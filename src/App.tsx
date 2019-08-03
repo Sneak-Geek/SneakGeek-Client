@@ -4,6 +4,7 @@
 
 import React, { Fragment } from "react";
 import { SafeAreaView, StyleSheet, ScrollView, View, Text, StatusBar } from "react-native";
+import { LoginButton, AccessToken } from "react-native-fbsdk";
 
 import {
   Header,
@@ -25,6 +26,24 @@ const App = () => {
               <Text style={styles.footer}>Engine: Hermes</Text>
             </View>
           )}
+          <View>
+            <LoginButton
+              onLoginFinished={(error, result) => {
+                if (error) {
+                  console.log("login has error: " + result.error);
+                } else if (result.isCancelled) {
+                  console.log("login is cancelled.");
+                } else {
+                  AccessToken.getCurrentAccessToken().then(data => {
+                    if (data) {
+                      console.log(data.accessToken.toString());
+                    }
+                  });
+                }
+              }}
+              onLogoutFinished={() => console.log("logout.")}
+            />
+          </View>
           <View style={styles.body}>
             <View style={styles.sectionContainer}>
               <Text style={styles.sectionTitle}>VSNKRS</Text>

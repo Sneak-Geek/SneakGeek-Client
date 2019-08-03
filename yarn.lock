@@ -1001,7 +1001,15 @@
   resolved "https://registry.yarnpkg.com/@types/prop-types/-/prop-types-15.7.1.tgz#f1a11e7babb0c3cad68100be381d1e064c68f1f6"
   integrity sha512-CFzn9idOEpHrgdw8JsoTkaDDyRWk1jrzIV8djzcgpq0y9tG4B4lFT+Nxh52DVpDXV+n4+NPNv7M1Dj5uMp6XFg==
 
-"@types/react-native@^0.60.3":
+"@types/react-native-fbsdk@^0.7.0":
+  version "0.7.0"
+  resolved "https://registry.yarnpkg.com/@types/react-native-fbsdk/-/react-native-fbsdk-0.7.0.tgz#75c6ef0b48d0aa4abd5ccc1af7b256b3c903f003"
+  integrity sha512-eGJZi93wfILxejJ0tU29ooruzSantFju9j3B4GkGAMqxtSzETtLxFnemYW/pvItHu+0etl8jB7uuGTWK4O2MQQ==
+  dependencies:
+    "@types/react" "*"
+    "@types/react-native" "*"
+
+"@types/react-native@*", "@types/react-native@^0.60.3":
   version "0.60.3"
   resolved "https://registry.yarnpkg.com/@types/react-native/-/react-native-0.60.3.tgz#38bd4d871edd0369f595513872bb00bd4f7e7145"
   integrity sha512-VjXawSlRG6l620tXB2dzYIwwXfzOZrl4kYHuX09EF0W9QFw/vwH7n7mp+0aFrwlr8ZOkWX/SZFPp6osyRpTGtg==
@@ -5151,6 +5159,10 @@ react-is@^16.8.1, react-is@^16.8.4, react-is@^16.8.6:
   version "16.8.6"
   resolved "https://registry.yarnpkg.com/react-is/-/react-is-16.8.6.tgz#5bbc1e2d29141c9fbdfed456343fe2bc430a6a16"
   integrity sha512-aUk3bHfZ2bRSVFFbbeVS4i+lNPZr3/WM5jT2J5omUVV1zzcs1nAaf3l51ctA5FFvCRbhrH0bdAsRRQddFJZPtA==
+
+"react-native-fbsdk@git+https://github.com/facebook/react-native-fbsdk.git":
+  version "1.0.1"
+  resolved "git+https://github.com/facebook/react-native-fbsdk.git#6d153bdd56533af330c46cd78e3b1b8f80893ed5"
 
 react-native@0.60.4:
   version "0.60.4"
