@@ -11,7 +11,7 @@ import AppNavigator from "./Navigation/AppNavigator";
 import { Provider } from "react-redux";
 import { AppStore } from "./Store";
 
-export default class Index extends React.Component<{}> {
+export default class App extends React.Component<{}> {
   render() {
     return (
       <Provider store={AppStore}>

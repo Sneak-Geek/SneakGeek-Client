@@ -67,6 +67,8 @@ PODS:
     - React-cxxreact (= 0.60.4)
     - React-jsi (= 0.60.4)
   - React-jsinspector (0.60.4)
+  - react-native-blur (0.8.0):
+    - React
   - react-native-fbsdk (1.0.1):
     - React
     - react-native-fbsdk/Core (= 1.0.1)
@@ -105,6 +107,10 @@ PODS:
   - React-RCTWebSocket (0.60.4):
     - React-Core (= 0.60.4)
     - React-fishhook (= 0.60.4)
+  - RNGestureHandler (1.3.0):
+    - React
+  - RNVectorIcons (6.6.0):
+    - React
   - yoga (0.60.4.React)
 
 DEPENDENCIES:
@@ -119,6 +125,7 @@ DEPENDENCIES:
   - React-jsi (from `../node_modules/react-native/ReactCommon/jsi`)
   - React-jsiexecutor (from `../node_modules/react-native/ReactCommon/jsiexecutor`)
   - React-jsinspector (from `../node_modules/react-native/ReactCommon/jsinspector`)
+  - "react-native-blur (from `../node_modules/@react-native-community/blur`)"
   - react-native-fbsdk (from `../node_modules/react-native-fbsdk`)
   - React-RCTActionSheet (from `../node_modules/react-native/Libraries/ActionSheetIOS`)
   - React-RCTAnimation (from `../node_modules/react-native/Libraries/NativeAnimation`)
@@ -130,6 +137,8 @@ DEPENDENCIES:
   - React-RCTText (from `../node_modules/react-native/Libraries/Text`)
   - React-RCTVibration (from `../node_modules/react-native/Libraries/Vibration`)
   - React-RCTWebSocket (from `../node_modules/react-native/Libraries/WebSocket`)
+  - RNGestureHandler (from `../node_modules/react-native-gesture-handler`)
+  - RNVectorIcons (from `../node_modules/react-native-vector-icons`)
   - yoga (from `../node_modules/react-native/ReactCommon/yoga`)
 
 SPEC REPOS:
@@ -162,6 +171,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native/ReactCommon/jsiexecutor"
   React-jsinspector:
     :path: "../node_modules/react-native/ReactCommon/jsinspector"
+  react-native-blur:
+    :path: "../node_modules/@react-native-community/blur"
   react-native-fbsdk:
     :path: "../node_modules/react-native-fbsdk"
   React-RCTActionSheet:
@@ -184,6 +195,10 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native/Libraries/Vibration"
   React-RCTWebSocket:
     :path: "../node_modules/react-native/Libraries/WebSocket"
+  RNGestureHandler:
+    :path: "../node_modules/react-native-gesture-handler"
+  RNVectorIcons:
+    :path: "../node_modules/react-native-vector-icons"
   yoga:
     :path: "../node_modules/react-native/ReactCommon/yoga"
 
@@ -203,6 +218,7 @@ SPEC CHECKSUMS:
   React-jsi: 21d3153b1153fbf6510a92b6b11e33e725cb7432
   React-jsiexecutor: 7549641e48bafae7bfee3f3ea19bf4901639c5de
   React-jsinspector: 73f24a02fa684ed6a2b828ba116874a2191ded88
+  react-native-blur: cad4d93b364f91e7b7931b3fa935455487e5c33c
   react-native-fbsdk: 080f3bb23513c5b59b6528543206fe0d1436bb7e
   React-RCTActionSheet: 9f71d7ae3e8fb10e08d162cbf14c621349dbfab3
   React-RCTAnimation: 981d8c95b0e30918a9832ccac32af83562a27fae
@@ -214,6 +230,8 @@ SPEC CHECKSUMS:
   React-RCTText: e0f224898b13af9aa036ea7cb3d438daa68c1044
   React-RCTVibration: 0bea40cd51bd089bd591a8f74c86e91fdf2666c5
   React-RCTWebSocket: 163873f4cdd5f1058a9483443404fc3801581cb6
+  RNGestureHandler: 5329a942fce3d41c68b84c2c2276ce06a696d8b0
+  RNVectorIcons: 0bb4def82230be1333ddaeee9fcba45f0b288ed4
   yoga: c2c050f6ae6e222534760cc82f559b89214b67e2
 
 PODFILE CHECKSUM: 614c086c014bfd54140369ab94fdf8957db34229
