@@ -8,7 +8,7 @@ import { Shoe } from "../Reducers";
 export class AppContentService {
   public static getShoes() {
     return new Promise<Shoe[]>((resolve, reject) => {
-      ApiClient.get(`/shoes/all`)
+      ApiClient.get(`/shoe/all`)
         .then(result => {
           if (result && result.status >= 200 && result.status < 300) {
             resolve(result.data);

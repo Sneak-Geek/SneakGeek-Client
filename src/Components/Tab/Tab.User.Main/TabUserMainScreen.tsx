@@ -111,6 +111,7 @@ export default class TabUserMainScreen extends React.Component<IUserTabMainProps
         <View style={{ marginTop: 34 }}>
           {list.map(item => (
             <View
+              key={item.title}
               style={[
                 item.hasMarginBottom ? styles.listItemStyleWithMarginBottom : null,
                 styles.settingsContainer
