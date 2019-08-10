@@ -18,7 +18,7 @@ import {
   TouchableOpacity
 } from "react-native";
 import { Shoe } from "../../../Reducers";
-import { ShoeCard } from "../../../common/ui";
+import { ShoeCard } from "../../../Common/ui";
 import { NavigationScreenOptions } from "react-navigation";
 
 export interface ITabHomeMainScreenProps {
@@ -139,7 +139,7 @@ export class TabHomeMainScreen extends React.Component<ITabHomeMainScreenProps> 
       >
         <View style={styles.shoeCardContainer}>
           <Image
-            source={{ uri: shoe.media.imageUrl, cache: "default" }}
+            source={{ uri: shoe.imageUrl, cache: "default" }}
             style={styles.shoeCard}
             resizeMode={"contain"}
           />

@@ -3,12 +3,12 @@
 //!
 
 import * as React from "react";
-import { View, Dimensions, Switch, Text, StyleSheet } from "react-native";
+import { View, Dimensions, Switch, Text, StyleSheet, TextInput } from "react-native";
 
 type State = {
   tainted: boolean; // ố vàng
   soleWorn: boolean; // đế mòn
-  heavyTear: boolean; // rách
+  heavilyTorn: boolean; // rách
   other: boolean;
   otherDetails: string;
 
@@ -16,14 +16,42 @@ type State = {
   [key: string]: any;
 };
 
-type Setting = { stateName: string; title: string };
+type Props = {
+  onSetShoeTainted: (tainted: boolean) => void;
+  onSetShoeOutsoleWorn: (outsoleWorn: boolean) => void;
+  onSetShoeInsoleWorn: (insoleWorn: boolean) => void;
+  onSetShoeHeavilyTorn: (heavilyTorn: boolean) => void;
+  onSetShoeOtherDetail: (otherDetail: string) => void;
+};
 
-export class ShoeConditionExtraInfoComponent extends React.PureComponent<{}, State> {
+type Setting = {
+  stateName: string;
+  title: string;
+  onValueChange: (currentValue: boolean) => void;
+};
+
+export class ShoeConditionExtraInfoComponent extends React.PureComponent<Props, State> {
   private settingsAndOptions: Setting[] = [
-    { stateName: "tainted", title: "Ố vàng" },
-    { stateName: "soleWorn", title: "Đế mòn" },
-    { stateName: "heavyTear", title: "Rách" },
-    { stateName: "other", title: "Các vấn đề khác" }
+    {
+      stateName: "tainted",
+      title: "Ố vàng",
+      onValueChange: this.props.onSetShoeTainted
+    },
+    {
+      stateName: "outsoleWorn",
+      title: "Đế mòn",
+      onValueChange: this.props.onSetShoeOutsoleWorn
+    },
+    {
+      stateName: "insoleWorn",
+      title: "Lót giày có vấn đề",
+      onValueChange: this.props.onSetShoeInsoleWorn
+    },
+    {
+      stateName: "heavilyTorn",
+      title: "Vết rách",
+      onValueChange: this.props.onSetShoeHeavilyTorn
+    }
   ];
 
   public constructor(props: any) {
@@ -32,7 +60,7 @@ export class ShoeConditionExtraInfoComponent extends React.PureComponent<{}, Sta
     this.state = {
       tainted: false,
       soleWorn: false,
-      heavyTear: false,
+      heavilyTorn: false,
       other: false,
       otherDetails: ""
     };
@@ -43,6 +71,7 @@ export class ShoeConditionExtraInfoComponent extends React.PureComponent<{}, Sta
       <View style={{ flex: 1, width: Dimensions.get("screen").width }}>
         <View style={{ flexDirection: "column" }}>
           {this.settingsAndOptions.map(setting => this._renderSettingAndOptions(setting))}
+          {this._renderOtherDetail()}
         </View>
       </View>
     );
@@ -56,11 +85,27 @@ export class ShoeConditionExtraInfoComponent extends React.PureComponent<{}, Sta
           trackColor={{ true: "#1ABC9C", false: "gainsboro" }}
           value={this.state[setting.stateName]}
           onValueChange={value =>
-            this.setState(prevState => ({
-              ...prevState,
-              [setting.stateName]: value
-            }))
+            this.setState(prevState => {
+              setting.onValueChange(value);
+              return {
+                ...prevState,
+                [setting.stateName]: value
+              };
+            })
           }
+        />
+      </View>
+    );
+  }
+
+  private _renderOtherDetail() {
+    // TODO: Research on underline for iOS
+    return (
+      <View style={styles.otherDetailContainer}>
+        <Text style={{ fontSize: 16 }}>Các vấn đề khác</Text>
+        <TextInput
+          placeholder={"Các chi tiết khác của sản phẩm"}
+          onChangeText={value => this.props.onSetShoeOtherDetail(value)}
         />
       </View>
     );
@@ -74,5 +119,11 @@ const styles = StyleSheet.create({
     marginVertical: 15,
     alignItems: "center",
     justifyContent: "space-between"
+  },
+
+  otherDetailContainer: {
+    flexDirection: "column",
+    marginHorizontal: 20,
+    marginVertical: 15
   }
 });

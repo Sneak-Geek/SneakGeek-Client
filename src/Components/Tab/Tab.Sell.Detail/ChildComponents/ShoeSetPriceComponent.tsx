@@ -16,20 +16,27 @@ import {
   SafeAreaView
 } from "react-native";
 import { Button } from "react-native-elements";
+import { LineChart, Grid, YAxis } from "react-native-svg-charts";
+import * as StringUtil from "../../../../Utilities/StringFormatterUtil";
 
 interface State {
   isModalOpen: boolean;
-  pickerOptions: any[];
   selectedDuration: string;
+  shoePrice: string;
 }
 
-export class ShoeSetPriceComponent extends React.Component<{}, State> {
+interface Props {
+  onSetShoePrice: (price: number) => void;
+  onSetSellDuration: (sellDuration: { duration: number; unit: string }) => void;
+}
+
+export class ShoeSetPriceComponent extends React.Component<Props, State> {
   constructor(props: any) {
     super(props);
     this.state = {
       isModalOpen: false,
-      pickerOptions: [],
-      selectedDuration: ""
+      selectedDuration: "",
+      shoePrice: ""
     };
   }
 
@@ -53,14 +60,58 @@ export class ShoeSetPriceComponent extends React.Component<{}, State> {
         <Text style={[styles.fontTitle, { textAlignVertical: "center" }]}>Đặt giá bán</Text>
         <View style={styles.rowSeparatedContainer}>
           <Text style={{ textAlign: "center" }}>VND</Text>
-          <TextInput placeholder={"1,000,0000"} style={[{ marginLeft: 5 }, styles.fontTitle]} />
+          <TextInput
+            keyboardType={"numeric"}
+            onChangeText={text =>
+              this.setState({
+                shoePrice: text
+              })
+            }
+            value={this.state.shoePrice}
+            onEndEditing={() => {
+              const shoePrice = this.state.shoePrice;
+              this.props.onSetShoePrice(parseInt(shoePrice));
+              this.setState({
+                shoePrice: StringUtil.toCurrencyString(shoePrice)
+              });
+            }}
+            onFocus={() => {
+              this.setState({ shoePrice: "" });
+            }}
+            placeholder={StringUtil.toCurrencyString("1000000")}
+            style={[{ marginLeft: 5 }, styles.fontTitle]}
+          />
         </View>
       </View>
     );
   }
 
   private _renderPriceChart(): JSX.Element | null {
-    return null;
+    const data = [50, 40, 95, 85, 100];
+    const contentInset = { top: 20, bottom: 20 };
+
+    return (
+      <View style={{ height: 200, flexDirection: "row" }}>
+        <YAxis
+          data={data}
+          contentInset={contentInset}
+          svg={{
+            fill: "grey",
+            fontSize: 10
+          }}
+          numberOfTicks={5}
+        />
+        <LineChart
+          style={{ flex: 1, marginLeft: 16 }}
+          data={data}
+          svg={{ stroke: "#1ABC9C", strokeWidth: 3, strokeLinecap: "round" }}
+          contentInset={contentInset}
+          numberOfTicks={5}
+        >
+          <Grid />
+        </LineChart>
+      </View>
+    );
   }
 
   private _renderPriceLoHi(): JSX.Element {
@@ -89,13 +140,14 @@ export class ShoeSetPriceComponent extends React.Component<{}, State> {
       <View style={[styles.rowSeparatedContainer, { marginVertical: 15 }]}>
         <Text style={styles.fontTitle}>Thời gian đăng</Text>
         <TouchableOpacity onPress={() => this.setState({ isModalOpen: true })}>
-          <Text style={styles.textPicker}>Lựa chọn</Text>
+          <Text style={styles.textPicker}>{this.state.selectedDuration || "Lựa chọn"}</Text>
         </TouchableOpacity>
       </View>
     );
   }
 
   private _renderPickerModal() {
+    // TODO: Get config from server and set proper duration unit/duration
     const options = ["24 tiếng", "48 tiếng", "72 tiếng", "7 ngày", "1 tháng"];
     return (
       <Modal
@@ -115,11 +167,19 @@ export class ShoeSetPriceComponent extends React.Component<{}, State> {
             />
             <Picker
               selectedValue={this.state.selectedDuration}
-              onValueChange={item => this.setState({ selectedDuration: item })}
+              onValueChange={item =>
+                this.setState({ selectedDuration: item }, () => {
+                  const duration = (item as string).split(" ");
+                  this.props.onSetSellDuration({
+                    duration: parseInt(duration[0]),
+                    unit: duration[1]
+                  });
+                })
+              }
               itemStyle={{ backgroundColor: "white" }}
             >
-              {options.map(option => (
-                <Picker.Item label={option} value={option} />
+              {options.map((option, idx) => (
+                <Picker.Item key={idx.toString()} label={option} value={option} />
               ))}
             </Picker>
           </View>
@@ -147,7 +207,7 @@ const styles = StyleSheet.create({
 
   textPicker: {
     color: "#1ABC9C",
-    fontStyle: "italic"
+    fontSize: 17
   },
 
   modalContainer: {

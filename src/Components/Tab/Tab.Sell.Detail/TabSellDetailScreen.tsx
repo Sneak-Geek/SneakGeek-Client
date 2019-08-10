@@ -4,7 +4,7 @@
 
 import * as React from "react";
 import { Shoe } from "../../../Reducers";
-import { View, Image, Text, TouchableOpacity, StyleSheet } from "react-native";
+import { View, Image, Text, TouchableOpacity, StyleSheet, Dimensions } from "react-native";
 import {
   NavigationScreenProp,
   NavigationRoute,
@@ -15,7 +15,8 @@ import {
 import {
   ShoeConditionRequiredInfoComponent,
   ShoeConditionExtraInfoComponent,
-  ShoeSetPriceComponent
+  ShoeSetPriceComponent,
+  ShoeSellOrderSummaryComponent
 } from "./ChildComponents";
 import { Icon } from "react-native-elements";
 import styles from "./styles";
@@ -24,7 +25,25 @@ export interface ISellDetailScreenProps {
   navigation: NavigationScreenProp<NavigationRoute>;
 }
 
-export class TabSellDetailScreen extends React.Component<ISellDetailScreenProps, {}> {
+export type SellOrder = {
+  shoeSize?: number;
+  shoeCondition?: string;
+  boxCondition?: string;
+  isShoeTainted?: boolean;
+  isOutSoleWorn?: boolean;
+  isInsoleWorn?: boolean;
+  isHeavilyTorn?: boolean;
+  otherDetail?: string;
+  price?: number;
+  sellDuration?: { duration: number; unit: string };
+};
+
+interface State {
+  sellOrderInfo: SellOrder;
+  currentChildComponentIndex: number;
+}
+
+export class TabSellDetailScreen extends React.Component<ISellDetailScreenProps, State> {
   static navigationOptions = (navigationConfig: BottomTabBarProps) => ({
     title: "Đăng sản phẩm",
     headerLeft: (
@@ -39,13 +58,59 @@ export class TabSellDetailScreen extends React.Component<ISellDetailScreenProps,
   });
 
   private shoe: Shoe;
+  private detailComponentList: FlatList<{ render: () => JSX.Element }> | null = null;
+  private childComponents: { render: () => JSX.Element }[] = [];
 
   public constructor /** override */(props: ISellDetailScreenProps) {
     super(props);
     this.shoe = this.props.navigation.getParam("shoeForSell");
+    this.state = {
+      sellOrderInfo: {},
+      currentChildComponentIndex: 0
+    };
+
+    this.childComponents = [
+      {
+        render: () => (
+          <ShoeConditionRequiredInfoComponent
+            key={0}
+            onSetShoeSize={this._setShoeSize.bind(this)}
+            onSetShoeCondition={this._setShoeCondition.bind(this)}
+            onSetBoxCondition={this._setBoxCondition.bind(this)}
+          />
+        )
+      },
+      {
+        render: () => (
+          <ShoeConditionExtraInfoComponent
+            key={1}
+            onSetShoeHeavilyTorn={this._setShoeHeavilyTorn.bind(this)}
+            onSetShoeInsoleWorn={this._setShoeInsoleWorn.bind(this)}
+            onSetShoeOutsoleWorn={this._setShoeOutsoleWorn.bind(this)}
+            onSetShoeTainted={this._setShoeTainted.bind(this)}
+            onSetShoeOtherDetail={this._setShoeOtherDetail.bind(this)}
+          />
+        )
+      },
+      {
+        render: () => (
+          <ShoeSetPriceComponent
+            key={2}
+            onSetShoePrice={this._setShoePrice.bind(this)}
+            onSetSellDuration={this._setSellDuration.bind(this)}
+          />
+        )
+      },
+      {
+        render: () => (
+          <ShoeSellOrderSummaryComponent key={3} orderSummary={this.state.sellOrderInfo} />
+        )
+      }
+    ];
   }
 
   public /** override */ render() {
+    console.log(this.state.sellOrderInfo);
     return (
       <View style={StyleSheet.absoluteFill}>
         {this._renderShoeDetail()}
@@ -59,45 +124,165 @@ export class TabSellDetailScreen extends React.Component<ISellDetailScreenProps,
     return (
       <View style={styles.shoeDetailContainer}>
         <Image
-          source={{ uri: this.shoe.media.imageUrl, cache: "default" }}
+          source={{ uri: this.shoe.imageUrl, cache: "default" }}
           style={{ width: 120, aspectRatio: 2 }}
           resizeMode={"contain"}
         />
-
         <View style={styles.shoeDetailTextContainer}>
           <Text style={{ fontSize: 18 }}>{this.shoe.title}</Text>
           <Text style={{ fontSize: 13, marginTop: 3 }} numberOfLines={1} ellipsizeMode={"tail"}>
-            Colorway: {this.shoe.colorway}
+            Colorway: {this.shoe.colorway.join(", ")}
           </Text>
         </View>
       </View>
     );
   }
-
   private _renderSellerContent() {
-    const contents = [
-      <ShoeConditionRequiredInfoComponent key={0} />,
-      <ShoeConditionExtraInfoComponent key={1} />,
-      <ShoeSetPriceComponent key={2} />
-    ];
-
     return (
       <FlatList
+        ref={ref => (this.detailComponentList = ref)}
+        bounces={false}
         style={{ flex: 1 }}
         horizontal
         pagingEnabled
-        data={contents}
-        renderItem={({ item }) => item}
+        data={this.childComponents}
+        renderItem={({ item }) => item.render()}
         alwaysBounceHorizontal={false}
+        scrollEnabled={false}
       />
     );
   }
 
+  private _setShoeSize(shoeSize: number) {
+    this.setState(prevState => ({
+      sellOrderInfo: {
+        shoeSize,
+        ...prevState.sellOrderInfo
+      }
+    }));
+  }
+
+  private _setBoxCondition(boxCondition: string) {
+    this.setState(prevState => ({
+      sellOrderInfo: {
+        boxCondition,
+        ...prevState.sellOrderInfo
+      }
+    }));
+  }
+
+  private _setShoeCondition(shoeCondition: string) {
+    this.setState(prevState => ({
+      sellOrderInfo: {
+        shoeCondition,
+        ...prevState.sellOrderInfo
+      }
+    }));
+  }
+
+  private _setShoeHeavilyTorn(isHeavilyTorn: boolean) {
+    this.setState(prevState => ({
+      sellOrderInfo: {
+        isHeavilyTorn,
+        ...prevState.sellOrderInfo
+      }
+    }));
+  }
+
+  private _setShoeInsoleWorn(isInsoleWorn: boolean) {
+    this.setState(prevState => ({
+      sellOrderInfo: {
+        isInsoleWorn,
+        ...prevState.sellOrderInfo
+      }
+    }));
+  }
+
+  private _setShoeOutsoleWorn(isOutsoleWorn: boolean) {
+    this.setState(prevState => ({
+      sellOrderInfo: {
+        isOutsoleWorn,
+        ...prevState.sellOrderInfo
+      }
+    }));
+  }
+
+  private _setShoeTainted(isShoeTainted: boolean) {
+    this.setState(prevState => ({
+      sellOrderInfo: {
+        isShoeTainted,
+        ...prevState.sellOrderInfo
+      }
+    }));
+  }
+
+  private _setShoeOtherDetail(otherDetail: string) {
+    this.setState(prevState => ({
+      sellOrderInfo: {
+        otherDetail,
+        ...prevState.sellOrderInfo
+      }
+    }));
+  }
+
+  private _setSellDuration(sellDuration: { duration: number; unit: string }) {
+    this.setState(prevState => ({
+      sellOrderInfo: {
+        sellDuration,
+        ...prevState.sellOrderInfo
+      }
+    }));
+  }
+
+  private _setShoePrice(price: number) {
+    this.setState(prevState => ({
+      sellOrderInfo: {
+        price,
+        ...prevState.sellOrderInfo
+      }
+    }));
+  }
+
   private _renderNextButton() {
+    const { width } = Dimensions.get("window");
+    const fullWidth = { width };
+    const halftWidth = { width: width / 2 };
+
     return (
-      <TouchableOpacity style={styles.nextButtonStyle}>
-        <Text style={{ textAlign: "center", color: "white", fontSize: 18 }}>Tiếp tục</Text>
-      </TouchableOpacity>
+      <View style={styles.bottomButtonContainer}>
+        {this.state.currentChildComponentIndex > 0 && (
+          <TouchableOpacity
+            style={[styles.backButtonStyle, halftWidth]}
+            onPress={() => this._scrollToComponent(false)}
+          >
+            <Text style={{ textAlign: "center", color: "black", fontSize: 18 }}>Quay lại</Text>
+          </TouchableOpacity>
+        )}
+        <TouchableOpacity
+          style={[
+            styles.nextButtonStyle,
+            this.state.currentChildComponentIndex === 0 ? fullWidth : halftWidth
+          ]}
+          onPress={() => this._scrollToComponent(true)}
+        >
+          <Text style={{ textAlign: "center", color: "white", fontSize: 18 }}>Tiếp tục</Text>
+        </TouchableOpacity>
+      </View>
     );
+  }
+
+  private _scrollToComponent(isNext: boolean) {
+    if (this.detailComponentList) {
+      const nextIndex = isNext
+        ? Math.min(this.state.currentChildComponentIndex + 1, this.childComponents.length)
+        : Math.max(this.state.currentChildComponentIndex - 1, 0);
+      this.detailComponentList.scrollToIndex({
+        index: nextIndex,
+        animated: true
+      });
+      this.setState({
+        currentChildComponentIndex: nextIndex
+      });
+    }
   }
 }

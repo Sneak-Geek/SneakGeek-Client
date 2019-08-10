@@ -21,7 +21,7 @@ import {
 } from "react-navigation";
 import { Icon } from "react-native-elements";
 import Styles from "./Styles";
-import { AppButton, ShoeCard } from "../../../common/ui";
+import { AppButton, ShoeCard } from "../../../Common/ui";
 import StarRating from "react-native-star-rating";
 // import { LineChart } from "react-native-svg-charts";
 
@@ -90,7 +90,7 @@ export class TabHomeShoeDetailScreen extends React.Component<Props, State> {
     return (
       <View style={Styles.shoeImageContainer}>
         <Image
-          source={{ uri: this.shoe.media.imageUrl }}
+          source={{ uri: this.shoe.imageUrl }}
           style={{ width: "100%", aspectRatio: 2 }}
           resizeMode={"contain"}
         />

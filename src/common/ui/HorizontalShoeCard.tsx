@@ -26,7 +26,7 @@ export class HorizontalShoeCard extends React.Component<Props, {}> {
         }}
       >
         <Image
-          source={{ uri: shoe.media.imageUrl, cache: "default" }}
+          source={{ uri: shoe.imageUrl, cache: "default" }}
           style={{ width: 100, aspectRatio: 2, flex: 1.5 }}
           resizeMode={"center"}
         />

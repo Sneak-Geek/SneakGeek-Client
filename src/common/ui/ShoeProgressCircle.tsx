@@ -36,7 +36,7 @@ export class ShoeProgressCircle extends React.Component<Props, {}> {
           outerCircleStyle={{ marginLeft: 12, marginBottom: 15 }}
         >
           <Image
-            source={{ uri: shoe.media.imageUrl, cache: "default" }}
+            source={{ uri: shoe.imageUrl, cache: "default" }}
             style={{ width: 80, aspectRatio: 1 }}
             resizeMode={"contain"}
           />

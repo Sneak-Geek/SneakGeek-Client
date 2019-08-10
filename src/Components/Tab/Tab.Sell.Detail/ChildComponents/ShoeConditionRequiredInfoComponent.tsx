@@ -23,6 +23,12 @@ enum PickerType {
   BoxCondition = "BoxCondition"
 }
 
+type Props = {
+  onSetShoeSize: (shoeSize: number) => void;
+  onSetShoeCondition: (shoeCondition: string) => void;
+  onSetBoxCondition: (boxCondition: string) => void;
+};
+
 type State = {
   shoeSize?: number;
   shoeCondition: string;
@@ -42,7 +48,7 @@ type Setting = {
   readonly onLaunchOptionChooser: () => void;
 };
 
-export class ShoeConditionRequiredInfoComponent extends React.PureComponent<{}, State> {
+export class ShoeConditionRequiredInfoComponent extends React.PureComponent<Props, State> {
   private settingsAndOptions: Setting[] = [
     {
       stateName: "shoeSize",
@@ -108,11 +114,11 @@ export class ShoeConditionRequiredInfoComponent extends React.PureComponent<{}, 
   }
 
   private _getShoeConditionOptions(): string[] {
-    return ["", "Mới", "Đã qua sử dụng"];
+    return ["Mới", "Đã qua sử dụng"];
   }
 
   private _getShoeBoxConditionOptions(): string[] {
-    return ["", "Nguyên hộp", "Không hộp"];
+    return ["Nguyên hộp", "Không hộp"];
   }
 
   private _renderSettingWithOptions(setting: Setting): JSX.Element {
@@ -169,7 +175,10 @@ export class ShoeConditionRequiredInfoComponent extends React.PureComponent<{}, 
                 : {}
             ]}
             onPress={() => {
-              this.setState({ shoeSize: parseFloat(item) });
+              const shoeSize = parseFloat(item);
+              this.setState({ shoeSize }, () => {
+                this.props.onSetShoeSize(shoeSize);
+              });
             }}
             titleStyle={{ fontSize: 14, color: "black" }}
           />
@@ -202,12 +211,19 @@ export class ShoeConditionRequiredInfoComponent extends React.PureComponent<{}, 
     }
 
     let currentPickedSettings: Setting | null = null;
+    let onPickerSelected: (pickerOption: string) => void;
     switch (this.state.currentPicker) {
       case PickerType.BoxCondition:
         currentPickedSettings = this.settingsAndOptions[2];
+        onPickerSelected = (pickerOption: string) => {
+          this.props.onSetBoxCondition(pickerOption);
+        };
         break;
       case PickerType.ShoeCondition:
         currentPickedSettings = this.settingsAndOptions[1];
+        onPickerSelected = (pickerOption: string) => {
+          this.props.onSetShoeCondition(pickerOption);
+        };
         break;
       default:
         break;
@@ -220,6 +236,7 @@ export class ShoeConditionRequiredInfoComponent extends React.PureComponent<{}, 
           selectedValue={this.state[pickedSetting]}
           onValueChange={itemValue =>
             this.setState(prevState => {
+              onPickerSelected(itemValue.toString());
               return {
                 ...prevState,
                 [pickedSetting]: itemValue,

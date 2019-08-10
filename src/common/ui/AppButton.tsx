@@ -3,14 +3,7 @@
 //!
 
 import * as React from "react";
-import {
-  ViewStyle,
-  View,
-  TouchableOpacity,
-  Text,
-  TextStyle,
-  StyleSheet
-} from "react-native";
+import { ViewStyle, View, TouchableOpacity, Text, TextStyle, StyleSheet } from "react-native";
 
 interface Props {
   containerStyle?: ViewStyle | ViewStyle[];

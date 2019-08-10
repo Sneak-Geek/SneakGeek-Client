@@ -18,7 +18,7 @@ export class ShoeCard extends React.Component<IShoeCardProps> {
     return (
       <TouchableOpacity onPress={onPress} style={[styles.smallShoeContainer, style]}>
         <Image
-          source={{ uri: shoe.media.imageUrl, cache: "default" }}
+          source={{ uri: shoe.imageUrl, cache: "default" }}
           resizeMode={"contain"}
           style={styles.smallShoeCard}
         />

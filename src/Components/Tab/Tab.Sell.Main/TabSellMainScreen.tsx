@@ -6,7 +6,7 @@ import * as React from "react";
 import { View, SafeAreaView, ScrollView, Text } from "react-native";
 import { Shoe } from "../../../Reducers";
 import { FlatList } from "react-native-gesture-handler";
-import { ShoeProgressCircle } from "../../../common/ui";
+import { ShoeProgressCircle } from "../../../Common/ui";
 import PurchaseComponent from "../PurchaseComponent";
 import { Icon } from "react-native-elements";
 import { NavigationScreenOptions } from "react-navigation";

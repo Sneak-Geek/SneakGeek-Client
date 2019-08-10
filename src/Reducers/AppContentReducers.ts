@@ -8,7 +8,7 @@ import { updateShoesData } from "../Actions";
 export type Shoe = {
   brand: string;
   category: string;
-  colorway: string;
+  colorway: string[];
   name: string;
   description?: string;
   media: {

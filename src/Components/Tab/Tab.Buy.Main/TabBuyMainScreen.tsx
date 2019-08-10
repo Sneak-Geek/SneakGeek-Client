@@ -5,7 +5,7 @@
 import * as React from "react";
 import { View, ScrollView, SafeAreaView, FlatList } from "react-native";
 import { Shoe } from "../../../Reducers";
-import { ShoeProgressCircle } from "../../../common/ui";
+import { ShoeProgressCircle } from "../../../Common/ui";
 import PurchaseComponent from "../PurchaseComponent";
 
 export interface IBuyScreenProps {

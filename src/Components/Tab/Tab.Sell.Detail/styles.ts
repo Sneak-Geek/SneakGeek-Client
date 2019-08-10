@@ -24,14 +24,27 @@ export default StyleSheet.create({
     alignItems: "flex-start"
   },
 
+  backButtonStyle: {
+    height: 56,
+    backgroundColor: "white",
+    alignItems: "center",
+    justifyContent: "center"
+  },
+
   nextButtonStyle: {
-    position: "absolute",
-    bottom: 0,
-    left: 0,
-    right: 0,
     height: 56,
     backgroundColor: "black",
     alignItems: "center",
     justifyContent: "center"
+  },
+
+  bottomButtonContainer: {
+    position: "absolute",
+    bottom: 0,
+    left: 0,
+    right: 0,
+    flexDirection: "row",
+    borderTopWidth: 1,
+    borderTopColor: "lightgray"
   }
 });
