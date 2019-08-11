@@ -43,6 +43,11 @@ interface State {
   currentChildComponentIndex: number;
 }
 
+type SellDetailChildren = {
+  render: () => JSX.Element;
+  canProceed: () => boolean;
+};
+
 export class TabSellDetailScreen extends React.Component<ISellDetailScreenProps, State> {
   static navigationOptions = (navigationConfig: BottomTabBarProps) => ({
     title: "Đăng sản phẩm",
@@ -58,8 +63,8 @@ export class TabSellDetailScreen extends React.Component<ISellDetailScreenProps,
   });
 
   private shoe: Shoe;
-  private detailComponentList: FlatList<{ render: () => JSX.Element }> | null = null;
-  private childComponents: { render: () => JSX.Element }[] = [];
+  private detailComponentList: FlatList<SellDetailChildren> | null = null;
+  private childComponents: SellDetailChildren[] = [];
 
   public constructor /** override */(props: ISellDetailScreenProps) {
     super(props);
@@ -78,7 +83,15 @@ export class TabSellDetailScreen extends React.Component<ISellDetailScreenProps,
             onSetShoeCondition={this._setShoeCondition.bind(this)}
             onSetBoxCondition={this._setBoxCondition.bind(this)}
           />
-        )
+        ),
+        canProceed: () => {
+          const { sellOrderInfo } = this.state;
+          return (
+            sellOrderInfo.shoeSize !== undefined &&
+            sellOrderInfo.shoeCondition !== undefined &&
+            sellOrderInfo.boxCondition !== undefined
+          );
+        }
       },
       {
         render: () => (
@@ -90,7 +103,10 @@ export class TabSellDetailScreen extends React.Component<ISellDetailScreenProps,
             onSetShoeTainted={this._setShoeTainted.bind(this)}
             onSetShoeOtherDetail={this._setShoeOtherDetail.bind(this)}
           />
-        )
+        ),
+        canProceed: () => {
+          return true;
+        }
       },
       {
         render: () => (
@@ -99,17 +115,24 @@ export class TabSellDetailScreen extends React.Component<ISellDetailScreenProps,
             onSetShoePrice={this._setShoePrice.bind(this)}
             onSetSellDuration={this._setSellDuration.bind(this)}
           />
-        )
+        ),
+        canProceed: () => {
+          const { sellOrderInfo } = this.state;
+          return sellOrderInfo.price !== undefined && sellOrderInfo.sellDuration !== undefined;
+        }
       },
       {
         render: () => (
           <ShoeSellOrderSummaryComponent key={3} orderSummary={this.state.sellOrderInfo} />
-        )
+        ),
+        canProceed: () => {
+          return false;
+        }
       }
     ];
   }
 
-  public /** override */ render() {
+  public /** override */ render(): JSX.Element {
     console.log(this.state.sellOrderInfo);
     return (
       <View style={StyleSheet.absoluteFill}>
@@ -253,7 +276,7 @@ export class TabSellDetailScreen extends React.Component<ISellDetailScreenProps,
         {this.state.currentChildComponentIndex > 0 && (
           <TouchableOpacity
             style={[styles.backButtonStyle, halftWidth]}
-            onPress={() => this._scrollToComponent(false)}
+            onPress={() => this._scrollToNext(false)}
           >
             <Text style={{ textAlign: "center", color: "black", fontSize: 18 }}>Quay lại</Text>
           </TouchableOpacity>
@@ -263,7 +286,7 @@ export class TabSellDetailScreen extends React.Component<ISellDetailScreenProps,
             styles.nextButtonStyle,
             this.state.currentChildComponentIndex === 0 ? fullWidth : halftWidth
           ]}
-          onPress={() => this._scrollToComponent(true)}
+          onPress={() => this._scrollToNext(true)}
         >
           <Text style={{ textAlign: "center", color: "white", fontSize: 18 }}>Tiếp tục</Text>
         </TouchableOpacity>
@@ -271,11 +294,15 @@ export class TabSellDetailScreen extends React.Component<ISellDetailScreenProps,
     );
   }
 
-  private _scrollToComponent(isNext: boolean) {
+  private _scrollToNext(isNext: boolean) {
+    const currentChildComponent = this.childComponents[this.state.currentChildComponentIndex];
+    if (isNext && !currentChildComponent.canProceed()) return;
+
     if (this.detailComponentList) {
       const nextIndex = isNext
-        ? Math.min(this.state.currentChildComponentIndex + 1, this.childComponents.length)
+        ? Math.min(this.state.currentChildComponentIndex + 1, this.childComponents.length - 1)
         : Math.max(this.state.currentChildComponentIndex - 1, 0);
+
       this.detailComponentList.scrollToIndex({
         index: nextIndex,
         animated: true

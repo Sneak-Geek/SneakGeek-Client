@@ -16,6 +16,9 @@ interface Props {
 }
 
 export class ShoeProgressCircle extends React.Component<Props, {}> {
+  // TODO: Deprecated the use of Progress circle - use react-native-svg-charts
+  // since it's using componentWillReceiveProps
+
   render(): React.ReactNode {
     const { shoe, shoeData } = this.props;
     return (
