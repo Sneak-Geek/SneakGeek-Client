@@ -1,5 +1,5 @@
 //!
-//! Copyright (c) 2019 - VSNKRS. All rights reserved
+//! Copyright (c) 2019 - SneakGeek. All rights reserved
 //!
 
 import { StyleSheet, Dimensions, ViewStyle, TextStyle } from "react-native";

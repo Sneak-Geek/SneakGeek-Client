@@ -1,5 +1,5 @@
 //!
-//! Copyright (c) 2019 - VSNKRS. All rights reserved
+//! Copyright (c) 2019 - SneakGeek. All rights reserved
 //!
 
 import { createAction } from "redux-actions";
@@ -15,5 +15,7 @@ export interface ModalPayload {
   data: any;
 }
 
-export const displayModal = createAction<ModalPayload>(ModalActionsConstant.DISPLAY_MODAL_BY_NAME);
+export const displayModal = createAction<ModalPayload>(
+  ModalActionsConstant.DISPLAY_MODAL_BY_NAME
+);
 export const dismissModal = createAction(ModalActionsConstant.DISMISS_MODAL);
