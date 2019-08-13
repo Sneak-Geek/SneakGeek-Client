@@ -497,7 +497,7 @@
 					"-ObjC",
 					"-lc++",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = org.vsnkrs.client;
+				PRODUCT_BUNDLE_IDENTIFIER = org.sneakgeek.client;
 				PRODUCT_NAME = client;
 				VERSIONING_SYSTEM = "apple-generic";
 			};
@@ -521,7 +521,7 @@
 					"-ObjC",
 					"-lc++",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = org.vsnkrs.client;
+				PRODUCT_BUNDLE_IDENTIFIER = org.sneakgeek.client;
 				PRODUCT_NAME = client;
 				VERSIONING_SYSTEM = "apple-generic";
 			};

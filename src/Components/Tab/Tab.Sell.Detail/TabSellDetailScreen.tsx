@@ -270,6 +270,7 @@ export class TabSellDetailScreen extends React.Component<ISellDetailScreenProps,
     const { width } = Dimensions.get("window");
     const fullWidth = { width };
     const halftWidth = { width: width / 2 };
+    const currentChildComponent = this.childComponents[this.state.currentChildComponentIndex];
 
     return (
       <View style={styles.bottomButtonContainer}>
@@ -284,7 +285,10 @@ export class TabSellDetailScreen extends React.Component<ISellDetailScreenProps,
         <TouchableOpacity
           style={[
             styles.nextButtonStyle,
-            this.state.currentChildComponentIndex === 0 ? fullWidth : halftWidth
+            this.state.currentChildComponentIndex === 0 ? fullWidth : halftWidth,
+            currentChildComponent.canProceed()
+              ? { backgroundColor: "black" }
+              : { backgroundColor: "gray" }
           ]}
           onPress={() => this._scrollToNext(true)}
         >
