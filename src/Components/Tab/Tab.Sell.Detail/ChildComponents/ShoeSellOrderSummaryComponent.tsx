@@ -3,15 +3,35 @@
 //!
 
 import * as React from "react";
-import { ScrollView, View, Dimensions, StyleSheet, Text } from "react-native";
+import { ScrollView, View, Dimensions, StyleSheet, Image } from "react-native";
 import * as StringUtil from "../../../../Utilities/StringFormatterUtil";
 import { SellOrder } from "../TabSellDetailScreen";
+import { TouchableOpacity } from "react-native-gesture-handler";
+import { Assets } from "../../../../Assets";
+import ImagePicker, { ImagePickerResponse } from "react-native-image-picker";
+import * as Text from "../../../../Common/ui/Text";
 
 interface Props {
   orderSummary: SellOrder;
 }
 
-export class ShoeSellOrderSummaryComponent extends React.PureComponent<Props> {
+interface State {
+  pictures: (string | null)[];
+}
+
+export class ShoeSellOrderSummaryComponent extends React.PureComponent<Props, State> {
+  state = {
+    pictures: [null]
+  };
+
+  private readonly imagePickerOptions = {
+    title: "Upload images",
+    storageOptions: {
+      skipBackup: true,
+      path: "images"
+    }
+  };
+
   public /** override */ render(): JSX.Element {
     return (
       <ScrollView style={{ flex: 1, width: Dimensions.get("screen").width }}>
@@ -30,8 +50,8 @@ export class ShoeSellOrderSummaryComponent extends React.PureComponent<Props> {
 
     return (
       <View style={styles.sectionContainer}>
-        <Text style={styles.title}>Giá bán</Text>
-        <Text style={styles.detail}>VND {StringUtil.toCurrencyString(price)}</Text>
+        <Text.Subhead>Giá bán</Text.Subhead>
+        <Text.Body style={styles.detail}>VND {StringUtil.toCurrencyString(price)}</Text.Body>
       </View>
     );
   }
@@ -40,10 +60,10 @@ export class ShoeSellOrderSummaryComponent extends React.PureComponent<Props> {
     const { orderSummary } = this.props;
     return (
       <View style={styles.sectionContainer}>
-        <Text style={styles.title}>Miêu tả</Text>
-        <Text style={styles.detail}>
+        <Text.Subhead>Miêu tả</Text.Subhead>
+        <Text.Body style={styles.detail}>
           Cỡ {orderSummary.shoeSize}, {orderSummary.shoeCondition}, {orderSummary.boxCondition}
-        </Text>
+        </Text.Body>
       </View>
     );
   }
@@ -58,16 +78,71 @@ export class ShoeSellOrderSummaryComponent extends React.PureComponent<Props> {
 
     return (
       <View style={styles.sectionContainer}>
-        <Text style={styles.title}>Thời gian đăng sản phẩm</Text>
-        <Text style={styles.detail}>
+        <Text.Subhead>Thời gian đăng sản phẩm</Text.Subhead>
+        <Text.Body style={styles.detail}>
           {sellDuration.duration} {sellDuration.unit}
-        </Text>
+        </Text.Body>
       </View>
     );
   }
 
   private _renderPictures(): JSX.Element {
-    return <></>;
+    return (
+      <View style={{ flex: 1, flexDirection: "column" }}>
+        <Text.Subhead>Ảnh sản phẩm</Text.Subhead>
+        <ScrollView
+          style={{ flex: 1 }}
+          horizontal={true}
+          showsHorizontalScrollIndicator={false}
+        >
+          <View style={{ flexDirection: "row" }}>
+            {this.state.pictures.map((item, index) => {
+              if (!item) {
+                return this._renderImagePicker(index);
+              }
+
+              return this._renderPicture(item, index);
+            })}
+          </View>
+        </ScrollView>
+      </View>
+    );
+  }
+
+  private _renderImagePicker(index: number): JSX.Element {
+    return (
+      <TouchableOpacity
+        key={index}
+        style={{ backgroundColor: "#C4C4C4", ...styles.imageContainer }}
+        onPress={this._launchSystemImagePicker.bind(this)}
+      >
+        <Image source={Assets.Icons.AddPicture} />
+      </TouchableOpacity>
+    );
+  }
+
+  private _launchSystemImagePicker(): void {
+    ImagePicker.launchImageLibrary(this.imagePickerOptions, (response: ImagePickerResponse) => {
+      if (!response.didCancel && !response.error) {
+        console.log(`Image picked: ${response.uri}`);
+        this.setState(prevState => ({
+          pictures: [...prevState.pictures, response.uri]
+        }));
+      }
+    });
+  }
+
+  private _renderPicture(pictureUri: string | null, index: number) {
+    pictureUri = pictureUri as string;
+
+    return (
+      <Image
+        key={index}
+        source={{ uri: pictureUri }}
+        style={styles.imageContainer}
+        resizeMode={"cover"}
+      />
+    );
   }
 }
 
@@ -75,16 +150,17 @@ const styles = StyleSheet.create({
   sectionContainer: {
     flexDirection: "column",
     alignItems: "flex-start",
-    marginBottom: 16
-  },
-
-  title: {
-    fontSize: 16
+    marginBottom: 30
   },
 
   detail: {
-    fontSize: 18,
     color: "#1ABC9C",
     marginTop: 10
+  },
+
+  imageContainer: {
+    width: 93,
+    aspectRatio: 1,
+    marginRight: 12
   }
 });

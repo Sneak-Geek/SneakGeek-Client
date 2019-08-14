@@ -71,11 +71,13 @@ export default class LoginScreen extends React.Component<ILoginScreenProps> {
           underlineColorAndroid={"transparent"}
           inputStyle={styles.emailInputStyle}
         />
-        <Button
-          title="Đăng nhập"
-          buttonStyle={styles.authButton}
-          onPress={() => this.props.navigateToHome()}
-        />
+        <View style={styles.authButtonContainer}>
+          <Button
+            title="Đăng nhập"
+            buttonStyle={styles.authButton}
+            onPress={() => this.props.navigateToHome()}
+          />
+        </View>
       </View>
     );
   }
