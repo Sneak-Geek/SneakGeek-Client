@@ -10,11 +10,15 @@ export default StyleSheet.create({
     paddingVertical: 10,
     paddingHorizontal: 42,
     backgroundColor: "white",
-    flexDirection: "column"
+    flexDirection: "column",
+    justifyContent: "space-between"
   } as ViewStyle,
 
   socialContainer: {
-    marginTop: 127
+    height: "45%",
+    alignItems: "stretch",
+    flexDirection: "column",
+    justifyContent: "flex-end"
   } as ViewStyle,
 
   label: {
@@ -44,16 +48,15 @@ export default StyleSheet.create({
   },
 
   emailBasedContainer: {
+    height: "40%",
     flexDirection: "column",
-    alignItems: "center",
-    justifyContent: "center"
+    alignItems: "flex-start",
+    justifyContent: "flex-start"
   } as ViewStyle,
 
   separator: {
     backgroundColor: "#BCBBC1",
     height: 1,
-    marginTop: 83,
-    marginBottom: 70,
     alignSelf: "stretch"
   } as ViewStyle,
 
@@ -73,12 +76,18 @@ export default StyleSheet.create({
     fontWeight: "normal"
   } as ViewStyle,
 
+  authButtonContainer: {
+    position: "absolute",
+    bottom: "10%",
+    left: 0,
+    right: 0,
+    alignItems: "center"
+  },
+
   authButton: {
-    marginTop: 80,
     width: 169,
     height: 50,
-    backgroundColor: "#C7C7C7",
-    alignSelf: "center"
+    backgroundColor: "#C7C7C7"
   } as ViewStyle,
 
   debugDialogButton: {
