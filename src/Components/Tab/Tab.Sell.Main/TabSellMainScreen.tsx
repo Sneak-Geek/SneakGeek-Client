@@ -3,44 +3,58 @@
 //!
 
 import * as React from "react";
-import { View, SafeAreaView, ScrollView, Text } from "react-native";
+import { View, SafeAreaView, ScrollView, StyleSheet, Button } from "react-native";
 import { Shoe } from "../../../Reducers";
-import { FlatList } from "react-native-gesture-handler";
+import { FlatList, TouchableOpacity } from "react-native-gesture-handler";
 import { ShoeProgressCircle } from "../../../Common/ui";
 import PurchaseComponent from "../PurchaseComponent";
 import { Icon } from "react-native-elements";
-import { NavigationScreenOptions } from "react-navigation";
+import {
+  NavigationScreenOptions,
+  NavigationScreenProp,
+  NavigationRoute
+} from "react-navigation";
+import * as Text from "../../../Common/ui/Text";
 
 export interface ISellTabMainProps {
+  navigation: NavigationScreenProp<NavigationRoute>;
   shoes: Shoe[];
   navigateToSearch: () => void;
 }
 
-export class TabSellMainScreen extends PurchaseComponent<ISellTabMainProps, {}> {
+interface ISellTabState {
+  shouldRenderSuccessToast: boolean;
+}
+
+export class TabSellMainScreen extends PurchaseComponent<ISellTabMainProps, ISellTabState> {
   static navigationOptions: NavigationScreenOptions = {
     header: null
   };
 
-  render(): React.ReactNode {
+  public constructor(props: ISellTabMainProps) {
+    super(props);
+    this.state = {
+      shouldRenderSuccessToast: true
+    };
+  }
+
+  public /** override */ componentWillUnmount() {
+    this.props.navigation.setParams({ isSellSuccess: null });
+  }
+
+  public /** override */ render(): React.ReactNode {
     return (
-      <SafeAreaView>
+      <SafeAreaView style={{ position: "relative" }}>
+        {this.props.navigation.getParam("isSellSuccess") &&
+          this.state.shouldRenderSuccessToast &&
+          this._renderSellSuccessToast()}
         <ScrollView>
-          {this._renderBalance()}
           {this._renderCurrentSelling()}
           {this._renderInventory()}
           {this._renderHistory()}
         </ScrollView>
         {this._renderSellNewShoeButton()}
       </SafeAreaView>
-    );
-  }
-
-  private _renderBalance(): React.ReactNode {
-    return (
-      <View style={{ paddingHorizontal: 20, marginVertical: 25 }}>
-        <Text style={{ fontSize: 22 }}>Số dư tài khoản</Text>
-        <Text style={{ fontSize: 32 }}>VND 31,200,200</Text>
-      </View>
     );
   }
 
@@ -86,4 +100,33 @@ export class TabSellMainScreen extends PurchaseComponent<ISellTabMainProps, {}> 
       />
     );
   }
+
+  private _renderSellSuccessToast() {
+    return (
+      <View style={styles.toastContainer}>
+        <Text.Caption style={{ color: "#1ABC9C" }}>Đã đăng bán sản phẩm</Text.Caption>
+        <TouchableOpacity
+          onPress={() =>
+            this.setState({
+              shouldRenderSuccessToast: false
+            })
+          }
+        >
+          <Text.Caption style={{ color: "white" }}>Đóng</Text.Caption>
+        </TouchableOpacity>
+      </View>
+    );
+  }
 }
+
+const styles = StyleSheet.create({
+  toastContainer: {
+    flexDirection: "row",
+    backgroundColor: "#000000",
+    width: "100%",
+    height: 32,
+    alignItems: "center",
+    justifyContent: "space-between",
+    paddingHorizontal: 20
+  }
+});

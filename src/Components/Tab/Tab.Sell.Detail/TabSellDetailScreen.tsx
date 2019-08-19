@@ -23,6 +23,7 @@ import styles from "./styles";
 
 export interface ISellDetailScreenProps {
   navigation: NavigationScreenProp<NavigationRoute>;
+  uploadShoes: () => void;
 }
 
 export type SellOrder = {
@@ -126,7 +127,7 @@ export class TabSellDetailScreen extends React.Component<ISellDetailScreenProps,
           <ShoeSellOrderSummaryComponent key={3} orderSummary={this.state.sellOrderInfo} />
         ),
         canProceed: () => {
-          return false;
+          return true;
         }
       }
     ];
@@ -269,14 +270,19 @@ export class TabSellDetailScreen extends React.Component<ISellDetailScreenProps,
   private _renderNextButton() {
     const { width } = Dimensions.get("window");
     const fullWidth = { width };
-    const halftWidth = { width: width / 2 };
+    const halfWidth = { width: width / 2 };
     const currentChildComponent = this.childComponents[this.state.currentChildComponentIndex];
+    const halfButtonCondition =
+      this.state.currentChildComponentIndex > 0 &&
+      this.state.currentChildComponentIndex < this.childComponents.length - 1;
+    const shouldRenderUpdate =
+      this.state.currentChildComponentIndex === this.childComponents.length - 1;
 
     return (
       <View style={styles.bottomButtonContainer}>
-        {this.state.currentChildComponentIndex > 0 && (
+        {halfButtonCondition && (
           <TouchableOpacity
-            style={[styles.backButtonStyle, halftWidth]}
+            style={[styles.backButtonStyle, halfWidth]}
             onPress={() => this._scrollToNext(false)}
           >
             <Text style={{ textAlign: "center", color: "black", fontSize: 18 }}>Quay lại</Text>
@@ -285,14 +291,16 @@ export class TabSellDetailScreen extends React.Component<ISellDetailScreenProps,
         <TouchableOpacity
           style={[
             styles.nextButtonStyle,
-            this.state.currentChildComponentIndex === 0 ? fullWidth : halftWidth,
+            !halfButtonCondition ? fullWidth : halfWidth,
             currentChildComponent.canProceed()
               ? { backgroundColor: "black" }
               : { backgroundColor: "gray" }
           ]}
-          onPress={() => this._scrollToNext(true)}
+          onPress={() => (shouldRenderUpdate ? this._uploadShoes() : this._scrollToNext(true))}
         >
-          <Text style={{ textAlign: "center", color: "white", fontSize: 18 }}>Tiếp tục</Text>
+          <Text style={{ textAlign: "center", color: "white", fontSize: 18 }}>
+            {shouldRenderUpdate ? "Đăng sản phẩm" : "Tiếp tục"}
+          </Text>
         </TouchableOpacity>
       </View>
     );
@@ -315,5 +323,9 @@ export class TabSellDetailScreen extends React.Component<ISellDetailScreenProps,
         currentChildComponentIndex: nextIndex
       });
     }
+  }
+
+  private _uploadShoes() {
+    this.props.uploadShoes();
   }
 }
