@@ -3,10 +3,12 @@
 //!
 
 import * as React from "react";
-import { Text, View } from "react-native";
+import { View, TouchableOpacity, Image } from "react-native";
 import styles from "./styles";
-import { SocialIcon, Input, Button, Icon } from "react-native-elements";
+import { Input, Button, Icon } from "react-native-elements";
 import { Account } from "../../Reducers";
+import * as Text from "../../Common/ui/Text";
+import { Assets } from "../../Assets";
 
 export interface ILoginScreenProps {
   currentAccount: Account | null;
@@ -29,7 +31,6 @@ export default class LoginScreen extends React.Component<ILoginScreenProps> {
         {this._renderSocialContainer()}
         <View style={styles.separator} />
         {this._renderEmailBasedContainer()}
-        {this._renderDebugDialog()}
       </View>
     );
   }
@@ -37,37 +38,47 @@ export default class LoginScreen extends React.Component<ILoginScreenProps> {
   private _renderSocialContainer() {
     return (
       <View style={styles.socialContainer}>
-        <Text style={[styles.label, styles.socialLabel]}>Đăng nhập qua</Text>
-
-        <SocialIcon
-          style={styles.buttonContainer}
-          title="Tài khoản Facebook"
-          button
-          type="facebook"
-          fontWeight="normal"
-          onPress={() => this.props.facebookLogin()}
-        />
-
-        <SocialIcon
-          style={styles.buttonContainer}
-          title={"Tài khoản Google"}
-          button
-          type={"google-plus-official"}
-          fontWeight={"normal"}
-          onPress={() => this.props.googleLogin()}
-        />
+        <Text.Body style={[styles.label, styles.socialLabel]}>Đăng nhập qua</Text.Body>
+        {this._renderSocialButton(
+          "Tài khoản Facebook",
+          Assets.Icons.Facebook,
+          this.props.facebookLogin
+        )}
+        {this._renderSocialButton(
+          "Tài khoản Google",
+          Assets.Icons.Google,
+          this.props.googleLogin
+        )}
       </View>
+    );
+  }
+
+  private _renderSocialButton(title: string, icon: any, onPress: () => void): JSX.Element {
+    return (
+      <TouchableOpacity onPress={onPress} style={styles.socialButton}>
+        <View style={styles.socialButtonInner}>
+          <Image source={icon} />
+          <Text.Body style={styles.socialButtonText}>{title}</Text.Body>
+        </View>
+      </TouchableOpacity>
     );
   }
 
   private _renderEmailBasedContainer() {
     return (
       <View style={styles.emailBasedContainer}>
-        <Text style={styles.label}>Hoặc sử dụng email</Text>
+        <Text.Body style={styles.label}>Hoặc sử dụng email</Text.Body>
         <Input
           inputContainerStyle={styles.emailContainerStyle}
           placeholder={"taikhoan@email.com"}
-          leftIcon={<Icon type={"ionicon"} name={"md-mail"} size={24} color={"#DADADA"} />}
+          leftIcon={
+            <Icon
+              type={"ionicon"}
+              name={"md-mail"}
+              size={24}
+              color={Assets.Styles.ButtonDisabledColor}
+            />
+          }
           underlineColorAndroid={"transparent"}
           inputStyle={styles.emailInputStyle}
         />
@@ -80,20 +91,5 @@ export default class LoginScreen extends React.Component<ILoginScreenProps> {
         </View>
       </View>
     );
-  }
-
-  private _renderDebugDialog(): JSX.Element | null {
-    if (__DEV__) {
-      return (
-        <Icon
-          reverse
-          containerStyle={styles.debugDialogButton}
-          name={"settings"}
-          onPress={() => this.props.displayDebugDialog()}
-        />
-      );
-    }
-
-    return null;
   }
 }

@@ -10,6 +10,8 @@ import { Account } from "../Reducers";
 import { StackActions } from "react-navigation";
 import { RouteNames } from "../Navigation";
 import { LoginManager, LoginResult, AccessToken } from "react-native-fbsdk";
+import { GoogleSignin, User as GoogleUser } from "react-native-google-signin";
+import { Assets } from "../Assets";
 
 export module AccountActions {
   export const AUTHENTICATE_ERROR = "AUTHENTICATION_ERROR";
@@ -53,10 +55,9 @@ export const authenticate = (provider: "facebook" | "google") => {
   return async (dispatch: Function) => {
     if (provider === "facebook") {
       dispatch(facebookAuthenticate());
+    } else {
+      dispatch(googleAuthenticate());
     }
-    // else {
-    //   dispatch(googleAuthenticate());
-    // }
   };
 };
 
@@ -79,20 +80,21 @@ export const facebookAuthenticate = () => {
   };
 };
 
-// export const googleAuthenticate = () => {
-//   return async (dispatch: Function) => {
-//     try {
-//       const result = await Google.logInAsync({
-//         androidClientId: Config.GOOGLE_ANDROID_ID,
-//         iosClientId: Config.GOOGLE_IOS_ID
-//       });
-//       if (result.type === "cancel") {
-//         dispatch(cancelThirdPartyAuthentication("google"));
-//       } else {
-//         dispatch(authenticateVsnkrsService(result.accessToken, "google"));
-//       }
-//     } catch (error) {
-//       dispatch(authenticationError(error));
-//     }
-//   };
-// };
+export const googleAuthenticate = () => {
+  return async (dispatch: Function) => {
+    try {
+      await GoogleSignin.configure({
+        webClientId: Assets.Configuration.GoogleWebClientID,
+        offlineAccess: true,
+        forceConsentPrompt: true
+      });
+      await GoogleSignin.hasPlayServices();
+      const userInfo: GoogleUser = await GoogleSignin.signIn();
+      if (userInfo && userInfo.idToken) {
+        dispatch(authenticateVsnkrsService(userInfo.idToken, "google"));
+      }
+    } catch (error) {
+      dispatch(authenticationError(error));
+    }
+  };
+};

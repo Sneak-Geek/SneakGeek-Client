@@ -3,6 +3,7 @@
 //!
 
 import { StyleSheet, ViewStyle } from "react-native";
+import { Assets } from "../../Assets";
 
 export default StyleSheet.create({
   rootContainer: {
@@ -20,6 +21,25 @@ export default StyleSheet.create({
     flexDirection: "column",
     justifyContent: "flex-end"
   } as ViewStyle,
+
+  socialButton: {
+    height: Assets.Styles.ButtonHeight,
+    backgroundColor: Assets.Styles.ButtonPrimaryColor,
+    borderRadius: Assets.Styles.ButtonBorderRadius,
+    marginVertical: 5
+  },
+
+  socialButtonInner: {
+    flex: 1,
+    flexDirection: "row",
+    alignItems: "center",
+    paddingHorizontal: Assets.Styles.ButtonPadding
+  },
+
+  socialButtonText: {
+    color: Assets.Styles.TextSecondaryColor,
+    marginLeft: 20
+  },
 
   label: {
     fontSize: 18
@@ -61,13 +81,12 @@ export default StyleSheet.create({
   } as ViewStyle,
 
   emailContainerStyle: {
-    borderRadius: 4,
+    borderRadius: Assets.Styles.ButtonBorderRadius,
     borderColor: "black",
     borderWidth: 1,
     justifyContent: "flex-start",
-    alignSelf: "stretch",
     marginTop: 20,
-    height: 52
+    height: Assets.Styles.ButtonHeight
   } as ViewStyle,
 
   emailInputStyle: {
@@ -86,15 +105,7 @@ export default StyleSheet.create({
 
   authButton: {
     width: 169,
-    height: 50,
-    backgroundColor: "#C7C7C7"
-  } as ViewStyle,
-
-  debugDialogButton: {
-    position: "absolute",
-    bottom: 30,
-    right: 10,
-    alignItems: "center",
-    justifyContent: "center"
-  }
+    height: Assets.Styles.ButtonHeight,
+    backgroundColor: Assets.Styles.ButtonPrimaryColor
+  } as ViewStyle
 });

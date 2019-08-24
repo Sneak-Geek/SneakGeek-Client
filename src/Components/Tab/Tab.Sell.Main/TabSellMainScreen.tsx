@@ -3,7 +3,7 @@
 //!
 
 import * as React from "react";
-import { View, SafeAreaView, ScrollView, StyleSheet, Button } from "react-native";
+import { View, SafeAreaView, ScrollView, StyleSheet } from "react-native";
 import { Shoe } from "../../../Reducers";
 import { FlatList, TouchableOpacity } from "react-native-gesture-handler";
 import { ShoeProgressCircle } from "../../../Common/ui";
