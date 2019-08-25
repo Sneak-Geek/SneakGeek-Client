@@ -8,7 +8,7 @@ import { Action } from "redux-actions";
 import { RouteNames } from "../Navigation/RouteNames";
 
 const initialAction = AppNavigator.router.getActionForPathAndParams(
-  RouteNames.AppNavigator
+  RouteNames.Login
 ) as NavigationAction;
 
 const initialState = AppNavigator.router.getStateForAction(initialAction);

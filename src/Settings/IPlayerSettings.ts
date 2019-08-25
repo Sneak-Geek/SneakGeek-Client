@@ -3,12 +3,6 @@
 //!
 
 export interface ISettingsProvider {
-  // TASK 5665423: Change ISettingsProvider's save and load methods to match conventions, along with implementations.
-  currentAccount: {
-    accountProvider: string;
-    accessToken: string;
-  };
-
   /** Load the settings. Returns a promise indicating when the load operation is complete, and if it was successful. */
   load(): Promise<boolean>;
 

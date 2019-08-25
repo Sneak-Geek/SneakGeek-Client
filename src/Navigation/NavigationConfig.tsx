@@ -10,16 +10,15 @@ import {
 } from "react-navigation";
 import Tab from "../Components/Tab";
 import { LoginScreenContainer } from "../Components/Login/LoginScreen.Container";
+import { SellDetailScreenContainer } from "../Components/SellDetail/SellDetailScreen.Container";
 import { RouteNames } from "./RouteNames";
 import { Icon } from "react-native-elements";
-import { ModalRootContainer } from "../Components/Modal/Root/ModalRoot";
 
 const BuyTabNavigator = createStackNavigator(
   {
     [`${RouteNames.Tabs.BuyTab.MainScreen}`]: { screen: Tab.Buy.Main }
   },
   {
-    headerMode: "none",
     navigationOptions: {
       tabBarIcon: ({ tintColor }) => {
         tintColor = tintColor as string;
@@ -31,8 +30,7 @@ const BuyTabNavigator = createStackNavigator(
 
 const SellTabNavigator = createStackNavigator(
   {
-    [`${RouteNames.Tabs.SellTab.MainScreen}`]: { screen: Tab.Sell.Main },
-    [`${RouteNames.Tabs.SellTab.DetailScreen}`]: { screen: Tab.Sell.Detail }
+    [`${RouteNames.Tabs.SellTab.MainScreen}`]: { screen: Tab.Sell.Main }
   },
   {
     navigationOptions: {
@@ -50,7 +48,9 @@ const HomeTabNavigator = createStackNavigator(
     [`${RouteNames.Tabs.HomeTab.ShoeDetailScreen}`]: { screen: Tab.Home.ShoeDetail }
   },
   {
+    headerMode: "none",
     navigationOptions: {
+      header: null,
       tabBarIcon: ({ tintColor }) => {
         tintColor = tintColor as string;
         return <Icon type={"ionicon"} name={"md-home"} size={28} color={tintColor} />;
@@ -65,7 +65,6 @@ const UserInfoTabNavigator = createStackNavigator(
     [`${RouteNames.Tabs.UserInfoTab.Edit}`]: { screen: Tab.User.Edit }
   },
   {
-    // headerMode: "none",
     navigationOptions: {
       tabBarIcon: ({ tintColor }) => {
         tintColor = tintColor as string;
@@ -101,32 +100,22 @@ const AppTabRoot = createBottomTabNavigator(
 
 export const AppNavigator = createStackNavigator(
   {
-    [`${RouteNames.Tabs.TabRoot}`]: { screen: AppTabRoot },
-    [`${RouteNames.Login}`]: { screen: LoginScreenContainer }
+    [`${RouteNames.Tabs.TabRoot}`]: {
+      screen: AppTabRoot,
+      navigationOptions: {
+        header: null
+      }
+    },
+    [`${RouteNames.Login}`]: { screen: LoginScreenContainer },
+    [`${RouteNames.Tabs.SellTab.DetailScreen}`]: { screen: SellDetailScreenContainer }
   },
   {
     initialRouteName: RouteNames.Login,
-    headerMode: "none",
-    defaultNavigationOptions: {
+    mode: "card",
+    navigationOptions: {
       gesturesEnabled: true
     }
   }
 );
 
-export const RootNavigator = createStackNavigator(
-  {
-    [`${RouteNames.AppNavigator}`]: { screen: AppNavigator },
-    [`${RouteNames.Modal}`]: { screen: ModalRootContainer }
-  },
-  {
-    initialRouteName: RouteNames.AppNavigator,
-    mode: "modal",
-    headerMode: "none",
-    transparentCard: true,
-    navigationOptions: {
-      gesturesEnabled: false
-    }
-  }
-);
-
-export default createAppContainer(RootNavigator);
+export default createAppContainer(AppNavigator);

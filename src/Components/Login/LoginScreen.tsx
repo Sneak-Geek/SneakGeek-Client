@@ -7,8 +7,9 @@ import { View, TouchableOpacity, Image } from "react-native";
 import styles from "./styles";
 import { Input, Button, Icon } from "react-native-elements";
 import { Account } from "../../Reducers";
-import * as Text from "../../Common/ui/Text";
+import * as Text from "../Shared/Text";
 import { Assets } from "../../Assets";
+import * as StringUtil from "../../Utilities/StringUtil";
 
 export interface ILoginScreenProps {
   currentAccount: Account | null;
@@ -24,7 +25,22 @@ export interface ILoginScreenProps {
   displayDebugDialog: () => void;
 }
 
-export default class LoginScreen extends React.Component<ILoginScreenProps> {
+interface State {
+  currentEmail: string;
+}
+
+export default class LoginScreen extends React.Component<ILoginScreenProps, State> {
+  static navigationOptions = {
+    header: null
+  };
+
+  public constructor /** override */(props: ILoginScreenProps) {
+    super(props);
+    this.state = {
+      currentEmail: ""
+    };
+  }
+
   public /** override */ render() {
     return (
       <View style={styles.rootContainer}>
@@ -69,6 +85,8 @@ export default class LoginScreen extends React.Component<ILoginScreenProps> {
       <View style={styles.emailBasedContainer}>
         <Text.Body style={styles.label}>Hoặc sử dụng email</Text.Body>
         <Input
+          value={this.state.currentEmail}
+          onChangeText={currentEmail => this.setState({ currentEmail })}
           inputContainerStyle={styles.emailContainerStyle}
           placeholder={"taikhoan@email.com"}
           leftIcon={
@@ -85,7 +103,14 @@ export default class LoginScreen extends React.Component<ILoginScreenProps> {
         <View style={styles.authButtonContainer}>
           <Button
             title="Đăng nhập"
-            buttonStyle={styles.authButton}
+            buttonStyle={[
+              styles.authButton,
+              {
+                backgroundColor: StringUtil.isValidEmail(this.state.currentEmail)
+                  ? Assets.Styles.ButtonPrimaryColor
+                  : Assets.Styles.ButtonDisabledColor
+              }
+            ]}
             onPress={() => this.props.navigateToHome()}
           />
         </View>

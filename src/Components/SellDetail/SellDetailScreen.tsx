@@ -3,14 +3,14 @@
 //!
 
 import * as React from "react";
-import { Shoe } from "../../../Reducers";
-import { View, Image, Text, TouchableOpacity, StyleSheet, Dimensions } from "react-native";
+import { Shoe } from "../../Reducers";
+import { View, Image, Text, TouchableOpacity, Dimensions, SafeAreaView } from "react-native";
 import {
   NavigationScreenProp,
   NavigationRoute,
   StackActions,
   FlatList,
-  BottomTabBarProps
+  ScreenProps
 } from "react-navigation";
 import {
   ShoeConditionRequiredInfoComponent,
@@ -49,8 +49,8 @@ type SellDetailChildren = {
   canProceed: () => boolean;
 };
 
-export class TabSellDetailScreen extends React.Component<ISellDetailScreenProps, State> {
-  static navigationOptions = (navigationConfig: BottomTabBarProps) => ({
+export class SellDetailScreen extends React.Component<ISellDetailScreenProps, State> {
+  static navigationOptions = (navigationConfig: ScreenProps) => ({
     title: "Đăng sản phẩm",
     headerLeft: (
       <Icon
@@ -134,13 +134,14 @@ export class TabSellDetailScreen extends React.Component<ISellDetailScreenProps,
   }
 
   public /** override */ render(): JSX.Element {
-    console.log(this.state.sellOrderInfo);
     return (
-      <View style={StyleSheet.absoluteFill}>
-        {this._renderShoeDetail()}
-        {this._renderSellerContent()}
-        {this._renderNextButton()}
-      </View>
+      <SafeAreaView style={{ flex: 1, position: "relative" }}>
+        <View style={{ flex: 1 }}>
+          {this._renderShoeDetail()}
+          {this._renderSellerContent()}
+          {this._renderNextButton()}
+        </View>
+      </SafeAreaView>
     );
   }
 

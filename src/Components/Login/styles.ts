@@ -105,7 +105,6 @@ export default StyleSheet.create({
 
   authButton: {
     width: 169,
-    height: Assets.Styles.ButtonHeight,
-    backgroundColor: Assets.Styles.ButtonPrimaryColor
+    height: Assets.Styles.ButtonHeight
   } as ViewStyle
 });

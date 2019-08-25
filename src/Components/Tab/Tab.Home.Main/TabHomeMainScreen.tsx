@@ -18,8 +18,7 @@ import {
   TouchableOpacity
 } from "react-native";
 import { Shoe } from "../../../Reducers";
-import { ShoeCard } from "../../../Common/ui";
-import { NavigationScreenOptions } from "react-navigation";
+import { ShoeCard } from "../../Shared";
 
 export interface ITabHomeMainScreenProps {
   shoes: Shoe[];
@@ -29,10 +28,6 @@ export interface ITabHomeMainScreenProps {
 }
 
 export class TabHomeMainScreen extends React.Component<ITabHomeMainScreenProps> {
-  static navigationOptions: NavigationScreenOptions = {
-    header: null
-  };
-
   public /** override */ componentDidMount() {
     this.props.shoes.length === 0 && this.props.fetchShoes();
   }

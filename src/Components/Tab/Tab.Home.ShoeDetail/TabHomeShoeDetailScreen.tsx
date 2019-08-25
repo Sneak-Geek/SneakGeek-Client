@@ -21,7 +21,7 @@ import {
 } from "react-navigation";
 import { Icon } from "react-native-elements";
 import Styles from "./Styles";
-import { AppButton, ShoeCard } from "../../../Common/ui";
+import { AppButton, ShoeCard } from "../../Shared";
 import StarRating from "react-native-star-rating";
 // import { LineChart } from "react-native-svg-charts";
 

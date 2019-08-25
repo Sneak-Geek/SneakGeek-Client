@@ -3,10 +3,10 @@
 //!
 
 import { connect } from "react-redux";
-import { IAppState } from "../../../Store";
-import { TabSellDetailScreen } from "./TabSellDetailScreen";
+import { IAppState } from "../../Store";
+import { SellDetailScreen } from "./SellDetailScreen";
 import { StackActions } from "react-navigation";
-import { RouteNames } from "../../../Navigation";
+import { RouteNames } from "../../Navigation";
 
 const mapStateToProps = (_state: IAppState) => ({});
 
@@ -25,7 +25,7 @@ const mapDispatchToProps = (dispatch: Function) => {
   };
 };
 
-export const TabSellDetailScreenContainer = connect(
+export const SellDetailScreenContainer = connect(
   mapStateToProps,
   mapDispatchToProps
-)(TabSellDetailScreen);
+)(SellDetailScreen);

@@ -17,7 +17,7 @@ import {
 } from "react-native";
 import { Button } from "react-native-elements";
 import { LineChart, Grid, YAxis } from "react-native-svg-charts";
-import * as StringUtil from "../../../../Utilities/StringFormatterUtil";
+import * as StringUtil from "../../../Utilities/StringUtil";
 
 interface State {
   isModalOpen: boolean;

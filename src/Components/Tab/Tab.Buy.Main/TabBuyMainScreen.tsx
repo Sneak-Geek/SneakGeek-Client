@@ -5,7 +5,7 @@
 import * as React from "react";
 import { View, ScrollView, SafeAreaView, FlatList } from "react-native";
 import { Shoe } from "../../../Reducers";
-import { ShoeProgressCircle } from "../../../Common/ui";
+import { ShoeProgressCircle } from "../../Shared";
 import PurchaseComponent from "../PurchaseComponent";
 
 export interface IBuyScreenProps {
@@ -13,6 +13,10 @@ export interface IBuyScreenProps {
 }
 
 export default class TabBuyMainScreen extends PurchaseComponent<IBuyScreenProps> {
+  static navigationOptions = {
+    header: null
+  };
+
   public render(): React.ReactNode {
     return (
       <ScrollView>
