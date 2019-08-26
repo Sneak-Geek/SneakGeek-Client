@@ -5,11 +5,10 @@
 import { connect } from "react-redux";
 import { IAppState } from "../../../Store";
 import { TabHomeMainScreen } from "./TabHomeMainScreen";
-import { fetchShoes, displayModal } from "../../../Actions";
+import { fetchShoes } from "../../../Actions";
 import { RouteNames } from "../../../Navigation";
 import { Shoe } from "../../../Reducers";
 import { NavigationActions } from "react-navigation";
-import { ModalTypes } from "../../Modal/ModalTypes";
 
 const mapStateToProps = (state: IAppState) => {
   return {
@@ -26,14 +25,6 @@ const mapDispatchToProps = (dispatch: Function) => {
         params: { shoe }
       };
       dispatch(NavigationActions.navigate(navConfig));
-    },
-    viewShoesByBrand: (brand: string) => {
-      dispatch(displayModal({ modalType: ModalTypes.ShoesByBrand, data: { brand } }));
-      dispatch(
-        NavigationActions.navigate({
-          routeName: RouteNames.Modal
-        })
-      );
     }
   };
 };

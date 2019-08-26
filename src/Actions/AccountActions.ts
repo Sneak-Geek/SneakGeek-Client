@@ -3,21 +3,21 @@
 //!
 
 import { createAction } from "redux-actions";
-// import { Facebook, Google } from "expo";
 import { invariant } from "ts-invariant";
-import * as Service from "../Service";
 import { Account } from "../Reducers";
-import { StackActions } from "react-navigation";
-import { RouteNames } from "../Navigation";
 import { LoginManager, LoginResult, AccessToken } from "react-native-fbsdk";
 import { GoogleSignin, User as GoogleUser } from "react-native-google-signin";
-import { Assets } from "../Assets";
+import AppConfig from "../Config/ThirdParty";
+import { container, Types } from "../Config/Inversify";
+import { IAuthenticationService } from "../Service/AuthenticationService";
+import { IAppSettings, SettingsKeys } from "../Config/Settings";
 
 export module AccountActions {
   export const AUTHENTICATE_ERROR = "AUTHENTICATION_ERROR";
   export const AUTHENTICATE_VSNKRS = "AUTHENTICATE_VSNKRS";
   export const AUTHENTICATION_COMPLETE = "AUTHENTICATION_COMPLETE";
   export const THIRD_PARTY_CANCELED_AUTH = "THIRD_PARTY_CANCELED_AUTH";
+  export const GO_TO_LOGIN = "GO_TO_LOGIN";
 }
 
 export const cancelThirdPartyAuthentication = createAction<"facebook" | "google">(
@@ -28,6 +28,7 @@ export const vsnkrsAuthenticate = createAction(AccountActions.AUTHENTICATE_VSNKR
 export const authenticationComplete = createAction<Account>(
   AccountActions.AUTHENTICATION_COMPLETE
 );
+export const goToLogin = createAction(AccountActions.GO_TO_LOGIN);
 
 export const authenticateVsnkrsService = (
   accessToken: string,
@@ -36,14 +37,13 @@ export const authenticateVsnkrsService = (
   return async (dispatch: Function) => {
     dispatch(vsnkrsAuthenticate);
     try {
-      const account = await Service.AuthenticationService.login(accessToken, provider);
-      if (account) {
-        dispatch(authenticationComplete(account));
-        dispatch(
-          StackActions.replace({
-            routeName: RouteNames.Tabs.TabRoot
-          })
-        );
+      const authService = container.get<IAuthenticationService>(Types.IAuthenticationService);
+      const settings = container.get<IAppSettings>(Types.IAppSettings);
+
+      const accountPayload = await authService.login(accessToken, provider);
+      if (accountPayload) {
+        await settings.setValue(SettingsKeys.CurrentAccessToken, accountPayload.token);
+        dispatch(authenticationComplete(accountPayload.user));
       }
     } catch (error) {
       dispatch(authenticationError(error));
@@ -84,7 +84,7 @@ export const googleAuthenticate = () => {
   return async (dispatch: Function) => {
     try {
       await GoogleSignin.configure({
-        webClientId: Assets.Configuration.GoogleWebClientID,
+        webClientId: AppConfig.GOOGLE_WEB_CLIENT_ID,
         offlineAccess: true,
         forceConsentPrompt: true
       });
@@ -92,6 +92,21 @@ export const googleAuthenticate = () => {
       const userInfo: GoogleUser = await GoogleSignin.signIn();
       if (userInfo && userInfo.idToken) {
         dispatch(authenticateVsnkrsService(userInfo.idToken, "google"));
+      }
+    } catch (error) {
+      dispatch(authenticationError(error));
+    }
+  };
+};
+
+export const getCurrentUser = (accessToken: string) => {
+  return async (dispatch: Function) => {
+    try {
+      const authService = container.get<IAuthenticationService>(Types.IAuthenticationService);
+      const accountPayload = await authService.getCurrentUser(accessToken);
+
+      if (accountPayload) {
+        dispatch(authenticationComplete(accountPayload.user));
       }
     } catch (error) {
       dispatch(authenticationError(error));

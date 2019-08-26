@@ -4,9 +4,6 @@
 
 import * as React from "react";
 
-// Needed for InversifyJS
-import "reflect-metadata";
-
 import AppNavigator from "./Navigation/AppNavigator";
 import { Provider } from "react-redux";
 import { AppStore } from "./Store";

@@ -2,7 +2,7 @@
 //! Copyright (c) 2019 - SneakGeek. All rights reserved
 //!
 
-export interface ISettingsProvider {
+export interface IAppSettings {
   /** Load the settings. Returns a promise indicating when the load operation is complete, and if it was successful. */
   load(): Promise<boolean>;
 
@@ -13,11 +13,11 @@ export interface ISettingsProvider {
   getValue(key: string): any;
 
   /** Remove a setting by the key. */
-  removeValue(key: string): void;
+  removeValue(key: string): Promise<void>;
 
   /** Set a setting value. */
-  setValue(key: string, value: any, shouldPersist?: boolean): void;
+  setValue(key: string, value: any): Promise<void>;
 
   /** Clears all the data in the settings provider */
-  clear(): void;
+  clear(): Promise<void>;
 }

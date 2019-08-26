@@ -4,7 +4,7 @@
 
 export const RouteNames = {
   AppNavigator: "AppNavigator",
-  Modal: "Modal",
+  Splash: "Splash",
   Login: "Login",
   Tabs: {
     TabRoot: "TabRoot",

@@ -5,9 +5,14 @@
 import { Container } from "inversify";
 import { StoreProvider, IStoreProvider } from "../../Store";
 import { Types } from "./Types";
+import { IAppSettings, AppSettings } from "../Settings";
+import {
+  IAuthenticationService,
+  AuthenticationService
+} from "../../Service/AuthenticationService";
 
 export const container = new Container();
+
 container.bind<IStoreProvider>(Types.IStoreProvider).to(StoreProvider);
-// container.bind<ApiClient>(Types.ApiClient).to(ApiClient);
-// container.bind<AppContentService>(Types.AppContentService).to(AppContentService);
-// container.bind<AuthenticationService>(Types.AuthenticationService).to(AuthenticationService);
+container.bind<IAppSettings>(Types.IAppSettings).to(AppSettings);
+container.bind<IAuthenticationService>(Types.IAuthenticationService).to(AuthenticationService);

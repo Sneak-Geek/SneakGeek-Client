@@ -4,7 +4,8 @@
 
 export const Types = {
   IStoreProvider: Symbol.for("IStoreProvider"),
-  AuthenticationService: Symbol.for("AuthenticationService"),
+  IAppSettings: Symbol.for("IAppSettings"),
+  IAuthenticationService: Symbol.for("IAuthenticationService"),
 
   ApiClient: Symbol.for("ApiClient"),
   AppContentService: Symbol.for("AppContentService")

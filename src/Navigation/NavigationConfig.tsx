@@ -13,6 +13,7 @@ import { LoginScreenContainer } from "../Components/Login/LoginScreen.Container"
 import { SellDetailScreenContainer } from "../Components/SellDetail/SellDetailScreen.Container";
 import { RouteNames } from "./RouteNames";
 import { Icon } from "react-native-elements";
+import { SplashScreenContainer } from "../Components/Splash/SplashScreen";
 
 const BuyTabNavigator = createStackNavigator(
   {
@@ -106,11 +107,12 @@ export const AppNavigator = createStackNavigator(
         header: null
       }
     },
+    [`${RouteNames.Splash}`]: { screen: SplashScreenContainer },
     [`${RouteNames.Login}`]: { screen: LoginScreenContainer },
     [`${RouteNames.Tabs.SellTab.DetailScreen}`]: { screen: SellDetailScreenContainer }
   },
   {
-    initialRouteName: RouteNames.Login,
+    initialRouteName: RouteNames.Splash,
     mode: "card",
     navigationOptions: {
       gesturesEnabled: true
