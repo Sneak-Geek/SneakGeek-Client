@@ -6,12 +6,13 @@ export const RouteNames = {
   AppNavigator: "AppNavigator",
   Splash: "Splash",
   Login: "Login",
+  SellDetail: "SellDetail",
+  ShoeDetail: "ShoeDetail",
   Tabs: {
     TabRoot: "TabRoot",
     HomeTab: {
       TabName: "Home",
-      MainScreen: "Home/Main",
-      ShoeDetailScreen: "Home/ShoeDetail"
+      MainScreen: "Home/Main"
     },
     SearchTab: "Search",
     BuyTab: {
@@ -20,8 +21,7 @@ export const RouteNames = {
     },
     SellTab: {
       TabName: "Sell",
-      MainScreen: "Sell/Main",
-      DetailScreen: "Sell/Detail"
+      MainScreen: "Sell/Main"
     },
     UserInfoTab: {
       TabName: "UserInfo",

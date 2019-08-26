@@ -67,7 +67,7 @@ export const ShoesByBrandModalContainer = connect(
     goToShoeDetail: (shoe: Shoe) =>
       dispatch(
         NavigationActions.navigate({
-          routeName: RouteNames.Tabs.HomeTab.ShoeDetailScreen,
+          routeName: RouteNames.ShoeDetail,
           params: { shoe }
         })
       )

@@ -3,7 +3,6 @@
 //!
 
 import { TabHomeMainScreenContainer } from "./Tab.Home.Main/TabHomeMainScreen.Container";
-import { TabHomeShoeDetailScreenContainer } from "./Tab.Home.ShoeDetail/TabHomeShoeDetailScreen.Container";
 
 import { TabSearchContainer } from "./Tab.Search/TabSearch.Container";
 import { TabBuyMainScreenContainer } from "./Tab.Buy.Main/TabBuyMainScreen.Container";
@@ -14,8 +13,7 @@ import { TabUserEditScreenContainer as TabUserEdit } from "./Tab.User.Edit/TabUs
 
 const Tabs = {
   Home: {
-    Main: TabHomeMainScreenContainer,
-    ShoeDetail: TabHomeShoeDetailScreenContainer
+    Main: TabHomeMainScreenContainer
   },
   Buy: {
     Main: TabBuyMainScreenContainer

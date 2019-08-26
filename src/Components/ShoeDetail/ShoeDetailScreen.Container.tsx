@@ -3,11 +3,11 @@
 //!
 
 import { connect } from "react-redux";
-import { TabHomeShoeDetailScreen } from "./TabHomeShoeDetailScreen";
-import { IAppState } from "../../../Store";
-import { RouteNames } from "../../../Navigation";
+import { ShoeDetailScreen } from "./ShoeDetailScreen";
+import { IAppState } from "../../Store";
+import { RouteNames } from "../../Navigation";
 import { StackActions } from "react-navigation";
-import { Shoe } from "../../../Reducers";
+import { Shoe } from "../../Reducers";
 
 const mapStateToProps = (state: IAppState) => {
   return {
@@ -20,7 +20,7 @@ const mapDispatchToProps = (dispatch: Function) => {
   return {
     navigateToShoeDetailWithReset: (_index: number, shoe: Shoe) => {
       const navConfig = {
-        routeName: RouteNames.Tabs.HomeTab.ShoeDetailScreen,
+        routeName: RouteNames.ShoeDetail,
         params: { shoe }
       };
       // dispatch(StackActions.pop({}));
@@ -29,7 +29,7 @@ const mapDispatchToProps = (dispatch: Function) => {
   };
 };
 
-export const TabHomeShoeDetailScreenContainer = connect(
+export const ShoeDetailScreenContainer = connect(
   mapStateToProps,
   mapDispatchToProps
-)(TabHomeShoeDetailScreen);
+)(ShoeDetailScreen);

@@ -14,6 +14,7 @@ import { SellDetailScreenContainer } from "../Components/SellDetail/SellDetailSc
 import { RouteNames } from "./RouteNames";
 import { Icon } from "react-native-elements";
 import { SplashScreenContainer } from "../Components/Splash/SplashScreen";
+import { ShoeDetailScreenContainer } from "../Components/ShoeDetail";
 
 const BuyTabNavigator = createStackNavigator(
   {
@@ -45,8 +46,7 @@ const SellTabNavigator = createStackNavigator(
 
 const HomeTabNavigator = createStackNavigator(
   {
-    [`${RouteNames.Tabs.HomeTab.MainScreen}`]: { screen: Tab.Home.Main },
-    [`${RouteNames.Tabs.HomeTab.ShoeDetailScreen}`]: { screen: Tab.Home.ShoeDetail }
+    [`${RouteNames.Tabs.HomeTab.MainScreen}`]: { screen: Tab.Home.Main }
   },
   {
     headerMode: "none",
@@ -109,7 +109,8 @@ export const AppNavigator = createStackNavigator(
     },
     [`${RouteNames.Splash}`]: { screen: SplashScreenContainer },
     [`${RouteNames.Login}`]: { screen: LoginScreenContainer },
-    [`${RouteNames.Tabs.SellTab.DetailScreen}`]: { screen: SellDetailScreenContainer }
+    [`${RouteNames.SellDetail}`]: { screen: SellDetailScreenContainer },
+    [`${RouteNames.ShoeDetail}`]: { screen: ShoeDetailScreenContainer }
   },
   {
     initialRouteName: RouteNames.Splash,

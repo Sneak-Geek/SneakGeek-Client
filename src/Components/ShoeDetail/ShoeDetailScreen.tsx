@@ -12,7 +12,7 @@ import {
   FlatList,
   ScrollView
 } from "react-native";
-import { Shoe } from "../../../Reducers";
+import { Shoe } from "../../Reducers";
 import {
   StackActions,
   NavigationScreenProp,
@@ -21,7 +21,7 @@ import {
 } from "react-navigation";
 import { Icon } from "react-native-elements";
 import Styles from "./Styles";
-import { AppButton, ShoeCard } from "../../Shared";
+import { AppButton, ShoeCard } from "../Shared";
 import StarRating from "react-native-star-rating";
 // import { LineChart } from "react-native-svg-charts";
 
@@ -36,7 +36,7 @@ interface State {
   favorited: boolean;
 }
 
-export class TabHomeShoeDetailScreen extends React.Component<Props, State> {
+export class ShoeDetailScreen extends React.Component<Props, State> {
   static navigationOptions = (transitionProp: NavigationScreenProps) => ({
     title: "Chi tiết sản phẩm",
     headerLeft: (

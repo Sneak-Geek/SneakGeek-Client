@@ -19,7 +19,7 @@ const mapDispatchToProps = (dispatch: Function) => ({
   onShoeClick: (isForSell: boolean, shoe: Shoe) => {
     if (isForSell) {
       const navAction = NavigationActions.navigate({
-        routeName: RouteNames.Tabs.SellTab.DetailScreen,
+        routeName: RouteNames.SellDetail,
         params: { shoeForSell: shoe }
       });
       dispatch(navAction);

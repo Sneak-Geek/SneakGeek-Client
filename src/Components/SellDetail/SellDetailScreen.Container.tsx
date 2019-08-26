@@ -5,7 +5,7 @@
 import { connect } from "react-redux";
 import { IAppState } from "../../Store";
 import { SellDetailScreen } from "./SellDetailScreen";
-import { StackActions } from "react-navigation";
+import { NavigationActions } from "react-navigation";
 import { RouteNames } from "../../Navigation";
 
 const mapStateToProps = (_state: IAppState) => ({});
@@ -14,7 +14,7 @@ const mapDispatchToProps = (dispatch: Function) => {
   return {
     uploadShoes: () => {
       dispatch(
-        StackActions.push({
+        NavigationActions.navigate({
           routeName: RouteNames.Tabs.SellTab.MainScreen,
           params: {
             isSellSuccess: true

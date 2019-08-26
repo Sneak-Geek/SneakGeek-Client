@@ -21,7 +21,7 @@ const mapDispatchToProps = (dispatch: Function) => {
     fetchShoes: () => dispatch(fetchShoes()),
     navigateToShoeDetail: (shoe: Shoe) => {
       const navConfig = {
-        routeName: RouteNames.Tabs.HomeTab.ShoeDetailScreen,
+        routeName: RouteNames.ShoeDetail,
         params: { shoe }
       };
       dispatch(NavigationActions.navigate(navConfig));
