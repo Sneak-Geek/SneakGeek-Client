@@ -7,7 +7,6 @@ import {
   View,
   SafeAreaView,
   Image,
-  Text,
   TouchableOpacity,
   FlatList,
   ScrollView
@@ -20,10 +19,13 @@ import {
   NavigationScreenProps
 } from "react-navigation";
 import { Icon } from "react-native-elements";
-import Styles from "./Styles";
-import { AppButton, ShoeCard } from "../Shared";
+import styles from "./styles";
+import { AppButton, ShoeCard } from "../../Shared/UI";
 import StarRating from "react-native-star-rating";
-// import { LineChart } from "react-native-svg-charts";
+import { LineChart, YAxis, Grid } from "react-native-svg-charts";
+import { Assets } from "../../Assets";
+import * as Text from "../../Shared/UI/Text";
+import { toCurrencyString } from "../../Utilities/StringUtil";
 
 export interface Props {
   navigation: NavigationScreenProp<NavigationRoute>;
@@ -34,6 +36,7 @@ export interface Props {
 
 interface State {
   favorited: boolean;
+  bottomBuyerHeight?: number;
 }
 
 export class ShoeDetailScreen extends React.Component<Props, State> {
@@ -70,25 +73,33 @@ export class ShoeDetailScreen extends React.Component<Props, State> {
   }
 
   public /** override */ render(): JSX.Element {
+    const bottomHeightStyle = this.state.bottomBuyerHeight
+      ? { marginBottom: this.state.bottomBuyerHeight + 20 }
+      : {};
     return (
-      <ScrollView style={{ flex: 1 }}>
-        <SafeAreaView style={{ flex: 1, alignItems: "stretch", justifyContent: "center" }}>
-          {this._renderShoeImages()}
-          {this._renderUserBehaviorButtons()}
-          {this._renderShoeTitle()}
-          {this._renderShoeDescription()}
-          {this._renderPriceGraph()}
-          {this._renderShoeDetail()}
-          {this._renderShoeRatings()}
-          {this._renderRelatedShoes()}
-        </SafeAreaView>
-      </ScrollView>
+      <SafeAreaView style={{ flex: 1, position: "relative" }}>
+        <View style={{ flex: 1 }}>
+          <ScrollView style={{ flex: 1 }} showsVerticalScrollIndicator={false}>
+            <View style={{ flex: 1, ...bottomHeightStyle }}>
+              {this._renderShoeImages()}
+              {this._renderUserBehaviorButtons()}
+              {this._renderShoeTitle()}
+              {this._renderShoeDescription()}
+              {this._renderPriceGraph()}
+              {this._renderShoeDetail()}
+              {this._renderShoeRatings()}
+              {this._renderRelatedShoes()}
+            </View>
+          </ScrollView>
+          {this._renderBuyerSection()}
+        </View>
+      </SafeAreaView>
     );
   }
 
   private _renderShoeImages(): JSX.Element {
     return (
-      <View style={Styles.shoeImageContainer}>
+      <View style={styles.shoeImageContainer}>
         <Image
           source={{ uri: this.shoe.imageUrl }}
           style={{ width: "100%", aspectRatio: 2 }}
@@ -100,7 +111,7 @@ export class ShoeDetailScreen extends React.Component<Props, State> {
 
   private _renderUserBehaviorButtons(): JSX.Element {
     return (
-      <View style={Styles.userButtonContainer}>
+      <View style={styles.userButtonContainer}>
         <Icon
           type={"ionicon"}
           name={this.state.favorited ? "ios-heart" : "ios-heart-empty"}
@@ -110,9 +121,9 @@ export class ShoeDetailScreen extends React.Component<Props, State> {
         <View style={{ flexDirection: "row" }}>
           <AppButton
             title={"Đã có"}
-            containerStyle={[Styles.buttonStyle, { marginRight: 10 }]}
+            containerStyle={[styles.buttonStyle, { marginRight: 10 }]}
           />
-          <AppButton title={"Bán"} containerStyle={Styles.buttonStyle} />
+          <AppButton title={"Bán"} containerStyle={styles.buttonStyle} />
         </View>
       </View>
     );
@@ -120,9 +131,9 @@ export class ShoeDetailScreen extends React.Component<Props, State> {
 
   private _renderShoeTitle(): JSX.Element {
     return (
-      <Text style={Styles.shoeTitle} numberOfLines={2}>
+      <Text.Title2 style={styles.shoeTitle} numberOfLines={2}>
         {this.shoe.title}
-      </Text>
+      </Text.Title2>
     );
   }
 
@@ -131,20 +142,39 @@ export class ShoeDetailScreen extends React.Component<Props, State> {
       return null;
     }
 
-    return <Text style={{ marginHorizontal: 30 }}>{this.shoe.description}</Text>;
+    return <Text.Body style={{ marginHorizontal: 30 }}>{this.shoe.description}</Text.Body>;
   }
 
   private _renderPriceGraph(): JSX.Element | null {
-    return null;
-    // const data = [50, 10, 40, 95, -4, -24, 85, 91, 35, 53, -53, 24, 50, -20, -80];
-    // return (
-    //   <LineChart
-    //     style={{ height: 200 }}
-    //     data={data}
-    //     svg={{ stroke: "#1CFACE" }}
-    //     contentInset={{ top: 20, bottom: 20 }}
-    //   />
-    // );
+    const data = [80, 81, 82, 80, 75, 85, 90, 95, 85, 92, 90, 98, 100];
+    const contentInset = { top: 20, bottom: 20 };
+
+    return (
+      <View style={{ height: 200, flexDirection: "row", paddingHorizontal: 20 }}>
+        <YAxis
+          data={data}
+          contentInset={contentInset}
+          svg={{
+            fill: "grey",
+            fontSize: 10
+          }}
+          numberOfTicks={5}
+        />
+        <LineChart
+          style={{ flex: 1, marginLeft: 16 }}
+          data={data}
+          svg={{
+            stroke: Assets.Styles.AppPrimaryColor,
+            strokeWidth: 3,
+            strokeLinecap: "round"
+          }}
+          contentInset={contentInset}
+          numberOfTicks={5}
+        >
+          <Grid />
+        </LineChart>
+      </View>
+    );
   }
 
   private _renderShoeDetail(): JSX.Element {
@@ -157,11 +187,11 @@ export class ShoeDetailScreen extends React.Component<Props, State> {
     const views: JSX.Element[] = [];
     fieldMapping.forEach((value: string, key: string) =>
       views.push(
-        <View style={Styles.infoRow}>
-          <Text style={{ color: "gray" }}>{value}</Text>
-          <Text style={{ maxWidth: "60%", textAlign: "right" }} numberOfLines={2}>
+        <View style={styles.infoRow}>
+          <Text.Caption style={{ color: "gray" }}>{value.toUpperCase()}</Text.Caption>
+          <Text.Body style={{ maxWidth: "60%", textAlign: "right" }} numberOfLines={2}>
             {this.shoe[key]}
-          </Text>
+          </Text.Body>
         </View>
       )
     );
@@ -169,37 +199,39 @@ export class ShoeDetailScreen extends React.Component<Props, State> {
   }
 
   private _renderShoeRatings(): JSX.Element {
-    const starColor: string = "#E2C115";
+    const starColor: string = Assets.Styles.AppPrimaryColor;
     return (
       <View style={{ flex: 1, paddingHorizontal: 20, marginTop: 40 }}>
-        <View style={Styles.ratingContainer}>
-          <Text style={Styles.ratingTitle}>Đánh giá sản phẩm</Text>
-          <Text style={Styles.ratingTitle}>3.5/5</Text>
+        <View style={styles.ratingContainer}>
+          <Text.Heading style={styles.ratingTitle}>Đánh giá sản phẩm</Text.Heading>
+          <Text.Heading style={styles.ratingTitle}>3.5/5</Text.Heading>
         </View>
         <View style={{ flex: 1, flexDirection: "column" }}>
-          <View style={Styles.reviewTitleContainer}>
-            <Text style={{ textAlign: "center", fontSize: 16 }}>Hoàng Phạm</Text>
+          <View style={styles.reviewTitleContainer}>
+            <Text.Caption style={{ textAlign: "center", fontWeight: "normal" }}>
+              Hoàng Phạm
+            </Text.Caption>
             <StarRating
               disabled={true}
               maxStars={5}
-              starSize={25}
+              starSize={17}
               rating={3.5}
               emptyStarColor={starColor}
               fullStarColor={starColor}
               starStyle={{ marginHorizontal: 2 }}
             />
           </View>
-          <Text numberOfLines={2} style={{ color: "darkgray" }}>
+          <Text.Body numberOfLines={2} style={{ color: "darkgray" }}>
             Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor
             incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud
             exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute
             irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla
             pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia
             deserunt mollit anim id est laborum.
-          </Text>
+          </Text.Body>
         </View>
         <TouchableOpacity style={{ alignSelf: "flex-end", marginTop: 10 }}>
-          <Text>Xem thêm</Text>
+          <Text.Body style={{ color: Assets.Styles.AppPrimaryColor }}>Xem thêm</Text.Body>
         </TouchableOpacity>
       </View>
     );
@@ -210,7 +242,9 @@ export class ShoeDetailScreen extends React.Component<Props, State> {
     const shoesData = shoes.length === 0 ? [] : shoes.slice(0, 5);
     return (
       <View>
-        <Text style={[Styles.ratingTitle, { margin: 20 }]}>Sản phẩm liên quan</Text>
+        <Text.Heading style={[styles.ratingTitle, { margin: 20 }]}>
+          Sản phẩm liên quan
+        </Text.Heading>
         <FlatList
           horizontal={true}
           data={shoesData}
@@ -223,6 +257,42 @@ export class ShoeDetailScreen extends React.Component<Props, State> {
           )}
           showsHorizontalScrollIndicator={false}
         />
+      </View>
+    );
+  }
+
+  private _renderBuyerSection(): JSX.Element {
+    const price = [{ condition: "mới", price: 1800000 }, { condition: "cũ", price: 1200000 }];
+    return (
+      <View style={styles.buyerContainer}>
+        <View style={styles.pullHandle} />
+        <FlatList
+          bounces={false}
+          data={price}
+          keyExtractor={(_itm, idx) => idx.toString()}
+          horizontal={true}
+          pagingEnabled={true}
+          renderItem={({ item }) => this._renderBuyListItem(item)}
+          showsHorizontalScrollIndicator={false}
+        />
+      </View>
+    );
+  }
+
+  private _renderBuyListItem(item: { condition: string; price: number }) {
+    return (
+      <View
+        style={styles.priceListItem}
+        onLayout={event =>
+          this.setState({
+            bottomBuyerHeight: event.nativeEvent.layout.height
+          })
+        }
+      >
+        <Text.Body style={{ color: "white" }}>Mua {item.condition}</Text.Body>
+        <Text.Title2 style={{ color: Assets.Styles.AppPrimaryColor }}>
+          {toCurrencyString(item.price.toString())}
+        </Text.Title2>
       </View>
     );
   }

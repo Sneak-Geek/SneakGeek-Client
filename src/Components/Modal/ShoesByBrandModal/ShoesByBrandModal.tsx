@@ -5,7 +5,7 @@
 import * as React from "react";
 import { FlatList, SafeAreaView, StyleSheet } from "react-native";
 import { Shoe } from "../../../Reducers";
-import { ShoeCard } from "../../Shared";
+import { ShoeCard } from "../../../Shared/UI";
 import { connect } from "react-redux";
 import { IAppState } from "../../../Store";
 import { NavigationActions } from "react-navigation";

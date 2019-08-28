@@ -14,7 +14,7 @@ import { View, SafeAreaView, Text, StyleSheet } from "react-native";
 import { Input, Icon } from "react-native-elements";
 import { BlurView } from "@react-native-community/blur";
 import { Shoe } from "../../../Reducers";
-import { ShoeCard } from "../../Shared";
+import { ShoeCard } from "../../../Shared/UI";
 
 export interface ISearchScreenProps {
   shoes: Shoe[];

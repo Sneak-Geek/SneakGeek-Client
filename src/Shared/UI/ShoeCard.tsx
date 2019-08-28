@@ -3,8 +3,10 @@
 //!
 
 import * as React from "react";
-import { Image, Text, StyleSheet, ViewStyle, TouchableOpacity } from "react-native";
+import { Image, StyleSheet, ViewStyle, TouchableOpacity } from "react-native";
+import * as Text from "./Text";
 import { Shoe } from "../../Reducers";
+import * as StringsUtil from "../../Utilities/StringUtil";
 
 interface IShoeCardProps {
   shoe: Shoe;
@@ -19,18 +21,18 @@ export class ShoeCard extends React.Component<IShoeCardProps> {
       <TouchableOpacity onPress={onPress} style={[styles.smallShoeContainer, style]}>
         <Image
           source={{ uri: shoe.imageUrl, cache: "default" }}
-          resizeMode={"contain"}
+          resizeMode={"center"}
           style={styles.smallShoeCard}
         />
-        <Text
-          style={styles.shoeSubTitle}
+        <Text.Subhead
+          style={{ marginTop: 40 }}
           numberOfLines={2}
           textBreakStrategy={"highQuality"}
           ellipsizeMode={"tail"}
         >
           {shoe.title}
-        </Text>
-        <Text style={styles.priceTag}>VND 3,150,000</Text>
+        </Text.Subhead>
+        <Text.Body style={styles.priceTag}>{StringsUtil.toCurrencyString("3150000")}</Text.Body>
       </TouchableOpacity>
     );
   }
@@ -40,17 +42,15 @@ const styles = StyleSheet.create({
   smallShoeContainer: {
     flex: 1,
     maxWidth: 150,
-    marginLeft: 20,
+    marginLeft: 30,
     marginBottom: 8,
     alignItems: "flex-start"
   },
+
   smallShoeCard: {
     flex: 1,
-    width: 160,
-    height: 80
-  },
-  shoeSubTitle: {
-    fontSize: 12
+    width: 140,
+    height: 70
   },
   priceTag: {
     marginTop: 15

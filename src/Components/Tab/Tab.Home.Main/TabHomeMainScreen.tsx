@@ -5,7 +5,6 @@
 import * as React from "react";
 import {
   StyleSheet,
-  Text,
   View,
   FlatList,
   ListRenderItemInfo,
@@ -13,12 +12,13 @@ import {
   SafeAreaView,
   ScrollView,
   Dimensions,
-  TextProps,
   ActivityIndicator,
   TouchableOpacity
 } from "react-native";
 import { Shoe } from "../../../Reducers";
-import { ShoeCard } from "../../Shared";
+import { ShoeCard } from "../../../Shared/UI";
+import * as Text from "../../../Shared/UI/Text";
+import { Assets } from "../../../Assets";
 
 export interface ITabHomeMainScreenProps {
   shoes: Shoe[];
@@ -46,7 +46,7 @@ export class TabHomeMainScreen extends React.Component<ITabHomeMainScreenProps> 
           {this._renderUserCustomizeFeed()}
           {this._renderByBrand("Nike")}
           {this._renderByBrand("adidas")}
-          {this._renderByBrand("Jordan")}
+          {this._renderByBrand("Jordan", false)}
         </ScrollView>
       </SafeAreaView>
     );
@@ -56,12 +56,12 @@ export class TabHomeMainScreen extends React.Component<ITabHomeMainScreenProps> 
     const shoesData = this.props.shoes.length > 8 ? this.props.shoes.slice(0, 8) : [];
     return (
       <View style={{ flex: 1 }}>
-        <Text style={styles.sectionTitle}>Đang hot</Text>
+        <Text.Title1 style={styles.sectionTitle}>Đang hot</Text.Title1>
         <FlatList
           horizontal={true}
           data={shoesData}
           keyExtractor={(shoe: Shoe, _idx: number) => shoe.title}
-          renderItem={this._renderTrendingShoesCard.bind(this)}
+          renderItem={this._renderTrendingShoe.bind(this)}
           pagingEnabled={true}
           showsHorizontalScrollIndicator={false}
         />
@@ -80,7 +80,7 @@ export class TabHomeMainScreen extends React.Component<ITabHomeMainScreenProps> 
 
     return (
       <View style={{ flex: 1 }}>
-        <Text style={styles.subtitle}>Dành cho bạn</Text>
+        <Text.Title2 style={styles.subtitle}>Dành cho bạn</Text.Title2>
         <FlatList
           horizontal={true}
           data={shoesData}
@@ -95,7 +95,7 @@ export class TabHomeMainScreen extends React.Component<ITabHomeMainScreenProps> 
     );
   }
 
-  private _renderByBrand(brandName: string) {
+  private _renderByBrand(brandName: string, shouldRenderDivider: boolean = true) {
     const shoesData =
       this.props.shoes.length > 0
         ? this.props.shoes
@@ -106,7 +106,7 @@ export class TabHomeMainScreen extends React.Component<ITabHomeMainScreenProps> 
     return (
       <View style={{ flex: 1 }}>
         <TouchableOpacity onPress={() => {}}>
-          <Text style={styles.subtitle}>{brandName} - Nổi bật</Text>
+          <Text.Title2 style={styles.subtitle}>{brandName} - Nổi bật</Text.Title2>
         </TouchableOpacity>
         <FlatList
           horizontal={true}
@@ -117,31 +117,33 @@ export class TabHomeMainScreen extends React.Component<ITabHomeMainScreenProps> 
           )}
           showsHorizontalScrollIndicator={false}
         />
-        {this._renderDivider()}
+        {shouldRenderDivider && this._renderDivider()}
       </View>
     );
   }
 
-  private _renderTrendingShoesCard(listData: ListRenderItemInfo<Shoe>) {
+  private _renderTrendingShoe(listData: ListRenderItemInfo<Shoe>) {
     const shoe = listData.item;
 
     return (
-      <TouchableOpacity
-        onPress={() => {
-          this.props.navigateToShoeDetail(shoe);
-        }}
-      >
+      <View style={styles.shoeCardListItem}>
         <View style={styles.shoeCardContainer}>
           <Image
             source={{ uri: shoe.imageUrl, cache: "default" }}
             style={styles.shoeCard}
-            resizeMode={"contain"}
+            resizeMode={"center"}
           />
-          <Text style={styles.shoeTitle} numberOfLines={1} ellipsizeMode={"tail"}>
-            {shoe.title}
-          </Text>
+          <TouchableOpacity
+            onPress={() => {
+              this.props.navigateToShoeDetail(shoe);
+            }}
+          >
+            <Text.Title2 numberOfLines={2} style={styles.shoeTitle} ellipsizeMode={"tail"}>
+              {shoe.title}
+            </Text.Title2>
+          </TouchableOpacity>
         </View>
-      </TouchableOpacity>
+      </View>
     );
   }
 }
@@ -157,34 +159,49 @@ const styles = StyleSheet.create({
     flex: 1,
     height: 0.5,
     backgroundColor: "#BCBBC1",
-    marginVertical: 20
+    marginVertical: 20,
+    marginHorizontal: 17
   },
   sectionTitle: {
     fontSize: 28,
     marginLeft: 15,
-    marginVertical: 25
+    marginVertical: 25,
+    color: Assets.Styles.AppPrimaryColor
   },
+
+  shoeCardListItem: {
+    width: Dimensions.get("window").width
+  },
+
   shoeCardContainer: {
-    width: Dimensions.get("window").width,
-    paddingHorizontal: 20,
+    marginHorizontal: 20,
+    marginTop: 20,
+    marginBottom: 10,
     flexDirection: "column",
     alignItems: "center",
     justifyContent: "center",
-    flex: 1
+    ...Assets.Styles.CardStyle,
+    backgroundColor: "white",
+    borderRadius: Assets.Styles.ButtonBorderRadius,
+    paddingBottom: 10
   },
+
   shoeCard: {
     flex: 1,
-    width: 300,
-    height: 150,
+    width: 200,
+    height: 100,
     marginVertical: 25
   },
   shoeTitle: {
-    fontSize: 20
-  } as TextProps,
+    fontSize: 20,
+    textAlign: "center",
+    marginHorizontal: 25
+  },
 
   subtitle: {
     fontSize: 20,
     marginLeft: 20,
-    marginVertical: 25
+    marginVertical: 25,
+    color: Assets.Styles.AppPrimaryColor
   }
 });

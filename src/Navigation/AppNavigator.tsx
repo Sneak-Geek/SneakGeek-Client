@@ -3,6 +3,7 @@
 //!
 
 import * as React from "react";
+import { View, StyleSheet, StatusBar } from "react-native";
 import {
   createReactNavigationReduxMiddleware,
   createReduxContainer
@@ -27,10 +28,13 @@ interface IMainAppNavigatorProps {
 class MainAppNavigator extends React.Component<IMainAppNavigatorProps> {
   render() {
     return (
-      <UnconnectedMainAppNavigator
-        dispatch={this.props.dispatch}
-        state={this.props.navigation}
-      />
+      <View style={StyleSheet.absoluteFill}>
+        <StatusBar barStyle={"dark-content"} />
+        <UnconnectedMainAppNavigator
+          dispatch={this.props.dispatch}
+          state={this.props.navigation}
+        />
+      </View>
     );
   }
 }

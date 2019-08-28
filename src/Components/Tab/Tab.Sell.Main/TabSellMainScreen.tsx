@@ -6,7 +6,7 @@ import * as React from "react";
 import { View, SafeAreaView, ScrollView, StyleSheet } from "react-native";
 import { Shoe } from "../../../Reducers";
 import { FlatList, TouchableOpacity } from "react-native-gesture-handler";
-import { ShoeProgressCircle } from "../../Shared";
+import { ShoeProgressCircle } from "../../../Shared/UI";
 import PurchaseComponent from "../PurchaseComponent";
 import { Icon } from "react-native-elements";
 import {
@@ -14,7 +14,7 @@ import {
   NavigationScreenProp,
   NavigationRoute
 } from "react-navigation";
-import * as Text from "../../Shared/Text";
+import * as Text from "../../../Shared/UI/Text";
 
 export interface ISellTabMainProps {
   navigation: NavigationScreenProp<NavigationRoute>;

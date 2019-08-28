@@ -12,13 +12,23 @@ export const Assets = {
     AppPrimaryColor: "#1ABC9C",
     AppSecondaryColor: "#FFFFFF",
     AppAccentColor: "#000000",
+    AppSecondaryColorBlurred: "rgba(47, 47, 47, 0.95)",
     ButtonHeight: 52,
     ButtonPrimaryColor: "#000000",
     ButtonBorderRadius: 4,
     ButtonDisabledColor: "#DADADA",
     ButtonPadding: 15,
     TextPrimaryColor: "#000000",
-    TextSecondaryColor: "#FFFFFF"
+    TextSecondaryColor: "#FFFFFF",
+    CardStyle: {
+      shadowColor: "#000000",
+      shadowOffset: {
+        width: 1,
+        height: 2
+      },
+      shadowRadius: 3,
+      shadowOpacity: 0.5
+    }
   },
   Configuration: {
     GoogleWebClientID:

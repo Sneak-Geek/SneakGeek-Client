@@ -3,51 +3,49 @@
 //!
 
 import * as React from "react";
-import { Text, StyleSheet, StyleProp, TextStyle } from "react-native";
+import { Text, StyleSheet, TextProps } from "react-native";
 
-type TextProps = {
-  style?: StyleProp<TextStyle>;
-};
+type CustomTextProps = TextProps;
 
-export class Title1 extends React.PureComponent<TextProps> {
+export class Title1 extends React.PureComponent<CustomTextProps> {
   public /** override */ render(): JSX.Element {
     return <Text {...this.props} style={[this.props.style, styles.title1]} />;
   }
 }
 
-export class Title2 extends React.PureComponent<TextProps> {
+export class Title2 extends React.PureComponent<CustomTextProps> {
   public /** override */ render(): JSX.Element {
     return <Text {...this.props} style={[this.props.style, styles.title2]} />;
   }
 }
 
-export class Heading extends React.PureComponent<TextProps> {
+export class Heading extends React.PureComponent<CustomTextProps> {
   public /** override */ render(): JSX.Element {
     return <Text {...this.props} style={[this.props.style, styles.heading]} />;
   }
 }
 
-export class Display extends React.PureComponent<TextProps> {
+export class Display extends React.PureComponent<CustomTextProps> {
   public /** override */ render(): JSX.Element {
     return <Text {...this.props} style={[this.props.style, styles.display]} />;
   }
 }
 
-export class Subhead extends React.PureComponent<TextProps> {
+export class Subhead extends React.PureComponent<CustomTextProps> {
   public /** override */ render(): JSX.Element {
-    return <Text {...this.props} style={[this.props.style, styles.subhead]} />;
+    return <Text {...this.props} style={[styles.subhead, this.props.style]} />;
   }
 }
 
-export class Body extends React.PureComponent<TextProps> {
+export class Body extends React.PureComponent<CustomTextProps> {
   public /** override */ render(): JSX.Element {
     return <Text {...this.props} style={[this.props.style, styles.body]} />;
   }
 }
 
-export class Caption extends React.PureComponent<TextProps> {
+export class Caption extends React.PureComponent<CustomTextProps> {
   public /** override */ render(): JSX.Element {
-    return <Text {...this.props} style={[this.props.style, styles.caption]} />;
+    return <Text {...this.props} style={[styles.caption, this.props.style]} />;
   }
 }
 

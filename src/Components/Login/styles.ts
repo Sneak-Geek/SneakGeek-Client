@@ -8,14 +8,13 @@ import { Assets } from "../../Assets";
 export default StyleSheet.create({
   rootContainer: {
     flex: 1,
-    paddingVertical: 10,
-    paddingHorizontal: 42,
     backgroundColor: "white",
     flexDirection: "column",
     justifyContent: "space-between"
   } as ViewStyle,
 
   socialContainer: {
+    marginHorizontal: 42,
     height: "45%",
     alignItems: "stretch",
     flexDirection: "column",
@@ -42,11 +41,11 @@ export default StyleSheet.create({
   },
 
   label: {
-    fontSize: 18
+    marginBottom: 20
   } as ViewStyle,
 
   socialLabel: {
-    marginBottom: 20
+    marginHorizontal: 42
   } as ViewStyle,
 
   buttonContainer: {
@@ -77,7 +76,8 @@ export default StyleSheet.create({
   separator: {
     backgroundColor: "#BCBBC1",
     height: 1,
-    alignSelf: "stretch"
+    alignSelf: "stretch",
+    marginHorizontal: 42
   } as ViewStyle,
 
   emailContainerStyle: {
@@ -86,7 +86,8 @@ export default StyleSheet.create({
     borderWidth: 1,
     justifyContent: "flex-start",
     marginTop: 20,
-    height: Assets.Styles.ButtonHeight
+    height: Assets.Styles.ButtonHeight,
+    marginHorizontal: 42
   } as ViewStyle,
 
   emailInputStyle: {
@@ -97,14 +98,16 @@ export default StyleSheet.create({
 
   authButtonContainer: {
     position: "absolute",
-    bottom: "10%",
+    bottom: 0,
     left: 0,
     right: 0,
-    alignItems: "center"
+    alignItems: "center",
+    width: "100%"
   },
 
   authButton: {
-    width: 169,
+    flex: 1,
+    width: "100%",
     height: Assets.Styles.ButtonHeight
   } as ViewStyle
 });

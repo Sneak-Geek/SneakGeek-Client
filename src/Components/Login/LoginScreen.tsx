@@ -3,11 +3,11 @@
 //!
 
 import * as React from "react";
-import { View, TouchableOpacity, Image } from "react-native";
+import { View, TouchableOpacity, Image, SafeAreaView } from "react-native";
 import styles from "./styles";
 import { Input, Button, Icon } from "react-native-elements";
 import { Account } from "../../Reducers";
-import * as Text from "../Shared/Text";
+import * as Text from "../../Shared/UI/Text";
 import { Assets } from "../../Assets";
 import * as StringUtil from "../../Utilities/StringUtil";
 
@@ -43,18 +43,18 @@ export default class LoginScreen extends React.Component<ILoginScreenProps, Stat
 
   public /** override */ render() {
     return (
-      <View style={styles.rootContainer}>
+      <SafeAreaView style={styles.rootContainer}>
         {this._renderSocialContainer()}
         <View style={styles.separator} />
         {this._renderEmailBasedContainer()}
-      </View>
+      </SafeAreaView>
     );
   }
 
   private _renderSocialContainer() {
     return (
       <View style={styles.socialContainer}>
-        <Text.Body style={[styles.label, styles.socialLabel]}>Đăng nhập qua</Text.Body>
+        <Text.Body style={styles.label}>Đăng nhập qua</Text.Body>
         {this._renderSocialButton(
           "Tài khoản Facebook",
           Assets.Icons.Facebook,
@@ -83,10 +83,11 @@ export default class LoginScreen extends React.Component<ILoginScreenProps, Stat
   private _renderEmailBasedContainer() {
     return (
       <View style={styles.emailBasedContainer}>
-        <Text.Body style={styles.label}>Hoặc sử dụng email</Text.Body>
+        <Text.Body style={styles.socialLabel}>Hoặc sử dụng email</Text.Body>
         <Input
           value={this.state.currentEmail}
           onChangeText={currentEmail => this.setState({ currentEmail })}
+          containerStyle={{ width: "100%", paddingHorizontal: 0 }}
           inputContainerStyle={styles.emailContainerStyle}
           placeholder={"taikhoan@email.com"}
           leftIcon={
@@ -103,6 +104,7 @@ export default class LoginScreen extends React.Component<ILoginScreenProps, Stat
         <View style={styles.authButtonContainer}>
           <Button
             title="Đăng nhập"
+            containerStyle={{ width: "100%" }}
             buttonStyle={[
               styles.authButton,
               {

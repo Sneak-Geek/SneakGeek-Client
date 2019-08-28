@@ -9,7 +9,7 @@ import { SellOrder } from "../SellDetailScreen";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import { Assets } from "../../../Assets";
 import ImagePicker, { ImagePickerResponse } from "react-native-image-picker";
-import * as Text from "../../Shared/Text";
+import * as Text from "../../../Shared/UI/Text";
 
 interface Props {
   orderSummary: SellOrder;

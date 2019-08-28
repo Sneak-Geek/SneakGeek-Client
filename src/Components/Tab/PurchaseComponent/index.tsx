@@ -5,7 +5,7 @@
 import * as React from "react";
 import { View, Text, StyleSheet, FlatList } from "react-native";
 import { Shoe } from "../../../Reducers";
-import { HorizontalShoeCard } from "../../Shared";
+import { HorizontalShoeCard } from "../../../Shared/UI";
 
 export default class PurchaseComponents<P = {}, S = {}> extends React.Component<P, S> {
   public /** abstract */ render(): React.ReactNode {

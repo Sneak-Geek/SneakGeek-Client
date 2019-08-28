@@ -3,6 +3,7 @@
 //!
 
 import { StyleSheet, Dimensions, ViewStyle, TextStyle } from "react-native";
+import { Assets } from "../../Assets";
 
 const dimension = Dimensions.get("window");
 
@@ -32,9 +33,8 @@ export default StyleSheet.create({
   },
 
   shoeTitle: {
-    fontSize: 22,
     marginVertical: 20,
-    marginHorizontal: 65,
+    marginHorizontal: 25,
     textAlign: "center"
   } as TextStyle,
 
@@ -42,7 +42,7 @@ export default StyleSheet.create({
     flex: 1,
     flexDirection: "row",
     justifyContent: "space-between",
-    marginVertical: 10
+    marginVertical: 15
   },
 
   ratingTitle: {
@@ -61,6 +61,33 @@ export default StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "space-between",
-    marginBottom: 20
+    marginBottom: 5
+  },
+
+  buyerContainer: {
+    position: "absolute",
+    bottom: 0,
+    left: 0,
+    right: 0,
+    flex: 1,
+    flexDirection: "column",
+    alignItems: "center",
+    backgroundColor: Assets.Styles.AppSecondaryColorBlurred
+  },
+
+  priceListItem: {
+    width: (Dimensions.get("window").width * 3) / 5,
+    alignItems: "center",
+    justifyContent: "center",
+    paddingVertical: 10,
+    flexDirection: "column"
+  },
+
+  pullHandle: {
+    width: 60,
+    height: 3,
+    borderRadius: Assets.Styles.ButtonBorderRadius,
+    backgroundColor: Assets.Styles.AppSecondaryColor,
+    marginTop: 12
   }
 });
