@@ -25,7 +25,7 @@ export class ShoeCard extends React.Component<IShoeCardProps> {
           style={styles.smallShoeCard}
         />
         <Text.Subhead
-          style={{ marginTop: 40 }}
+          style={{ marginTop: 30, alignSelf: "flex-start" }}
           numberOfLines={2}
           textBreakStrategy={"highQuality"}
           ellipsizeMode={"tail"}
@@ -41,16 +41,18 @@ export class ShoeCard extends React.Component<IShoeCardProps> {
 const styles = StyleSheet.create({
   smallShoeContainer: {
     flex: 1,
+    flexDirection: "column",
     maxWidth: 150,
     marginLeft: 30,
     marginBottom: 8,
-    alignItems: "flex-start"
+    alignItems: "flex-start",
+    justifyContent: "flex-start"
   },
 
   smallShoeCard: {
     flex: 1,
     width: 140,
-    height: 70
+    height: 90
   },
   priceTag: {
     marginTop: 15

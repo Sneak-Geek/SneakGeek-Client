@@ -41,7 +41,7 @@ export class TabHomeMainScreen extends React.Component<ITabHomeMainScreenProps> 
     }
     return (
       <SafeAreaView style={styles.container}>
-        <ScrollView>
+        <ScrollView showsVerticalScrollIndicator={false}>
           {this._renderTrendingShoes()}
           {this._renderUserCustomizeFeed()}
           {this._renderByBrand("Nike")}
@@ -165,8 +165,7 @@ const styles = StyleSheet.create({
   sectionTitle: {
     fontSize: 28,
     marginLeft: 15,
-    marginVertical: 25,
-    color: Assets.Styles.AppPrimaryColor
+    marginVertical: 25
   },
 
   shoeCardListItem: {
@@ -180,8 +179,6 @@ const styles = StyleSheet.create({
     flexDirection: "column",
     alignItems: "center",
     justifyContent: "center",
-    ...Assets.Styles.CardStyle,
-    backgroundColor: "white",
     borderRadius: Assets.Styles.ButtonBorderRadius,
     paddingBottom: 10
   },
@@ -201,7 +198,6 @@ const styles = StyleSheet.create({
   subtitle: {
     fontSize: 20,
     marginLeft: 20,
-    marginVertical: 25,
-    color: Assets.Styles.AppPrimaryColor
+    marginVertical: 25
   }
 });

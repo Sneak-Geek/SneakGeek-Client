@@ -37,6 +37,8 @@ export interface Props {
 interface State {
   favorited: boolean;
   bottomBuyerHeight?: number;
+  isBuyTabClicked?: boolean;
+  priceListIndex: number;
 }
 
 export class ShoeDetailScreen extends React.Component<Props, State> {
@@ -68,7 +70,8 @@ export class ShoeDetailScreen extends React.Component<Props, State> {
 
     this.shoe = this.props.navigation.getParam("shoe");
     this.state = {
-      favorited: false
+      favorited: false,
+      priceListIndex: 0
     };
   }
 
@@ -77,8 +80,14 @@ export class ShoeDetailScreen extends React.Component<Props, State> {
       ? { marginBottom: this.state.bottomBuyerHeight + 20 }
       : {};
     return (
-      <SafeAreaView style={{ flex: 1, position: "relative" }}>
-        <View style={{ flex: 1 }}>
+      <SafeAreaView
+        style={{
+          flex: 1,
+          position: "relative",
+          backgroundColor: Assets.Styles.AppSecondaryColorBlurred
+        }}
+      >
+        <View style={{ flex: 1, backgroundColor: "white" }}>
           <ScrollView style={{ flex: 1 }} showsVerticalScrollIndicator={false}>
             <View style={{ flex: 1, ...bottomHeightStyle }}>
               {this._renderShoeImages()}
@@ -203,7 +212,9 @@ export class ShoeDetailScreen extends React.Component<Props, State> {
     return (
       <View style={{ flex: 1, paddingHorizontal: 20, marginTop: 40 }}>
         <View style={styles.ratingContainer}>
-          <Text.Heading style={styles.ratingTitle}>Đánh giá sản phẩm</Text.Heading>
+          <Text.Heading style={styles.ratingTitle}>
+            {"Đánh giá sản phẩm".toUpperCase()}
+          </Text.Heading>
           <Text.Heading style={styles.ratingTitle}>3.5/5</Text.Heading>
         </View>
         <View style={{ flex: 1, flexDirection: "column" }}>
@@ -243,7 +254,7 @@ export class ShoeDetailScreen extends React.Component<Props, State> {
     return (
       <View>
         <Text.Heading style={[styles.ratingTitle, { margin: 20 }]}>
-          Sản phẩm liên quan
+          {"Sản phẩm liên quan".toUpperCase()}
         </Text.Heading>
         <FlatList
           horizontal={true}
@@ -264,22 +275,26 @@ export class ShoeDetailScreen extends React.Component<Props, State> {
   private _renderBuyerSection(): JSX.Element {
     const price = [{ condition: "mới", price: 1800000 }, { condition: "cũ", price: 1200000 }];
     return (
-      <View style={styles.buyerContainer}>
-        <View style={styles.pullHandle} />
+      <View
+        style={!this.state.isBuyTabClicked ? styles.buyerContainer : styles.buyerContainerFull}
+      >
+        <TouchableOpacity
+          style={styles.pullHandle}
+          onPress={() => this.setState({ isBuyTabClicked: !this.state.isBuyTabClicked })}
+        />
         <FlatList
           bounces={false}
           data={price}
           keyExtractor={(_itm, idx) => idx.toString()}
           horizontal={true}
-          pagingEnabled={true}
-          renderItem={({ item }) => this._renderBuyListItem(item)}
+          renderItem={({ item, index }) => this._renderBuyListItem(item, index)}
           showsHorizontalScrollIndicator={false}
         />
       </View>
     );
   }
 
-  private _renderBuyListItem(item: { condition: string; price: number }) {
+  private _renderBuyListItem(item: { condition: string; price: number }, index: number) {
     return (
       <View
         style={styles.priceListItem}
@@ -293,7 +308,23 @@ export class ShoeDetailScreen extends React.Component<Props, State> {
         <Text.Title2 style={{ color: Assets.Styles.AppPrimaryColor }}>
           {toCurrencyString(item.price.toString())}
         </Text.Title2>
+        {this.state.isBuyTabClicked && index === this.state.priceListIndex && (
+          <View style={styles.divider} />
+        )}
+        {this.state.isBuyTabClicked && this._renderAvailableSize()}
       </View>
+    );
+  }
+
+  private _renderAvailableSize() {
+    const sizes = [8, 8.5, 9, 9.5, 10, 10.5, 11, 11.5, 12];
+    return (
+      <FlatList
+        data={sizes}
+        showsVerticalScrollIndicator={false}
+        renderItem={({ item }) => <Text.Body style={styles.shoeSize}>{item}</Text.Body>}
+        keyExtractor={(_itm, idx) => idx.toString()}
+      />
     );
   }
 }

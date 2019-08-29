@@ -129,7 +129,11 @@ export default class TabSearch extends React.Component<ISearchScreenProps, ISear
       </View>
     ));
 
-    return <View style={styles.buttonContainer}>{buttons}</View>;
+    return (
+      <ScrollView horizontal={true} showsHorizontalScrollIndicator={false}>
+        {buttons}
+      </ScrollView>
+    );
   }
 
   private _toggleSearchFocus(): void {
@@ -169,7 +173,8 @@ export default class TabSearch extends React.Component<ISearchScreenProps, ISear
         renderItem={({ item }) => (
           <ShoeCard shoe={item} onPress={() => onShoeClick(isForSell, item)} />
         )}
-        contentContainerStyle={styles.gridContainer}
+        numColumns={2}
+        style={{ marginTop: 30 }}
       />
     );
   }
@@ -193,11 +198,6 @@ const styles = StyleSheet.create({
     fontSize: 16
   },
 
-  buttonContainer: {
-    flexDirection: "row",
-    flexWrap: "wrap"
-  },
-
   keywordWrapper: {
     paddingVertical: 12,
     paddingHorizontal: 18,
@@ -216,11 +216,5 @@ const styles = StyleSheet.create({
   searchResult: {
     marginVertical: 15,
     fontSize: 14
-  },
-
-  gridContainer: {
-    justifyContent: "flex-start",
-    flexDirection: "row",
-    flexWrap: "wrap"
   }
 });

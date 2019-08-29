@@ -52,17 +52,17 @@ export class Caption extends React.PureComponent<CustomTextProps> {
 const styles = StyleSheet.create({
   title1: {
     fontSize: 34,
-    fontWeight: "bold"
+    fontWeight: "600"
   },
 
   title2: {
     fontSize: 22,
-    fontWeight: "bold"
+    fontWeight: "600"
   },
 
   heading: {
     fontSize: 17,
-    fontWeight: "bold"
+    fontWeight: "600"
   },
 
   display: {
@@ -83,6 +83,6 @@ const styles = StyleSheet.create({
 
   caption: {
     fontSize: 13,
-    fontWeight: "600"
+    fontWeight: "400"
   }
 });

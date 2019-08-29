@@ -75,11 +75,19 @@ export default StyleSheet.create({
     backgroundColor: Assets.Styles.AppSecondaryColorBlurred
   },
 
-  priceListItem: {
-    width: (Dimensions.get("window").width * 3) / 5,
+  buyerContainerFull: {
+    width: Dimensions.get("window").width,
+    height: Dimensions.get("window").height,
+    flexDirection: "column",
     alignItems: "center",
-    justifyContent: "center",
-    paddingVertical: 10,
+    backgroundColor: Assets.Styles.AppSecondaryColorBlurred
+  },
+
+  priceListItem: {
+    width: (Dimensions.get("window").width * 5) / 7,
+    alignItems: "center",
+    justifyContent: "flex-start",
+    paddingTop: 10,
     flexDirection: "column"
   },
 
@@ -89,5 +97,18 @@ export default StyleSheet.create({
     borderRadius: Assets.Styles.ButtonBorderRadius,
     backgroundColor: Assets.Styles.AppSecondaryColor,
     marginTop: 12
+  },
+
+  divider: {
+    width: 130,
+    marginHorizontal: 35,
+    height: 1,
+    backgroundColor: Assets.Styles.AppSecondaryColor,
+    marginVertical: 15
+  },
+
+  shoeSize: {
+    color: Assets.Styles.AppSecondaryColor,
+    marginVertical: 35
   }
 });
