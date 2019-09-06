@@ -102,6 +102,13 @@
 		<string>SimpleLineIcons.ttf</string>
 		<string>Octicons.ttf</string>
 		<string>Zocial.ttf</string>
+		<string>Fontisto.ttf</string>
+    <string>RobotoCondensed-Bold.ttf</string>
+    <string>RobotoCondensed-BoldItalic.ttf</string>
+    <string>RobotoCondensed-Light.ttf</string>
+    <string>RobotoCondensed-LightItalic.ttf</string>
+    <string>RobotoCondensed-Regular.ttf</string>
+    <string>RobotoCondensed-RegularItalic.ttf</string>
 	</array>
 	<key>UILaunchStoryboardName</key>
 	<string>LaunchScreen</string>

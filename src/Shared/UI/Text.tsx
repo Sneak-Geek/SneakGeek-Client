@@ -51,38 +51,38 @@ export class Caption extends React.PureComponent<CustomTextProps> {
 
 const styles = StyleSheet.create({
   title1: {
-    fontSize: 34,
-    fontWeight: "600"
+    fontFamily: "RobotoCondensed-Bold",
+    fontSize: 34
   },
 
   title2: {
     fontSize: 22,
-    fontWeight: "600"
+    fontFamily: "RobotoCondensed-Bold"
   },
 
   heading: {
     fontSize: 17,
-    fontWeight: "600"
+    fontFamily: "RobotoCondensed-Bold"
   },
 
   display: {
     fontSize: 14,
-    fontWeight: "600"
+    fontFamily: "RobotoCondensed-Bold"
   },
 
   subhead: {
     fontSize: 14,
-    fontWeight: "normal",
+    fontFamily: "RobotoCondensed-Regular",
     color: "rgba(0, 0, 0, 0.6)"
   },
 
   body: {
     fontSize: 17,
-    fontWeight: "normal"
+    fontFamily: "RobotoCondensed-Regular"
   },
 
   caption: {
     fontSize: 13,
-    fontWeight: "400"
+    fontFamily: "RobotCondensed-Light"
   }
 });
