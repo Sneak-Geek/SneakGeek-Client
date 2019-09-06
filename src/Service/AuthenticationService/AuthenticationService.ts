@@ -9,7 +9,7 @@ import { injectable } from "inversify";
 
 @injectable()
 export class AuthenticationService implements IAuthenticationService {
-  public async /** throws */ login(
+  public async /** override */ login(
     token: string,
     provider: AuthProvider
   ): Promise<AccountPayload | undefined> {

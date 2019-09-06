@@ -10,21 +10,35 @@ import {
   NavigationScreenProp,
   NavigationRoute
 } from "react-navigation";
-import { View, SafeAreaView, Text, StyleSheet } from "react-native";
+import {
+  View,
+  SafeAreaView,
+  StyleSheet,
+  ActivityIndicator,
+  NativeSyntheticEvent
+} from "react-native";
 import { Input, Icon } from "react-native-elements";
 import { BlurView } from "@react-native-community/blur";
 import { Shoe } from "../../../Reducers";
 import { ShoeCard } from "../../../Shared/UI";
+import { SearchShoePayload } from "../../../Actions";
+import { SearchShoeState } from "../../../Shared/State";
+import * as Text from "../../../Shared/UI/Text";
+import { Assets } from "../../../Assets";
 
 export interface ISearchScreenProps {
   shoes: Shoe[];
-  onShoeClick: (forSell: boolean, shoe: Shoe) => void;
+  searchResult: SearchShoePayload;
   navigation?: NavigationScreenProp<NavigationRoute>;
+
+  onShoeClick: (forSell: boolean, shoe: Shoe) => void;
+  search: (key: string) => void;
 }
 
 interface ISearchScreenState {
+  searchKey: string;
   searchFocus: boolean;
-  searchResult: Shoe[];
+  shouldRenderTopShoes: boolean;
 }
 
 export default class TabSearch extends React.Component<ISearchScreenProps, ISearchScreenState> {
@@ -36,25 +50,35 @@ export default class TabSearch extends React.Component<ISearchScreenProps, ISear
   };
 
   private _searchInputComponent: Input | null = null;
+  private isForSell: boolean = false;
 
   public constructor /** override */(props: any) {
     super(props);
     this.state = {
+      searchKey: "",
       searchFocus: false,
-      searchResult: []
+      shouldRenderTopShoes: true
     };
+    this.isForSell = this.props.navigation
+      ? this.props.navigation.getParam("isForSell") === true
+      : false;
   }
 
   public /** override */ render(): React.ReactNode {
+    const { searchResult } = this.props;
+    const isSearchReady = searchResult.shoes && searchResult.shoes.length > 0;
     return (
       <SafeAreaView style={{ flex: 1 }}>
         {this._renderSearchBar()}
         <View style={styles.contentContainer}>
-          {this.state.searchFocus && this._renderSearchContent()}
+          {this.state.searchFocus &&
+            searchResult.shoes &&
+            searchResult.shoes.length > 0 &&
+            this._renderSearchContent()}
           <ScrollView>
             {this._renderKeywordHeaderAndFilter()}
             {this._renderHotKeywords()}
-            {this._renderTopShoes()}
+            {isSearchReady ? this._renderSearchResult() : this._renderTopShoes()}
           </ScrollView>
         </View>
       </SafeAreaView>
@@ -81,26 +105,27 @@ export default class TabSearch extends React.Component<ISearchScreenProps, ISear
         }
         labelStyle={{ fontSize: 16 }}
         onChangeText={this._search.bind(this)}
+        onEndEditing={this._onEndEditing.bind(this)}
       />
     );
   }
 
   private _renderSearchContent(): React.ReactNode {
+    const { searchResult } = this.props;
     return (
-      <BlurView
-        blurType={"light"}
-        blurAmount={80}
-        style={[
-          StyleSheet.absoluteFill,
-          { zIndex: 100, paddingHorizontal: 25, paddingTop: 20 }
-        ]}
-      >
-        <FlatList
-          data={this.state.searchResult}
-          keyExtractor={(shoe, _index) => shoe.title}
-          renderItem={({ item }) => <Text style={styles.searchResult}>{item.title}</Text>}
-          showsVerticalScrollIndicator={false}
-        />
+      <BlurView blurType={"light"} blurAmount={20} style={styles.searchContainer}>
+        {searchResult.state === SearchShoeState.SEARCHING && <ActivityIndicator />}
+        {searchResult.shoes && searchResult.shoes.length > 0 && (
+          <FlatList
+            style={{ borderBottomWidth: 1, borderBottomColor: "black" }}
+            data={searchResult.shoes}
+            keyExtractor={(shoe, _index) => shoe.title}
+            renderItem={({ item }) => (
+              <Text.Display style={styles.searchResult}>{item.title}</Text.Display>
+            )}
+            showsVerticalScrollIndicator={false}
+          />
+        )}
       </BlurView>
     );
   }
@@ -108,8 +133,8 @@ export default class TabSearch extends React.Component<ISearchScreenProps, ISear
   private _renderKeywordHeaderAndFilter(): React.ReactNode {
     return (
       <View style={styles.keywordContainer}>
-        <Text style={styles.keywordLabel}>Từ khoá hot</Text>
-        <Icon type={"ionicon"} name={"md-options"} size={25} />
+        <Text.Subhead>Từ khoá hot</Text.Subhead>
+        <Icon type={"ionicon"} name={"md-options"} size={20} />
       </View>
     );
   }
@@ -125,7 +150,7 @@ export default class TabSearch extends React.Component<ISearchScreenProps, ISear
 
     const buttons = keywords.map((k, idx) => (
       <View style={styles.keywordWrapper} key={idx}>
-        <Text style={styles.keywordStyle}>{k}</Text>
+        <Text.Body style={styles.keywordStyle}>{k}</Text.Body>
       </View>
     ));
 
@@ -136,42 +161,64 @@ export default class TabSearch extends React.Component<ISearchScreenProps, ISear
     );
   }
 
-  private _toggleSearchFocus(): void {
+  private _toggleSearchFocus(shouldClearText: boolean = true): void {
     this.setState((prevState: ISearchScreenState) => {
-      if (prevState.searchFocus && this._searchInputComponent) {
+      if (shouldClearText && prevState.searchFocus && this._searchInputComponent) {
         this._searchInputComponent.blur();
         this._searchInputComponent.clear();
       }
 
       return {
         ...prevState,
-        searchFocus: !prevState.searchFocus,
-        searchResult: []
+        searchFocus: !prevState.searchFocus
       };
     });
   }
 
-  private _search(searchInput: string): void {
-    if (this.props.shoes.length == 0) {
-      return;
-    }
+  private _search(keyword: string): void {
+    this.setState((prevState: ISearchScreenState) => {
+      if (keyword.length > this.state.searchKey.length && keyword.length >= 3) {
+        this.props.search(keyword);
+      }
 
-    this.setState((prevState: ISearchScreenState) => ({
-      ...prevState,
-      searchResult: this.props.shoes.filter(s => s.title.indexOf(searchInput) >= 0).slice(0, 10)
-    }));
+      return {
+        ...prevState,
+        searchKey: keyword,
+        shouldRenderTopShoes: false
+      };
+    });
+  }
+
+  private _onEndEditing(_event: NativeSyntheticEvent<any>): void {
+    this._toggleSearchFocus(false);
   }
 
   private _renderTopShoes(): React.ReactNode {
-    const { onShoeClick, navigation, shoes } = this.props;
-    const topShoes: Shoe[] = shoes.length > 0 ? shoes.splice(0, 10) : [];
-    const isForSell = navigation ? navigation.getParam("isForSell") === true : false;
+    const { onShoeClick, shoes } = this.props;
+    const topShoes: Shoe[] = shoes.length > 0 ? shoes.slice(0, 10) : [];
+
     return (
       <FlatList
         data={topShoes}
         keyExtractor={(_data, index) => index.toString()}
         renderItem={({ item }) => (
-          <ShoeCard shoe={item} onPress={() => onShoeClick(isForSell, item)} />
+          <ShoeCard shoe={item} onPress={() => onShoeClick(this.isForSell, item)} />
+        )}
+        numColumns={2}
+        style={{ marginTop: 30 }}
+      />
+    );
+  }
+
+  private _renderSearchResult(): JSX.Element {
+    const { searchResult } = this.props;
+    const shoes = searchResult.shoes ? searchResult.shoes : [];
+    return (
+      <FlatList
+        data={shoes}
+        keyExtractor={(_data, index) => index.toString()}
+        renderItem={({ item }) => (
+          <ShoeCard shoe={item} onPress={() => this.props.onShoeClick(this.isForSell, item)} />
         )}
         numColumns={2}
         style={{ marginTop: 30 }}
@@ -194,12 +241,19 @@ const styles = StyleSheet.create({
     justifyContent: "space-between"
   },
 
-  keywordLabel: {
-    fontSize: 16
+  searchContainer: {
+    position: "absolute",
+    top: 0,
+    left: 0,
+    right: 0,
+    zIndex: 100,
+    paddingTop: 20
   },
 
   keywordWrapper: {
-    paddingVertical: 12,
+    height: Assets.Styles.ButtonHeight,
+    alignItems: "center",
+    justifyContent: "center",
     paddingHorizontal: 18,
     borderWidth: 1,
     borderColor: "black",
@@ -209,12 +263,12 @@ const styles = StyleSheet.create({
   },
 
   keywordStyle: {
-    textAlign: "center",
-    fontSize: 14
+    textAlign: "center"
   },
 
   searchResult: {
     marginVertical: 15,
+    marginHorizontal: 20,
     fontSize: 14
   }
 });

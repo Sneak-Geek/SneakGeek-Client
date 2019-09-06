@@ -8,22 +8,25 @@ import { IAppState } from "../../../Store";
 import { NavigationActions } from "react-navigation";
 import { RouteNames } from "../../../Navigation";
 import { Shoe } from "../../../Reducers";
+import { searchShoes } from "../../../Actions";
 
 const mapStateToProps = (state: IAppState) => {
   return {
-    shoes: state.AppContentState.shoes
+    shoes: state.AppContentState.shoes,
+    searchResult: state.AppContentState.shoesSearchResult
   };
 };
 
 const mapDispatchToProps = (dispatch: Function) => ({
   onShoeClick: (isForSell: boolean, shoe: Shoe) => {
-    if (isForSell) {
-      const navAction = NavigationActions.navigate({
-        routeName: RouteNames.SellDetail,
-        params: { shoeForSell: shoe }
-      });
-      dispatch(navAction);
-    }
+    const navAction = NavigationActions.navigate({
+      routeName: isForSell ? RouteNames.SellDetail : RouteNames.ShoeDetail,
+      params: isForSell ? { shoeForSell: shoe } : { shoe }
+    });
+    dispatch(navAction);
+  },
+  search: (keyword: string) => {
+    dispatch(searchShoes(keyword));
   }
 });
 

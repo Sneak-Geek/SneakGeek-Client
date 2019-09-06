@@ -83,6 +83,6 @@ const styles = StyleSheet.create({
 
   caption: {
     fontSize: 13,
-    fontFamily: "RobotCondensed-Light"
+    fontFamily: "RobotoCondensed-Light"
   }
 });

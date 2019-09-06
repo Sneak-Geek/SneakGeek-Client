@@ -8,5 +8,5 @@ export const Types = {
   IAuthenticationService: Symbol.for("IAuthenticationService"),
 
   ApiClient: Symbol.for("ApiClient"),
-  AppContentService: Symbol.for("AppContentService")
+  IAppContentService: Symbol.for("IAppContentService")
 };
