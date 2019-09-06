@@ -6,15 +6,25 @@ import { handleActions, Action } from "redux-actions";
 import * as Actions from "../Actions";
 
 export interface Account {
-  provider: "facebook" | "google";
-  id: string;
-  displayName: string;
-  name: {
-    familyName: string;
+  isVerified: boolean;
+  accessLevel: number;
+  _id: string;
+  createdAt: String;
+  updatedAt: String;
+  accountProvider: "facebook" | "google";
+  accountIdByProvider: String;
+  accountNameByProvider: {
+    familyName: String;
     givenName: string;
     middleName: string;
   };
-  photos: [{ value: string }];
+  accountGenderByProvider: string;
+  accountEmailByProvider: string;
+  accountProfilePicByProvider: string;
+  isAuthenticating: boolean;
+  authenticationError: any;
+  isAuthenticatingWithFacebook: boolean;
+  isAuthenticationCancelled: boolean;
 }
 
 export interface IAccountState {

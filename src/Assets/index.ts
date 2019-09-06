@@ -6,7 +6,9 @@ export const Assets = {
   Icons: {
     AddPicture: require("../../../Icons/AddPicture.png"),
     Facebook: require("../../../Icons/Facebook.png"),
-    Google: require("../../../Icons/Google.png")
+    Google: require("../../../Icons/Google.png"),
+    ProfileCamera: require("../../../Icons/ProfileCamera.png"),
+    ChevronLeft: require("../../../Icons/ChevronLeft.png")
   },
   Styles: {
     AppPrimaryColor: "#1ABC9C",

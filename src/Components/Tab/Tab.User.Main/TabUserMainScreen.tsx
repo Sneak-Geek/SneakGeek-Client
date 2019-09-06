@@ -4,8 +4,17 @@
 
 import * as React from "react";
 import { NavigationScreenOptions, ScrollView } from "react-navigation";
-import { View, Text, StyleSheet, TouchableWithoutFeedback } from "react-native";
-import { Button, Image, Icon } from "react-native-elements";
+import {
+  View,
+  StyleSheet,
+  TouchableWithoutFeedback,
+  SafeAreaView,
+  TouchableOpacity
+} from "react-native";
+import { Button, Image } from "react-native-elements";
+import * as Text from "../../../Shared/UI/Text";
+import { Assets } from "../../../Assets";
+import { Account } from "../../../Reducers";
 
 const list = [
   {
@@ -43,13 +52,13 @@ const list = [
 ];
 
 export interface IUserTabMainProps {
-  // shoes: Shoe[];
+  account: Account;
   navigateToUserEdit: () => void;
 }
 
 export default class TabUserMainScreen extends React.Component<IUserTabMainProps> {
   static navigationOptions: NavigationScreenOptions = {
-    headerTitle: "Cá nhân"
+    header: null
   };
 
   public constructor /** override */(props: any) {
@@ -58,49 +67,42 @@ export default class TabUserMainScreen extends React.Component<IUserTabMainProps
 
   public /** override */ render(): React.ReactNode {
     return (
-      <ScrollView showsVerticalScrollIndicator={false}>
-        <View style={styles.headerContainer}>
-          {this._renderAvatarContainer()}
-          {this._renderName()}
-          {this._renderAddress()}
+      <SafeAreaView>
+        <ScrollView showsVerticalScrollIndicator={false}>
+          <View>
+            {this._renderPageTitle()}
+            {this._renderBasicUserData()}
+            {this._renderSettingsList()}
+            {this._renderLogoutButton()}
+          </View>
+        </ScrollView>
+      </SafeAreaView>
+    );
+  }
+
+  private _renderPageTitle(): JSX.Element {
+    return <Text.Title1 style={{ margin: 20 }}>Cá nhân</Text.Title1>;
+  }
+
+  private _renderBasicUserData(): JSX.Element {
+    const { account } = this.props;
+    const { accountNameByProvider } = account;
+    const photo = account.accountProfilePicByProvider;
+
+    return (
+      <View style={styles.headerContainer}>
+        <View style={{ position: "relative" }}>
+          <Image source={{ uri: photo }} style={styles.avatarContainer} />
+          <TouchableOpacity style={styles.cameraButtonContainer}>
+            <Image source={Assets.Icons.ProfileCamera} style={{ width: 22, height: 18 }} />
+          </TouchableOpacity>
         </View>
-        {this._renderSettingsList()}
-        {this._renderLogoutButton()}
-      </ScrollView>
-    );
-  }
-
-  private _renderAvatarContainer(): React.ReactNode {
-    return (
-      <View style={{ position: "relative" }}>
-        <Image
-          source={{
-            uri: "https://s3.amazonaws.com/uifaces/faces/twitter/adhamdannaway/128.jpg"
-          }}
-          style={styles.avatarContainer}
-        />
-        <Icon
-          type={"ionicon"}
-          name={"md-camera"}
-          size={28}
-          containerStyle={{ position: "absolute", zIndex: 100, bottom: 0, right: 5 }}
-        />
-      </View>
-    );
-  }
-
-  private _renderName(): React.ReactNode {
-    return (
-      <View>
-        <Text style={styles.name}>PHẠM MINH</Text>
-      </View>
-    );
-  }
-
-  private _renderAddress(): React.ReactNode {
-    return (
-      <View>
-        <Text style={styles.address}>Hà Nội, VN</Text>
+        <View>
+          <Text.Heading style={styles.name}>
+            {accountNameByProvider.familyName} {accountNameByProvider.givenName}
+          </Text.Heading>
+          <Text.Display style={styles.address}>Hà Nội, VN</Text.Display>
+        </View>
       </View>
     );
   }
@@ -108,7 +110,7 @@ export default class TabUserMainScreen extends React.Component<IUserTabMainProps
   private _renderSettingsList(): React.ReactNode {
     return (
       <TouchableWithoutFeedback onPress={this.props.navigateToUserEdit.bind(this)}>
-        <View style={{ marginTop: 34 }}>
+        <View>
           {list.map(item => (
             <View
               key={item.title}
@@ -117,8 +119,10 @@ export default class TabUserMainScreen extends React.Component<IUserTabMainProps
                 styles.settingsContainer
               ]}
             >
-              <Text style={{ fontWeight: "bold", fontSize: 16 }}>{item.title}</Text>
-              <Icon type={"ionicon"} name={"md-arrow-dropright"} size={28} />
+              <Text.Display style={{ fontWeight: "bold", fontSize: 16 }}>
+                {item.title.toUpperCase()}
+              </Text.Display>
+              <Image source={Assets.Icons.ChevronLeft} />
             </View>
           ))}
         </View>
@@ -139,8 +143,11 @@ export default class TabUserMainScreen extends React.Component<IUserTabMainProps
 
 const styles = StyleSheet.create({
   headerContainer: {
-    paddingVertical: 20,
-    alignItems: "center"
+    margin: 30,
+    alignItems: "center",
+    flex: 1,
+    flexDirection: "row",
+    justifyContent: "space-between"
   },
 
   title: {
@@ -148,13 +155,27 @@ const styles = StyleSheet.create({
     fontSize: 24
   },
 
+  cameraButtonContainer: {
+    position: "absolute",
+    bottom: -10,
+    right: 0,
+    backgroundColor: "lightgrey",
+    width: 40,
+    height: 40,
+    borderWidth: 2,
+    borderColor: "white",
+    borderRadius: 20,
+    alignItems: "center",
+    justifyContent: "center"
+  },
+
   avatarContainer: {
     borderWidth: 1,
     borderColor: "rgba(0,0,0,0.2)",
     alignItems: "center",
     justifyContent: "center",
-    width: 130,
-    height: 130,
+    width: 120,
+    height: 120,
     backgroundColor: "#fff",
     borderRadius: 65
   },
@@ -193,7 +214,7 @@ const styles = StyleSheet.create({
   },
 
   listItemStyleWithMarginBottom: {
-    marginBottom: 50
+    marginBottom: 20
   },
 
   logoutText: {
@@ -203,16 +224,17 @@ const styles = StyleSheet.create({
 
   logoutButton: {
     backgroundColor: "rgba(196,196,196, 0.1)",
-    padding: 20,
+    height: Assets.Styles.ButtonHeight,
     marginBottom: 30
   },
 
   settingsContainer: {
+    paddingHorizontal: 20,
     flexDirection: "row",
     flex: 1,
     alignItems: "center",
     justifyContent: "space-between",
     backgroundColor: "rgba(196,196,196, 0.1)",
-    padding: 20
+    height: Assets.Styles.ButtonHeight
   }
 });

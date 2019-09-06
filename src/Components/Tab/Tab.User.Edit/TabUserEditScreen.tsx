@@ -11,43 +11,47 @@ import {
   BottomTabBarProps
 } from "react-navigation";
 import { View, StyleSheet } from "react-native";
-import { ListItem, Icon } from "react-native-elements";
+import * as Text from "../../../Shared/UI/Text";
+import { Icon } from "react-native-elements";
+import { Account } from "../../../Reducers";
+import { Assets } from "../../../Assets";
 
 const list = [
   {
     title: "Họ",
-    value: "Phạm",
+    value: (account: Account) => account.accountNameByProvider.familyName,
     hasMarginBottom: false
   },
   {
     title: "Tên",
-    value: "Minh",
+    value: (account: Account) => account.accountNameByProvider.givenName,
     hasMarginBottom: true
   },
   {
     title: "Giới tính",
-    value: "Nam",
+    value: (account: Account) => account.accountGenderByProvider,
     hasMarginBottom: false
   },
   {
     title: "Cỡ giày",
-    value: "8",
+    value: (_account: Account) => 8,
     hasMarginBottom: true
   },
   {
     title: "Email",
-    value: "minh.phamle91@gmail.com",
+    value: (account: Account) => account.accountEmailByProvider,
     hasMarginBottom: false
   },
   {
-    title: "Số điện thoại",
-    value: "617-372-0511",
+    title: "Điện thoại",
+    value: (_account: Account) => "123-456-789",
     hasMarginBottom: true
   }
 ];
 
 export interface IUserEditScreenProps {
-  navigation: NavigationScreenProp<NavigationRoute>;
+  account: Account | null;
+  navigation?: NavigationScreenProp<NavigationRoute>;
 }
 
 export class TabUserEditScreen extends React.Component<IUserEditScreenProps, {}> {
@@ -56,6 +60,7 @@ export class TabUserEditScreen extends React.Component<IUserEditScreenProps, {}>
     headerLeft: (
       <Icon
         name={"ios-arrow-back"}
+        type={"ionicon"}
         size={28}
         containerStyle={{ marginLeft: 10 }}
         onPress={() => navigationConfig.navigation.dispatch(StackActions.pop({ n: 1 }))}
@@ -69,31 +74,30 @@ export class TabUserEditScreen extends React.Component<IUserEditScreenProps, {}>
 
   public /** override */ render() {
     return (
-      <ScrollView showsVerticalScrollIndicator={false}>{this._renderSettings()}</ScrollView>
+      <ScrollView showsVerticalScrollIndicator={false}>
+        {/* {this._renderProfilePic()} */}
+        {this._renderSettings()}
+      </ScrollView>
     );
   }
 
   private _renderSettings() {
+    const { account } = this.props;
     return (
       <View>
         {list.map((item, i) => (
-          <ListItem
+          <View
             key={i}
-            title={item.title}
-            titleStyle={{ flex: 1, fontWeight: "bold", padding: 0 }}
-            containerStyle={
-              item.hasMarginBottom
-                ? styles.listItemStyleWithMarginBottom
-                : styles.listItemStyleWithoutMarginBottom
-            }
-            bottomDivider={false}
-            input={{
-              defaultValue: item.value,
-              inputStyle: { textAlign: "left" },
-              containerStyle: { flex: 2, padding: 0 },
-              inputContainerStyle: { padding: 0, margin: 0 }
-            }}
-          />
+            style={[
+              styles.listItem,
+              item.hasMarginBottom ? styles.listItemStyleWithMarginBottom : {}
+            ]}
+          >
+            <Text.Display style={{ flex: 1 }}>{item.title.toUpperCase()}</Text.Display>
+            <Text.Subhead style={{ flex: 2 }}>
+              {account ? item.value(account) : ""}
+            </Text.Subhead>
+          </View>
         ))}
       </View>
     );
@@ -144,21 +148,18 @@ const styles = StyleSheet.create({
     fontWeight: "bold"
   },
 
-  listItemStyleWithMarginBottom: {
+  listItem: {
     flex: 1,
-    backgroundColor: "#E5E5E5",
-    // fontWeight: "bold",
+    flexDirection: "row",
+    paddingHorizontal: 20,
+    backgroundColor: "rgba(196,196,196, 0.1)",
     alignItems: "center",
-    justifyContent: "center",
-    marginBottom: 50
+    justifyContent: "flex-start",
+    height: Assets.Styles.ButtonHeight
   },
 
-  listItemStyleWithoutMarginBottom: {
-    flex: 1,
-    backgroundColor: "#E5E5E5",
-    // fontWeight: "bold",
-    alignItems: "center",
-    justifyContent: "center"
+  listItemStyleWithMarginBottom: {
+    marginBottom: 50
   },
 
   logoutText: {

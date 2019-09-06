@@ -8,8 +8,8 @@ import { IAppState } from "../../../Store";
 import { NavigationActions } from "react-navigation";
 import { RouteNames } from "../../../Navigation";
 
-const mapStateToProps = (_state: IAppState) => ({
-  // shoes: state.AppContentState.shoes
+const mapStateToProps = (state: IAppState) => ({
+  account: state.AccountState.currentAccount
 });
 
 const mapDispatchToProps = (dispatch: Function) => {

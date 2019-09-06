@@ -83,39 +83,38 @@ export default class LoginScreen extends React.Component<ILoginScreenProps, Stat
   private _renderEmailBasedContainer() {
     return (
       <View style={styles.emailBasedContainer}>
-        <Text.Body style={styles.socialLabel}>Hoặc sử dụng email</Text.Body>
-        <Input
-          value={this.state.currentEmail}
-          onChangeText={currentEmail => this.setState({ currentEmail })}
-          containerStyle={{ width: "100%", paddingHorizontal: 0 }}
-          inputContainerStyle={styles.emailContainerStyle}
-          placeholder={"taikhoan@email.com"}
-          leftIcon={
-            <Icon
-              type={"ionicon"}
-              name={"md-mail"}
-              size={24}
-              color={Assets.Styles.ButtonDisabledColor}
-            />
-          }
-          underlineColorAndroid={"transparent"}
-          inputStyle={styles.emailInputStyle}
-        />
-        <View style={styles.authButtonContainer}>
-          <Button
-            title="Đăng nhập"
-            containerStyle={{ width: "100%" }}
-            buttonStyle={[
-              styles.authButton,
-              {
-                backgroundColor: StringUtil.isValidEmail(this.state.currentEmail)
-                  ? Assets.Styles.ButtonPrimaryColor
-                  : Assets.Styles.ButtonDisabledColor
-              }
-            ]}
-            onPress={() => this.props.navigateToHome()}
+        <View style={{ flex: 1, width: "100%" }}>
+          <Text.Body style={styles.socialLabel}>Hoặc sử dụng email</Text.Body>
+          <Input
+            value={this.state.currentEmail}
+            onChangeText={currentEmail => this.setState({ currentEmail })}
+            containerStyle={{ width: "100%", paddingHorizontal: 0 }}
+            inputContainerStyle={styles.emailContainerStyle}
+            placeholder={"taikhoan@email.com"}
+            leftIcon={
+              <Icon
+                type={"ionicon"}
+                name={"md-mail"}
+                size={24}
+                color={Assets.Styles.ButtonDisabledColor}
+              />
+            }
+            underlineColorAndroid={"transparent"}
+            inputStyle={styles.emailInputStyle}
           />
         </View>
+        <Button
+          title="Đăng nhập"
+          buttonStyle={[
+            styles.authButtonContainer,
+            {
+              backgroundColor: StringUtil.isValidEmail(this.state.currentEmail)
+                ? Assets.Styles.ButtonPrimaryColor
+                : Assets.Styles.ButtonDisabledColor
+            }
+          ]}
+          onPress={() => this.props.navigateToHome()}
+        />
       </View>
     );
   }

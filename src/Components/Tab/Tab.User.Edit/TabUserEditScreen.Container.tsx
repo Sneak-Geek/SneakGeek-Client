@@ -6,11 +6,8 @@ import { connect } from "react-redux";
 import { TabUserEditScreen } from "./TabUserEditScreen";
 import { IAppState } from "../../../Store";
 
-const mapStateToProps = (_state: IAppState) => ({});
+const mapStateToProps = (state: IAppState) => ({
+  account: state.AccountState.currentAccount
+});
 
-const mapDispatchToProps = (_dispatch: Function) => ({});
-
-export const TabUserEditScreenContainer = connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(TabUserEditScreen);
+export const TabUserEditScreenContainer = connect(mapStateToProps)(TabUserEditScreen);
