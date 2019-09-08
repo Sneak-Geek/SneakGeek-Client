@@ -20,11 +20,10 @@ import {
 } from "react-navigation";
 import { Icon } from "react-native-elements";
 import styles from "./styles";
-import { AppButton, ShoeCard } from "../../Shared/UI";
+import { AppButton, ShoeCard, Text } from "../../Shared/UI";
 import StarRating from "react-native-star-rating";
 import { LineChart, YAxis, Grid } from "react-native-svg-charts";
-import { Assets } from "../../Assets";
-import * as Text from "../../Shared/UI/Text";
+import * as Assets from "../../Assets";
 import { toCurrencyString } from "../../Utilities/StringUtil";
 
 export interface Props {

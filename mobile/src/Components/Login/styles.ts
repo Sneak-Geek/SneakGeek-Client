@@ -3,7 +3,7 @@
 //!
 
 import { StyleSheet, ViewStyle } from "react-native";
-import { Assets } from "../../Assets";
+import * as Assets from "../../Assets";
 
 export default StyleSheet.create({
   rootContainer: {

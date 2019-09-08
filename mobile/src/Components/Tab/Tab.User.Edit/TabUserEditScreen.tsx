@@ -11,10 +11,10 @@ import {
   BottomTabBarProps
 } from "react-navigation";
 import { View, StyleSheet } from "react-native";
-import * as Text from "../../../Shared/UI/Text";
+import { Text } from "../../../Shared/UI";
 import { Icon } from "react-native-elements";
 import { Account } from "../../../Reducers";
-import { Assets } from "../../../Assets";
+import * as Assets from "../../../Assets";
 
 const list = [
   {

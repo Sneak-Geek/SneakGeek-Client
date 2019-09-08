@@ -6,3 +6,6 @@ export { ShoeCard } from "./ShoeCard";
 export { HorizontalShoeCard } from "./HorizontalShoeCard";
 export { ShoeProgressCircle } from "./ShoeProgressCircle";
 export { AppButton } from "./AppButton";
+
+import * as Text from "./Text";
+export { Text };

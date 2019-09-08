@@ -3,9 +3,9 @@
 //!
 
 import * as React from "react";
-import { View, Text, StyleSheet, FlatList } from "react-native";
+import { View, StyleSheet, FlatList } from "react-native";
 import { Shoe } from "../../../Reducers";
-import { HorizontalShoeCard } from "../../../Shared/UI";
+import { HorizontalShoeCard, Text } from "../../../Shared/UI";
 
 export default class PurchaseComponents<P = {}, S = {}> extends React.Component<P, S> {
   public /** abstract */ render(): React.ReactNode {
@@ -31,8 +31,8 @@ export default class PurchaseComponents<P = {}, S = {}> extends React.Component<
   public renderTitleWithSeeMore(title: string): React.ReactNode {
     return (
       <View style={styles.titleContainer}>
-        <Text style={styles.title}>{title}</Text>
-        <Text style={styles.seeMore}>Xem thêm</Text>
+        <Text.Title2>{title}</Text.Title2>
+        <Text.Caption>Xem thêm</Text.Caption>
       </View>
     );
   }
@@ -46,14 +46,5 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     paddingHorizontal: 20,
     marginTop: 14
-  },
-
-  title: {
-    fontSize: 22
-  },
-
-  seeMore: {
-    fontSize: 14,
-    color: "#979797"
   }
 });

@@ -11,9 +11,9 @@ import {
   SafeAreaView,
   TouchableOpacity
 } from "react-native";
-import { Button, Image } from "react-native-elements";
-import * as Text from "../../../Shared/UI/Text";
-import { Assets } from "../../../Assets";
+import { Image } from "react-native-elements";
+import { Text } from "../../../Shared/UI";
+import * as Assets from "../../../Assets";
 import { Account } from "../../../Reducers";
 
 const list = [
@@ -132,11 +132,9 @@ export default class TabUserMainScreen extends React.Component<IUserTabMainProps
 
   private _renderLogoutButton(): React.ReactNode {
     return (
-      <Button
-        title="Đăng xuất"
-        titleStyle={styles.logoutText}
-        buttonStyle={styles.logoutButton}
-      />
+      <TouchableOpacity style={[styles.settingsContainer, styles.signOutContainer]}>
+        <Text.Subhead style={{ color: Assets.Styles.AppErrorColor }}>Đăng xuất</Text.Subhead>
+      </TouchableOpacity>
     );
   }
 }
@@ -236,5 +234,11 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     backgroundColor: "rgba(196,196,196, 0.1)",
     height: Assets.Styles.ButtonHeight
+  },
+
+  signOutContainer: {
+    alignItems: "center",
+    justifyContent: "center",
+    marginBottom: 30
   }
 });

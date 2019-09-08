@@ -3,6 +3,7 @@
 //!
 
 import { StyleSheet } from "react-native";
+import * as Assets from "../../Assets";
 
 export default StyleSheet.create({
   shoeDetailContainer: {
@@ -44,7 +45,9 @@ export default StyleSheet.create({
     left: 0,
     right: 0,
     flexDirection: "row",
-    borderTopWidth: 1,
-    borderTopColor: "lightgray"
+    borderTopWidth: 0.25,
+    borderBottomWidth: 0.5,
+    borderBottomColor: Assets.Styles.AppAccentColor,
+    borderTopColor: Assets.Styles.AppAccentColor
   }
 });

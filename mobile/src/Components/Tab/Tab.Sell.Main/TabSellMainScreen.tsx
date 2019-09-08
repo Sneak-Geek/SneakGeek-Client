@@ -6,7 +6,7 @@ import * as React from "react";
 import { View, SafeAreaView, ScrollView, StyleSheet } from "react-native";
 import { Shoe } from "../../../Reducers";
 import { FlatList, TouchableOpacity } from "react-native-gesture-handler";
-import { ShoeProgressCircle } from "../../../Shared/UI";
+import { ShoeProgressCircle, Text } from "../../../Shared/UI";
 import PurchaseComponent from "../PurchaseComponent";
 import { Icon } from "react-native-elements";
 import {
@@ -14,7 +14,6 @@ import {
   NavigationScreenProp,
   NavigationRoute
 } from "react-navigation";
-import * as Text from "../../../Shared/UI/Text";
 
 export interface ISellTabMainProps {
   navigation: NavigationScreenProp<NavigationRoute>;
@@ -70,6 +69,7 @@ export class TabSellMainScreen extends PurchaseComponent<ISellTabMainProps, ISel
           data={shoes}
           renderItem={({ item, index }) => (
             <ShoeProgressCircle
+              key={index}
               shoe={item}
               shoeData={{ isDropped: index % 3 === 0, percent: (5 - index) * 10 }}
             />

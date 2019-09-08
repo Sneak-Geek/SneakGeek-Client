@@ -4,7 +4,7 @@
 
 import * as React from "react";
 import { View, ActivityIndicator, StyleSheet } from "react-native";
-import { Assets } from "../../Assets";
+import * as Assets from "../../Assets";
 import { connect } from "react-redux";
 import { bootstrap } from "../../Actions";
 

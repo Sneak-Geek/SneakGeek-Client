@@ -7,8 +7,8 @@ import { View, TouchableOpacity, Image, SafeAreaView } from "react-native";
 import styles from "./styles";
 import { Input, Button, Icon } from "react-native-elements";
 import { Account } from "../../Reducers";
-import * as Text from "../../Shared/UI/Text";
-import { Assets } from "../../Assets";
+import { Text } from "../../Shared/UI";
+import * as Assets from "../../Assets";
 import * as StringUtil from "../../Utilities/StringUtil";
 
 export interface ILoginScreenProps {

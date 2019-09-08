@@ -273,9 +273,7 @@ export class SellDetailScreen extends React.Component<ISellDetailScreenProps, St
     const fullWidth = { width };
     const halfWidth = { width: width / 2 };
     const currentChildComponent = this.childComponents[this.state.currentChildComponentIndex];
-    const halfButtonCondition =
-      this.state.currentChildComponentIndex > 0 &&
-      this.state.currentChildComponentIndex < this.childComponents.length - 1;
+    const halfButtonCondition = this.state.currentChildComponentIndex > 0;
     const shouldRenderUpdate =
       this.state.currentChildComponentIndex === this.childComponents.length - 1;
 

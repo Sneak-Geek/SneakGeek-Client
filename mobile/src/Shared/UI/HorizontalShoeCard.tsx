@@ -3,8 +3,11 @@
 //!
 
 import * as React from "react";
-import { View, Image, Text } from "react-native";
+import { View, Image, StyleSheet } from "react-native";
 import { Shoe } from "../../Reducers";
+import { StringUtils } from "../../Utilities";
+import * as Text from "./Text";
+import * as Assets from "../../Assets";
 
 interface Props {
   shoe: Shoe;
@@ -15,32 +18,21 @@ export class HorizontalShoeCard extends React.Component<Props, {}> {
   render() {
     const { shoe, renderPriceOnly } = this.props;
     return (
-      <View
-        style={{
-          flex: 1,
-          flexDirection: "row",
-          alignItems: "center",
-          justifyContent: "flex-start",
-          paddingHorizontal: 14,
-          marginBottom: 20
-        }}
-      >
+      <View style={styles.container}>
         <Image
           source={{ uri: shoe.imageUrl, cache: "default" }}
-          style={{ width: 100, aspectRatio: 2, flex: 1.5 }}
-          resizeMode={"center"}
+          style={{ width: "25%", aspectRatio: 1.5 }}
+          resizeMode={"contain"}
         />
-        <View style={{ flex: 2.75, paddingHorizontal: 10 }}>
-          <Text
+        <View style={{ flex: 1, paddingHorizontal: 15 }}>
+          <Text.Subhead
             numberOfLines={2}
             textBreakStrategy={"highQuality"}
             ellipsizeMode={"tail"}
-            style={{ fontSize: 13 }}
           >
             {shoe.title}
-          </Text>
+          </Text.Subhead>
         </View>
-
         {renderPriceOnly ? this._renderPrice() : this._renderPriceWithPercentage()}
       </View>
     );
@@ -48,35 +40,39 @@ export class HorizontalShoeCard extends React.Component<Props, {}> {
 
   private _renderPrice() {
     return (
-      <Text style={{ flex: 1.5, textAlign: "right" }} numberOfLines={1}>
-        VND 3,150K
-      </Text>
+      <Text.Subhead style={{ textAlign: "right" }} numberOfLines={1}>
+        {StringUtils.toCurrencyString("3150000")}
+      </Text.Subhead>
     );
   }
 
   private _renderPriceWithPercentage() {
-    const bg = this.props.shoe.title.length % 2 === 0 ? "#FF2D55" : "#1ABC9C";
+    const negative =
+      this.props.shoe.title.length % 2 === 0
+        ? Assets.Styles.AppErrorColor
+        : Assets.Styles.AppPrimaryColor;
     return (
-      <View
-        style={{
-          flex: 2,
-          flexDirection: "row",
-          alignItems: "center",
-          justifyContent: "space-between"
-        }}
-      >
-        <Text>3,150K</Text>
-        <View
-          style={{
-            backgroundColor: bg,
-            paddingVertical: 9,
-            paddingHorizontal: 5,
-            borderRadius: 3
-          }}
-        >
-          <Text style={{ color: "white" }}>15.3%</Text>
-        </View>
+      <View style={styles.priceChangeContainer}>
+        <Text.Caption>{StringUtils.toCurrencyString("3150000")}</Text.Caption>
+        <Text.Caption style={{ color: negative }}>{negative ? "-" : "+"}15.3%</Text.Caption>
       </View>
     );
   }
 }
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "flex-start",
+    paddingHorizontal: 14,
+    marginBottom: 20
+  },
+
+  priceChangeContainer: {
+    flexDirection: "column",
+    alignItems: "center",
+    justifyContent: "space-between"
+  }
+});

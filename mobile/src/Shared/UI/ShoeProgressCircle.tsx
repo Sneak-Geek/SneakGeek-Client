@@ -4,8 +4,10 @@
 
 import * as React from "react";
 import { Shoe } from "../../Reducers";
-import { View, Image, Text } from "react-native";
+import { View, Image } from "react-native";
 import ProgressCircle from "react-native-progress-circle";
+import { Text } from ".";
+import { StringUtils } from "../../Utilities";
 
 interface Props {
   shoe: Shoe;
@@ -44,7 +46,9 @@ export class ShoeProgressCircle extends React.Component<Props, {}> {
             resizeMode={"contain"}
           />
         </ProgressCircle>
-        <Text style={{ fontSize: 12 }}>VND 3,150,000</Text>
+        <Text.Subhead style={{ fontSize: 12 }}>
+          {StringUtils.toCurrencyString("3150000")}
+        </Text.Subhead>
       </View>
     );
   }

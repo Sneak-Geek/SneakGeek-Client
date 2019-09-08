@@ -7,9 +7,9 @@ import { ScrollView, View, Dimensions, StyleSheet, Image } from "react-native";
 import * as StringUtil from "../../../Utilities/StringUtil";
 import { SellOrder } from "../SellDetailScreen";
 import { TouchableOpacity } from "react-native-gesture-handler";
-import { Assets } from "../../../Assets";
+import * as Assets from "../../../Assets";
 import ImagePicker, { ImagePickerResponse } from "react-native-image-picker";
-import * as Text from "../../../Shared/UI/Text";
+import { Text } from "../../../Shared/UI";
 
 interface Props {
   orderSummary: SellOrder;

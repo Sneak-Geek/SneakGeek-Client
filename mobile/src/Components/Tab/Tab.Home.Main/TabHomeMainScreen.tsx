@@ -16,9 +16,8 @@ import {
   TouchableOpacity
 } from "react-native";
 import { Shoe } from "../../../Reducers";
-import { ShoeCard } from "../../../Shared/UI";
-import * as Text from "../../../Shared/UI/Text";
-import { Assets } from "../../../Assets";
+import { ShoeCard, Text } from "../../../Shared/UI";
+import * as Assets from "../../../Assets";
 
 export interface ITabHomeMainScreenProps {
   shoes: Shoe[];

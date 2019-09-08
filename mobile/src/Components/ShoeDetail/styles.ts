@@ -3,7 +3,7 @@
 //!
 
 import { StyleSheet, Dimensions, ViewStyle, TextStyle } from "react-native";
-import { Assets } from "../../Assets";
+import * as Assets from "../../Assets";
 
 const dimension = Dimensions.get("window");
 
