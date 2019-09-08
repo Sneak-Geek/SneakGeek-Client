@@ -46,9 +46,7 @@ export class ShoeProgressCircle extends React.Component<Props, {}> {
             resizeMode={"contain"}
           />
         </ProgressCircle>
-        <Text.Subhead style={{ fontSize: 12 }}>
-          {StringUtils.toCurrencyString("3150000")}
-        </Text.Subhead>
+        <Text.Subhead>{StringUtils.toCurrencyString("3150000")}</Text.Subhead>
       </View>
     );
   }

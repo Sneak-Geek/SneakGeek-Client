@@ -19,7 +19,7 @@ export default class TabBuyMainScreen extends PurchaseComponent<IBuyScreenProps>
 
   public render(): React.ReactNode {
     return (
-      <ScrollView>
+      <ScrollView showsVerticalScrollIndicator={false}>
         <SafeAreaView>
           {this._renderCurrentBid()}
           {this._renderFollowing()}

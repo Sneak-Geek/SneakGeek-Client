@@ -48,7 +48,7 @@ export class TabSellMainScreen extends PurchaseComponent<ISellTabMainProps, ISel
         {this.props.navigation.getParam("isSellSuccess") &&
           this.state.shouldRenderSuccessToast &&
           this._renderSellSuccessToast()}
-        <ScrollView>
+        <ScrollView showsVerticalScrollIndicator={false}>
           {this._renderCurrentSelling()}
           {this._renderInventory()}
           {this._renderHistory()}

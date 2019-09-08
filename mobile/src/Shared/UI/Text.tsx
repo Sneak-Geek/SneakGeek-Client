@@ -7,25 +7,25 @@ import { Text, StyleSheet, TextProps } from "react-native";
 
 export class LargeTitle extends React.PureComponent<TextProps> {
   public /** override */ render(): JSX.Element {
-    return <Text {...this.props} style={[this.props.style, TextStyle.largeTitle]} />;
+    return <Text {...this.props} style={[TextStyle.largeTitle, this.props.style]} />;
   }
 }
 
 export class Title1 extends React.PureComponent<TextProps> {
   public /** override */ render(): JSX.Element {
-    return <Text {...this.props} style={[this.props.style, TextStyle.largeTitle]} />;
+    return <Text {...this.props} style={[TextStyle.largeTitle, this.props.style]} />;
   }
 }
 
 export class Title2 extends React.PureComponent<TextProps> {
   public /** override */ render(): JSX.Element {
-    return <Text {...this.props} style={[this.props.style, TextStyle.title2]} />;
+    return <Text {...this.props} style={[TextStyle.title2, this.props.style]} />;
   }
 }
 
 export class Title3 extends React.PureComponent<TextProps> {
   public /** override */ render(): JSX.Element {
-    return <Text {...this.props} style={[this.props.style, TextStyle.title3]} />;
+    return <Text {...this.props} style={[TextStyle.title3, this.props.style]} />;
   }
 }
 
@@ -37,7 +37,7 @@ export class Headline extends React.PureComponent<TextProps> {
 
 export class Callout extends React.PureComponent<TextProps> {
   public /** override */ render(): JSX.Element {
-    return <Text {...this.props} style={[this.props.style, TextStyle.callout]} />;
+    return <Text {...this.props} style={[TextStyle.callout, this.props.style]} />;
   }
 }
 
@@ -49,7 +49,7 @@ export class Subhead extends React.PureComponent<TextProps> {
 
 export class Body extends React.PureComponent<TextProps> {
   public /** override */ render(): JSX.Element {
-    return <Text {...this.props} style={[this.props.style, TextStyle.body]} />;
+    return <Text {...this.props} style={[TextStyle.body, this.props.style]} />;
   }
 }
 
@@ -109,8 +109,7 @@ export const TextStyle = StyleSheet.create({
 
   subhead: {
     fontSize: 15,
-    fontFamily: "RobotoCondensed-Regular",
-    color: "rgba(0, 0, 0, 0.6)"
+    fontFamily: "RobotoCondensed-Light"
   },
 
   footnote: {

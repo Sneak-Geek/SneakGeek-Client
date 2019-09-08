@@ -3,10 +3,11 @@
 //!
 
 import * as React from "react";
-import { Image, StyleSheet, ViewStyle, TouchableOpacity } from "react-native";
+import { Image, StyleSheet, ViewStyle, TouchableOpacity, View } from "react-native";
 import * as Text from "./Text";
 import { Shoe } from "../../Reducers";
 import * as StringsUtil from "../../Utilities/StringUtil";
+import { TouchableWithoutFeedback } from "react-native-gesture-handler";
 
 interface IShoeCardProps {
   shoe: Shoe;
@@ -18,22 +19,28 @@ export class ShoeCard extends React.Component<IShoeCardProps> {
   render() {
     const { shoe, style, onPress } = this.props;
     return (
-      <TouchableOpacity onPress={onPress} style={[styles.smallShoeContainer, style]}>
-        <Image
-          source={{ uri: shoe.imageUrl, cache: "default" }}
-          resizeMode={"center"}
-          style={styles.smallShoeCard}
-        />
-        <Text.Subhead
-          style={{ marginTop: 30, alignSelf: "flex-start" }}
-          numberOfLines={2}
-          textBreakStrategy={"highQuality"}
-          ellipsizeMode={"tail"}
-        >
-          {shoe.title}
-        </Text.Subhead>
-        <Text.Body style={styles.priceTag}>{StringsUtil.toCurrencyString("3150000")}</Text.Body>
-      </TouchableOpacity>
+      <TouchableWithoutFeedback onPress={onPress} style={[styles.smallShoeContainer, style]}>
+        <View style={{ flex: 1 }}>
+          <Image
+            source={{ uri: shoe.imageUrl, cache: "default" }}
+            resizeMode={"center"}
+            style={styles.smallShoeCard}
+          />
+          <TouchableOpacity>
+            <Text.Subhead
+              style={{ marginTop: 30, alignSelf: "flex-start" }}
+              numberOfLines={2}
+              textBreakStrategy={"highQuality"}
+              ellipsizeMode={"tail"}
+            >
+              {shoe.title}
+            </Text.Subhead>
+          </TouchableOpacity>
+          <Text.Body style={styles.priceTag}>
+            {StringsUtil.toCurrencyString("3150000")}
+          </Text.Body>
+        </View>
+      </TouchableWithoutFeedback>
     );
   }
 }

@@ -25,13 +25,13 @@ export class HorizontalShoeCard extends React.Component<Props, {}> {
           resizeMode={"contain"}
         />
         <View style={{ flex: 1, paddingHorizontal: 15 }}>
-          <Text.Subhead
+          <Text.Callout
             numberOfLines={2}
             textBreakStrategy={"highQuality"}
             ellipsizeMode={"tail"}
           >
             {shoe.title}
-          </Text.Subhead>
+          </Text.Callout>
         </View>
         {renderPriceOnly ? this._renderPrice() : this._renderPriceWithPercentage()}
       </View>
@@ -40,9 +40,9 @@ export class HorizontalShoeCard extends React.Component<Props, {}> {
 
   private _renderPrice() {
     return (
-      <Text.Subhead style={{ textAlign: "right" }} numberOfLines={1}>
+      <Text.Callout style={{ textAlign: "right" }} numberOfLines={1}>
         {StringUtils.toCurrencyString("3150000")}
-      </Text.Subhead>
+      </Text.Callout>
     );
   }
 
@@ -53,8 +53,8 @@ export class HorizontalShoeCard extends React.Component<Props, {}> {
         : Assets.Styles.AppPrimaryColor;
     return (
       <View style={styles.priceChangeContainer}>
-        <Text.Subhead>{StringUtils.toCurrencyString("3150000")}</Text.Subhead>
-        <Text.Subhead style={{ color: negative }}>{negative ? "-" : "+"}15.3%</Text.Subhead>
+        <Text.Callout>{StringUtils.toCurrencyString("3150000")}</Text.Callout>
+        <Text.Callout style={{ color: negative }}>{negative ? "-" : "+"}15.3%</Text.Callout>
       </View>
     );
   }
