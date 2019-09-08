@@ -12,40 +12,42 @@ export class AppSettings implements IAppSettings {
   private _dict: { [key: string]: any } = {};
   private _isLoaded: boolean = false;
 
-  public async load(): Promise<boolean> {
+  public async /** override */ load(): Promise<boolean> {
     const value = await AsyncStorage.getItem(SettingsKeys.AppSettingsKey);
+
     if (value) {
       try {
         this._dict = Object.assign(JSON.parse(value), this._dict);
-        this._isLoaded = true;
-        return true;
       } catch (error) {
-        return false;
+        console.log(`Load settings error: ${error}`);
       }
     }
+    this._isLoaded = true;
+    return true;
+  }
 
-    return false;
+  public /** override */ isSettingsLoaded(): boolean {
+    return this._isLoaded;
   }
 
   public async /** override */ save(): Promise<boolean> {
     try {
-      await AsyncStorage.setItem(SettingsKeys.CurrentAccessToken, JSON.stringify(this._dict));
+      await AsyncStorage.setItem(SettingsKeys.AppSettingsKey, JSON.stringify(this._dict));
       return true;
     } catch (error) {
-      console.log(`Error saving: ${error}`);
       return false;
     }
   }
 
   public /** override */ getValue(key: string): any {
-    if (this._isLoaded) {
+    if (!this._isLoaded) {
       throw new Error("Settings are not loaded");
     }
     return this._dict[key];
   }
 
   public async /** override */ removeValue(key: string): Promise<void> {
-    if (this._isLoaded) {
+    if (!this._isLoaded) {
       throw new Error("Settings are not loaded");
     }
 

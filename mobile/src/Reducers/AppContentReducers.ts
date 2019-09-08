@@ -35,6 +35,7 @@ export interface IAppContentState {
 const initialAppContentState = {
   shoes: [],
   shoesSearchResult: {
+    shoes: [],
     state: SearchShoeState.NOT_STARTED
   }
 };

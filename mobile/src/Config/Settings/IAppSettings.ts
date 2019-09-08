@@ -3,6 +3,7 @@
 //!
 
 export interface IAppSettings {
+  isSettingsLoaded(): boolean;
   /** Load the settings. Returns a promise indicating when the load operation is complete, and if it was successful. */
   load(): Promise<boolean>;
 

@@ -27,6 +27,7 @@ export const NavigationReducers = (
         state
       );
     case Actions.AccountActions.GO_TO_LOGIN:
+    case Actions.AccountActions.AUTHENTICATE_ERROR:
       return AppNavigator.router.getStateForAction(
         StackActions.replace({
           routeName: RouteNames.Login

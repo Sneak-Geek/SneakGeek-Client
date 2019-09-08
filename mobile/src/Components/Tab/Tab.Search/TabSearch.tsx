@@ -14,15 +14,14 @@ import {
   View,
   SafeAreaView,
   StyleSheet,
-  ActivityIndicator,
-  NativeSyntheticEvent
+  NativeSyntheticEvent,
+  TouchableOpacity
 } from "react-native";
 import { Input, Icon } from "react-native-elements";
 import { BlurView } from "@react-native-community/blur";
 import { Shoe } from "../../../Reducers";
 import { ShoeCard } from "../../../Shared/UI";
 import { SearchShoePayload } from "../../../Actions";
-import { SearchShoeState } from "../../../Shared/State";
 import * as Text from "../../../Shared/UI/Text";
 import { Assets } from "../../../Assets";
 
@@ -114,14 +113,16 @@ export default class TabSearch extends React.Component<ISearchScreenProps, ISear
     const { searchResult } = this.props;
     return (
       <BlurView blurType={"light"} blurAmount={20} style={styles.searchContainer}>
-        {searchResult.state === SearchShoeState.SEARCHING && <ActivityIndicator />}
-        {searchResult.shoes && searchResult.shoes.length > 0 && (
+        {searchResult.shoes && (
           <FlatList
+            keyboardShouldPersistTaps={"always"}
             style={{ borderBottomWidth: 1, borderBottomColor: "black" }}
             data={searchResult.shoes}
             keyExtractor={(shoe, _index) => shoe.title}
             renderItem={({ item }) => (
-              <Text.Display style={styles.searchResult}>{item.title}</Text.Display>
+              <TouchableOpacity onPress={() => this.props.onShoeClick(this.isForSell, item)}>
+                <Text.Display style={styles.searchResult}>{item.title}</Text.Display>
+              </TouchableOpacity>
             )}
             showsVerticalScrollIndicator={false}
           />
