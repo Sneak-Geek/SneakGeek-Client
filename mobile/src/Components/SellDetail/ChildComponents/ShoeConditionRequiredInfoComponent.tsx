@@ -151,7 +151,7 @@ export class ShoeConditionRequiredInfoComponent extends React.PureComponent<Prop
         <SafeAreaView style={styles.shoeSizesContainer}>
           <Text.Body style={{ color: Assets.Styles.AppSecondaryColor, marginVertical: 20 }}>
             Bạn đang sở hữu giày
-          </Tex.Bodyt>
+          </Text.Body>
           {this._renderShoeSizesContainer()}
           {this._renderShoeSizeSelectionButtons()}
         </SafeAreaView>
