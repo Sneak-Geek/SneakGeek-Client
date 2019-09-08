@@ -32,7 +32,7 @@ export default class PurchaseComponents<P = {}, S = {}> extends React.Component<
     return (
       <View style={styles.titleContainer}>
         <Text.Title2>{title}</Text.Title2>
-        <Text.Caption>Xem thêm</Text.Caption>
+        <Text.Footnote>xem thêm</Text.Footnote>
       </View>
     );
   }

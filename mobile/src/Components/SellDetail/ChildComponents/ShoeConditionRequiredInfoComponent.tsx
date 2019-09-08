@@ -6,17 +6,16 @@ import * as React from "react";
 import {
   View,
   FlatList,
-  Text,
-  TouchableHighlight,
   StyleSheet,
   Modal,
   Dimensions,
   SafeAreaView,
-  Picker,
-  PickerIOS
+  TouchableOpacity
 } from "react-native";
 import { getInset } from "react-native-safe-area-view";
 import { Button } from "react-native-elements";
+import { CustomPicker, Text } from "../../../Shared/UI";
+import * as Assets from "../../../Assets";
 
 enum PickerType {
   ShoeCondition = "ShoeCondition",
@@ -35,6 +34,7 @@ type State = {
   boxCondition: string;
   isSelectingShoeSize: boolean;
   isShowingPicker: boolean;
+  pickerVisible: boolean;
   currentPicker?: PickerType;
 
   // indexing purpose
@@ -63,7 +63,7 @@ export class ShoeConditionRequiredInfoComponent extends React.PureComponent<Prop
       title: "Tình trạng",
       options: this._getShoeConditionOptions(),
       onLaunchOptionChooser: () => {
-        this.setState({ currentPicker: PickerType.ShoeCondition });
+        this.setState({ pickerVisible: true, currentPicker: PickerType.ShoeCondition });
       }
     },
     {
@@ -71,7 +71,7 @@ export class ShoeConditionRequiredInfoComponent extends React.PureComponent<Prop
       title: "Hộp",
       options: this._getShoeBoxConditionOptions(),
       onLaunchOptionChooser: () => {
-        this.setState({ currentPicker: PickerType.BoxCondition });
+        this.setState({ pickerVisible: true, currentPicker: PickerType.BoxCondition });
       }
     }
   ];
@@ -79,6 +79,7 @@ export class ShoeConditionRequiredInfoComponent extends React.PureComponent<Prop
   public constructor(props: any) {
     super(props);
     this.state = {
+      pickerVisible: false,
       shoeSize: undefined,
       shoeCondition: "",
       boxCondition: "",
@@ -90,13 +91,15 @@ export class ShoeConditionRequiredInfoComponent extends React.PureComponent<Prop
 
   public /** override */ render(): JSX.Element {
     return (
-      <View style={{ flex: 1, width: Dimensions.get("screen").width }}>
+      <SafeAreaView style={{ flex: 1, width: Dimensions.get("screen").width }}>
         {this._renderShoeSelectionModal()}
         <View style={{ flexDirection: "column" }}>
-          {this.settingsAndOptions.map(setting => this._renderSettingWithOptions(setting))}
+          {this.settingsAndOptions.map((setting, index) =>
+            this._renderSettingWithOptions(setting, index)
+          )}
         </View>
         {this._renderPicker()}
-      </View>
+      </SafeAreaView>
     );
   }
 
@@ -121,17 +124,17 @@ export class ShoeConditionRequiredInfoComponent extends React.PureComponent<Prop
     return ["Nguyên hộp", "Không hộp"];
   }
 
-  private _renderSettingWithOptions(setting: Setting): JSX.Element {
+  private _renderSettingWithOptions(setting: Setting, index: number): JSX.Element {
     const defaultOption = "Lựa chọn";
 
     return (
-      <View style={styles.settingContainer}>
-        <Text style={styles.settingText}>{setting.title}</Text>
-        <TouchableHighlight onPress={() => setting.onLaunchOptionChooser()}>
-          <Text style={[styles.settingText, { color: "#1ABC9C" }]}>
+      <View style={styles.settingContainer} key={index}>
+        <Text.Body>{setting.title}</Text.Body>
+        <TouchableOpacity onPress={() => setting.onLaunchOptionChooser()}>
+          <Text.Body style={{ color: Assets.Styles.AppPrimaryColor }}>
             {this.state[setting.stateName] || defaultOption}
-          </Text>
-        </TouchableHighlight>
+          </Text.Body>
+        </TouchableOpacity>
       </View>
     );
   }
@@ -146,9 +149,9 @@ export class ShoeConditionRequiredInfoComponent extends React.PureComponent<Prop
         animated={true}
       >
         <SafeAreaView style={styles.shoeSizesContainer}>
-          <Text style={{ fontSize: 16, color: "white", marginVertical: 20 }}>
+          <Text.Body style={{ color: Assets.Styles.AppSecondaryColor, marginVertical: 20 }}>
             Bạn đang sở hữu giày
-          </Text>
+          </Tex.Bodyt>
           {this._renderShoeSizesContainer()}
           {this._renderShoeSizeSelectionButtons()}
         </SafeAreaView>
@@ -206,10 +209,6 @@ export class ShoeConditionRequiredInfoComponent extends React.PureComponent<Prop
   }
 
   private _renderPicker(): JSX.Element | null {
-    if (!this.state.currentPicker) {
-      return null;
-    }
-
     let currentPickedSettings: Setting | null = null;
     let onPickerSelected: (pickerOption: string) => void;
     switch (this.state.currentPicker) {
@@ -229,26 +228,25 @@ export class ShoeConditionRequiredInfoComponent extends React.PureComponent<Prop
         break;
     }
 
-    if (currentPickedSettings) {
-      const pickedSetting = currentPickedSettings.stateName;
+    if (currentPickedSettings !== null) {
+      const { stateName, options } = currentPickedSettings;
       return (
-        <PickerIOS
-          selectedValue={this.state[pickedSetting]}
-          onValueChange={itemValue =>
+        <CustomPicker
+          options={options}
+          visible={this.state.pickerVisible}
+          optionLabelToString={item => item}
+          onSelectPickerOK={(selectedValue: string) => {
             this.setState(prevState => {
-              onPickerSelected(itemValue.toString());
+              onPickerSelected(selectedValue);
               return {
                 ...prevState,
-                [pickedSetting]: itemValue,
+                [stateName]: selectedValue,
                 currentPicker: undefined
               };
-            })
-          }
-        >
-          {currentPickedSettings.options.map(option => (
-            <Picker.Item label={option} value={option} />
-          ))}
-        </PickerIOS>
+            });
+          }}
+          onSelectPickerCancel={() => this.setState({ pickerVisible: false })}
+        />
       );
     }
 
@@ -279,8 +277,6 @@ const styles = StyleSheet.create({
     marginVertical: 15,
     marginHorizontal: 20
   },
-
-  settingText: { fontSize: 16 },
 
   shoeSizesContainer: {
     position: "relative",

@@ -5,54 +5,81 @@
 import * as React from "react";
 import { Text, StyleSheet, TextProps } from "react-native";
 
-type CustomTextProps = TextProps;
-
-export class Title1 extends React.PureComponent<CustomTextProps> {
+export class LargeTitle extends React.PureComponent<TextProps> {
   public /** override */ render(): JSX.Element {
-    return <Text {...this.props} style={[this.props.style, styles.title1]} />;
+    return <Text {...this.props} style={[this.props.style, TextStyle.largeTitle]} />;
   }
 }
 
-export class Title2 extends React.PureComponent<CustomTextProps> {
+export class Title1 extends React.PureComponent<TextProps> {
   public /** override */ render(): JSX.Element {
-    return <Text {...this.props} style={[this.props.style, styles.title2]} />;
+    return <Text {...this.props} style={[this.props.style, TextStyle.largeTitle]} />;
   }
 }
 
-export class Heading extends React.PureComponent<CustomTextProps> {
+export class Title2 extends React.PureComponent<TextProps> {
   public /** override */ render(): JSX.Element {
-    return <Text {...this.props} style={[this.props.style, styles.heading]} />;
+    return <Text {...this.props} style={[this.props.style, TextStyle.title2]} />;
   }
 }
 
-export class Display extends React.PureComponent<CustomTextProps> {
+export class Title3 extends React.PureComponent<TextProps> {
   public /** override */ render(): JSX.Element {
-    return <Text {...this.props} style={[this.props.style, styles.display]} />;
+    return <Text {...this.props} style={[this.props.style, TextStyle.title3]} />;
   }
 }
 
-export class Subhead extends React.PureComponent<CustomTextProps> {
+export class Headline extends React.PureComponent<TextProps> {
   public /** override */ render(): JSX.Element {
-    return <Text {...this.props} style={[styles.subhead, this.props.style]} />;
+    return <Text {...this.props} style={[TextStyle.headline, this.props.style]} />;
   }
 }
 
-export class Body extends React.PureComponent<CustomTextProps> {
+export class Callout extends React.PureComponent<TextProps> {
   public /** override */ render(): JSX.Element {
-    return <Text {...this.props} style={[this.props.style, styles.body]} />;
+    return <Text {...this.props} style={[this.props.style, TextStyle.callout]} />;
   }
 }
 
-export class Caption extends React.PureComponent<CustomTextProps> {
+export class Subhead extends React.PureComponent<TextProps> {
   public /** override */ render(): JSX.Element {
-    return <Text {...this.props} style={[styles.caption, this.props.style]} />;
+    return <Text {...this.props} style={[TextStyle.subhead, this.props.style]} />;
   }
 }
 
-const styles = StyleSheet.create({
-  title1: {
+export class Body extends React.PureComponent<TextProps> {
+  public /** override */ render(): JSX.Element {
+    return <Text {...this.props} style={[this.props.style, TextStyle.body]} />;
+  }
+}
+
+export class Footnote extends React.PureComponent<TextProps> {
+  public /** override */ render(): JSX.Element {
+    return <Text {...this.props} style={[TextStyle.footnote, this.props.style]} />;
+  }
+}
+
+export class Caption1 extends React.PureComponent<TextProps> {
+  public /** override */ render(): JSX.Element {
+    return <Text {...this.props} style={[TextStyle.caption1, this.props.style]} />;
+  }
+}
+
+export class Caption2 extends React.PureComponent<TextProps> {
+  public /** override */ render(): JSX.Element {
+    return <Text {...this.props} style={[TextStyle.caption2, this.props.style]} />;
+  }
+}
+
+export const TextStyle = StyleSheet.create({
+  largeTitle: {
     fontFamily: "RobotoCondensed-Bold",
     fontSize: 34
+  },
+
+  title1: {
+    fontFamily: "RobotoCondensed-Bold",
+    fontSize: 28
   },
 
   title2: {
@@ -60,20 +87,14 @@ const styles = StyleSheet.create({
     fontFamily: "RobotoCondensed-Bold"
   },
 
-  heading: {
+  title3: {
+    fontSize: 20,
+    fontFamily: "RobotoCondensed-Bold"
+  },
+
+  headline: {
     fontSize: 17,
     fontFamily: "RobotoCondensed-Bold"
-  },
-
-  display: {
-    fontSize: 14,
-    fontFamily: "RobotoCondensed-Bold"
-  },
-
-  subhead: {
-    fontSize: 14,
-    fontFamily: "RobotoCondensed-Regular",
-    color: "rgba(0, 0, 0, 0.6)"
   },
 
   body: {
@@ -81,8 +102,29 @@ const styles = StyleSheet.create({
     fontFamily: "RobotoCondensed-Regular"
   },
 
-  caption: {
+  callout: {
+    fontSize: 16,
+    fontFamily: "RobotoCondensed-Regular"
+  },
+
+  subhead: {
+    fontSize: 15,
+    fontFamily: "RobotoCondensed-Regular",
+    color: "rgba(0, 0, 0, 0.6)"
+  },
+
+  footnote: {
     fontSize: 13,
+    fontFamily: "RobotoCondensed-Light"
+  },
+
+  caption1: {
+    fontSize: 12,
+    fontFamily: "RobotoCondensed-Light"
+  },
+
+  caption2: {
+    fontSize: 11,
     fontFamily: "RobotoCondensed-Light"
   }
 });

@@ -98,10 +98,10 @@ export default class TabUserMainScreen extends React.Component<IUserTabMainProps
           </TouchableOpacity>
         </View>
         <View>
-          <Text.Heading style={styles.name}>
+          <Text.Headline style={styles.name}>
             {accountNameByProvider.familyName} {accountNameByProvider.givenName}
-          </Text.Heading>
-          <Text.Display style={styles.address}>Hà Nội, VN</Text.Display>
+          </Text.Headline>
+          <Text.Callout style={styles.address}>Hà Nội, VN</Text.Callout>
         </View>
       </View>
     );
@@ -119,9 +119,9 @@ export default class TabUserMainScreen extends React.Component<IUserTabMainProps
                 styles.settingsContainer
               ]}
             >
-              <Text.Display style={{ fontWeight: "bold", fontSize: 16 }}>
+              <Text.Callout style={{ fontWeight: "bold", fontSize: 16 }}>
                 {item.title.toUpperCase()}
-              </Text.Display>
+              </Text.Callout>
               <Image source={Assets.Icons.ChevronLeft} />
             </View>
           ))}

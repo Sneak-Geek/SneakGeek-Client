@@ -7,17 +7,13 @@ import {
   ScrollView,
   View,
   StyleSheet,
-  Text,
   TextInput,
   Dimensions,
-  TouchableOpacity,
-  Modal,
-  Picker,
-  SafeAreaView
+  TouchableOpacity
 } from "react-native";
-import { Button } from "react-native-elements";
 import { LineChart, Grid, YAxis } from "react-native-svg-charts";
-import * as StringUtil from "../../../Utilities/StringUtil";
+import { StringUtils } from "../../../Utilities";
+import { CustomPicker, Text } from "../../../Shared/UI";
 
 interface State {
   isModalOpen: boolean;
@@ -57,9 +53,8 @@ export class ShoeSetPriceComponent extends React.Component<Props, State> {
   private _renderSetPrice(): JSX.Element {
     return (
       <View style={[styles.rowSeparatedContainer, { marginVertical: 15 }]}>
-        <Text style={[styles.fontTitle, { textAlignVertical: "center" }]}>Đặt giá bán</Text>
+        <Text.Headline style={{ textAlignVertical: "center" }}>Đặt giá bán</Text.Headline>
         <View style={styles.rowSeparatedContainer}>
-          <Text style={{ textAlign: "center" }}>VND</Text>
           <TextInput
             keyboardType={"numeric"}
             onChangeText={text =>
@@ -72,14 +67,14 @@ export class ShoeSetPriceComponent extends React.Component<Props, State> {
               const shoePrice = this.state.shoePrice;
               this.props.onSetShoePrice(parseInt(shoePrice));
               this.setState({
-                shoePrice: StringUtil.toCurrencyString(shoePrice)
+                shoePrice: StringUtils.toCurrencyString(shoePrice)
               });
             }}
             onFocus={() => {
               this.setState({ shoePrice: "" });
             }}
-            placeholder={StringUtil.toCurrencyString("1000000")}
-            style={[{ marginLeft: 5 }, styles.fontTitle]}
+            placeholder={StringUtils.toCurrencyString("1000000")}
+            style={{ marginLeft: 5, ...Text.TextStyle.body }}
           />
         </View>
       </View>
@@ -118,18 +113,12 @@ export class ShoeSetPriceComponent extends React.Component<Props, State> {
     return (
       <View style={[styles.rowSeparatedContainer, { marginVertical: 15 }]}>
         <View>
-          <Text style={styles.fontSubtitle}>Giá thấp nhất</Text>
-          <Text>
-            VND
-            <Text style={styles.fontTitle}> 1,200,000</Text>
-          </Text>
+          <Text.Subhead>Giá thấp nhất</Text.Subhead>
+          <Text.Headline>{StringUtils.toCurrencyString("1200000")}</Text.Headline>
         </View>
         <View>
-          <Text style={[styles.fontSubtitle, { textAlign: "right" }]}>Giá cao nhất</Text>
-          <Text style={{ textAlign: "right" }}>
-            VND
-            <Text style={styles.fontTitle}> 1,800,000</Text>
-          </Text>
+          <Text.Subhead style={{ textAlign: "right" }}>Giá cao nhất</Text.Subhead>
+          <Text.Headline>{StringUtils.toCurrencyString("1800000")}</Text.Headline>
         </View>
       </View>
     );
@@ -138,9 +127,11 @@ export class ShoeSetPriceComponent extends React.Component<Props, State> {
   private _renderSellDuration(): JSX.Element {
     return (
       <View style={[styles.rowSeparatedContainer, { marginVertical: 15 }]}>
-        <Text style={styles.fontTitle}>Thời gian đăng</Text>
+        <Text.Headline>Thời gian đăng</Text.Headline>
         <TouchableOpacity onPress={() => this.setState({ isModalOpen: true })}>
-          <Text style={styles.textPicker}>{this.state.selectedDuration || "Lựa chọn"}</Text>
+          <Text.Body style={styles.textPicker}>
+            {this.state.selectedDuration || "Lựa chọn"}
+          </Text.Body>
         </TouchableOpacity>
       </View>
     );
@@ -149,42 +140,20 @@ export class ShoeSetPriceComponent extends React.Component<Props, State> {
   private _renderPickerModal() {
     // TODO: Get config from server and set proper duration unit/duration
     const options = ["24 tiếng", "48 tiếng", "72 tiếng", "7 ngày", "1 tháng"];
+
     return (
-      <Modal
-        presentationStyle={"overFullScreen"}
+      <CustomPicker
         visible={this.state.isModalOpen}
-        transparent={true}
-        animationType={"fade"}
-        animated={true}
-      >
-        <SafeAreaView style={styles.modalContainer}>
-          <View style={styles.pickerContainer}>
-            <Button
-              title={"OK"}
-              type={"clear"}
-              onPress={() => this.setState({ isModalOpen: false })}
-              containerStyle={{ alignSelf: "flex-end", marginRight: 20 }}
-            />
-            <Picker
-              selectedValue={this.state.selectedDuration}
-              onValueChange={item =>
-                this.setState({ selectedDuration: item }, () => {
-                  const duration = (item as string).split(" ");
-                  this.props.onSetSellDuration({
-                    duration: parseInt(duration[0]),
-                    unit: duration[1]
-                  });
-                })
-              }
-              itemStyle={{ backgroundColor: "white" }}
-            >
-              {options.map((option, idx) => (
-                <Picker.Item key={idx.toString()} label={option} value={option} />
-              ))}
-            </Picker>
-          </View>
-        </SafeAreaView>
-      </Modal>
+        options={options}
+        optionLabelToString={item => item}
+        onSelectPickerOK={(selectedValue: string) => {
+          this.setState({ selectedDuration: selectedValue, isModalOpen: false }, () => {
+            const [duration, unit] = selectedValue.split(" ");
+            this.props.onSetSellDuration({ duration: parseInt(duration, 10), unit });
+          });
+        }}
+        onSelectPickerCancel={() => this.setState({ isModalOpen: false })}
+      />
     );
   }
 }
@@ -196,18 +165,13 @@ const styles = StyleSheet.create({
     justifyContent: "space-between"
   },
 
-  fontTitle: {
-    fontSize: 20
-  },
-
   fontSubtitle: {
     fontSize: 16,
     color: "rgba(0.0, 0.0, 0.0, 0.6)"
   },
 
   textPicker: {
-    color: "#1ABC9C",
-    fontSize: 17
+    color: "#1ABC9C"
   },
 
   modalContainer: {

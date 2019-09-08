@@ -53,8 +53,8 @@ export class HorizontalShoeCard extends React.Component<Props, {}> {
         : Assets.Styles.AppPrimaryColor;
     return (
       <View style={styles.priceChangeContainer}>
-        <Text.Caption>{StringUtils.toCurrencyString("3150000")}</Text.Caption>
-        <Text.Caption style={{ color: negative }}>{negative ? "-" : "+"}15.3%</Text.Caption>
+        <Text.Subhead>{StringUtils.toCurrencyString("3150000")}</Text.Subhead>
+        <Text.Subhead style={{ color: negative }}>{negative ? "-" : "+"}15.3%</Text.Subhead>
       </View>
     );
   }

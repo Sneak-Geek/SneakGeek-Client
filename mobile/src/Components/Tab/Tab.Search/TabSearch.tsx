@@ -120,7 +120,7 @@ export default class TabSearch extends React.Component<ISearchScreenProps, ISear
             keyExtractor={(shoe, _index) => shoe.title}
             renderItem={({ item }) => (
               <TouchableOpacity onPress={() => this.props.onShoeClick(this.isForSell, item)}>
-                <Text.Display style={styles.searchResult}>{item.title}</Text.Display>
+                <Text.Callout style={styles.searchResult}>{item.title}</Text.Callout>
               </TouchableOpacity>
             )}
             showsVerticalScrollIndicator={false}

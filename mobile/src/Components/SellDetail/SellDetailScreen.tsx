@@ -4,7 +4,7 @@
 
 import * as React from "react";
 import { Shoe } from "../../Reducers";
-import { View, Image, Text, TouchableOpacity, Dimensions, SafeAreaView } from "react-native";
+import { View, Image, TouchableOpacity, Dimensions, SafeAreaView } from "react-native";
 import {
   NavigationScreenProp,
   NavigationRoute,
@@ -20,6 +20,7 @@ import {
 } from "./ChildComponents";
 import { Icon } from "react-native-elements";
 import styles from "./styles";
+import { Text } from "../../Shared/UI";
 
 export interface ISellDetailScreenProps {
   navigation: NavigationScreenProp<NavigationRoute>;
@@ -52,6 +53,7 @@ type SellDetailChildren = {
 export class SellDetailScreen extends React.Component<ISellDetailScreenProps, State> {
   static navigationOptions = (navigationConfig: ScreenProps) => ({
     title: "Đăng sản phẩm",
+    headerTitleStyle: Text.TextStyle.title3,
     headerLeft: (
       <Icon
         type={"ionicon"}
@@ -154,10 +156,10 @@ export class SellDetailScreen extends React.Component<ISellDetailScreenProps, St
           resizeMode={"contain"}
         />
         <View style={styles.shoeDetailTextContainer}>
-          <Text style={{ fontSize: 18 }}>{this.shoe.title}</Text>
-          <Text style={{ fontSize: 13, marginTop: 3 }} numberOfLines={1} ellipsizeMode={"tail"}>
+          <Text.Headline>{this.shoe.title}</Text.Headline>
+          <Text.Footnote style={{ marginTop: 3 }} numberOfLines={2} ellipsizeMode={"tail"}>
             Colorway: {this.shoe.colorway.join(", ")}
-          </Text>
+          </Text.Footnote>
         </View>
       </View>
     );
@@ -284,7 +286,7 @@ export class SellDetailScreen extends React.Component<ISellDetailScreenProps, St
             style={[styles.backButtonStyle, halfWidth]}
             onPress={() => this._scrollToNext(false)}
           >
-            <Text style={{ textAlign: "center", color: "black", fontSize: 18 }}>Quay lại</Text>
+            <Text.Body style={{ textAlign: "center", color: "black" }}>Quay lại</Text.Body>
           </TouchableOpacity>
         )}
         <TouchableOpacity
@@ -297,9 +299,9 @@ export class SellDetailScreen extends React.Component<ISellDetailScreenProps, St
           ]}
           onPress={() => (shouldRenderUpdate ? this._uploadShoes() : this._scrollToNext(true))}
         >
-          <Text style={{ textAlign: "center", color: "white", fontSize: 18 }}>
+          <Text.Body style={{ textAlign: "center", color: "white" }}>
             {shouldRenderUpdate ? "Đăng sản phẩm" : "Tiếp tục"}
-          </Text>
+          </Text.Body>
         </TouchableOpacity>
       </View>
     );

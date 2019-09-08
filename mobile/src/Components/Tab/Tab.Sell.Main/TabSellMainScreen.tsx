@@ -14,6 +14,7 @@ import {
   NavigationScreenProp,
   NavigationRoute
 } from "react-navigation";
+import * as Assets from "../../../Assets";
 
 export interface ISellTabMainProps {
   navigation: NavigationScreenProp<NavigationRoute>;
@@ -104,7 +105,9 @@ export class TabSellMainScreen extends PurchaseComponent<ISellTabMainProps, ISel
   private _renderSellSuccessToast() {
     return (
       <View style={styles.toastContainer}>
-        <Text.Caption style={{ color: "#1ABC9C" }}>Đã đăng bán sản phẩm</Text.Caption>
+        <Text.Footnote style={{ color: Assets.Styles.AppPrimaryColor }}>
+          Đã đăng bán sản phẩm
+        </Text.Footnote>
         <TouchableOpacity
           onPress={() =>
             this.setState({
@@ -112,7 +115,7 @@ export class TabSellMainScreen extends PurchaseComponent<ISellTabMainProps, ISel
             })
           }
         >
-          <Text.Caption style={{ color: "white" }}>Đóng</Text.Caption>
+          <Text.Footnote style={{ color: "white" }}>Đóng</Text.Footnote>
         </TouchableOpacity>
       </View>
     );

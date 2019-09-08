@@ -196,7 +196,7 @@ export class ShoeDetailScreen extends React.Component<Props, State> {
     fieldMapping.forEach((value: string, key: string) =>
       views.push(
         <View style={styles.infoRow}>
-          <Text.Caption style={{ color: "gray" }}>{value.toUpperCase()}</Text.Caption>
+          <Text.Footnote style={{ color: "gray" }}>{value.toUpperCase()}</Text.Footnote>
           <Text.Body style={{ maxWidth: "60%", textAlign: "right" }} numberOfLines={2}>
             {this.shoe[key]}
           </Text.Body>
@@ -211,16 +211,16 @@ export class ShoeDetailScreen extends React.Component<Props, State> {
     return (
       <View style={{ flex: 1, paddingHorizontal: 20, marginTop: 40 }}>
         <View style={styles.ratingContainer}>
-          <Text.Heading style={styles.ratingTitle}>
+          <Text.Headline style={styles.ratingTitle}>
             {"Đánh giá sản phẩm".toUpperCase()}
-          </Text.Heading>
-          <Text.Heading style={styles.ratingTitle}>3.5/5</Text.Heading>
+          </Text.Headline>
+          <Text.Headline style={styles.ratingTitle}>3.5/5</Text.Headline>
         </View>
         <View style={{ flex: 1, flexDirection: "column" }}>
           <View style={styles.reviewTitleContainer}>
-            <Text.Caption style={{ textAlign: "center", fontWeight: "normal" }}>
+            <Text.Footnote style={{ textAlign: "center", fontWeight: "normal" }}>
               Hoàng Phạm
-            </Text.Caption>
+            </Text.Footnote>
             <StarRating
               disabled={true}
               maxStars={5}
@@ -252,9 +252,9 @@ export class ShoeDetailScreen extends React.Component<Props, State> {
     const shoesData = shoes.length === 0 ? [] : shoes.slice(0, 5);
     return (
       <View>
-        <Text.Heading style={[styles.ratingTitle, { margin: 20 }]}>
+        <Text.Headline style={[styles.ratingTitle, { margin: 20 }]}>
           {"Sản phẩm liên quan".toUpperCase()}
-        </Text.Heading>
+        </Text.Headline>
         <FlatList
           horizontal={true}
           data={shoesData}

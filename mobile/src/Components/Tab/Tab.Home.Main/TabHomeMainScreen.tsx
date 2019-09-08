@@ -55,7 +55,7 @@ export class TabHomeMainScreen extends React.Component<ITabHomeMainScreenProps> 
     const shoesData = this.props.shoes.length > 8 ? this.props.shoes.slice(0, 8) : [];
     return (
       <View style={{ flex: 1 }}>
-        <Text.Title1 style={styles.sectionTitle}>Đang hot</Text.Title1>
+        <Text.LargeTitle style={styles.sectionTitle}>Đang hot</Text.LargeTitle>
         <FlatList
           horizontal={true}
           data={shoesData}
@@ -137,9 +137,9 @@ export class TabHomeMainScreen extends React.Component<ITabHomeMainScreenProps> 
               this.props.navigateToShoeDetail(shoe);
             }}
           >
-            <Text.Title2 numberOfLines={2} style={styles.shoeTitle} ellipsizeMode={"tail"}>
+            <Text.Headline numberOfLines={2} style={styles.shoeTitle} ellipsizeMode={"tail"}>
               {shoe.title}
-            </Text.Title2>
+            </Text.Headline>
           </TouchableOpacity>
         </View>
       </View>

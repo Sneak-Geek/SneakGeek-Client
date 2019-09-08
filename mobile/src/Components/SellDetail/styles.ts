@@ -22,7 +22,8 @@ export default StyleSheet.create({
     flexWrap: "wrap",
     flexDirection: "column",
     justifyContent: "flex-start",
-    alignItems: "flex-start"
+    alignItems: "flex-start",
+    paddingRight: 5
   },
 
   backButtonStyle: {
