@@ -93,7 +93,7 @@ export class TabUserEditScreen extends React.Component<IUserEditScreenProps, {}>
               item.hasMarginBottom ? styles.listItemStyleWithMarginBottom : {}
             ]}
           >
-            <Text.Callout style={{ flex: 1 }}>{item.title.toUpperCase()}</Text.Callout>
+            <Text.Headline style={{ flex: 1 }}>{item.title.toUpperCase()}</Text.Headline>
             <Text.Subhead style={{ flex: 2 }}>
               {account ? item.value(account) : ""}
             </Text.Subhead>

@@ -15,7 +15,8 @@ import {
   SafeAreaView,
   StyleSheet,
   NativeSyntheticEvent,
-  TouchableOpacity
+  TouchableOpacity,
+  Keyboard
 } from "react-native";
 import { Input, Icon } from "react-native-elements";
 import { BlurView } from "@react-native-community/blur";
@@ -37,6 +38,7 @@ interface ISearchScreenState {
   searchKey: string;
   searchFocus: boolean;
   shouldRenderTopShoes: boolean;
+  shouldOpenSell: boolean;
 }
 
 export default class TabSearch extends React.Component<ISearchScreenProps, ISearchScreenState> {
@@ -52,14 +54,15 @@ export default class TabSearch extends React.Component<ISearchScreenProps, ISear
 
   public constructor /** override */(props: any) {
     super(props);
-    this.state = {
-      searchKey: "",
-      searchFocus: false,
-      shouldRenderTopShoes: true
-    };
     this.isForSell = this.props.navigation
       ? this.props.navigation.getParam("isForSell") === true
       : false;
+    this.state = {
+      searchKey: "",
+      searchFocus: false,
+      shouldRenderTopShoes: true,
+      shouldOpenSell: this.isForSell
+    };
   }
 
   public /** override */ render(): React.ReactNode {
@@ -83,6 +86,15 @@ export default class TabSearch extends React.Component<ISearchScreenProps, ISear
     );
   }
 
+  public componentDidUpdate(prevProps: ISearchScreenProps) {
+    const isForSell = prevProps.navigation ? prevProps.navigation.getParam("isForSell") : false;
+    if (typeof isForSell === "boolean" && isForSell !== this.state.shouldOpenSell) {
+      this.setState({
+        shouldOpenSell: isForSell
+      });
+    }
+  }
+
   private _renderSearchBar(): React.ReactNode {
     return (
       <Input
@@ -103,7 +115,7 @@ export default class TabSearch extends React.Component<ISearchScreenProps, ISear
         }
         labelStyle={{ fontSize: 16 }}
         onChangeText={this._search.bind(this)}
-        onEndEditing={this._onEndEditing.bind(this)}
+        onSubmitEditing={this._onEndEditing.bind(this)}
       />
     );
   }
@@ -114,12 +126,15 @@ export default class TabSearch extends React.Component<ISearchScreenProps, ISear
       <BlurView blurType={"light"} blurAmount={20} style={styles.searchContainer}>
         {searchResult.shoes && (
           <FlatList
+            onScroll={_evt => Keyboard.dismiss()}
             keyboardShouldPersistTaps={"always"}
             style={{ borderBottomWidth: 1, borderBottomColor: "black" }}
             data={searchResult.shoes}
             keyExtractor={(shoe, _index) => shoe.title}
             renderItem={({ item }) => (
-              <TouchableOpacity onPress={() => this.props.onShoeClick(this.isForSell, item)}>
+              <TouchableOpacity
+                onPress={() => this.props.onShoeClick(this.state.shouldOpenSell, item)}
+              >
                 <Text.Callout style={styles.searchResult}>{item.title}</Text.Callout>
               </TouchableOpacity>
             )}
@@ -202,7 +217,7 @@ export default class TabSearch extends React.Component<ISearchScreenProps, ISear
         data={topShoes}
         keyExtractor={(_data, index) => index.toString()}
         renderItem={({ item }) => (
-          <ShoeCard shoe={item} onPress={() => onShoeClick(this.isForSell, item)} />
+          <ShoeCard shoe={item} onPress={() => onShoeClick(this.state.shouldOpenSell, item)} />
         )}
         numColumns={2}
         style={{ marginTop: 30 }}
@@ -218,7 +233,10 @@ export default class TabSearch extends React.Component<ISearchScreenProps, ISear
         data={shoes}
         keyExtractor={(_data, index) => index.toString()}
         renderItem={({ item }) => (
-          <ShoeCard shoe={item} onPress={() => this.props.onShoeClick(this.isForSell, item)} />
+          <ShoeCard
+            shoe={item}
+            onPress={() => this.props.onShoeClick(this.state.shouldOpenSell, item)}
+          />
         )}
         numColumns={2}
         style={{ marginTop: 30 }}

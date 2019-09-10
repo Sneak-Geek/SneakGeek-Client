@@ -133,7 +133,7 @@ export default class TabUserMainScreen extends React.Component<IUserTabMainProps
   private _renderLogoutButton(): React.ReactNode {
     return (
       <TouchableOpacity style={[styles.settingsContainer, styles.signOutContainer]}>
-        <Text.Subhead style={{ color: Assets.Styles.AppErrorColor }}>Đăng xuất</Text.Subhead>
+        <Text.Body style={{ color: Assets.Styles.AppErrorColor }}>Đăng xuất</Text.Body>
       </TouchableOpacity>
     );
   }

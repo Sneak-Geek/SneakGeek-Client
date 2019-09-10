@@ -8,6 +8,7 @@ export const Styles = {
   AppAccentColor: "#000000",
   AppErrorColor: "#FF2D55",
   AppSecondaryColorBlurred: "rgba(47, 47, 47, 0.95)",
+  AppModalBackground: "rgba(0.0, 0.0, 0.0, 0.3)",
   ButtonHeight: 52,
   ButtonPrimaryColor: "#000000",
   ButtonBorderRadius: 4,

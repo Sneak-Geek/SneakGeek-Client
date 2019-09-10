@@ -45,10 +45,6 @@ export default StyleSheet.create({
     marginVertical: 15
   },
 
-  ratingTitle: {
-    fontSize: 24
-  },
-
   ratingContainer: {
     flex: 1,
     flexDirection: "row",

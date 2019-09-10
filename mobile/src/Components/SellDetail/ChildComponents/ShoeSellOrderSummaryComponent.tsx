@@ -13,6 +13,7 @@ import { Text } from "../../../Shared/UI";
 
 interface Props {
   orderSummary: SellOrder;
+  onShoePictureAdded: (picUrl: string) => void;
 }
 
 interface State {
@@ -125,9 +126,13 @@ export class ShoeSellOrderSummaryComponent extends React.PureComponent<Props, St
     ImagePicker.launchImageLibrary(this.imagePickerOptions, (response: ImagePickerResponse) => {
       if (!response.didCancel && !response.error) {
         console.log(`Image picked: ${response.uri}`);
-        this.setState(prevState => ({
-          pictures: [...prevState.pictures, response.uri]
-        }));
+        this.setState(prevState => {
+          this.props.onShoePictureAdded(response.uri);
+
+          return {
+            pictures: [...prevState.pictures, response.uri]
+          };
+        });
       }
     });
   }

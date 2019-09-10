@@ -3,7 +3,8 @@
 //!
 
 import * as React from "react";
-import { ViewStyle, View, TouchableOpacity, Text, TextStyle, StyleSheet } from "react-native";
+import { ViewStyle, View, TouchableOpacity, TextStyle, StyleSheet } from "react-native";
+import { Text } from ".";
 
 interface Props {
   containerStyle?: ViewStyle | ViewStyle[];
@@ -17,7 +18,7 @@ export class AppButton extends React.PureComponent<Props> {
     return (
       <TouchableOpacity onPress={this.props.onPress}>
         <View style={[this.props.containerStyle, styles.border]}>
-          <Text style={this.props.textStyle}>{this.props.title}</Text>
+          <Text.Subhead style={this.props.textStyle}>{this.props.title}</Text.Subhead>
         </View>
       </TouchableOpacity>
     );

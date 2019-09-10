@@ -196,7 +196,7 @@ export class ShoeDetailScreen extends React.Component<Props, State> {
     fieldMapping.forEach((value: string, key: string) =>
       views.push(
         <View style={styles.infoRow}>
-          <Text.Footnote style={{ color: "gray" }}>{value.toUpperCase()}</Text.Footnote>
+          <Text.Subhead style={{ color: "gray" }}>{value.toUpperCase()}</Text.Subhead>
           <Text.Body style={{ maxWidth: "60%", textAlign: "right" }} numberOfLines={2}>
             {this.shoe[key]}
           </Text.Body>
@@ -211,10 +211,8 @@ export class ShoeDetailScreen extends React.Component<Props, State> {
     return (
       <View style={{ flex: 1, paddingHorizontal: 20, marginTop: 40 }}>
         <View style={styles.ratingContainer}>
-          <Text.Headline style={styles.ratingTitle}>
-            {"Đánh giá sản phẩm".toUpperCase()}
-          </Text.Headline>
-          <Text.Headline style={styles.ratingTitle}>3.5/5</Text.Headline>
+          <Text.Headline>{"giá sản phẩm".toUpperCase()}</Text.Headline>
+          <Text.Headline style={{ color: Assets.Styles.AppPrimaryColor }}>3.5/5</Text.Headline>
         </View>
         <View style={{ flex: 1, flexDirection: "column" }}>
           <View style={styles.reviewTitleContainer}>
@@ -252,7 +250,7 @@ export class ShoeDetailScreen extends React.Component<Props, State> {
     const shoesData = shoes.length === 0 ? [] : shoes.slice(0, 5);
     return (
       <View>
-        <Text.Headline style={[styles.ratingTitle, { margin: 20 }]}>
+        <Text.Headline style={{ margin: 20 }}>
           {"Sản phẩm liên quan".toUpperCase()}
         </Text.Headline>
         <FlatList

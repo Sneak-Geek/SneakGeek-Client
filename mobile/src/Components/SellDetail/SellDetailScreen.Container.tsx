@@ -7,12 +7,17 @@ import { IAppState } from "../../Store";
 import { SellDetailScreen } from "./SellDetailScreen";
 import { NavigationActions } from "react-navigation";
 import { RouteNames } from "../../Navigation";
+import { sellShoes } from "../../Actions/TransactionActions";
 
-const mapStateToProps = (_state: IAppState) => ({});
+const mapStateToProps = (state: IAppState) => ({
+  transactionState: state.TransactionState
+});
 
 const mapDispatchToProps = (dispatch: Function) => {
   return {
-    uploadShoes: () => {
+    uploadShoes: async (pictures: string[]) => {
+      await dispatch(sellShoes(pictures));
+
       dispatch(
         NavigationActions.navigate({
           routeName: RouteNames.Tabs.SellTab.MainScreen,

@@ -50,5 +50,19 @@ export default StyleSheet.create({
     borderBottomWidth: 0.5,
     borderBottomColor: Assets.Styles.AppAccentColor,
     borderTopColor: Assets.Styles.AppAccentColor
+  },
+
+  activityIndicatorModalContainer: {
+    alignItems: "center",
+    justifyContent: "center"
+  },
+
+  acitivytIndicatorContainer: {
+    width: 100,
+    height: 100,
+    backgroundColor: Assets.Styles.AppModalBackground,
+    alignItems: "center",
+    justifyContent: "center",
+    borderRadius: Assets.Styles.ButtonBorderRadius
   }
 });

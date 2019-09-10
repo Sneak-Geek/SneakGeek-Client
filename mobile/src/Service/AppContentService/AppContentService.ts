@@ -5,14 +5,14 @@
 import ApiClient from "../ApiClient";
 import { Shoe } from "../../Reducers";
 import { IAppContentService } from "./IAppContentService";
-import httpStatus = require("http-status");
+import * as HttpStatus from "http-status";
 import { injectable } from "inversify";
 
 @injectable()
 export class AppContentService implements IAppContentService {
   public async getShoes(): Promise<Shoe[]> {
     const response = await ApiClient.get("/shoe/all");
-    if (response && response.status === httpStatus.OK) {
+    if (response && response.status === HttpStatus.OK) {
       return response.data as Shoe[];
     }
 
@@ -21,7 +21,7 @@ export class AppContentService implements IAppContentService {
 
   public async searchShoes(key: string): Promise<Shoe[]> {
     const response = await ApiClient.get(`/shoe/find?key=${key}`);
-    if (response && response.status === httpStatus.OK) {
+    if (response && response.status === HttpStatus.OK) {
       return response.data as Shoe[];
     }
 

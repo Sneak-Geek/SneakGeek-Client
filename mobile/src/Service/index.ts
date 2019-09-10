@@ -4,3 +4,4 @@
 
 export * from "./AuthenticationService";
 export * from "./AppContentService";
+export * from "./CdnService";

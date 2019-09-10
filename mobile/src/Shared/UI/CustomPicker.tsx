@@ -5,6 +5,7 @@
 import * as React from "react";
 import { Modal, Picker, View, SafeAreaView, StyleSheet } from "react-native";
 import { Button } from "react-native-elements";
+import * as Assets from "../../Assets";
 
 export interface IPickerState<T> {
   selectedItem: T | null;
@@ -79,7 +80,7 @@ export class CustomPicker<T> extends React.PureComponent<IPickerProps<T>, IPicke
 
 const styles = StyleSheet.create({
   modalContainer: {
-    backgroundColor: "rgba(0.0, 0.0, 0.0, 0.3)",
+    backgroundColor: Assets.Styles.AppModalBackground,
     flex: 1,
     position: "relative"
   },

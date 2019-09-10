@@ -3,5 +3,6 @@
 //!
 
 export interface ICdnService {
+  getImageUploadUrls(token: string, count: number): Promise<string[]>;
   uploadImage(localImgUrl: string, presignedCdnUrl: string): Promise<any>;
 }

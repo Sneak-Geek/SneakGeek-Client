@@ -3,8 +3,17 @@
 //!
 
 import * as React from "react";
-import { Shoe } from "../../Reducers";
-import { View, Image, TouchableOpacity, Dimensions, SafeAreaView } from "react-native";
+import { Shoe, ITransactionState } from "../../Reducers";
+import {
+  View,
+  Image,
+  TouchableOpacity,
+  Dimensions,
+  SafeAreaView,
+  Modal,
+  ActivityIndicator,
+  StyleSheet
+} from "react-native";
 import {
   NavigationScreenProp,
   NavigationRoute,
@@ -21,10 +30,13 @@ import {
 import { Icon } from "react-native-elements";
 import styles from "./styles";
 import { Text } from "../../Shared/UI";
+import { TransactionState } from "../../Shared/State";
+import * as Assets from "../../Assets";
 
 export interface ISellDetailScreenProps {
   navigation: NavigationScreenProp<NavigationRoute>;
-  uploadShoes: () => void;
+  transactionState: ITransactionState;
+  uploadShoes: (pictures: string[]) => void;
 }
 
 export type SellOrder = {
@@ -38,6 +50,7 @@ export type SellOrder = {
   otherDetail?: string;
   price?: number;
   sellDuration?: { duration: number; unit: string };
+  pictures?: string[];
 };
 
 interface State {
@@ -126,7 +139,22 @@ export class SellDetailScreen extends React.Component<ISellDetailScreenProps, St
       },
       {
         render: () => (
-          <ShoeSellOrderSummaryComponent key={3} orderSummary={this.state.sellOrderInfo} />
+          <ShoeSellOrderSummaryComponent
+            key={3}
+            orderSummary={this.state.sellOrderInfo}
+            onShoePictureAdded={(picUri: string) => {
+              this.setState(prevState => {
+                let pictures: string[] = prevState.sellOrderInfo.pictures || [];
+                pictures = [...pictures, picUri];
+                return {
+                  sellOrderInfo: {
+                    ...prevState.sellOrderInfo,
+                    pictures
+                  }
+                };
+              });
+            }}
+          />
         ),
         canProceed: () => {
           return true;
@@ -138,12 +166,39 @@ export class SellDetailScreen extends React.Component<ISellDetailScreenProps, St
   public /** override */ render(): JSX.Element {
     return (
       <SafeAreaView style={{ flex: 1, position: "relative" }}>
+        {this._renderActivityIndicator()}
         <View style={{ flex: 1 }}>
           {this._renderShoeDetail()}
           {this._renderSellerContent()}
           {this._renderNextButton()}
         </View>
       </SafeAreaView>
+    );
+  }
+
+  public /** override */ componentWillUnmount() {
+    this.props.navigation.setParams({ isForSell: false });
+  }
+
+  private _renderActivityIndicator() {
+    const { transactionState } = this.props;
+    return (
+      <Modal
+        presentationStyle={"overFullScreen"}
+        visible={transactionState.sell.state === TransactionState.SELL_UPLOADING_PICTURES}
+        transparent={true}
+        animationType={"fade"}
+        animated={true}
+      >
+        <View style={[StyleSheet.absoluteFill, styles.activityIndicatorModalContainer]}>
+          <View style={styles.acitivytIndicatorContainer}>
+            <ActivityIndicator size={"large"} color={"white"} />
+            <Text.Subhead style={{ color: Assets.Styles.AppSecondaryColor }}>
+              Đang tải
+            </Text.Subhead>
+          </View>
+        </View>
+      </Modal>
     );
   }
 
@@ -327,6 +382,9 @@ export class SellDetailScreen extends React.Component<ISellDetailScreenProps, St
   }
 
   private _uploadShoes() {
-    this.props.uploadShoes();
+    const { uploadShoes } = this.props;
+    if (this.state.sellOrderInfo.pictures) {
+      uploadShoes(this.state.sellOrderInfo.pictures);
+    }
   }
 }
