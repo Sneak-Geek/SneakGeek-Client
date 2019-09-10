@@ -14,7 +14,7 @@ import { IAppSettings, SettingsKeys } from "../Config/Settings";
 
 export module AccountActions {
   export const AUTHENTICATE_ERROR = "AUTHENTICATION_ERROR";
-  export const AUTHENTICATE_VSNKRS = "AUTHENTICATE_VSNKRS";
+  export const AUTHENTICATE_SG = "AUTHENTICATE_SG";
   export const AUTHENTICATION_COMPLETE = "AUTHENTICATION_COMPLETE";
   export const THIRD_PARTY_CANCELED_AUTH = "THIRD_PARTY_CANCELED_AUTH";
   export const GO_TO_LOGIN = "GO_TO_LOGIN";
@@ -24,18 +24,18 @@ export const cancelThirdPartyAuthentication = createAction<"facebook" | "google"
   AccountActions.THIRD_PARTY_CANCELED_AUTH
 );
 export const authenticationError = createAction(AccountActions.AUTHENTICATE_ERROR);
-export const vsnkrsAuthenticate = createAction(AccountActions.AUTHENTICATE_VSNKRS);
+export const sgAuthenticate = createAction(AccountActions.AUTHENTICATE_SG);
 export const authenticationComplete = createAction<Account>(
   AccountActions.AUTHENTICATION_COMPLETE
 );
 export const goToLogin = createAction(AccountActions.GO_TO_LOGIN);
 
-export const authenticateVsnkrsService = (
+export const authenticateSGService = (
   accessToken: string,
   provider: "facebook" | "google"
 ) => {
   return async (dispatch: Function) => {
-    dispatch(vsnkrsAuthenticate);
+    dispatch(sgAuthenticate);
     try {
       const authService = container.get<IAuthenticationService>(Types.IAuthenticationService);
       const settings = container.get<IAppSettings>(Types.IAppSettings);
@@ -72,7 +72,7 @@ export const facebookAuthenticate = () => {
       } else {
         const data = (await AccessToken.getCurrentAccessToken()) as AccessToken;
         invariant(data !== null);
-        dispatch(authenticateVsnkrsService(data.accessToken.toString(), "facebook"));
+        dispatch(authenticateSGService(data.accessToken.toString(), "facebook"));
       }
     } catch (error) {
       dispatch(authenticationError(error));
@@ -91,7 +91,7 @@ export const googleAuthenticate = () => {
       await GoogleSignin.hasPlayServices();
       const userInfo: GoogleUser = await GoogleSignin.signIn();
       if (userInfo && userInfo.idToken) {
-        dispatch(authenticateVsnkrsService(userInfo.idToken, "google"));
+        dispatch(authenticateSGService(userInfo.idToken, "google"));
       }
     } catch (error) {
       dispatch(authenticationError(error));
