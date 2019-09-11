@@ -17,11 +17,12 @@ export class AppSettings implements IAppSettings {
 
     if (value) {
       try {
-        this._dict = Object.assign(JSON.parse(value), this._dict);
+        this._dict = Object.assign(this._dict, JSON.parse(value));
       } catch (error) {
         console.log(`Load settings error: ${error}`);
       }
     }
+
     this._isLoaded = true;
     return true;
   }

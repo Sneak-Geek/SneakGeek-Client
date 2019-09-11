@@ -30,10 +30,11 @@ export class CdnService implements ICdnService {
       const xhr = new XMLHttpRequest();
       xhr.open("PUT", presignedCdnUrl);
       xhr.onreadystatechange = () => {
-        if (xhr.readyState === 4 && xhr.status === HttpStatus.OK) {
-          resolve();
-        } else {
-          reject();
+        if (xhr.readyState === 4) {
+          if (xhr.status === HttpStatus.OK) resolve();
+          else {
+            reject();
+          }
         }
       };
 

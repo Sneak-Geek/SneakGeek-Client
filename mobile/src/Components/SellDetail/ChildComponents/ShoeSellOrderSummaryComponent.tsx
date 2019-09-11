@@ -5,7 +5,7 @@
 import * as React from "react";
 import { ScrollView, View, Dimensions, StyleSheet, Image } from "react-native";
 import * as StringUtil from "../../../Utilities/StringUtil";
-import { SellOrder } from "../SellDetailScreen";
+import { SellOrder } from "../../../Shared/Model";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import * as Assets from "../../../Assets";
 import ImagePicker, { ImagePickerResponse } from "react-native-image-picker";

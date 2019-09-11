@@ -7,6 +7,7 @@ import { updateShoesData, updateSearchShoesState, SearchShoePayload } from "../A
 import { SearchShoeState } from "../Shared/State";
 
 export type Shoe = {
+  _id: string;
   brand: string;
   category: string;
   colorway: string[];

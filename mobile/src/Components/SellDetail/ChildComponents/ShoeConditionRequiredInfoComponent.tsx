@@ -23,13 +23,13 @@ enum PickerType {
 }
 
 type Props = {
-  onSetShoeSize: (shoeSize: number) => void;
+  onSetShoeSize: (shoeSize: string) => void;
   onSetShoeCondition: (shoeCondition: string) => void;
   onSetBoxCondition: (boxCondition: string) => void;
 };
 
 type State = {
-  shoeSize?: number;
+  shoeSize?: string;
   shoeCondition: string;
   boxCondition: string;
   isSelectingShoeSize: boolean;
@@ -178,7 +178,7 @@ export class ShoeConditionRequiredInfoComponent extends React.PureComponent<Prop
                 : {}
             ]}
             onPress={() => {
-              const shoeSize = parseFloat(item);
+              const shoeSize = item;
               this.setState({ shoeSize }, () => {
                 this.props.onSetShoeSize(shoeSize);
               });

@@ -9,5 +9,6 @@ export const Types = {
 
   ApiClient: Symbol.for("ApiClient"),
   IAppContentService: Symbol.for("IAppContentService"),
-  ICdnService: Symbol.for("ICdnService")
+  ICdnService: Symbol.for("ICdnService"),
+  ITransactionService: Symbol.for("ITransactionService")
 };
