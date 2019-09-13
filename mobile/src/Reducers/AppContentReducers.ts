@@ -3,41 +3,34 @@
 //!
 
 import { handleActions, Action } from "redux-actions";
-import { updateShoesData, updateSearchShoesState, SearchShoePayload } from "../Actions";
-import { SearchShoeState } from "../Shared/State";
-
-export type Shoe = {
-  _id: string;
-  brand: string;
-  category: string;
-  colorway: string[];
-  name: string;
-  description?: string;
-  media: {
-    imageUrl: string;
-  };
-  shoe: string;
-  urlKey: string;
-  title: string;
-
-  // indexing Shoe purpose only
-  [key: string]: any;
-};
+import { updateShoesData, updateSearchShoesState, updateGetShoesState } from "../Actions";
+import { Shoe } from "../Shared/Model";
+import { SearchShoePayload, GetShoesPayload } from "../Shared/Payload";
+import { NetworkRequestState } from "../Shared/State";
 
 export interface IAppContentState {
   shoes: Shoe[];
-  shoesSearchResult: {
+  getShoesState: {
+    state: NetworkRequestState;
     shoes?: Shoe[];
-    state: SearchShoeState;
+    error?: any;
+  };
+  searchShoesState: {
+    shoes?: Shoe[];
+    state: NetworkRequestState;
     error?: any;
   };
 }
 
-const initialAppContentState = {
+const initialAppContentState: IAppContentState = {
   shoes: [],
-  shoesSearchResult: {
+  getShoesState: {
+    state: NetworkRequestState.NOT_STARTED,
+    shoes: []
+  },
+  searchShoesState: {
     shoes: [],
-    state: SearchShoeState.NOT_STARTED
+    state: NetworkRequestState.NOT_STARTED
   }
 };
 
@@ -65,7 +58,14 @@ export const AppContentReducers = handleActions<IAppContentState, any>(
       }
 
       return result;
-    }
+    },
+    [`${updateGetShoesState}`]: (state: IAppContentState, action: Action<GetShoesPayload>) => ({
+      ...state,
+      getShoesState: {
+        ...state.getShoesState,
+        ...action.payload
+      }
+    })
   },
   initialAppContentState
 );

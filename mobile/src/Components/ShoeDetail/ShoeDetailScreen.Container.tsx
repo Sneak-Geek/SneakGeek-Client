@@ -7,7 +7,7 @@ import { ShoeDetailScreen } from "./ShoeDetailScreen";
 import { IAppState } from "../../Store";
 import { RouteNames } from "../../Navigation";
 import { StackActions } from "react-navigation";
-import { Shoe } from "../../Reducers";
+import { Shoe } from "../../Shared/Model";
 
 const mapStateToProps = (state: IAppState) => {
   return {

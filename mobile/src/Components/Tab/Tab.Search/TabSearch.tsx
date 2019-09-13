@@ -20,9 +20,9 @@ import {
 } from "react-native";
 import { Input, Icon } from "react-native-elements";
 import { BlurView } from "@react-native-community/blur";
-import { Shoe } from "../../../Reducers";
+import { Shoe } from "../../../Shared/Model";
 import { ShoeCard, Text } from "../../../Shared/UI";
-import { SearchShoePayload } from "../../../Actions";
+import { SearchShoePayload } from "../../../Shared/Payload";
 import * as Assets from "../../../Assets";
 
 export interface ISearchScreenProps {

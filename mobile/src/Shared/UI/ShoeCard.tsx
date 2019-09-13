@@ -5,7 +5,7 @@
 import * as React from "react";
 import { Image, StyleSheet, ViewStyle, TouchableOpacity, View } from "react-native";
 import * as Text from "./Text";
-import { Shoe } from "../../Reducers";
+import { Shoe } from "../../Shared/Model";
 import * as StringsUtil from "../../Utilities/StringUtil";
 import { TouchableWithoutFeedback } from "react-native-gesture-handler";
 

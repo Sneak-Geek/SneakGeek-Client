@@ -3,7 +3,7 @@
 //!
 
 import * as React from "react";
-import { Shoe, ITransactionState } from "../../Reducers";
+import { ITransactionState } from "../../Reducers";
 import {
   View,
   Image,
@@ -30,8 +30,8 @@ import {
 import { Icon } from "react-native-elements";
 import styles from "./styles";
 import { Text } from "../../Shared/UI";
-import { TransactionState } from "../../Shared/State";
-import { SellOrder } from "../../Shared/Model";
+import { TransactionReduxState } from "../../Shared/State";
+import { SellOrder, Shoe } from "../../Shared/Model";
 import * as Assets from "../../Assets";
 
 export interface ISellDetailScreenProps {
@@ -176,9 +176,9 @@ export class SellDetailScreen extends React.Component<ISellDetailScreenProps, St
       <Modal
         presentationStyle={"overFullScreen"}
         visible={
-          sellState !== TransactionState.SELL_NOT_STARTED &&
-          sellState !== TransactionState.SELL_SUCCESS &&
-          sellState !== TransactionState.SELL_FAILURE
+          sellState !== TransactionReduxState.SELL_NOT_STARTED &&
+          sellState !== TransactionReduxState.SELL_SUCCESS &&
+          sellState !== TransactionReduxState.SELL_FAILURE
         }
         transparent={true}
         animationType={"fade"}

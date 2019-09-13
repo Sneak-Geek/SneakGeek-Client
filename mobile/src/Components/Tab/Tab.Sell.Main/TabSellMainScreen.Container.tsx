@@ -7,10 +7,14 @@ import { TabSellMainScreen } from "./TabSellMainScreen";
 import { IAppState } from "../../../Store";
 import { NavigationActions } from "react-navigation";
 import { RouteNames } from "../../../Navigation";
+import { getSellHistory, getShoesByIds } from "../../../Actions";
 
-const mapStateToProps = (state: IAppState) => ({
-  shoes: state.AppContentState.shoes
-});
+const mapStateToProps = (state: IAppState) => {
+  return {
+    shoes: state.AppContentState.shoes,
+    sellHistory: state.TransactionState.sellHistory
+  };
+};
 
 const mapDispatchToProps = (dispatch: Function) => {
   return {
@@ -20,6 +24,12 @@ const mapDispatchToProps = (dispatch: Function) => {
         params: { isForSell: true }
       };
       dispatch(NavigationActions.navigate(navConfig));
+    },
+    getSellHistory: () => {
+      dispatch(getSellHistory());
+    },
+    getShoesByIds: (ids: string[]) => {
+      dispatch(getShoesByIds(ids));
     }
   };
 };

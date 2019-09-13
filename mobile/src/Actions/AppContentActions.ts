@@ -3,10 +3,12 @@
 //!
 
 import { createAction } from "redux-actions";
-import { Shoe } from "../Reducers";
+import { Shoe } from "../Shared/Model";
 import { IAppContentService } from "../Service";
-import { SearchShoeState } from "../Shared/State";
+import { NetworkRequestState } from "../Shared/State";
+import { SearchShoePayload, GetShoesPayload } from "../Shared/Payload";
 import { container, Types } from "../Config/Inversify";
+import { IAppSettings, SettingsKeys } from "../Config/Settings";
 
 namespace AppContentActionNames {
   export const FETCH_SHOES = "FETCH_SHOES";
@@ -14,6 +16,7 @@ namespace AppContentActionNames {
   export const UPDATE_SHOES_DATA = "UPDATE_SHOES_DATA";
 
   export const UPDATE_SEARCH_SHOE_STATE = "UPDATE_SEARCH_SHOE_STATE";
+  export const UPDATE_GET_SHOES_STATE = "UPDATE_GET_SHOE_STATE";
 }
 
 export const updateStatusFetchShoes = createAction<boolean>(AppContentActionNames.FETCH_SHOES);
@@ -22,10 +25,12 @@ export const updateFetchShoesError = createAction<any>(
   AppContentActionNames.UPDATE_FETCH_SHOES_ERROR
 );
 
-export type SearchShoePayload = { state: SearchShoeState; shoes?: Shoe[]; error?: any };
-
 export const updateSearchShoesState = createAction<SearchShoePayload>(
   AppContentActionNames.UPDATE_SEARCH_SHOE_STATE
+);
+
+export const updateGetShoesState = createAction<GetShoesPayload>(
+  AppContentActionNames.UPDATE_GET_SHOES_STATE
 );
 
 export const fetchShoes = () => {
@@ -45,15 +50,37 @@ export const fetchShoes = () => {
 
 export const searchShoes = (keyword: string) => {
   return async (dispatch: Function) => {
-    dispatch(updateSearchShoesState({ state: SearchShoeState.SEARCHING, error: undefined }));
+    dispatch(
+      updateSearchShoesState({ state: NetworkRequestState.REQUESTING, error: undefined })
+    );
     try {
       const appContentService = container.get<IAppContentService>(Types.IAppContentService);
       const shoes = await appContentService.searchShoes(keyword);
       dispatch(
-        updateSearchShoesState({ state: SearchShoeState.SUCCESS, shoes, error: undefined })
+        updateSearchShoesState({ state: NetworkRequestState.SUCCESS, shoes, error: undefined })
       );
     } catch (error) {
-      dispatch(updateSearchShoesState({ state: SearchShoeState.FAILED, error }));
+      dispatch(updateSearchShoesState({ state: NetworkRequestState.FAILED, error }));
+    }
+  };
+};
+
+export const getShoesByIds = (ids: string[]) => {
+  return async (dispatch: Function) => {
+    try {
+      dispatch(
+        updateGetShoesState({ state: NetworkRequestState.NOT_STARTED, error: undefined })
+      );
+      const appContentService = container.get<IAppContentService>(Types.IAppContentService);
+      const appSettings = container.get<IAppSettings>(Types.IAppSettings);
+      const token = appSettings.getValue(SettingsKeys.CurrentAccessToken);
+
+      const shoes = await appContentService.getShoesByIds(token, ids);
+      dispatch(
+        updateGetShoesState({ state: NetworkRequestState.SUCCESS, shoes, error: undefined })
+      );
+    } catch (e) {
+      dispatch(updateGetShoesState({ state: NetworkRequestState.FAILED, error: e }));
     }
   };
 };

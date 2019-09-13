@@ -2,9 +2,9 @@
 //! Copyright (c) 2019 - SneakGeek. All rights reserved
 //!
 
-export enum SearchShoeState {
+export enum NetworkRequestState {
   NOT_STARTED,
-  SEARCHING,
+  REQUESTING,
   SUCCESS,
   FAILED
 }

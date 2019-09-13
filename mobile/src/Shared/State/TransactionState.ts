@@ -2,7 +2,7 @@
 //! Copyright (c) 2019 - SneakGeek. All rights reserved
 //!
 
-export enum TransactionState {
+export enum TransactionReduxState {
   SELL_NOT_STARTED,
   SELL_UPLOADING,
   SELL_UPLOADING_PICTURES,

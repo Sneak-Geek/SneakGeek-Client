@@ -7,13 +7,13 @@ import TabSearch from "./TabSearch";
 import { IAppState } from "../../../Store";
 import { NavigationActions } from "react-navigation";
 import { RouteNames } from "../../../Navigation";
-import { Shoe } from "../../../Reducers";
+import { Shoe } from "../../../Shared/Model";
 import { searchShoes } from "../../../Actions";
 
 const mapStateToProps = (state: IAppState) => {
   return {
     shoes: state.AppContentState.shoes,
-    searchResult: state.AppContentState.shoesSearchResult
+    searchResult: state.AppContentState.searchShoesState
   };
 };
 

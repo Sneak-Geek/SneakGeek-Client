@@ -3,7 +3,7 @@
 //!
 
 import * as React from "react";
-import { Shoe } from "../../Reducers";
+import { Shoe } from "../../Shared/Model";
 import { View, Image } from "react-native";
 import ProgressCircle from "react-native-progress-circle";
 import { Text } from ".";

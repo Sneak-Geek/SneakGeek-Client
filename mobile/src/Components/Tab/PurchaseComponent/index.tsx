@@ -4,12 +4,16 @@
 
 import * as React from "react";
 import { View, StyleSheet, FlatList } from "react-native";
-import { Shoe } from "../../../Reducers";
+import { Shoe } from "../../../Shared/Model";
 import { HorizontalShoeCard, Text } from "../../../Shared/UI";
 
 export default class PurchaseComponents<P = {}, S = {}> extends React.Component<P, S> {
   public /** abstract */ render(): React.ReactNode {
     return null;
+  }
+
+  constructor(props: P) {
+    super(props);
   }
 
   public renderShoesList(title: string, shoes: Shoe[], renderPriceOnly: boolean) {

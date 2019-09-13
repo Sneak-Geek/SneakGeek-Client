@@ -11,7 +11,7 @@ import {
   FlatList,
   ScrollView
 } from "react-native";
-import { Shoe } from "../../Reducers";
+import { Shoe } from "../../Shared/Model";
 import {
   StackActions,
   NavigationScreenProp,

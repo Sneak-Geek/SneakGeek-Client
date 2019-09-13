@@ -7,7 +7,7 @@ import { IAppState } from "../../../Store";
 import { TabHomeMainScreen } from "./TabHomeMainScreen";
 import { fetchShoes } from "../../../Actions";
 import { RouteNames } from "../../../Navigation";
-import { Shoe } from "../../../Reducers";
+import { Shoe } from "../../../Shared/Model";
 import { NavigationActions } from "react-navigation";
 
 const mapStateToProps = (state: IAppState) => {

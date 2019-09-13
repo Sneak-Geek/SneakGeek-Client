@@ -4,7 +4,7 @@
 
 import * as React from "react";
 import { View, ScrollView, SafeAreaView, FlatList } from "react-native";
-import { Shoe } from "../../../Reducers";
+import { Shoe } from "../../../Shared/Model";
 import { ShoeProgressCircle } from "../../../Shared/UI";
 import PurchaseComponent from "../PurchaseComponent";
 

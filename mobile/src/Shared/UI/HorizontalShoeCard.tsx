@@ -4,7 +4,7 @@
 
 import * as React from "react";
 import { View, Image, StyleSheet } from "react-native";
-import { Shoe } from "../../Reducers";
+import { Shoe } from "../../Shared/Model";
 import { StringUtils } from "../../Utilities";
 import * as Text from "./Text";
 import * as Assets from "../../Assets";

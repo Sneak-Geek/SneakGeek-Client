@@ -3,27 +3,55 @@
 //!
 
 import { handleActions, Action } from "redux-actions";
-import { TransactionState } from "../Shared/State";
-import { updateSellState } from "../Actions";
+import { TransactionReduxState, NetworkRequestState } from "../Shared/State";
+import { updateSellState, updateGetSellHistory } from "../Actions";
+import { SellOrder } from "../Shared/Model";
+import { SellOrderHistoryPayload } from "../Shared/Payload";
 
 export interface ITransactionState {
   sell: {
-    state: TransactionState;
+    state: TransactionReduxState;
+  };
+  sellHistory: {
+    state: NetworkRequestState;
+    history: SellOrder[];
+    error?: any;
   };
 }
 
 const initialState: ITransactionState = {
   sell: {
-    state: TransactionState.SELL_NOT_STARTED
+    state: TransactionReduxState.SELL_NOT_STARTED
+  },
+  sellHistory: {
+    state: NetworkRequestState.NOT_STARTED,
+    history: []
   }
 };
 
 export const TransactionReducers = handleActions<ITransactionState, any>(
   {
-    [`${updateSellState}`]: (state: ITransactionState, action: Action<TransactionState>) => ({
-      ...state,
-      sell: { ...state.sell, state: action.payload }
-    })
+    [`${updateSellState}`]: (
+      state: ITransactionState,
+      action: Action<TransactionReduxState>
+    ) => {
+      return {
+        ...state,
+        sell: { ...state.sell, state: action.payload }
+      };
+    },
+    [`${updateGetSellHistory}`]: (
+      state: ITransactionState,
+      action: Action<Partial<SellOrderHistoryPayload>>
+    ) => {
+      return {
+        ...state,
+        sellHistory: {
+          ...state.sellHistory,
+          ...action.payload
+        }
+      };
+    }
   },
   initialState
 );

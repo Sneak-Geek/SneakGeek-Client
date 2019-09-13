@@ -5,23 +5,27 @@
 import { createAction } from "redux-actions";
 import { container, Types } from "../Config/Inversify";
 import { ICdnService, ITransactionService } from "../Service";
-import { TransactionState } from "../Shared/State";
+import { TransactionReduxState, NetworkRequestState } from "../Shared/State";
 import { SellOrder } from "../Shared/Model";
+import { SellOrderHistoryPayload } from "../Shared/Payload";
 import { IAppSettings, SettingsKeys } from "../Config/Settings";
-import { NavigationActions, StackActions } from "react-navigation";
-import { RouteNames } from "../Navigation";
 
-export const SellOrderActionNames = {
-  UPDATE_SELL_ORDER_STATE: "UPDATE_SELL_ORDER_STAGE"
+export const TransactionActionNames = {
+  UPDATE_SELL_ORDER_STATE: "UPDATE_SELL_ORDER_STAGE",
+  UPDATE_GET_SELL_HISTORY: "UPDATE_GET_SELL_HISTORY"
 };
 
-export const updateSellState = createAction<TransactionState>(
-  SellOrderActionNames.UPDATE_SELL_ORDER_STATE
+export const updateSellState = createAction<TransactionReduxState>(
+  TransactionActionNames.UPDATE_SELL_ORDER_STATE
+);
+
+export const updateGetSellHistory = createAction<SellOrderHistoryPayload>(
+  TransactionActionNames.UPDATE_GET_SELL_HISTORY
 );
 
 export const sellShoes = (sellOrder: SellOrder) => {
   return async (dispatch: Function) => {
-    dispatch(updateSellState(TransactionState.SELL_UPLOADING));
+    dispatch(updateSellState(TransactionReduxState.SELL_UPLOADING));
     const appSettings = container.get<IAppSettings>(Types.IAppSettings);
     const cdnService = container.get<ICdnService>(Types.ICdnService);
     const transactionService = container.get<ITransactionService>(Types.ITransactionService);
@@ -39,14 +43,30 @@ export const sellShoes = (sellOrder: SellOrder) => {
         }
 
         await Promise.all(imgUploadPromise);
-        dispatch(updateSellState(TransactionState.SELL_PICTURES_UPLOADED));
+        dispatch(updateSellState(TransactionReduxState.SELL_PICTURES_UPLOADED));
         sellOrder.shoePictures = presignedUrls;
         await transactionService.sellShoe(token, sellOrder);
-        dispatch(updateSellState(TransactionState.SELL_SUCCESS));
+        dispatch(updateSellState(TransactionReduxState.SELL_SUCCESS));
       }
     } catch (error) {
       console.log(`Error selling shoes`, error);
-      dispatch(updateSellState(TransactionState.SELL_FAILURE));
+      dispatch(updateSellState(TransactionReduxState.SELL_FAILURE));
+    }
+  };
+};
+
+export const getSellHistory = () => {
+  return async (dispatch: Function) => {
+    dispatch(updateGetSellHistory({ state: NetworkRequestState.REQUESTING }));
+    const appSettings = container.get<IAppSettings>(Types.IAppSettings);
+    const transactionService = container.get<ITransactionService>(Types.ITransactionService);
+    const token = appSettings.getValue(SettingsKeys.CurrentAccessToken);
+
+    try {
+      const history: SellOrder[] = await transactionService.getSellingHistory(token);
+      dispatch(updateGetSellHistory({ state: NetworkRequestState.SUCCESS, history }));
+    } catch (error) {
+      dispatch(updateGetSellHistory({ state: NetworkRequestState.FAILED, error }));
     }
   };
 };

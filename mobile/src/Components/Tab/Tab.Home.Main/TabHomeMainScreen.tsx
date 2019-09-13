@@ -15,7 +15,7 @@ import {
   ActivityIndicator,
   TouchableOpacity
 } from "react-native";
-import { Shoe } from "../../../Reducers";
+import { Shoe } from "../../../Shared/Model";
 import { ShoeCard, Text } from "../../../Shared/UI";
 import * as Assets from "../../../Assets";
 

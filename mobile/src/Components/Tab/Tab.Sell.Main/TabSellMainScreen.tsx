@@ -3,8 +3,8 @@
 //!
 
 import * as React from "react";
-import { View, SafeAreaView, ScrollView, StyleSheet } from "react-native";
-import { Shoe } from "../../../Reducers";
+import { View, SafeAreaView, ScrollView, StyleSheet, ActivityIndicator } from "react-native";
+import { Shoe } from "../../../Shared/Model";
 import { FlatList, TouchableOpacity } from "react-native-gesture-handler";
 import { ShoeProgressCircle, Text } from "../../../Shared/UI";
 import PurchaseComponent from "../PurchaseComponent";
@@ -15,11 +15,17 @@ import {
   NavigationRoute
 } from "react-navigation";
 import * as Assets from "../../../Assets";
+import { SellOrder } from "../../../Shared/Model";
+import { NetworkRequestState } from "../../../Shared/State";
 
 export interface ISellTabMainProps {
   navigation: NavigationScreenProp<NavigationRoute>;
   shoes: Shoe[];
+  sellHistory: { state: NetworkRequestState; history: SellOrder[]; error?: any };
+
   navigateToSearch: () => void;
+  getSellHistory: () => void;
+  getShoesById: (ids: string[]) => void;
 }
 
 interface ISellTabState {
@@ -38,8 +44,12 @@ export class TabSellMainScreen extends PurchaseComponent<ISellTabMainProps, ISel
     };
   }
 
+  public /** override */ componentDidMount() {
+    this.props.getSellHistory();
+  }
+
   public /** override */ componentWillUnmount() {
-    this.props.navigation.setParams({ isSellSuccess: null });
+    this.props.navigation.setParams({ isSellSuccess: false });
   }
 
   public /** override */ render(): React.ReactNode {
@@ -58,24 +68,42 @@ export class TabSellMainScreen extends PurchaseComponent<ISellTabMainProps, ISel
     );
   }
 
-  private _renderCurrentSelling(): React.ReactNode {
+  private _renderCurrentSelling(): JSX.Element {
+    const { sellHistory } = this.props;
     const shoes = this.props.shoes.length > 0 ? this.props.shoes.slice(0, 5) : [];
+
     return (
-      <View>
+      <View
+        style={{
+          flex: 1,
+          flexDirection: "column"
+        }}
+      >
         {this.renderTitleWithSeeMore("Đang bán")}
-        <FlatList
-          style={{ marginVertical: 20 }}
-          horizontal={true}
-          showsHorizontalScrollIndicator={false}
-          data={shoes}
-          renderItem={({ item, index }) => (
-            <ShoeProgressCircle
-              key={index}
-              shoe={item}
-              shoeData={{ isDropped: index % 3 === 0, percent: (5 - index) * 10 }}
-            />
-          )}
-        />
+        {sellHistory.state === NetworkRequestState.REQUESTING && (
+          <ActivityIndicator size={"small"} />
+        )}
+        {sellHistory.state === NetworkRequestState.SUCCESS && sellHistory.history === [] && (
+          <Text.Subhead>Hiện tại bạn chưa bán đôi giày nào</Text.Subhead>
+        )}
+        {sellHistory.state === NetworkRequestState.FAILED && sellHistory.history.length > 0 && (
+          <FlatList
+            style={{ marginVertical: 20 }}
+            horizontal={true}
+            showsHorizontalScrollIndicator={false}
+            data={shoes}
+            renderItem={({ item, index }) => (
+              <ShoeProgressCircle
+                key={index}
+                shoe={item}
+                shoeData={{ isDropped: index % 3 === 0, percent: (5 - index) * 10 }}
+              />
+            )}
+          />
+        )}
+        {sellHistory.state === NetworkRequestState.FAILED && (
+          <Text.Subhead>Đã có lỗi xảy ra. Vui lòng thử lại</Text.Subhead>
+        )}
       </View>
     );
   }

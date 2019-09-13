@@ -12,7 +12,7 @@ import {
 import { Action } from "redux-actions";
 import { RouteNames } from "../Navigation/RouteNames";
 import * as Actions from "../Actions";
-import { TransactionState } from "../Shared/State";
+import { TransactionReduxState } from "../Shared/State";
 
 const initialAction = AppNavigator.router.getActionForPathAndParams(
   RouteNames.Splash
@@ -43,8 +43,8 @@ export const NavigationReducers = (
         state
       );
       break;
-    case Actions.SellOrderActionNames.UPDATE_SELL_ORDER_STATE:
-      if (action.payload === TransactionState.SELL_SUCCESS) {
+    case Actions.TransactionActionNames.UPDATE_SELL_ORDER_STATE:
+      if (action.payload === TransactionReduxState.SELL_SUCCESS) {
         nextState = AppNavigator.router.getStateForAction(
           StackActions.replace({
             routeName: RouteNames.Tabs.TabRoot,

@@ -18,4 +18,14 @@ export class TransactionService implements ITransactionService {
 
     return undefined;
   }
+
+  public async /** override */ getSellingHistory(token: string): Promise<SellOrder[]> {
+    const headers = { authorization: token };
+    const result = await ApiClient.get("/transaction/sell/all", { headers });
+    if (result && result.status === HttpStatus.OK) {
+      return result.data;
+    }
+
+    return [];
+  }
 }
