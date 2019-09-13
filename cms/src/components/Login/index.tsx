@@ -1,5 +1,5 @@
 import React from 'react';
-import './Login.css';
+import './Login.scss';
 import Form from 'react-bootstrap/Form';
 import { FaFacebookF, FaGoogle } from 'react-icons/fa';
 

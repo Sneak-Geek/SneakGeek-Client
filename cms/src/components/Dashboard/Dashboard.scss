@@ -1,0 +1,8 @@
+@import "../../variables";
+
+.body-container {
+  position: absolute;
+  top: $top-nav-height + 2.3px;
+  bottom: 0px;
+  width: 100%;
+}

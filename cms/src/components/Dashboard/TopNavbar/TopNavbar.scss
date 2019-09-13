@@ -1,0 +1,36 @@
+@import "../../../variables";
+
+.topnav {
+  width: 100%;
+  height: $top-nav-height;
+  background-color: $primary-bg-color;
+  box-shadow: 0px 2px 2px rgba(0, 0, 0, 0.25);
+  color: #000000;
+  display: flex;
+  align-items: center;
+  font-weight: 500;
+}
+
+.brand {
+  width: $side-nav-width;
+  height: 100%;
+
+  display: flex;
+  align-items: center;
+
+  .logo {
+    margin-left: 20px;
+    margin-right: 20px;
+  }
+
+  div {
+    font-size: 20px;
+  }
+}
+
+.v-divider {
+  width: 1px;
+  background-color: #C4C4C4;
+  opacity: 0.6;
+  height: 51px;
+}
