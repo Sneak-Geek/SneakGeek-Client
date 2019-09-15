@@ -3,11 +3,12 @@
 //!
 
 import { NetworkRequestState } from "../State";
-import { SellOrder, Shoe } from "../Model";
+import { Transaction, Shoe } from "../Model";
 
 export type SellOrderHistoryPayload = {
   state: NetworkRequestState;
-  history?: SellOrder[];
+  sellHistory?: Transaction[];
+  shoes?: Shoe[];
   error?: any;
 };
 

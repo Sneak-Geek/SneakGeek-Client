@@ -8,5 +8,6 @@ export const Icons = {
   Google: require("../../../Icons/Google.png"),
   ProfileCamera: require("../../../Icons/ProfileCamera.png"),
   ChevronLeft: require("../../../Icons/ChevronLeft.png"),
-  CheckMark: require("../../../Icons/CheckMark.png")
+  CheckMark: require("../../../Icons/CheckMark.png"),
+  Clock: require("../../../Icons/Clock.png")
 };

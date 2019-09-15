@@ -5,7 +5,7 @@
 import { Container } from "inversify";
 import { StoreProvider, IStoreProvider } from "../../Store";
 import { Types } from "./Types";
-import { IAppSettings, AppSettings } from "../Settings";
+import { IAppSettingsService, AppSettingsService } from "../../Service/AppSettingsService";
 import {
   IAuthenticationService,
   AuthenticationService,
@@ -26,4 +26,6 @@ container.bind<ICdnService>(Types.ICdnService).to(CdnService);
 container.bind<ITransactionService>(Types.ITransactionService).to(TransactionService);
 
 // binding settings
-container.bind<IAppSettings>(Types.IAppSettings).toConstantValue(new AppSettings());
+container
+  .bind<IAppSettingsService>(Types.IAppSettingsService)
+  .toConstantValue(new AppSettingsService());

@@ -7,3 +7,4 @@ export * from "./AppContentReducers";
 export * from "./NavigationReducers";
 export * from "./ModalReducers";
 export * from "./TransactionReducers";
+export * from "./NotificationReducers";

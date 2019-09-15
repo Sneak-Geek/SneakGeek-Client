@@ -9,9 +9,7 @@ export type Shoe = {
   colorway: string[];
   name: string;
   description?: string;
-  media: {
-    imageUrl: string;
-  };
+  imageUrl?: string;
   shoe: string;
   urlKey: string;
   title: string;

@@ -5,14 +5,14 @@
 import * as React from "react";
 import { ScrollView, View, Dimensions, StyleSheet, Image } from "react-native";
 import * as StringUtil from "../../../Utilities/StringUtil";
-import { SellOrder } from "../../../Shared/Model";
+import { Transaction } from "../../../Shared/Model";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import * as Assets from "../../../Assets";
 import ImagePicker, { ImagePickerResponse } from "react-native-image-picker";
 import { Text } from "../../../Shared/UI";
 
 interface Props {
-  orderSummary: SellOrder;
+  orderSummary: Transaction;
   onShoePictureAdded: (picUrl: string) => void;
 }
 
@@ -47,7 +47,9 @@ export class ShoeSellOrderSummaryComponent extends React.PureComponent<Props, St
   }
 
   private _renderPriceSummary(): JSX.Element {
-    const price = this.props.orderSummary.price ? this.props.orderSummary.price.toString() : "";
+    const price = this.props.orderSummary.currentPrice
+      ? this.props.orderSummary.currentPrice.toString()
+      : "";
 
     return (
       <View style={styles.sectionContainer}>

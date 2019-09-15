@@ -7,7 +7,7 @@ import { TabSellMainScreen } from "./TabSellMainScreen";
 import { IAppState } from "../../../Store";
 import { NavigationActions } from "react-navigation";
 import { RouteNames } from "../../../Navigation";
-import { getSellHistory, getShoesByIds } from "../../../Actions";
+import { getSellHistory } from "../../../Actions";
 
 const mapStateToProps = (state: IAppState) => {
   return {
@@ -27,9 +27,6 @@ const mapDispatchToProps = (dispatch: Function) => {
     },
     getSellHistory: () => {
       dispatch(getSellHistory());
-    },
-    getShoesByIds: (ids: string[]) => {
-      dispatch(getShoesByIds(ids));
     }
   };
 };

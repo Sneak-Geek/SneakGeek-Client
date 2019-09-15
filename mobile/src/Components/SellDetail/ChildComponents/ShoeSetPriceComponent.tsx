@@ -14,10 +14,12 @@ import {
 import { LineChart, Grid, YAxis } from "react-native-svg-charts";
 import { StringUtils } from "../../../Utilities";
 import { CustomPicker, Text } from "../../../Shared/UI";
+import { container, Types } from "../../../Config/Inversify";
+import { IAppSettingsService } from "../../../Service/AppSettingsService";
 
 interface State {
   isModalOpen: boolean;
-  selectedDuration: string;
+  selectedDuration?: string;
   shoePrice: string;
 }
 
@@ -31,7 +33,6 @@ export class ShoeSetPriceComponent extends React.Component<Props, State> {
     super(props);
     this.state = {
       isModalOpen: false,
-      selectedDuration: "",
       shoePrice: ""
     };
   }
@@ -138,13 +139,15 @@ export class ShoeSetPriceComponent extends React.Component<Props, State> {
   }
 
   private _renderPickerModal() {
-    // TODO: Get config from server and set proper duration unit/duration
-    const options = ["24 tiếng", "48 tiếng", "72 tiếng", "7 ngày", "1 tháng"];
+    const settings = container.get<IAppSettingsService>(Types.IAppSettingsService).getSettings()
+      .RemoteSettings;
+
+    const options = settings ? settings.sellDuration : [];
 
     return (
       <CustomPicker
         visible={this.state.isModalOpen}
-        options={options}
+        options={options.map(t => `${t.duration} ${t.unit}`)}
         optionLabelToString={item => item}
         onSelectPickerOK={(selectedValue: string) => {
           this.setState({ selectedDuration: selectedValue, isModalOpen: false }, () => {

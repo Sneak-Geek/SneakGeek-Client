@@ -10,7 +10,7 @@ import { GoogleSignin, User as GoogleUser } from "react-native-google-signin";
 import AppConfig from "../Config/ThirdParty";
 import { container, Types } from "../Config/Inversify";
 import { IAuthenticationService } from "../Service/AuthenticationService";
-import { IAppSettings, SettingsKeys } from "../Config/Settings";
+import { IAppSettingsService, SettingsKeys } from "../Service/AppSettingsService";
 
 export module AccountActions {
   export const AUTHENTICATE_ERROR = "AUTHENTICATION_ERROR";
@@ -38,11 +38,12 @@ export const authenticateVsnkrsService = (
     dispatch(vsnkrsAuthenticate);
     try {
       const authService = container.get<IAuthenticationService>(Types.IAuthenticationService);
-      const settings = container.get<IAppSettings>(Types.IAppSettings);
+      const settings = container.get<IAppSettingsService>(Types.IAppSettingsService);
 
       const accountPayload = await authService.login(accessToken, provider);
       if (accountPayload) {
         await settings.setValue(SettingsKeys.CurrentAccessToken, accountPayload.token);
+        await settings.loadServerSettings();
         dispatch(authenticationComplete(accountPayload.user));
       }
     } catch (error) {

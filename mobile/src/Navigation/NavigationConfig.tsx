@@ -15,6 +15,7 @@ import { RouteNames } from "./RouteNames";
 import { Icon } from "react-native-elements";
 import { SplashScreenContainer } from "../Components/Splash/SplashScreen";
 import { ShoeDetailScreenContainer } from "../Components/ShoeDetail";
+import { Text } from "../Shared/UI";
 
 const BuyTabNavigator = createStackNavigator(
   {
@@ -22,6 +23,7 @@ const BuyTabNavigator = createStackNavigator(
   },
   {
     navigationOptions: {
+      tabBarLabel: "Mua",
       tabBarIcon: ({ tintColor }) => {
         tintColor = tintColor as string;
         return <Icon type={"ionicon"} name={"md-trending-up"} size={28} color={tintColor} />;
@@ -36,6 +38,7 @@ const SellTabNavigator = createStackNavigator(
   },
   {
     navigationOptions: {
+      tabBarLabel: "Bán",
       tabBarIcon: ({ tintColor }) => {
         tintColor = tintColor as string;
         return <Icon type={"ionicon"} name={"md-pricetag"} size={28} color={tintColor} />;
@@ -52,6 +55,7 @@ const HomeTabNavigator = createStackNavigator(
     headerMode: "none",
     navigationOptions: {
       header: null,
+      tabBarLabel: "Trang chủ",
       tabBarIcon: ({ tintColor }) => {
         tintColor = tintColor as string;
         return <Icon type={"ionicon"} name={"md-home"} size={28} color={tintColor} />;
@@ -67,6 +71,7 @@ const UserInfoTabNavigator = createStackNavigator(
   },
   {
     navigationOptions: {
+      tabBarLabel: "Cá nhân",
       tabBarIcon: ({ tintColor }) => {
         tintColor = tintColor as string;
         return <Icon type={"ionicon"} name={"md-person"} size={28} color={tintColor} />;
@@ -86,9 +91,10 @@ const AppTabRoot = createBottomTabNavigator(
   {
     tabBarOptions: {
       showIcon: true,
-      showLabel: false,
+      showLabel: true,
       activeTintColor: "black",
-      inactiveTintColor: "lightgrey"
+      inactiveTintColor: "lightgrey",
+      labelStyle: Text.TextStyle.caption2
     },
     defaultNavigationOptions: {
       tabBarOnPress: ({ navigation, defaultHandler }) => {

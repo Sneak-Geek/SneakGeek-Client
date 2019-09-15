@@ -8,7 +8,7 @@ import { IAppContentService } from "../Service";
 import { NetworkRequestState } from "../Shared/State";
 import { SearchShoePayload, GetShoesPayload } from "../Shared/Payload";
 import { container, Types } from "../Config/Inversify";
-import { IAppSettings, SettingsKeys } from "../Config/Settings";
+import { IAppSettingsService, SettingsKeys } from "../Service/AppSettingsService";
 
 namespace AppContentActionNames {
   export const FETCH_SHOES = "FETCH_SHOES";
@@ -72,7 +72,7 @@ export const getShoesByIds = (ids: string[]) => {
         updateGetShoesState({ state: NetworkRequestState.NOT_STARTED, error: undefined })
       );
       const appContentService = container.get<IAppContentService>(Types.IAppContentService);
-      const appSettings = container.get<IAppSettings>(Types.IAppSettings);
+      const appSettings = container.get<IAppSettingsService>(Types.IAppSettingsService);
       const token = appSettings.getValue(SettingsKeys.CurrentAccessToken);
 
       const shoes = await appContentService.getShoesByIds(token, ids);

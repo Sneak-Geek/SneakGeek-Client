@@ -9,7 +9,8 @@ import {
   AppContentReducers,
   NavigationReducers,
   ModalReducers,
-  TransactionReducers
+  TransactionReducers,
+  NotificationReducers
 } from "../Reducers";
 import { navigationMiddleware } from "../Navigation/AppNavigator";
 
@@ -24,7 +25,8 @@ const configureStore = (): Store<any> => {
       AccountState: AccountReducers,
       AppContentState: AppContentReducers,
       ModalState: ModalReducers,
-      TransactionState: TransactionReducers
+      TransactionState: TransactionReducers,
+      NotificationState: NotificationReducers
     }),
     composeEnhancers(applyMiddleware(navigationMiddleware, thunkMiddleware))
   );

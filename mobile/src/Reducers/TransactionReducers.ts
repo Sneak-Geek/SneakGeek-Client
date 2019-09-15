@@ -5,7 +5,7 @@
 import { handleActions, Action } from "redux-actions";
 import { TransactionReduxState, NetworkRequestState } from "../Shared/State";
 import { updateSellState, updateGetSellHistory } from "../Actions";
-import { SellOrder } from "../Shared/Model";
+import { Transaction, Shoe } from "../Shared/Model";
 import { SellOrderHistoryPayload } from "../Shared/Payload";
 
 export interface ITransactionState {
@@ -14,7 +14,8 @@ export interface ITransactionState {
   };
   sellHistory: {
     state: NetworkRequestState;
-    history: SellOrder[];
+    sellHistory: Transaction[];
+    shoes: Shoe[];
     error?: any;
   };
 }
@@ -25,7 +26,8 @@ const initialState: ITransactionState = {
   },
   sellHistory: {
     state: NetworkRequestState.NOT_STARTED,
-    history: []
+    sellHistory: [],
+    shoes: []
   }
 };
 

@@ -24,7 +24,7 @@ export class CustomPicker<T> extends React.PureComponent<IPickerProps<T>, IPicke
   constructor(props: IPickerProps<T>) {
     super(props);
     this.state = {
-      selectedItem: null
+      selectedItem: this.props.options.length > 0 ? this.props.options[0] : null
     };
   }
 
@@ -57,19 +57,16 @@ export class CustomPicker<T> extends React.PureComponent<IPickerProps<T>, IPicke
             </View>
             <Picker
               selectedValue={this.state.selectedItem}
-              onValueChange={item => this.setState({ selectedItem: item })}
+              onValueChange={(item: T) => this.setState({ selectedItem: item })}
               itemStyle={{ backgroundColor: "white" }}
             >
-              {this.props.options.map(
-                (option, idx) =>
-                  option !== null && (
-                    <Picker.Item
-                      key={idx.toString()}
-                      label={this.props.optionLabelToString(option)}
-                      value={option}
-                    />
-                  )
-              )}
+              {this.props.options.map((option, idx) => (
+                <Picker.Item
+                  key={idx.toString()}
+                  label={this.props.optionLabelToString(option)}
+                  value={option}
+                />
+              ))}
             </Picker>
           </View>
         </SafeAreaView>

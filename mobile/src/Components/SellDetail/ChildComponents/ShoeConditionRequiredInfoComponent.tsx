@@ -16,6 +16,8 @@ import { getInset } from "react-native-safe-area-view";
 import { Button } from "react-native-elements";
 import { CustomPicker, Text } from "../../../Shared/UI";
 import * as Assets from "../../../Assets";
+import { IAppSettingsService } from "../../../Service/AppSettingsService";
+import { container, Types } from "../../../Config/Inversify";
 
 enum PickerType {
   ShoeCondition = "ShoeCondition",
@@ -49,11 +51,16 @@ type Setting = {
 };
 
 export class ShoeConditionRequiredInfoComponent extends React.PureComponent<Props, State> {
+  private appSettings: IAppSettingsService = container.get<IAppSettingsService>(
+    Types.IAppSettingsService
+  );
+  private remoteSettings = this.appSettings.getSettings().RemoteSettings;
+
   private settingsAndOptions: Setting[] = [
     {
       stateName: "shoeSize",
       title: "Cỡ giày",
-      options: this._getShoeSizesOptions(),
+      options: this.remoteSettings ? this.remoteSettings.shoeSizes.Adult : [],
       onLaunchOptionChooser: () => {
         this.setState({ isSelectingShoeSize: true });
       }
@@ -61,7 +68,7 @@ export class ShoeConditionRequiredInfoComponent extends React.PureComponent<Prop
     {
       stateName: "shoeCondition",
       title: "Tình trạng",
-      options: this._getShoeConditionOptions(),
+      options: this.remoteSettings ? this.remoteSettings.shoeConditions : [],
       onLaunchOptionChooser: () => {
         this.setState({ pickerVisible: true, currentPicker: PickerType.ShoeCondition });
       }
@@ -69,7 +76,7 @@ export class ShoeConditionRequiredInfoComponent extends React.PureComponent<Prop
     {
       stateName: "boxCondition",
       title: "Hộp",
-      options: this._getShoeBoxConditionOptions(),
+      options: this.remoteSettings ? this.remoteSettings.boxConditions : [],
       onLaunchOptionChooser: () => {
         this.setState({ pickerVisible: true, currentPicker: PickerType.BoxCondition });
       }
@@ -101,27 +108,6 @@ export class ShoeConditionRequiredInfoComponent extends React.PureComponent<Prop
         {this._renderPicker()}
       </SafeAreaView>
     );
-  }
-
-  private _getShoeSizesOptions(): string[] {
-    let start = 5;
-    let end = 14.5;
-    let result = [];
-
-    while (start <= end) {
-      result.push(start);
-      start += 0.5;
-    }
-
-    return result.map(size => size.toString());
-  }
-
-  private _getShoeConditionOptions(): string[] {
-    return ["Mới", "Đã qua sử dụng"];
-  }
-
-  private _getShoeBoxConditionOptions(): string[] {
-    return ["Nguyên hộp", "Không hộp"];
   }
 
   private _renderSettingWithOptions(setting: Setting, index: number): JSX.Element {
@@ -183,7 +169,7 @@ export class ShoeConditionRequiredInfoComponent extends React.PureComponent<Prop
                 this.props.onSetShoeSize(shoeSize);
               });
             }}
-            titleStyle={{ fontSize: 14, color: "black" }}
+            titleStyle={Text.TextStyle.body}
           />
         )}
       />
@@ -194,13 +180,19 @@ export class ShoeConditionRequiredInfoComponent extends React.PureComponent<Prop
     return (
       <View style={styles.footerContainer}>
         <Button
-          buttonStyle={{ backgroundColor: "white", ...styles.footerButton }}
+          buttonStyle={{
+            backgroundColor: "white",
+            ...styles.footerButton
+          }}
           title={"Đóng"}
           titleStyle={{ color: "black" }}
           onPress={() => this.setState({ isSelectingShoeSize: false })}
         />
         <Button
-          buttonStyle={{ backgroundColor: "#1ABC9C", ...styles.footerButton }}
+          buttonStyle={{
+            backgroundColor: "#1ABC9C",
+            ...styles.footerButton
+          }}
           title={"Xác nhận"}
           onPress={() => this.setState({ isSelectingShoeSize: false })}
         />
@@ -288,7 +280,7 @@ const styles = StyleSheet.create({
   footerButton: {
     width: Dimensions.get("window").width / 2,
     borderRadius: 0,
-    height: 52
+    height: Assets.Styles.ButtonHeight
   },
 
   footerContainer: {

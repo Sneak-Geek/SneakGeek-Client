@@ -6,9 +6,10 @@ import { createAction } from "redux-actions";
 import { container, Types } from "../Config/Inversify";
 import { ICdnService, ITransactionService } from "../Service";
 import { TransactionReduxState, NetworkRequestState } from "../Shared/State";
-import { SellOrder } from "../Shared/Model";
+import { Transaction } from "../Shared/Model";
 import { SellOrderHistoryPayload } from "../Shared/Payload";
-import { IAppSettings, SettingsKeys } from "../Config/Settings";
+import { IAppSettingsService, SettingsKeys } from "../Service/AppSettingsService";
+import { showNotification } from "./NotificationActions";
 
 export const TransactionActionNames = {
   UPDATE_SELL_ORDER_STATE: "UPDATE_SELL_ORDER_STAGE",
@@ -23,10 +24,10 @@ export const updateGetSellHistory = createAction<SellOrderHistoryPayload>(
   TransactionActionNames.UPDATE_GET_SELL_HISTORY
 );
 
-export const sellShoes = (sellOrder: SellOrder) => {
+export const sellShoes = (sellOrder: Transaction) => {
   return async (dispatch: Function) => {
     dispatch(updateSellState(TransactionReduxState.SELL_UPLOADING));
-    const appSettings = container.get<IAppSettings>(Types.IAppSettings);
+    const appSettings = container.get<IAppSettingsService>(Types.IAppSettingsService);
     const cdnService = container.get<ICdnService>(Types.ICdnService);
     const transactionService = container.get<ITransactionService>(Types.ITransactionService);
 
@@ -45,9 +46,11 @@ export const sellShoes = (sellOrder: SellOrder) => {
         await Promise.all(imgUploadPromise);
         dispatch(updateSellState(TransactionReduxState.SELL_PICTURES_UPLOADED));
         sellOrder.shoePictures = presignedUrls;
-        await transactionService.sellShoe(token, sellOrder);
-        dispatch(updateSellState(TransactionReduxState.SELL_SUCCESS));
       }
+
+      await transactionService.sellShoe(token, sellOrder);
+      dispatch(showNotification("Đã bán thành công sản phẩm"));
+      dispatch(updateSellState(TransactionReduxState.SELL_SUCCESS));
     } catch (error) {
       console.log(`Error selling shoes`, error);
       dispatch(updateSellState(TransactionReduxState.SELL_FAILURE));
@@ -58,13 +61,16 @@ export const sellShoes = (sellOrder: SellOrder) => {
 export const getSellHistory = () => {
   return async (dispatch: Function) => {
     dispatch(updateGetSellHistory({ state: NetworkRequestState.REQUESTING }));
-    const appSettings = container.get<IAppSettings>(Types.IAppSettings);
+    const appSettings = container.get<IAppSettingsService>(Types.IAppSettingsService);
     const transactionService = container.get<ITransactionService>(Types.ITransactionService);
     const token = appSettings.getValue(SettingsKeys.CurrentAccessToken);
 
     try {
-      const history: SellOrder[] = await transactionService.getSellingHistory(token);
-      dispatch(updateGetSellHistory({ state: NetworkRequestState.SUCCESS, history }));
+      const { sellHistory, shoes } = await transactionService.getSellingHistory(token);
+
+      dispatch(
+        updateGetSellHistory({ state: NetworkRequestState.SUCCESS, sellHistory, shoes })
+      );
     } catch (error) {
       dispatch(updateGetSellHistory({ state: NetworkRequestState.FAILED, error }));
     }

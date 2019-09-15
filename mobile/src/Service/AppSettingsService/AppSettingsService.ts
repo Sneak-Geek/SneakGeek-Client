@@ -2,18 +2,20 @@
 //! Copyright (c) 2019 - SneakGeek. All rights reserved
 //!
 
-import { IAppSettings } from "./IAppSettings";
+import { IAppSettingsService, IAppSettings } from "./IAppSettingsService";
 import AsyncStorage from "@react-native-community/async-storage";
 import { SettingsKeys } from "./SettingsKeys";
 import { injectable } from "inversify";
+import ApiClient from "../ApiClient";
+import HttpStatus from "http-status";
 
 @injectable()
-export class AppSettings implements IAppSettings {
-  private _dict: { [key: string]: any } = {};
+export class AppSettingsService implements IAppSettingsService {
+  private _dict: IAppSettings = {};
   private _isLoaded: boolean = false;
 
   public async /** override */ load(): Promise<boolean> {
-    const value = await AsyncStorage.getItem(SettingsKeys.AppSettingsKey);
+    const value = await AsyncStorage.getItem(SettingsKeys.LocalSettings);
 
     if (value) {
       try {
@@ -27,13 +29,37 @@ export class AppSettings implements IAppSettings {
     return true;
   }
 
+  public async /** override */ loadServerSettings(): Promise<boolean> {
+    if (!this._isLoaded) {
+      throw new Error("App settings is not loaded");
+    }
+
+    if (!this._dict[SettingsKeys.CurrentAccessToken]) {
+      throw new Error("Current access token is not ready");
+    }
+
+    const headers = { authorization: this._dict[SettingsKeys.CurrentAccessToken] };
+    const response = await ApiClient.get("/settings", { headers });
+    if (response && response.status === HttpStatus.OK) {
+      this._dict[SettingsKeys.RemoteSettings] = response.data;
+      await this.save();
+      return true;
+    }
+
+    return false;
+  }
+
+  public /** override */ getSettings(): IAppSettings {
+    return this._dict;
+  }
+
   public /** override */ isSettingsLoaded(): boolean {
     return this._isLoaded;
   }
 
   public async /** override */ save(): Promise<boolean> {
     try {
-      await AsyncStorage.setItem(SettingsKeys.AppSettingsKey, JSON.stringify(this._dict));
+      await AsyncStorage.setItem(SettingsKeys.LocalSettings, JSON.stringify(this._dict));
       return true;
     } catch (error) {
       return false;

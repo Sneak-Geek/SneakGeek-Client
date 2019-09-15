@@ -31,17 +31,17 @@ import { Icon } from "react-native-elements";
 import styles from "./styles";
 import { Text } from "../../Shared/UI";
 import { TransactionReduxState } from "../../Shared/State";
-import { SellOrder, Shoe } from "../../Shared/Model";
+import { Transaction, Shoe } from "../../Shared/Model";
 import * as Assets from "../../Assets";
 
 export interface ISellDetailScreenProps {
   navigation: NavigationScreenProp<NavigationRoute>;
   transactionState: ITransactionState;
-  sellShoe: (sellOrder: SellOrder) => void;
+  sellShoe: (sellOrder: Transaction) => void;
 }
 
 interface State {
-  sellOrderInfo: SellOrder;
+  sellOrderInfo: Transaction;
   currentChildComponentIndex: number;
 }
 
@@ -123,7 +123,9 @@ export class SellDetailScreen extends React.Component<ISellDetailScreenProps, St
         ),
         canProceed: () => {
           const { sellOrderInfo } = this.state;
-          return sellOrderInfo.price !== undefined && sellOrderInfo.sellDuration !== undefined;
+          return (
+            sellOrderInfo.currentPrice !== undefined && sellOrderInfo.sellDuration !== undefined
+          );
         }
       },
       {
@@ -225,6 +227,7 @@ export class SellDetailScreen extends React.Component<ISellDetailScreenProps, St
         renderItem={({ item }) => item.render()}
         alwaysBounceHorizontal={false}
         scrollEnabled={false}
+        keyExtractor={(_itm, idx) => idx.toString()}
       />
     );
   }
@@ -313,7 +316,7 @@ export class SellDetailScreen extends React.Component<ISellDetailScreenProps, St
   private _setShoePrice(price: number) {
     this.setState(prevState => ({
       sellOrderInfo: {
-        price,
+        currentPrice: price,
         ...prevState.sellOrderInfo
       }
     }));

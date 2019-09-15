@@ -2,7 +2,7 @@
 //! Copyright (c) 2019 - SneakGeek. All rights reserved
 //!
 
-export type SellOrder = {
+export type Transaction = {
   shoeId: string;
   shoeSize?: string;
   shoeCondition?: string;
@@ -12,7 +12,9 @@ export type SellOrder = {
   isInsoleWorn?: boolean;
   isHeavilyTorn?: boolean;
   otherDetail?: string;
-  price?: number;
+  currentPrice?: number;
   sellDuration?: { duration: number; unit: string };
+  sellDeadline?: Date;
   shoePictures?: string[];
+  createdAt?: Date;
 };

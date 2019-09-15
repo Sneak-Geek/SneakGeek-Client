@@ -6,7 +6,7 @@ import { connect } from "react-redux";
 import { IAppState } from "../../Store";
 import { SellDetailScreen } from "./SellDetailScreen";
 import { sellShoes } from "../../Actions/TransactionActions";
-import { SellOrder } from "../../Shared/Model";
+import { Transaction } from "../../Shared/Model";
 
 const mapStateToProps = (state: IAppState) => ({
   transactionState: state.TransactionState
@@ -14,7 +14,7 @@ const mapStateToProps = (state: IAppState) => ({
 
 const mapDispatchToProps = (dispatch: Function) => {
   return {
-    sellShoe: async (shoeOrder: SellOrder) => {
+    sellShoe: async (shoeOrder: Transaction) => {
       await dispatch(sellShoes(shoeOrder));
     }
   };
