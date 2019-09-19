@@ -8,10 +8,12 @@ import { IAppState } from "../../Store";
 import { RouteNames } from "../../Navigation";
 import { StackActions } from "react-navigation";
 import { Shoe } from "../../Shared/Model";
+import { addOwnedShoe } from "../../Actions";
 
 const mapStateToProps = (state: IAppState) => {
   return {
     shoes: state.AppContentState.shoes,
+    account: state.AccountState.currentAccount,
     routeIndex: state.NavigationState.index
   };
 };
@@ -23,8 +25,10 @@ const mapDispatchToProps = (dispatch: Function) => {
         routeName: RouteNames.ShoeDetail,
         params: { shoe }
       };
-      // dispatch(StackActions.pop({}));
       dispatch(StackActions.push(navConfig));
+    },
+    addOwnedShoe: (shoeId: string) => {
+      dispatch(addOwnedShoe(shoeId));
     }
   };
 };

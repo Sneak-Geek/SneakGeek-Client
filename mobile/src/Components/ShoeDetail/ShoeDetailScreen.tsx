@@ -9,9 +9,11 @@ import {
   Image,
   TouchableOpacity,
   FlatList,
-  ScrollView
+  ScrollView,
+  ViewStyle,
+  TextStyle
 } from "react-native";
-import { Shoe } from "../../Shared/Model";
+import { Shoe, Account } from "../../Shared/Model";
 import {
   StackActions,
   NavigationScreenProp,
@@ -20,7 +22,7 @@ import {
 } from "react-navigation";
 import { Icon } from "react-native-elements";
 import styles from "./styles";
-import { AppButton, ShoeCard, Text } from "../../Shared/UI";
+import { ShoeCard, Text } from "../../Shared/UI";
 import StarRating from "react-native-star-rating";
 import { LineChart, YAxis, Grid } from "react-native-svg-charts";
 import * as Assets from "../../Assets";
@@ -29,8 +31,11 @@ import { toCurrencyString } from "../../Utilities/StringUtil";
 export interface Props {
   navigation: NavigationScreenProp<NavigationRoute>;
   shoes: Shoe[];
+  account: Account | null;
   routeIndex: number;
+
   navigateToShoeDetailWithReset: (index: number, shoe: Shoe) => void;
+  addOwnedShoe: (shoeId: string) => void;
 }
 
 interface State {
@@ -68,6 +73,7 @@ export class ShoeDetailScreen extends React.Component<Props, State> {
     super(props);
 
     this.shoe = this.props.navigation.getParam("shoe");
+
     this.state = {
       favorited: false,
       priceListIndex: 0
@@ -117,7 +123,22 @@ export class ShoeDetailScreen extends React.Component<Props, State> {
     );
   }
 
+  private _isShoeOwned(): boolean {
+    if (!this.props.account) {
+      return false;
+    }
+
+    const shoeOwned = this.props.account.profile
+      ? this.props.account.profile.ownedShoes.indexOf(this.shoe._id) >= 0
+      : false;
+
+    return shoeOwned;
+  }
+
   private _renderUserBehaviorButtons(): JSX.Element {
+    const [containerStyle, textStyle] = this._isShoeOwned()
+      ? [{ backgroundColor: "black" }, { color: "white" }]
+      : [{}, {}];
     return (
       <View style={styles.userButtonContainer}>
         <Icon
@@ -127,14 +148,22 @@ export class ShoeDetailScreen extends React.Component<Props, State> {
           onPress={() => this.setState(s => ({ ...s, favorited: !s.favorited }))}
         />
         <View style={{ flexDirection: "row" }}>
-          <AppButton
-            title={"Đã có"}
-            containerStyle={[styles.buttonStyle, { marginRight: 10 }]}
-          />
-          <AppButton title={"Bán"} containerStyle={styles.buttonStyle} />
+          {this._renderSideButton(
+            "Đã có",
+            { marginRight: 10, ...containerStyle },
+            textStyle,
+            () => this._addOwnedShoe()
+          )}
+          {this._renderSideButton("Bán", {}, {}, () => {})}
         </View>
       </View>
     );
+  }
+
+  private _addOwnedShoe() {
+    if (!this._isShoeOwned()) {
+      this.props.addOwnedShoe(this.shoe._id);
+    }
   }
 
   private _renderShoeTitle(): JSX.Element {
@@ -142,6 +171,21 @@ export class ShoeDetailScreen extends React.Component<Props, State> {
       <Text.Title2 style={styles.shoeTitle} numberOfLines={2}>
         {this.shoe.title}
       </Text.Title2>
+    );
+  }
+
+  private _renderSideButton(
+    title: string,
+    containerStyle: ViewStyle,
+    textStyle: TextStyle,
+    onPress: () => void
+  ) {
+    return (
+      <TouchableOpacity onPress={() => onPress()}>
+        <View style={[containerStyle, styles.smallButtonBorder]}>
+          <Text.Subhead style={textStyle}>{title}</Text.Subhead>
+        </View>
+      </TouchableOpacity>
     );
   }
 

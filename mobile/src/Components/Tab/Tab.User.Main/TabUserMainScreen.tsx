@@ -14,7 +14,7 @@ import {
 import { Image } from "react-native-elements";
 import { Text } from "../../../Shared/UI";
 import * as Assets from "../../../Assets";
-import { Account } from "../../../Reducers";
+import { Account } from "../../../Shared/Model";
 
 const list = [
   {

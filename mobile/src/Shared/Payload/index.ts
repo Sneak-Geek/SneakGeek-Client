@@ -3,19 +3,26 @@
 //!
 
 import { NetworkRequestState } from "../State";
-import { Transaction, Shoe } from "../Model";
+import { Transaction, Shoe, Profile } from "../Model";
+
+type NetworkPayload = {
+  state: NetworkRequestState;
+  error?: any;
+};
 
 export type SellOrderHistoryPayload = {
-  state: NetworkRequestState;
   sellHistory?: Transaction[];
   shoes?: Shoe[];
-  error?: any;
-};
+} & NetworkPayload;
 
 export type SearchShoePayload = {
-  state: NetworkRequestState;
   shoes?: Shoe[];
-  error?: any;
-};
+} & NetworkPayload;
 
 export type GetShoesPayload = SearchShoePayload;
+
+export type GetUserProfilePayload = {
+  profile?: Profile;
+} & NetworkPayload;
+
+export type UpdateUserProfilePayload = NetworkPayload;

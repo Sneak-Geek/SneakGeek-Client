@@ -10,53 +10,101 @@ import {
   NavigationRoute,
   BottomTabBarProps
 } from "react-navigation";
-import { View, StyleSheet } from "react-native";
+import { View, StyleSheet, TextInput, SafeAreaView } from "react-native";
 import { Text } from "../../../Shared/UI";
 import { Icon } from "react-native-elements";
-import { Account } from "../../../Reducers";
+import { Profile } from "../../../Shared/Model";
 import * as Assets from "../../../Assets";
+import { TouchableOpacity } from "react-native-gesture-handler";
+import { NetworkRequestState } from "../../../Shared/State";
 
-const list = [
+const optionsList = [
   {
     title: "Họ",
-    value: (account: Account) => account.accountNameByProvider.familyName,
+    value: (profile: Profile) =>
+      profile.userProvidedName ? profile.userProvidedName.lastName : "",
+    onUpdate: (value: string, profile: Profile) => {
+      return Object.assign(profile, {
+        userProvidedName: {
+          ...profile.userProvidedName,
+          lastName: value
+        }
+      });
+    },
     hasMarginBottom: false
   },
   {
     title: "Tên",
-    value: (account: Account) => account.accountNameByProvider.givenName,
+    value: (profile: Profile) =>
+      profile.userProvidedName ? profile.userProvidedName.firstName : "",
+    onUpdate: (value: string, profile: Profile) => {
+      return Object.assign(profile, {
+        userProvidedName: {
+          ...profile.userProvidedName,
+          firstName: value
+        }
+      });
+    },
     hasMarginBottom: true
   },
   {
     title: "Giới tính",
-    value: (account: Account) => account.accountGenderByProvider,
+    value: (profile: Profile) => profile.userProvidedGender,
+    onUpdate: (value: string, profile: Profile) => {
+      return Object.assign(profile, {
+        userProvidedGender: value
+      });
+    },
     hasMarginBottom: false
   },
   {
     title: "Cỡ giày",
-    value: (_account: Account) => 8,
+    value: (profile: Profile) => profile.userProvidedShoeSize,
+    onUpdate: (value: string, profile: Profile) => {
+      return Object.assign(profile, {
+        userProvidedShoeSize: value
+      });
+    },
     hasMarginBottom: true
   },
   {
     title: "Email",
-    value: (account: Account) => account.accountEmailByProvider,
+    value: (profile: Profile) => profile.userProvidedEmail,
+    onUpdate: (value: string, profile: Profile) => {
+      return Object.assign(profile, {
+        userProvidedEmail: value
+      });
+    },
     hasMarginBottom: false
   },
   {
     title: "Điện thoại",
-    value: (_account: Account) => "123-456-789",
+    value: (profile: Profile) => profile.userProvidedPhoneNumber,
+    onUpdate: (value: string, profile: Profile) => {
+      return Object.assign(profile, {
+        userProvidedPhoneNumber: value
+      });
+    },
     hasMarginBottom: true
   }
 ];
 
 export interface IUserEditScreenProps {
-  account: Account | null;
+  profile?: Profile;
+  updateProfileState: { state: NetworkRequestState };
   navigation?: NavigationScreenProp<NavigationRoute>;
+  updateProfile: (data: Partial<Profile>) => void;
 }
 
-export class TabUserEditScreen extends React.Component<IUserEditScreenProps, {}> {
+export interface IUserEditState {
+  editMode: boolean;
+  updatedInfo?: Profile;
+}
+
+export class TabUserEditScreen extends React.Component<IUserEditScreenProps, IUserEditState> {
   static navigationOptions = (navigationConfig: BottomTabBarProps) => ({
     title: "Thông tin cá nhân",
+    headerTitleStyle: Text.TextStyle.headline,
     headerLeft: (
       <Icon
         name={"ios-arrow-back"}
@@ -70,22 +118,36 @@ export class TabUserEditScreen extends React.Component<IUserEditScreenProps, {}>
 
   public constructor /** override */(props: IUserEditScreenProps) {
     super(props);
+    this.state = {
+      editMode: false,
+      updatedInfo: this.props.profile
+    };
   }
 
   public /** override */ render() {
     return (
-      <ScrollView showsVerticalScrollIndicator={false}>
-        {/* {this._renderProfilePic()} */}
-        {this._renderSettings()}
-      </ScrollView>
+      <SafeAreaView style={{ flex: 1 }}>
+        <ScrollView showsVerticalScrollIndicator={false}>{this._renderSettings()}</ScrollView>
+        {this._renderUpdateButton()}
+      </SafeAreaView>
     );
   }
 
+  public /** override */ shouldComponentUpdate(prevProps: IUserEditScreenProps) {
+    if (
+      prevProps.updateProfileState.state !== this.props.updateProfileState.state &&
+      this.props.updateProfileState.state === NetworkRequestState.SUCCESS
+    ) {
+      this.setState({ editMode: false });
+    }
+    return true;
+  }
+
   private _renderSettings() {
-    const { account } = this.props;
+    const { updatedInfo } = this.state;
     return (
       <View>
-        {list.map((item, i) => (
+        {optionsList.map((item, i) => (
           <View
             key={i}
             style={[
@@ -94,11 +156,43 @@ export class TabUserEditScreen extends React.Component<IUserEditScreenProps, {}>
             ]}
           >
             <Text.Headline style={{ flex: 1 }}>{item.title.toUpperCase()}</Text.Headline>
-            <Text.Subhead style={{ flex: 2 }}>
-              {account ? item.value(account) : ""}
-            </Text.Subhead>
+            <TextInput
+              value={
+                updatedInfo && item.value(updatedInfo)
+                  ? (item.value(updatedInfo) as any).toString()
+                  : ""
+              }
+              onChangeText={value => {
+                if (updatedInfo) {
+                  const newProfile = item.onUpdate(value, updatedInfo);
+                  this.setState({ updatedInfo: newProfile, editMode: true });
+                }
+              }}
+              style={[{ textAlign: "left", flex: 2 }, Text.TextStyle.subhead]}
+            />
           </View>
         ))}
+      </View>
+    );
+  }
+
+  private _renderUpdateButton(): JSX.Element | null {
+    if (!this.state.editMode) {
+      return null;
+    }
+
+    return (
+      <View style={styles.bottomButtonContainer}>
+        <TouchableOpacity
+          onPress={() => {
+            const newProfile = this.state.updatedInfo as Profile;
+            this.props.updateProfile(newProfile);
+          }}
+        >
+          <Text.Body style={{ color: Assets.Styles.TextSecondaryColor }}>
+            Cập nhật thông tin
+          </Text.Body>
+        </TouchableOpacity>
       </View>
     );
   }
@@ -165,5 +259,16 @@ const styles = StyleSheet.create({
   logoutText: {
     fontSize: 16,
     color: "red"
+  },
+
+  bottomButtonContainer: {
+    position: "absolute",
+    bottom: 0,
+    left: 0,
+    right: 0,
+    height: Assets.Styles.ButtonHeight,
+    backgroundColor: Assets.Styles.ButtonPrimaryColor,
+    alignItems: "center",
+    justifyContent: "center"
   }
 });

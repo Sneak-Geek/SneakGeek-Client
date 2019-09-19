@@ -7,8 +7,8 @@ import { StoreProvider, IStoreProvider } from "../../Store";
 import { Types } from "./Types";
 import { IAppSettingsService, AppSettingsService } from "../../Service/AppSettingsService";
 import {
-  IAuthenticationService,
-  AuthenticationService,
+  IAccountService,
+  AccountService,
   AppContentService,
   IAppContentService,
   ICdnService,
@@ -20,7 +20,7 @@ import {
 export const container = new Container();
 
 container.bind<IStoreProvider>(Types.IStoreProvider).to(StoreProvider);
-container.bind<IAuthenticationService>(Types.IAuthenticationService).to(AuthenticationService);
+container.bind<IAccountService>(Types.IAccountService).to(AccountService);
 container.bind<IAppContentService>(Types.IAppContentService).to(AppContentService);
 container.bind<ICdnService>(Types.ICdnService).to(CdnService);
 container.bind<ITransactionService>(Types.ITransactionService).to(TransactionService);

@@ -4,39 +4,35 @@
 
 import { handleActions, Action } from "redux-actions";
 import * as Actions from "../Actions";
-
-export interface Account {
-  isVerified: boolean;
-  accessLevel: number;
-  _id: string;
-  createdAt: String;
-  updatedAt: String;
-  accountProvider: "facebook" | "google";
-  accountIdByProvider: String;
-  accountNameByProvider: {
-    familyName: String;
-    givenName: string;
-    middleName: string;
-  };
-  accountGenderByProvider: string;
-  accountEmailByProvider: string;
-  accountProfilePicByProvider: string;
-  isAuthenticating: boolean;
-  authenticationError: any;
-  isAuthenticatingWithFacebook: boolean;
-  isAuthenticationCancelled: boolean;
-}
+import { Account, Profile } from "../Shared/Model";
+import { GetUserProfilePayload, UpdateUserProfilePayload } from "../Shared/Payload";
+import { NetworkRequestState } from "../Shared/State";
 
 export interface IAccountState {
   currentAccount: Account | null;
+  userProfileState: {
+    state: NetworkRequestState;
+    profile?: Profile;
+    error?: any;
+  };
+  updateProfileState: {
+    state: NetworkRequestState;
+    error?: any;
+  };
   isAuthenticating: boolean;
   authenticationError?: any;
   isAuthenticatingWithFacebook: boolean;
   isAuthenticationCancelled: boolean;
 }
 
-let initialState = {
+let initialState: IAccountState = {
   currentAccount: null,
+  userProfileState: {
+    state: NetworkRequestState.NOT_STARTED
+  },
+  updateProfileState: {
+    state: NetworkRequestState.NOT_STARTED
+  },
   isAuthenticating: false,
   authenticationError: null,
   isAuthenticatingWithFacebook: false,
@@ -62,7 +58,27 @@ export const AccountReducers = handleActions<IAccountState, any>(
         authenticationError: action.payload,
         isAuthenticating: false
       });
-    }
+    },
+    [`${Actions.updateGetUserProfile}`]: (
+      state: IAccountState,
+      action: Action<GetUserProfilePayload>
+    ) => ({
+      ...state,
+      userProfileState: {
+        ...state.userProfileState,
+        ...action.payload
+      }
+    }),
+    [`${Actions.updateUpdateUserProfile}`]: (
+      state: IAccountState,
+      action: Action<UpdateUserProfilePayload>
+    ) => ({
+      ...state,
+      updateProfileState: {
+        ...state.updateProfileState,
+        ...action.payload
+      }
+    })
   },
   initialState
 );

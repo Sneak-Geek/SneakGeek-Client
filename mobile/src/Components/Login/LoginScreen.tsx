@@ -6,7 +6,7 @@ import * as React from "react";
 import { View, TouchableOpacity, Image, SafeAreaView } from "react-native";
 import styles from "./styles";
 import { Input, Button, Icon } from "react-native-elements";
-import { Account } from "../../Reducers";
+import { Account } from "../../Shared/Model";
 import { Text } from "../../Shared/UI";
 import * as Assets from "../../Assets";
 import * as StringUtil from "../../Utilities/StringUtil";

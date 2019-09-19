@@ -5,9 +5,19 @@
 import { connect } from "react-redux";
 import { TabUserEditScreen } from "./TabUserEditScreen";
 import { IAppState } from "../../../Store";
+import { Profile } from "../../../Shared/Model";
+import { updateUserProfile } from "../../../Actions";
 
 const mapStateToProps = (state: IAppState) => ({
-  account: state.AccountState.currentAccount
+  profile: state.AccountState.userProfileState.profile,
+  updateProfileState: state.AccountState.updateProfileState
 });
 
-export const TabUserEditScreenContainer = connect(mapStateToProps)(TabUserEditScreen);
+const mapDispatchToProps = (dispatch: Function) => ({
+  updateProfile: (data: Partial<Profile>) => dispatch(updateUserProfile(data))
+});
+
+export const TabUserEditScreenContainer = connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(TabUserEditScreen);
