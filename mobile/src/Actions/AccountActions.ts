@@ -177,7 +177,10 @@ export const updateUserProfile = (data: Partial<Profile>) => {
   };
 };
 
-export const addOwnedShoe = (shoeId: string) => {
+export const addOwnedShoe = (
+  shoeId: string,
+  owned: Array<{ shoeSize: string; number: number }>
+) => {
   return async (dispatch: Function) => {
     try {
       const appSettings = container.get<IAppSettingsService>(Types.IAppSettingsService);
@@ -185,11 +188,11 @@ export const addOwnedShoe = (shoeId: string) => {
       const accessToken = appSettings.getSettings().CurrentAccessToken;
 
       if (accessToken) {
-        const success: boolean = await accountService.addOnwedShoes(accessToken, shoeId);
+        const success: boolean = await accountService.addOnwedShoes(accessToken, shoeId, owned);
 
         if (success) {
           dispatch(showNotification("Đã thêm thành công"));
-          dispatch(getCurrentUser(accessToken));
+          dispatch(getUserProfile(accessToken));
         }
       }
     } catch (error) {

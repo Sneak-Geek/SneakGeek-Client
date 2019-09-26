@@ -13,7 +13,7 @@ import {
   ViewStyle,
   TextStyle
 } from "react-native";
-import { Shoe, Account } from "../../Shared/Model";
+import { Shoe, Account, Profile } from "../../Shared/Model";
 import {
   StackActions,
   NavigationScreenProp,
@@ -22,7 +22,7 @@ import {
 } from "react-navigation";
 import { Icon } from "react-native-elements";
 import styles from "./styles";
-import { ShoeCard, Text } from "../../Shared/UI";
+import { ShoeCard, Text, ShoeSizePicker } from "../../Shared/UI";
 import StarRating from "react-native-star-rating";
 import { LineChart, YAxis, Grid } from "react-native-svg-charts";
 import * as Assets from "../../Assets";
@@ -32,10 +32,11 @@ export interface Props {
   navigation: NavigationScreenProp<NavigationRoute>;
   shoes: Shoe[];
   account: Account | null;
+  profile?: Profile;
   routeIndex: number;
 
   navigateToShoeDetailWithReset: (index: number, shoe: Shoe) => void;
-  addOwnedShoe: (shoeId: string) => void;
+  addOwnedShoe: (shoeId: string, owned: Array<{ shoeSize: string; number: number }>) => void;
 }
 
 interface State {
@@ -43,6 +44,7 @@ interface State {
   bottomBuyerHeight?: number;
   isBuyTabClicked?: boolean;
   priceListIndex: number;
+  ownedShoeModal: boolean;
 }
 
 export class ShoeDetailScreen extends React.Component<Props, State> {
@@ -76,7 +78,8 @@ export class ShoeDetailScreen extends React.Component<Props, State> {
 
     this.state = {
       favorited: false,
-      priceListIndex: 0
+      priceListIndex: 0,
+      ownedShoeModal: false
     };
   }
 
@@ -95,6 +98,7 @@ export class ShoeDetailScreen extends React.Component<Props, State> {
         <View style={{ flex: 1, backgroundColor: "white" }}>
           <ScrollView style={{ flex: 1 }} showsVerticalScrollIndicator={false}>
             <View style={{ flex: 1, ...bottomHeightStyle }}>
+              {this._renderOwnedModal()}
               {this._renderShoeImages()}
               {this._renderUserBehaviorButtons()}
               {this._renderShoeTitle()}
@@ -108,6 +112,47 @@ export class ShoeDetailScreen extends React.Component<Props, State> {
           {this._renderBuyerSection()}
         </View>
       </SafeAreaView>
+    );
+  }
+
+  private _renderOwnedModal() {
+    if (!this.props.account) {
+      return null;
+    }
+
+    return (
+      <ShoeSizePicker
+        shouldRenderCounter={true}
+        pickerTitle={"Bạn đang sở hữu cỡ giày"}
+        visible={this.state.ownedShoeModal}
+        onTogglePicker={this._onToggleSelectShoeSize.bind(this)}
+        owned={this._getOwnedPairs()}
+      />
+    );
+  }
+
+  private _getOwnedPairs() {
+    const ownedShoes = this.props.profile ? this.props.profile.ownedShoes : [];
+    const idx = ownedShoes.findIndex(t => t.shoeId === this.shoe._id);
+
+    if (idx >= 0) {
+      return ownedShoes[idx].owned;
+    }
+
+    return [];
+  }
+
+  private _onToggleSelectShoeSize(
+    exiting: boolean,
+    owned: string | Array<{ shoeSize: string; number: number }>
+  ) {
+    this.setState(
+      {
+        ownedShoeModal: false
+      },
+      () => {
+        !exiting && typeof owned !== "string" && this.props.addOwnedShoe(this.shoe._id, owned);
+      }
     );
   }
 
@@ -128,8 +173,8 @@ export class ShoeDetailScreen extends React.Component<Props, State> {
       return false;
     }
 
-    const shoeOwned = this.props.account.profile
-      ? this.props.account.profile.ownedShoes.indexOf(this.shoe._id) >= 0
+    const shoeOwned = this.props.profile
+      ? this.props.profile.ownedShoes.findIndex(t => t.shoeId === this.shoe._id) >= 0
       : false;
 
     return shoeOwned;
@@ -149,21 +194,19 @@ export class ShoeDetailScreen extends React.Component<Props, State> {
         />
         <View style={{ flexDirection: "row" }}>
           {this._renderSideButton(
-            "Đã có",
+            "Đã có".toUpperCase(),
             { marginRight: 10, ...containerStyle },
             textStyle,
             () => this._addOwnedShoe()
           )}
-          {this._renderSideButton("Bán", {}, {}, () => {})}
+          {this._renderSideButton("Bán".toUpperCase(), {}, {}, () => {})}
         </View>
       </View>
     );
   }
 
   private _addOwnedShoe() {
-    if (!this._isShoeOwned()) {
-      this.props.addOwnedShoe(this.shoe._id);
-    }
+    this.setState({ ownedShoeModal: true });
   }
 
   private _renderShoeTitle(): JSX.Element {
@@ -181,7 +224,7 @@ export class ShoeDetailScreen extends React.Component<Props, State> {
     onPress: () => void
   ) {
     return (
-      <TouchableOpacity onPress={() => onPress()}>
+      <TouchableOpacity onPress={onPress}>
         <View style={[containerStyle, styles.smallButtonBorder]}>
           <Text.Subhead style={textStyle}>{title}</Text.Subhead>
         </View>

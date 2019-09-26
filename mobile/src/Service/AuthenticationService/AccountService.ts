@@ -37,10 +37,11 @@ export class AccountService implements IAccountService {
 
   public async /** override */ addOnwedShoes(
     accessToken: string,
-    shoeId: string
+    shoeId: string,
+    owned: Array<{ shoeSize: string; number: number }>
   ): Promise<boolean> {
     const headers = { authorization: accessToken };
-    const response = await ApiClient.put(`/profile/own`, { shoeId }, { headers });
+    const response = await ApiClient.put(`/profile/own`, { shoeId, owned }, { headers });
     if (response && response.status === HttpStatus.OK) {
       return true;
     }

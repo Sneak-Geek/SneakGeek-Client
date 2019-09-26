@@ -3,18 +3,9 @@
 //!
 
 import * as React from "react";
-import {
-  View,
-  FlatList,
-  StyleSheet,
-  Modal,
-  Dimensions,
-  SafeAreaView,
-  TouchableOpacity
-} from "react-native";
+import { View, StyleSheet, Dimensions, SafeAreaView, TouchableOpacity } from "react-native";
 import { getInset } from "react-native-safe-area-view";
-import { Button } from "react-native-elements";
-import { CustomPicker, Text } from "../../../Shared/UI";
+import { CustomPicker, Text, ShoeSizePicker } from "../../../Shared/UI";
 import * as Assets from "../../../Assets";
 import { IAppSettingsService } from "../../../Service/AppSettingsService";
 import { container, Types } from "../../../Config/Inversify";
@@ -127,76 +118,26 @@ export class ShoeConditionRequiredInfoComponent extends React.PureComponent<Prop
 
   private _renderShoeSelectionModal(): JSX.Element {
     return (
-      <Modal
-        presentationStyle={"overFullScreen"}
+      <ShoeSizePicker
+        shouldRenderCounter={false}
+        pickerTitle={"Bạn đang muốn bán cỡ giày"}
         visible={this.state.isSelectingShoeSize}
-        transparent={true}
-        animationType={"fade"}
-        animated={true}
-      >
-        <SafeAreaView style={styles.shoeSizesContainer}>
-          <Text.Body style={{ color: Assets.Styles.AppSecondaryColor, marginVertical: 20 }}>
-            Bạn đang sở hữu giày
-          </Text.Body>
-          {this._renderShoeSizesContainer()}
-          {this._renderShoeSizeSelectionButtons()}
-        </SafeAreaView>
-      </Modal>
-    );
-  }
-
-  private _renderShoeSizesContainer(): JSX.Element {
-    return (
-      <FlatList
-        data={this.settingsAndOptions[0].options}
-        keyExtractor={(_item, idx) => idx.toString()}
-        numColumns={4}
-        columnWrapperStyle={{ flex: 1, justifyContent: "space-around" }}
-        renderItem={({ item }) => (
-          <Button
-            key={item}
-            title={item}
-            type={"clear"}
-            style={[
-              styles.buttonContainer,
-              this.state.shoeSize && this.state.shoeSize.toString() === item
-                ? styles.buttonSelected
-                : {}
-            ]}
-            onPress={() => {
-              const shoeSize = item;
-              this.setState({ shoeSize }, () => {
-                this.props.onSetShoeSize(shoeSize);
-              });
-            }}
-            titleStyle={Text.TextStyle.body}
-          />
-        )}
+        onTogglePicker={(
+          exiting: boolean,
+          owned: string | Array<{ shoeSize: string; number: number }>
+        ) => {
+          typeof owned === "string" &&
+            this.setState(
+              {
+                shoeSize: owned,
+                isSelectingShoeSize: false
+              },
+              () => {
+                !exiting && this.props.onSetShoeSize(owned);
+              }
+            );
+        }}
       />
-    );
-  }
-
-  private _renderShoeSizeSelectionButtons(): JSX.Element {
-    return (
-      <View style={styles.footerContainer}>
-        <Button
-          buttonStyle={{
-            backgroundColor: "white",
-            ...styles.footerButton
-          }}
-          title={"Đóng"}
-          titleStyle={{ color: "black" }}
-          onPress={() => this.setState({ isSelectingShoeSize: false })}
-        />
-        <Button
-          buttonStyle={{
-            backgroundColor: "#1ABC9C",
-            ...styles.footerButton
-          }}
-          title={"Xác nhận"}
-          onPress={() => this.setState({ isSelectingShoeSize: false })}
-        />
-      </View>
     );
   }
 

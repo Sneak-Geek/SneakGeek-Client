@@ -111,7 +111,8 @@ export default StyleSheet.create({
   smallButtonBorder: {
     borderWidth: 1,
     borderColor: "black",
-    paddingHorizontal: 10,
-    paddingVertical: 2
+    paddingHorizontal: 15,
+    paddingVertical: 4,
+    borderRadius: Assets.Styles.ButtonBorderRadius
   }
 });

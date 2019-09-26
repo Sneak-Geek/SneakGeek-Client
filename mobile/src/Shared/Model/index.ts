@@ -6,7 +6,10 @@ export interface Profile {
   _id: string;
   accountId: string;
   favoriteShoes: string[];
-  ownedShoes: string[];
+  ownedShoes: Array<{
+    shoeId: string;
+    owned: Array<{ number: number; shoeSize: string }>;
+  }>;
   userProvidedName?: {
     firstName: string;
     middleName: string;
@@ -40,7 +43,6 @@ export interface Account {
   authenticationError: any;
   isAuthenticatingWithFacebook: boolean;
   isAuthenticationCancelled: boolean;
-  profile?: Profile;
 }
 
 export type Transaction = {

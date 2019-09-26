@@ -11,3 +11,4 @@ import * as Text from "./Text";
 export { Text };
 
 export * from "./CustomPicker";
+export * from "./ShoeSizePicker";

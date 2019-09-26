@@ -12,5 +12,9 @@ export interface IAccountService {
   getCurrentUser(accessToken: string): Promise<AccountPayload | undefined>;
   getUserProfile(accessToken: string): Promise<Profile | undefined>;
   updateUserProfile(accessToken: string, newProfile: Partial<Profile>): Promise<boolean>;
-  addOnwedShoes(accessToken: string, shoeId: string): Promise<boolean>;
+  addOnwedShoes(
+    accessToken: string,
+    shoeId: string,
+    owned: Array<{ shoeSize: string; number: number }>
+  ): Promise<boolean>;
 }

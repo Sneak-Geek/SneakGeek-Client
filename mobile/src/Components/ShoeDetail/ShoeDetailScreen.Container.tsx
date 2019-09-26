@@ -14,6 +14,7 @@ const mapStateToProps = (state: IAppState) => {
   return {
     shoes: state.AppContentState.shoes,
     account: state.AccountState.currentAccount,
+    profile: state.AccountState.userProfileState.profile,
     routeIndex: state.NavigationState.index
   };
 };
@@ -27,8 +28,8 @@ const mapDispatchToProps = (dispatch: Function) => {
       };
       dispatch(StackActions.push(navConfig));
     },
-    addOwnedShoe: (shoeId: string) => {
-      dispatch(addOwnedShoe(shoeId));
+    addOwnedShoe: (shoeId: string, owned: Array<{ shoeSize: string; number: number }>) => {
+      dispatch(addOwnedShoe(shoeId, owned));
     }
   };
 };
