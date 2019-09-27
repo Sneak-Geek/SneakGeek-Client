@@ -62,7 +62,7 @@ export const authenticateVsnkrsService = (
         await settings.setValue(SettingsKeys.CurrentAccessToken, accountPayload.token);
         await settings.loadServerSettings();
 
-        dispatch(getUserProfile(accountPayload.token));
+        await dispatch(getUserProfile(accountPayload.token));
         dispatch(authenticationComplete(accountPayload.user));
         dispatch(notifyLoginSuccess());
       }

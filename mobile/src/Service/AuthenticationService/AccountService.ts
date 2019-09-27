@@ -16,7 +16,11 @@ export class AccountService implements IAccountService {
   ): Promise<AccountPayload | undefined> {
     const headers = { access_token: token };
     const response = await ApiClient.post(`/account/${provider}`, {}, { headers });
-    if (response && response.status === HttpStatus.CREATED) {
+
+    if (
+      response &&
+      (response.status === HttpStatus.CREATED || response.status === HttpStatus.OK)
+    ) {
       return response.data as AccountPayload;
     }
 
