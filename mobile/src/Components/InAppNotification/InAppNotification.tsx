@@ -48,7 +48,7 @@ export class InAppNotification extends React.Component<InAppNotificationProps> {
     );
   }
 
-  public componentWillUnmount() {
+  public /** override */ componentWillUnmount() {
     this.timeouts.forEach(t => clearTimeout(t));
   }
 }

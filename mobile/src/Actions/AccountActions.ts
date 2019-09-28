@@ -17,7 +17,7 @@ import { NetworkRequestState } from "../Shared/State";
 
 export module AccountActions {
   export const AUTHENTICATE_ERROR = "AUTHENTICATION_ERROR";
-  export const AUTHENTICATE_VSNKRS = "AUTHENTICATE_VSNKRS";
+  export const AUTHENTICATE_ON_PREM = "AUTHENTICATE_ON_PREM";
   export const AUTHENTICATION_COMPLETE = "AUTHENTICATION_COMPLETE";
   export const THIRD_PARTY_CANCELED_AUTH = "THIRD_PARTY_CANCELED_AUTH";
   export const GO_TO_LOGIN = "GO_TO_LOGIN";
@@ -29,7 +29,7 @@ export const cancelThirdPartyAuthentication = createAction<"facebook" | "google"
   AccountActions.THIRD_PARTY_CANCELED_AUTH
 );
 export const authenticationError = createAction(AccountActions.AUTHENTICATE_ERROR);
-export const vsnkrsAuthenticate = createAction(AccountActions.AUTHENTICATE_VSNKRS);
+export const onPremAuthenticate = createAction(AccountActions.AUTHENTICATE_ON_PREM);
 export const authenticationComplete = createAction<Account>(
   AccountActions.AUTHENTICATION_COMPLETE
 );
@@ -52,7 +52,7 @@ export const authenticateVsnkrsService = (
   provider: "facebook" | "google"
 ) => {
   return async (dispatch: Function) => {
-    dispatch(vsnkrsAuthenticate);
+    dispatch(onPremAuthenticate);
     try {
       const accountService = container.get<IAccountService>(Types.IAccountService);
       const settings = container.get<IAppSettingsService>(Types.IAppSettingsService);

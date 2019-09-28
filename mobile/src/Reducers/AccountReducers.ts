@@ -41,7 +41,7 @@ let initialState: IAccountState = {
 
 export const AccountReducers = handleActions<IAccountState, any>(
   {
-    [`${Actions.vsnkrsAuthenticate}`]: (state: IAccountState, _action: Action<any>) => {
+    [`${Actions.onPremAuthenticate}`]: (state: IAccountState, _action: Action<any>) => {
       return Object.assign(state, { isAuthenticating: true, authenticationError: null });
     },
     [`${Actions.cancelThirdPartyAuthentication}`]: (
