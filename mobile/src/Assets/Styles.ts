@@ -17,5 +17,6 @@ export const Styles = {
   ButtonPadding: 15,
   TextPrimaryColor: "#000000",
   TextSecondaryColor: "#FFFFFF",
-  TextWarningColor: "#CBAB08"
+  TextWarningColor: "#CBAB08",
+  ListItemBackgroundColor: "rgba(196,196,196, 0.1)"
 };

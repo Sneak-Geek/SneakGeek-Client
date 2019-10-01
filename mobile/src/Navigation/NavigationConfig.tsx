@@ -16,6 +16,8 @@ import { Icon } from "react-native-elements";
 import { SplashScreenContainer } from "../Components/Splash/SplashScreen";
 import { ShoeDetailScreenContainer } from "../Components/ShoeDetail";
 import { Text } from "../Shared/UI";
+import { PaymentOptionsScreenContainer } from "../Components/PaymentOptions/PaymentOptionsScreen.Container";
+import { AddCardScreenContainer } from "../Components/AddCard/AddCardScreen.Container";
 
 const BuyTabNavigator = createStackNavigator(
   {
@@ -116,7 +118,9 @@ export const AppNavigator = createStackNavigator(
     [`${RouteNames.Splash}`]: { screen: SplashScreenContainer },
     [`${RouteNames.Login}`]: { screen: LoginScreenContainer },
     [`${RouteNames.SellDetail}`]: { screen: SellDetailScreenContainer },
-    [`${RouteNames.ShoeDetail}`]: { screen: ShoeDetailScreenContainer }
+    [`${RouteNames.ShoeDetail}`]: { screen: ShoeDetailScreenContainer },
+    [`${RouteNames.PaymentOptions}`]: { screen: PaymentOptionsScreenContainer },
+    [`${RouteNames.AddCard}`]: { screen: AddCardScreenContainer }
   },
   {
     initialRouteName: RouteNames.Splash,
