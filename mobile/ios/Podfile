@@ -30,11 +30,6 @@ target 'client' do
 
   # For firebase
   pod 'Firebase/Analytics'
-  
-  target 'clientTests' do
-    inherit! :search_paths
-    # Pods for testing
-  end
 
   use_native_modules!
 end

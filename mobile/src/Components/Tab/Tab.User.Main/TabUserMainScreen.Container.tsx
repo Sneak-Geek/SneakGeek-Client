@@ -15,11 +15,19 @@ const mapStateToProps = (state: IAppState) => ({
 const mapDispatchToProps = (dispatch: Function) => {
   return {
     navigateToUserEdit: () => {
-      const navConfig = {
-        routeName: RouteNames.Tabs.UserInfoTab.Edit
-        //   params: { isForSell: true }
-      };
-      dispatch(NavigationActions.navigate(navConfig));
+      dispatch(
+        NavigationActions.navigate({
+          routeName: RouteNames.Tabs.UserInfoTab.Edit
+        })
+      );
+    },
+
+    navigateToPayments: () => {
+      dispatch(
+        NavigationActions.navigate({
+          routeName: RouteNames.PaymentOptions
+        })
+      );
     }
   };
 };

@@ -8,6 +8,8 @@ export const RouteNames = {
   Login: "Login",
   SellDetail: "SellDetail",
   ShoeDetail: "ShoeDetail",
+  AddCard: "AddCard",
+  PaymentOptions: "PaymentOptions",
   Tabs: {
     TabRoot: "TabRoot",
     HomeTab: {

@@ -4,62 +4,71 @@
 
 import * as React from "react";
 import { NavigationScreenOptions, ScrollView } from "react-navigation";
-import {
-  View,
-  StyleSheet,
-  TouchableWithoutFeedback,
-  SafeAreaView,
-  TouchableOpacity
-} from "react-native";
+import { View, StyleSheet, SafeAreaView, TouchableOpacity } from "react-native";
 import { Image } from "react-native-elements";
 import { Text } from "../../../Shared/UI";
 import * as Assets from "../../../Assets";
 import { Account } from "../../../Shared/Model";
 
-const list = [
-  {
-    title: "Thông tin cá nhân",
-    hasMarginBottom: true
-  },
-  {
-    title: "Đổi mật khẩu",
-    hasMarginBottom: true
-  },
-  {
-    title: "Thông tin thanh toán",
-    hasMarginBottom: false
-  },
-  {
-    title: "Địa chỉ",
-    hasMarginBottom: true
-  },
-  {
-    title: "Cài đặt thông báo",
-    hasMarginBottom: true
-  },
-  {
-    title: "Chia sẻ ứng dụng",
-    hasMarginBottom: false
-  },
-  {
-    title: "Thông tin phiên bản",
-    hasMarginBottom: false
-  },
-  {
-    title: "Liên hệ",
-    hasMarginBottom: true
-  }
-];
-
 export interface IUserTabMainProps {
   account: Account;
   navigateToUserEdit: () => void;
+  navigateToPayments: () => void;
 }
+
+type UserListOption = {
+  title: string;
+  hasMarginBottom: boolean;
+  onClick: () => void;
+};
 
 export default class TabUserMainScreen extends React.Component<IUserTabMainProps> {
   static navigationOptions: NavigationScreenOptions = {
     header: null
   };
+
+  private optionsList: Array<UserListOption> = [
+    {
+      title: "Thông tin cá nhân",
+      hasMarginBottom: true,
+      onClick: () => this.props.navigateToUserEdit()
+    },
+    {
+      title: "Đổi mật khẩu",
+      hasMarginBottom: true,
+      onClick: () => {}
+    },
+    {
+      title: "Thông tin thanh toán",
+      hasMarginBottom: false,
+      onClick: () => this.props.navigateToPayments()
+    },
+    {
+      title: "Địa chỉ",
+      hasMarginBottom: true,
+      onClick: () => {}
+    },
+    {
+      title: "Cài đặt thông báo",
+      hasMarginBottom: true,
+      onClick: () => {}
+    },
+    {
+      title: "Chia sẻ ứng dụng",
+      hasMarginBottom: false,
+      onClick: () => {}
+    },
+    {
+      title: "Thông tin phiên bản",
+      hasMarginBottom: false,
+      onClick: () => {}
+    },
+    {
+      title: "Liên hệ",
+      hasMarginBottom: true,
+      onClick: () => {}
+    }
+  ];
 
   public constructor /** override */(props: any) {
     super(props);
@@ -108,25 +117,25 @@ export default class TabUserMainScreen extends React.Component<IUserTabMainProps
   }
 
   private _renderSettingsList(): React.ReactNode {
+    return <View>{this.optionsList.map(this._renderOptionItem.bind(this))}</View>;
+  }
+
+  private _renderOptionItem(item: UserListOption) {
     return (
-      <TouchableWithoutFeedback onPress={this.props.navigateToUserEdit.bind(this)}>
-        <View>
-          {list.map(item => (
-            <View
-              key={item.title}
-              style={[
-                item.hasMarginBottom ? styles.listItemStyleWithMarginBottom : null,
-                styles.settingsContainer
-              ]}
-            >
-              <Text.Callout style={{ fontWeight: "bold", fontSize: 16 }}>
-                {item.title.toUpperCase()}
-              </Text.Callout>
-              <Image source={Assets.Icons.ChevronLeft} />
-            </View>
-          ))}
-        </View>
-      </TouchableWithoutFeedback>
+      <View
+        key={item.title}
+        style={[
+          item.hasMarginBottom ? styles.listItemStyleWithMarginBottom : null,
+          styles.settingsContainer
+        ]}
+      >
+        <Text.Callout style={{ fontWeight: "bold", fontSize: 16 }}>
+          {item.title.toUpperCase()}
+        </Text.Callout>
+        <TouchableOpacity onPress={item.onClick.bind(this)}>
+          <Image source={Assets.Icons.ChevronLeft} />
+        </TouchableOpacity>
+      </View>
     );
   }
 
@@ -232,7 +241,7 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: "center",
     justifyContent: "space-between",
-    backgroundColor: "rgba(196,196,196, 0.1)",
+    backgroundColor: Assets.Styles.ListItemBackgroundColor,
     height: Assets.Styles.ButtonHeight
   },
 
