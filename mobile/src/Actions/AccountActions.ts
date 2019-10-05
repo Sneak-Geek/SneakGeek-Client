@@ -200,3 +200,16 @@ export const addOwnedShoe = (
     }
   };
 };
+
+export const logout = () => {
+  return async (dispatch: Function) => {
+    try {
+      const settings = container.get<IAppSettingsService>(Types.IAppSettingsService);
+      await settings.setValue(SettingsKeys.CurrentAccessToken, undefined);
+      dispatch(showNotification("Đăng xuất thành công"));
+    } catch(error) {
+      console.log("Error", error);
+    }
+    
+  };
+};

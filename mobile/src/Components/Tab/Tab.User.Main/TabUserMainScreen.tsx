@@ -15,6 +15,7 @@ export interface IUserTabMainProps {
   navigateToUserEdit: () => void;
   navigateToPayments: () => void;
   navigateToLoginScreen: () => void;
+  logout: () => void;
 }
 
 type UserListOption = {
@@ -142,7 +143,11 @@ export default class TabUserMainScreen extends React.Component<IUserTabMainProps
 
   private _renderLogoutButton(): React.ReactNode {
     return (
-      <TouchableOpacity style={[styles.settingsContainer, styles.signOutContainer]} onPress={()=>this.props.navigateToLoginScreen()}>
+      <TouchableOpacity style={[styles.settingsContainer, styles.signOutContainer]} 
+        onPress={() => {
+          this.props.logout();
+          this.props.navigateToLoginScreen();
+      }}>
         <Text.Body style={{ color: Assets.Styles.AppErrorColor }}>Đăng xuất</Text.Body>
       </TouchableOpacity>
     );

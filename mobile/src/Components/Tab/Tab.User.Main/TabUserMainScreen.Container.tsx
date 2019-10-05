@@ -7,6 +7,7 @@ import TabUserMainScreen from "./TabUserMainScreen";
 import { IAppState } from "../../../Store";
 import { NavigationActions, StackActions } from "react-navigation";
 import { RouteNames } from "../../../Navigation";
+import { logout } from "../../../Actions";
 
 const mapStateToProps = (state: IAppState) => ({
   account: state.AccountState.currentAccount
@@ -36,6 +37,10 @@ const mapDispatchToProps = (dispatch: Function) => {
         actions: [NavigationActions.navigate({ routeName: RouteNames.Login })],
       });
       dispatch(resetAction);
+    },
+
+    logout: () => {
+      dispatch(logout());
     }
   };
 };
