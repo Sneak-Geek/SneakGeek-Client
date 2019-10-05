@@ -5,7 +5,7 @@
 import { connect } from "react-redux";
 import TabUserMainScreen from "./TabUserMainScreen";
 import { IAppState } from "../../../Store";
-import { NavigationActions } from "react-navigation";
+import { NavigationActions, StackActions } from "react-navigation";
 import { RouteNames } from "../../../Navigation";
 
 const mapStateToProps = (state: IAppState) => ({
@@ -28,6 +28,14 @@ const mapDispatchToProps = (dispatch: Function) => {
           routeName: RouteNames.PaymentOptions
         })
       );
+    },
+
+    navigateToLoginScreen: () => {
+      const resetAction = StackActions.reset({
+        index: 0,
+        actions: [NavigationActions.navigate({ routeName: RouteNames.Login })],
+      });
+      dispatch(resetAction);
     }
   };
 };
