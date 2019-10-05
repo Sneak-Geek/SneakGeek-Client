@@ -11,5 +11,6 @@ export const Icons = {
   CheckMark: require("../../../Icons/CheckMark.png"),
   Clock: require("../../../Icons/Clock.png"),
   Up: require("../../../Icons/Up.png"),
-  AddCard: require("../../../Icons/AddCard.png")
+  AddCard: require("../../../Icons/AddCard.png"),
+  Zalo: require("../../../Icons/Zalo.png")
 };

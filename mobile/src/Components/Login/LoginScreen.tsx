@@ -54,16 +54,21 @@ export default class LoginScreen extends React.Component<ILoginScreenProps, Stat
   private _renderSocialContainer() {
     return (
       <View style={styles.socialContainer}>
-        <Text.Body style={styles.label}>Đăng nhập qua</Text.Body>
+        <Text.Body style={styles.label}>Đăng nhập qua:</Text.Body>
+        {this._renderSocialButton(
+          "Tài khoản Google",
+          Assets.Icons.Google,
+          this.props.googleLogin
+        )}
         {this._renderSocialButton(
           "Tài khoản Facebook",
           Assets.Icons.Facebook,
           this.props.facebookLogin
         )}
-        {this._renderSocialButton(
-          "Tài khoản Google",
-          Assets.Icons.Google,
-          this.props.googleLogin
+         {this._renderSocialButton(
+          "Tài khoản Zalo",
+          Assets.Icons.Zalo,
+          this.props.facebookLogin
         )}
       </View>
     );
