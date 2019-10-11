@@ -6,6 +6,7 @@ export const RouteNames = {
   AppNavigator: "AppNavigator",
   Splash: "Splash",
   Login: "Login",
+  SignUp: "SignUp",
   SellDetail: "SellDetail",
   ShoeDetail: "ShoeDetail",
   AddCard: "AddCard",

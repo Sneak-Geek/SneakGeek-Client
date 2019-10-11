@@ -10,6 +10,7 @@ import {
 } from "react-navigation";
 import Tab from "../Components/Tab";
 import { LoginScreenContainer } from "../Components/Login/LoginScreen.Container";
+import { SignUpScreenContainer } from "../Components/SignUp/SignUpScreen.Container";
 import { SellDetailScreenContainer } from "../Components/SellDetail/SellDetailScreen.Container";
 import { RouteNames } from "./RouteNames";
 import { Icon } from "react-native-elements";
@@ -117,6 +118,7 @@ export const AppNavigator = createStackNavigator(
     },
     [`${RouteNames.Splash}`]: { screen: SplashScreenContainer },
     [`${RouteNames.Login}`]: { screen: LoginScreenContainer },
+    [`${RouteNames.SignUp}`]: { screen: SignUpScreenContainer },
     [`${RouteNames.SellDetail}`]: { screen: SellDetailScreenContainer },
     [`${RouteNames.ShoeDetail}`]: { screen: ShoeDetailScreenContainer },
     [`${RouteNames.PaymentOptions}`]: { screen: PaymentOptionsScreenContainer },
