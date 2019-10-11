@@ -17,14 +17,8 @@ export interface ISignUpScreenProps {
   currentAccount: Account | null;
   isAuthenticating: boolean;
   authenticationError?: any;
-  isAuthenticatingWithFacebook: boolean;
-  isAuthenticationCancelled: boolean;
 
   // dispatch props
-  facebookLogin: () => void;
-  googleLogin: () => void;
-  navigateToHome: () => void;
-  displayDebugDialog: () => void;
   goBack: () => void;
 }
 
