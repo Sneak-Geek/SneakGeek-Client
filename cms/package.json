@@ -7,9 +7,19 @@
     "@types/node": "12.7.4",
     "@types/react": "16.9.2",
     "@types/react-dom": "16.9.0",
-    "react": "^16.9.0",
-    "react-dom": "^16.9.0",
+    "bootstrap": "4.3.1",
+    "business": "file:../business",
+    "connected-react-router": "^6.5.2",
+    "node-sass": "^4.12.0",
+    "react": "16.9.0",
+    "react-bootstrap": "1.0.0-beta.14",
+    "react-dom": "16.9.0",
+    "react-icons": "3.7.0",
+    "react-redux": "7.1.1",
+    "react-router-dom": "5.1.2",
     "react-scripts": "3.1.1",
+    "redux-actions": "^2.6.5",
+    "redux-thunk": "^2.3.0",
     "typescript": "3.6.2"
   },
   "scripts": {
@@ -32,5 +42,12 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
+  },
+  "devDependencies": {
+    "@types/facebook-js-sdk": "^3.3.0",
+    "@types/react-bootstrap": "0.32.20",
+    "@types/react-redux": "7.1.4",
+    "@types/react-router-dom": "5.1.0",
+    "@types/redux-actions": "^2.6.1"
   }
 }

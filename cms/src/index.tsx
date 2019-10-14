@@ -1,10 +1,28 @@
-import React from 'react';
-import ReactDOM from 'react-dom';
-import './index.css';
-import App from './App';
-import * as serviceWorker from './serviceWorker';
+import React from "react";
+import ReactDOM from "react-dom";
+import App from "./App";
+import * as serviceWorker from "./serviceWorker";
+import {
+  ObjectFactory,
+  IEnvVar,
+  FactoryKey,
+  IAccountService,
+  AccountService,
+  IFacebookSDK
+} from "business";
+import { FacebookSDK } from "./services/FacebookSDK";
 
-ReactDOM.render(<App />, document.getElementById('root'));
+import "bootstrap/dist/css/bootstrap.min.css";
+import "./index.scss";
+
+ObjectFactory.register<IEnvVar>(FactoryKey.IEnvVar, {
+  __DEV__: process.env.NODE_ENV !== "production"
+});
+
+ObjectFactory.register<IAccountService>(FactoryKey.IAccountService, new AccountService());
+ObjectFactory.register<IFacebookSDK>(FactoryKey.IFacebookSDK, new FacebookSDK());
+
+ReactDOM.render(<App />, document.getElementById("root"));
 
 // If you want your app to work offline and load faster, you can change
 // unregister() to register() below. Note this comes with some pitfalls.

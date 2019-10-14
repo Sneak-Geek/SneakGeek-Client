@@ -1,26 +1,29 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+//!
+//! Copyright (c) 2019 - SneakGeek. All rights reserved
+//!
 
-const App: React.FC = () => {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+import React from "react";
+import { Route, Switch } from "react-router-dom";
+import { LoginScreenContainer } from "./components/LoginScreen";
+import { Provider } from "react-redux";
+import { AppStore } from "./store/AppStore";
+import { ConnectedRouter } from "connected-react-router";
+import { history } from "./store/AppStore";
+import { HomeScreen } from "./components/HomeScreen/HomeScreen";
+
+export default class App extends React.Component<{}> {
+  public /** override */ render(): JSX.Element {
+    return (
+      <Provider store={AppStore}>
+        <ConnectedRouter history={history}>
+          <>
+            <Switch>
+              <Route path="/login" component={LoginScreenContainer} />
+              <Route path="/home" component={HomeScreen} />
+            </Switch>
+          </>
+        </ConnectedRouter>
+      </Provider>
+    );
+  }
 }
-
-export default App;
