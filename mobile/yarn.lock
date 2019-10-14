@@ -1144,7 +1144,7 @@
     "@types/prop-types" "*"
     csstype "^2.2.0"
 
-"@types/redux-actions@2.6.1":
+"@types/redux-actions@^2.6.1":
   version "2.6.1"
   resolved "https://registry.yarnpkg.com/@types/redux-actions/-/redux-actions-2.6.1.tgz#0940e97fa35ad3004316bddb391d8e01d2efa605"
   integrity sha512-zKgK+ATp3sswXs6sOYo1tk8xdXTy4CTaeeYrVQlClCjeOpag5vzPo0ASWiiBJ7vsiQRAdb3VkuFLnDoBimF67g==
@@ -5569,7 +5569,7 @@ react-native-button@^2.3.0:
   dependencies:
     prop-types "^15.5.10"
 
-react-native-credit-card-input@^0.4.1:
+react-native-credit-card-input@0.4.1:
   version "0.4.1"
   resolved "https://registry.yarnpkg.com/react-native-credit-card-input/-/react-native-credit-card-input-0.4.1.tgz#e62dd1a9beeab6787e5373ba23b93831cbf5f3de"
   integrity sha1-5i3Rqb7qtnh+U3O6I7k4Mcv1894=
@@ -5908,7 +5908,7 @@ reduce-reducers@^0.4.3:
   resolved "https://registry.yarnpkg.com/reduce-reducers/-/reduce-reducers-0.4.3.tgz#8e052618801cd8fc2714b4915adaa8937eb6d66c"
   integrity sha512-+CNMnI8QhgVMtAt54uQs3kUxC3Sybpa7Y63HR14uGLgI9/QR5ggHvpxwhGGe3wmx5V91YwqQIblN9k5lspAmGw==
 
-redux-actions@2.6.5:
+redux-actions@^2.6.5:
   version "2.6.5"
   resolved "https://registry.yarnpkg.com/redux-actions/-/redux-actions-2.6.5.tgz#bdca548768ee99832a63910c276def85e821a27e"
   integrity sha512-pFhEcWFTYNk7DhQgxMGnbsB1H2glqhQJRQrtPb96kD3hWiZRzXHwwmFPswg6V2MjraXRXWNmuP9P84tvdLAJmw==
@@ -6718,7 +6718,7 @@ time-stamp@^1.0.0:
   resolved "https://registry.yarnpkg.com/time-stamp/-/time-stamp-1.1.0.tgz#764a5a11af50561921b133f3b44e618687e0f5c3"
   integrity sha1-dkpaEa9QVhkhsTPztE5hhofg9cM=
 
-tipsi-stripe@^7.5.1:
+tipsi-stripe@7.5.1:
   version "7.5.1"
   resolved "https://registry.yarnpkg.com/tipsi-stripe/-/tipsi-stripe-7.5.1.tgz#529434e0bbd0510eef68f6b1ff46c6d30f5a672f"
   integrity sha512-dSdyY/1GR5JmmddS9K8nBR3bAkNhBsMpUGKjAuyXvyHOXJIwkdzuWDa86yMLPAC+JLBP4HzB2cIuEYH4A6KI4g==

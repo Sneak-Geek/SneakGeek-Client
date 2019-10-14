@@ -1,8 +1,8 @@
-import { SettingsKeys } from "./SettingsKeys";
-
 //!
 //! Copyright (c) 2019 - SneakGeek. All rights reserved
 //!
+
+import { SettingsKeys } from "./SettingsKeys";
 
 export interface IAppSettingsService {
   isSettingsLoaded(): boolean;

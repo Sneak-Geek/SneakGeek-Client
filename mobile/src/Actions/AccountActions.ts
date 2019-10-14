@@ -52,7 +52,7 @@ export const authenticateVsnkrsService = (
   provider: "facebook" | "google"
 ) => {
   return async (dispatch: Function) => {
-    dispatch(onPremAuthenticate);
+    dispatch(onPremAuthenticate());
     try {
       const accountService = container.get<IAccountService>(Types.IAccountService);
       const settings = container.get<IAppSettingsService>(Types.IAppSettingsService);

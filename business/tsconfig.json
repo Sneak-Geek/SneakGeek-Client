@@ -1,0 +1,10 @@
+{
+  "extends": "../tsconfig.base.json",
+  "compilerOptions": {
+    "target": "es6",
+    "rootDir": "./",
+    "outDir": "./build",
+    "types": [],
+    "declaration": true
+  }
+}
