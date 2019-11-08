@@ -10,11 +10,9 @@ import { RouteNames } from "../../../Navigation";
 import { Shoe } from "../../../Shared/Model";
 import { NavigationActions } from "react-navigation";
 
-const mapStateToProps = (state: IAppState) => {
-  return {
-    shoes: state.AppContentState.shoes
-  };
-};
+const mapStateToProps = (state: IAppState) => ({
+  shoes: state.AppContentState.shoes
+});
 
 const mapDispatchToProps = (dispatch: Function) => {
   return {

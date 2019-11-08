@@ -33,7 +33,7 @@ export interface ISellTabMainProps {
   shoes: Shoe[];
   sellHistory: {
     state: NetworkRequestState;
-    sellHistory: Transaction[];
+    sells: Transaction[];
     shoes: Shoe[];
     error?: any;
   };
@@ -102,7 +102,7 @@ export class TabSellMainScreen extends PurchaseComponent<ISellTabMainProps, ISel
         view = <ActivityIndicator size={"small"} />;
         break;
       case NetworkRequestState.SUCCESS:
-        if (sellHistory.sellHistory.length === 0) {
+        if (sellHistory.sells.length === 0) {
           view = (
             <Text.Subhead style={textStyle}>Hiện tại bạn chưa bán đôi giày nào</Text.Subhead>
           );
@@ -113,7 +113,7 @@ export class TabSellMainScreen extends PurchaseComponent<ISellTabMainProps, ISel
               keyExtractor={(_itm, idx) => idx.toString()}
               horizontal={true}
               showsHorizontalScrollIndicator={false}
-              data={sellHistory.sellHistory}
+              data={sellHistory.sells}
               renderItem={({ item }) => this._renderCurrentlySellingShoeItem(item)}
             />
           );
