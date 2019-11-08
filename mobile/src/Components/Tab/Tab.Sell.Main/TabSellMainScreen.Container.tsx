@@ -12,7 +12,7 @@ import { getSellHistory } from "../../../Actions";
 const mapStateToProps = (state: IAppState) => {
   return {
     shoes: state.AppContentState.shoes,
-    sellHistory: state.TransactionState.sellHistory
+    transactionHistory: state.TransactionState.transactions
   };
 };
 

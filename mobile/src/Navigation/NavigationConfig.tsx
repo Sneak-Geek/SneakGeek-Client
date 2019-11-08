@@ -6,7 +6,8 @@ import * as React from "react";
 import {
   createStackNavigator,
   createAppContainer,
-  createBottomTabNavigator
+  createBottomTabNavigator,
+  createMaterialTopTabNavigator
 } from "react-navigation";
 import Tab from "../Components/Tab";
 import { LoginScreenContainer } from "../Components/Login/LoginScreen.Container";
@@ -18,36 +19,39 @@ import { ShoeDetailScreenContainer } from "../Components/ShoeDetail";
 import { Text } from "../Shared/UI";
 import { PaymentOptionsScreenContainer } from "../Components/PaymentOptions/PaymentOptionsScreen.Container";
 import { AddCardScreenContainer } from "../Components/AddCard/AddCardScreen.Container";
+import { SafeAreaMaterialTopTabBar } from "./SafeAreaMaterialTop";
+import { Styles } from "../Assets";
+import { TextStyle } from "../Shared/UI/Text";
 
-const BuyTabNavigator = createStackNavigator(
-  {
-    [`${RouteNames.Tabs.BuyTab.MainScreen}`]: { screen: Tab.Buy.Main }
-  },
-  {
-    navigationOptions: {
-      tabBarLabel: "Mua",
-      tabBarIcon: ({ tintColor }) => {
-        tintColor = tintColor as string;
-        return <Icon type={"ionicon"} name={"md-trending-up"} size={28} color={tintColor} />;
-      }
-    }
-  }
-);
+// const BuyTabNavigator = createStackNavigator(
+//   {
+//     [`${RouteNames.Tabs.BuyTab.MainScreen}`]: { screen: Tab.Buy.Main }
+//   },
+//   {
+//     navigationOptions: {
+//       tabBarLabel: "Mua",
+//       tabBarIcon: ({ tintColor }) => {
+//         tintColor = tintColor as string;
+//         return <Icon type={"ionicon"} name={"md-trending-up"} size={28} color={tintColor} />;
+//       }
+//     }
+//   }
+// );
 
-const SellTabNavigator = createStackNavigator(
-  {
-    [`${RouteNames.Tabs.SellTab.MainScreen}`]: { screen: Tab.Sell.Main }
-  },
-  {
-    navigationOptions: {
-      tabBarLabel: "Bán",
-      tabBarIcon: ({ tintColor }) => {
-        tintColor = tintColor as string;
-        return <Icon type={"ionicon"} name={"md-pricetag"} size={28} color={tintColor} />;
-      }
-    }
-  }
-);
+// const SellTabNavigator = createStackNavigator(
+//   {
+//     [`${RouteNames.Tabs.SellTab.MainScreen}`]: { screen: Tab.Sell.Main }
+//   },
+//   {
+//     navigationOptions: {
+//       tabBarLabel: "Bán",
+//       tabBarIcon: ({ tintColor }) => {
+//         tintColor = tintColor as string;
+//         return <Icon type={"ionicon"} name={"md-pricetag"} size={28} color={tintColor} />;
+//       }
+//     }
+//   }
+// );
 
 const HomeTabNavigator = createStackNavigator(
   {
@@ -82,15 +86,49 @@ const UserInfoTabNavigator = createStackNavigator(
   }
 );
 
+const TransactionTabNavigator = createMaterialTopTabNavigator(
+  {
+    [`${RouteNames.Tabs.Transaction.BuyTab}`]: { screen: Tab.Transaction.Buy },
+    [`${RouteNames.Tabs.Transaction.SellTab}`]: { screen: Tab.Transaction.Sell },
+    [`${RouteNames.Tabs.Transaction.HistoryTab}`]: { screen: Tab.Transaction.History }
+  },
+  {
+    lazy: true,
+    tabBarOptions: {
+      showLabel: true,
+      showIcon: false,
+      style: {
+        backgroundColor: "transparent"
+      },
+      labelStyle: {
+        color: Styles.TextPrimaryColor,
+        ...TextStyle.body
+      },
+      indicatorStyle: {
+        backgroundColor: Styles.AppAccentColor
+      }
+    },
+    tabBarComponent: SafeAreaMaterialTopTabBar,
+    swipeEnabled: false,
+    navigationOptions: {
+      tabBarLabel: "Giao dịch",
+      tabBarIcon: (options: any) => {
+        const tintColor = options.tintColor as string;
+        return <Icon type={"ionicon"} name={"md-cart"} size={28} color={tintColor} />;
+      }
+    }
+  }
+);
+
 const AppTabRoot = createBottomTabNavigator(
   {
     [`${RouteNames.Tabs.HomeTab.TabName}`]: { screen: HomeTabNavigator },
     [`${RouteNames.Tabs.SearchTab}`]: { screen: Tab.Search.Main },
-    [`${RouteNames.Tabs.BuyTab.TabName}`]: { screen: BuyTabNavigator },
-    [`${RouteNames.Tabs.SellTab.TabName}`]: { screen: SellTabNavigator },
+    [`${RouteNames.Tabs.Transaction.Root}`]: { screen: TransactionTabNavigator },
     [`${RouteNames.Tabs.UserInfoTab.TabName}`]: { screen: UserInfoTabNavigator }
   },
   {
+    lazy: true,
     tabBarOptions: {
       showIcon: true,
       showLabel: true,

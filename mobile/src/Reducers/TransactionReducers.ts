@@ -12,9 +12,9 @@ export interface ITransactionState {
   sell: {
     state: TransactionReduxState;
   };
-  sellHistory: {
+  transactions: {
     state: NetworkRequestState;
-    sellHistory: Transaction[];
+    sells: Transaction[];
     shoes: Shoe[];
     error?: any;
   };
@@ -24,9 +24,9 @@ const initialState: ITransactionState = {
   sell: {
     state: TransactionReduxState.SELL_NOT_STARTED
   },
-  sellHistory: {
+  transactions: {
     state: NetworkRequestState.NOT_STARTED,
-    sellHistory: [],
+    sells: [],
     shoes: []
   }
 };
@@ -48,8 +48,8 @@ export const TransactionReducers = handleActions<ITransactionState, any>(
     ) => {
       return {
         ...state,
-        sellHistory: {
-          ...state.sellHistory,
+        transactions: {
+          ...state.transactions,
           ...action.payload
         }
       };

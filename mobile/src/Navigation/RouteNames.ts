@@ -29,6 +29,12 @@ export const RouteNames = {
       TabName: "UserInfo",
       Info: "User/Info",
       Edit: "User/Edit"
+    },
+    Transaction: {
+      Root: "Transaction/Root",
+      SellTab: "SellTab",
+      BuyTab: "BuyTab",
+      HistoryTab: "HistoryTab"
     }
   }
 };
