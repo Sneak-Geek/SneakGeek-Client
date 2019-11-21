@@ -9,6 +9,8 @@ export const RouteNames = {
   SellDetail: "SellDetail",
   ShoeDetail: "ShoeDetail",
   AddCard: "AddCard",
+  ShoeRequire: "ShoeRequire",
+  RequireSuccess: "RequireSuccess",
   PaymentOptions: "PaymentOptions",
   Tabs: {
     TabRoot: "TabRoot",

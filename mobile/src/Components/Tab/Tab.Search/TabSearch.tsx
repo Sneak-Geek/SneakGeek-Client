@@ -16,7 +16,9 @@ import {
   StyleSheet,
   NativeSyntheticEvent,
   TouchableOpacity,
-  Keyboard
+  Keyboard,
+  Modal,
+  Image
 } from "react-native";
 import { Input, Icon } from "react-native-elements";
 import { BlurView } from "@react-native-community/blur";
@@ -32,6 +34,7 @@ export interface ISearchScreenProps {
 
   onShoeClick: (forSell: boolean, shoe: Shoe) => void;
   search: (key: string) => void;
+  test: () => void;
 }
 
 interface ISearchScreenState {
@@ -39,6 +42,10 @@ interface ISearchScreenState {
   searchFocus: boolean;
   shouldRenderTopShoes: boolean;
   shouldOpenSell: boolean;
+  showModal: boolean;
+  fillPrice: string;
+  fillGender: string;
+  fillCondition: string;
 }
 
 export default class TabSearch extends React.Component<ISearchScreenProps, ISearchScreenState> {
@@ -61,7 +68,11 @@ export default class TabSearch extends React.Component<ISearchScreenProps, ISear
       searchKey: "",
       searchFocus: false,
       shouldRenderTopShoes: true,
-      shouldOpenSell: this.isForSell
+      shouldOpenSell: this.isForSell,
+      showModal: false,
+      fillPrice: "highToLow",
+      fillGender: 'male',
+      fillCondition: 'new'
     };
   }
 
@@ -78,8 +89,11 @@ export default class TabSearch extends React.Component<ISearchScreenProps, ISear
             this._renderSearchContent()}
           <ScrollView>
             {this._renderKeywordHeaderAndFilter()}
-            {this._renderHotKeywords()}
-            {isSearchReady ? this._renderSearchResult() : this._renderTopShoes()}
+            <View>
+              {this._renderHotKeywords()}
+              {isSearchReady ? this._renderSearchResult() : this._renderTopShoes()}
+              {this.state.showModal && this._renderModal()}
+            </View>
           </ScrollView>
         </View>
       </SafeAreaView>
@@ -149,7 +163,10 @@ export default class TabSearch extends React.Component<ISearchScreenProps, ISear
     return (
       <View style={styles.keywordContainer}>
         <Text.Subhead>Từ khoá hot</Text.Subhead>
-        <Icon type={"ionicon"} name={"md-options"} size={20} />
+        <Icon type={"ionicon"} name={"md-options"} size={20}
+          // onPress={() => this.setState({ showModal: !this.state.showModal })}
+          onPress={() => this.props.test()}
+        />
       </View>
     );
   }
@@ -243,6 +260,141 @@ export default class TabSearch extends React.Component<ISearchScreenProps, ISear
       />
     );
   }
+
+  private _renderModal(): React.ReactNode {
+    return (
+      <Modal
+        presentationStyle={"overFullScreen"}
+        visible={this.state.showModal}
+        transparent={true}
+        animationType={"fade"}
+        animated={true}
+      >
+        <View style={{ flex: 1, }}>
+          <TouchableOpacity activeOpacity={1} onPress={() => this.setState({ showModal: false })} style={{ height: 140, backgroundColor: 'transparent' }} />
+          <ScrollView style={{ flex: 1, backgroundColor: 'rgba(0,0,0,0.85)' }}>
+            <View style={{ paddingHorizontal: 20, paddingTop: 37, flex: 1 }}>
+              {this._renderFillPrice()}
+              {this._renderFillGender()}
+              {this._renderFillCondition()}
+              <View style={{ paddingTop: 30, flexDirection: 'row', alignItems: 'flex-end', justifyContent: 'space-between' }}>
+                <Text.Title1 style={{ color: 'white', fontSize: 14 }}>LOẠI GIÀY</Text.Title1>
+                <Image source={Assets.Icons.RightArrow} style={{ width: 12, height: 20, resizeMode: 'contain' }} />
+              </View>
+              <View style={{ paddingTop: 30, flexDirection: 'row', alignItems: 'flex-end', justifyContent: 'space-between' }}>
+                <Text.Title1 style={{ color: 'white', fontSize: 14 }}>MÀU SẮC</Text.Title1>
+                <View>
+                  <Text.Body style={{ color: Assets.Styles.AppPrimaryColor }}>Xanh lá, đen, trắng</Text.Body>
+                </View>
+              </View>
+              <View style={{ paddingTop: 30, flexDirection: 'row', alignItems: 'flex-end', justifyContent: 'space-between' }}>
+                <Text.Title1 style={{ color: 'white', fontSize: 14 }}>CỠ GIÀY</Text.Title1>
+                <View>
+                  <Text.Body style={{ color: Assets.Styles.AppPrimaryColor }}>8.0, 8.5, 9, 9.5</Text.Body>
+                </View>
+              </View>
+              <View style={{ paddingTop: 30, flexDirection: 'row', alignItems: 'flex-end', justifyContent: 'space-between' }}>
+                <Text.Title1 style={{ color: 'white', fontSize: 14 }}>THƯƠNG HIỆU</Text.Title1>
+                <View>
+                  <Text.Body style={{ color: Assets.Styles.AppPrimaryColor }}>Nike, Adidas, Puma</Text.Body>
+                </View>
+              </View>
+            </View>
+          </ScrollView>
+          <TouchableOpacity style={{ paddingBottom: 23, alignItems: 'center', backgroundColor: 'rgba(0,0,0,0.85)' }} activeOpacity={1}>
+            <Text.Body style={{ fontSize: 20, color: 'white' }}>Xem kết quả</Text.Body>
+          </TouchableOpacity>
+        </View>
+      </Modal>
+    )
+  }
+
+  _renderFillPrice() {
+    let { fillPrice } = this.state;
+    return (
+      <View>
+        <Text.Title1 style={{ color: 'white', fontSize: 14 }}>SẮP XẾP THEO</Text.Title1>
+        <View style={{ flexDirection: 'row', paddingTop: 20, paddingBottom: 37 }}>
+          <TouchableOpacity
+            style={[fillPrice === "lowToHigh" ? styles.buttonSelected : styles.button, { marginRight: 7.5 }]}
+            onPress={() => this.setState({ fillPrice: "lowToHigh" })}
+          >
+            <Text.Body style={fillPrice === "lowToHigh" ? styles.titleSelected : styles.title}>Giá (Thấp - Cao)</Text.Body>
+            {fillPrice === "lowToHigh" &&
+              <Image source={Assets.Icons.CheckMark} style={styles.icon} />
+            }
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={[fillPrice === "highToLow" ? styles.buttonSelected : styles.button, { marginLeft: 7.5 }]}
+            onPress={() => this.setState({ fillPrice: "highToLow" })}
+          >
+            <Text.Body style={fillPrice === "highToLow" ? styles.titleSelected : styles.title}>Giá (Cao - Thấp)</Text.Body>
+            {fillPrice === "highToLow" &&
+              <Image source={Assets.Icons.CheckMark} style={styles.icon} />
+            }
+          </TouchableOpacity>
+        </View>
+      </View>
+    )
+  }
+
+  _renderFillGender() {
+    let { fillGender } = this.state;
+    return (
+      <View>
+        <Text.Title1 style={{ color: 'white', fontSize: 14 }}>GIỚI TÍNH</Text.Title1>
+        <View style={{ flexDirection: 'row', paddingTop: 20, paddingBottom: 37 }}>
+          <TouchableOpacity
+            style={[fillGender === "male" ? styles.buttonSelected : styles.button, { marginRight: 7.5 }]}
+            onPress={() => this.setState({ fillGender: "male" })}
+          >
+            <Text.Body style={fillGender === "male" ? styles.titleSelected : styles.title}>Nam</Text.Body>
+            {fillGender === "male" &&
+              <Image source={Assets.Icons.CheckMark} style={styles.icon} />
+            }
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={[fillGender === "female" ? styles.buttonSelected : styles.button, { marginLeft: 7.5 }]}
+            onPress={() => this.setState({ fillGender: "female" })}
+          >
+            <Text.Body style={fillGender === "female" ? styles.titleSelected : styles.title}>Nữ</Text.Body>
+            {fillGender === "female" &&
+              <Image source={Assets.Icons.CheckMark} style={styles.icon} />
+            }
+          </TouchableOpacity>
+        </View>
+      </View>
+    )
+  }
+
+  _renderFillCondition() {
+    let { fillCondition } = this.state;
+    return (
+      <View>
+        <Text.Title1 style={{ color: 'white', fontSize: 14 }}>TÌNH TRẠNG</Text.Title1>
+        <View style={{ flexDirection: 'row', paddingTop: 20 }}>
+          <TouchableOpacity
+            style={[fillCondition === "new" ? styles.buttonSelected : styles.button, { marginRight: 7.5 }]}
+            onPress={() => this.setState({ fillCondition: "new" })}
+          >
+            <Text.Body style={fillCondition === "new" ? styles.titleSelected : styles.title}>Mới</Text.Body>
+            {fillCondition === "new" &&
+              <Image source={Assets.Icons.CheckMark} style={styles.icon} />
+            }
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={[fillCondition === "old" ? styles.buttonSelected : styles.button, { marginLeft: 7.5 }]}
+            onPress={() => this.setState({ fillCondition: "old" })}
+          >
+            <Text.Body style={fillCondition === "old" ? styles.titleSelected : styles.title}>VSNKRS xác nhận</Text.Body>
+            {fillCondition === "old" &&
+              <Image source={Assets.Icons.CheckMark} style={styles.icon} />
+            }
+          </TouchableOpacity>
+        </View>
+      </View>
+    )
+  }
 }
 
 const styles = StyleSheet.create({
@@ -288,5 +440,39 @@ const styles = StyleSheet.create({
     marginVertical: 15,
     marginHorizontal: 20,
     fontSize: 14
+  },
+
+  buttonSelected: {
+    flex: 1,
+    backgroundColor: 'white',
+    borderRadius: 2,
+    height: 48,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  titleSelected: {
+    color: 'black',
+    fontSize: 14
+  },
+  button: {
+    flex: 1,
+    backgroundColor: 'transparent',
+    borderWidth: 1,
+    borderColor: 'white',
+    borderRadius: 2,
+    height: 48,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  title: {
+    color: 'white',
+    fontSize: 14
+  },
+  icon: {
+    position: 'absolute',
+    right: 6,
+    width: 17,
+    height: 13,
+    resizeMode: 'contain'
   }
 });

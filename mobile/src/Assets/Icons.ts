@@ -11,5 +11,8 @@ export const Icons = {
   CheckMark: require("../../../Icons/CheckMark.png"),
   Clock: require("../../../Icons/Clock.png"),
   Up: require("../../../Icons/Up.png"),
-  AddCard: require("../../../Icons/AddCard.png")
+  AddCard: require("../../../Icons/AddCard.png"),
+  RightArrow: require("../../../Icons/rightArrow.png"),
+  ContainerCamera: require("../../../Icons/containerCamera.png"),
+  SuccessLogo: require("../../../Icons/successLogo.png"),
 };

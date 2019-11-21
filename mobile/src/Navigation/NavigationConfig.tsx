@@ -22,6 +22,8 @@ import { AddCardScreenContainer } from "../Components/AddCard/AddCardScreen.Cont
 import { SafeAreaMaterialTopTabBar } from "./SafeAreaMaterialTop";
 import { Styles } from "../Assets";
 import { TextStyle } from "../Shared/UI/Text";
+import { ShoeRequireScreenContainer } from "../Components/ShoeRequire/ShoeRequireScreen.Container";
+import { RequireSuccessScreenContainer } from "../Components/RequireSuccess/RequireSuccessScreen.Container";
 
 // const BuyTabNavigator = createStackNavigator(
 //   {
@@ -158,7 +160,9 @@ export const AppNavigator = createStackNavigator(
     [`${RouteNames.SellDetail}`]: { screen: SellDetailScreenContainer },
     [`${RouteNames.ShoeDetail}`]: { screen: ShoeDetailScreenContainer },
     [`${RouteNames.PaymentOptions}`]: { screen: PaymentOptionsScreenContainer },
-    [`${RouteNames.AddCard}`]: { screen: AddCardScreenContainer }
+    [`${RouteNames.AddCard}`]: { screen: AddCardScreenContainer },
+    [`${RouteNames.ShoeRequire}`]: { screen: ShoeRequireScreenContainer },
+    [`${RouteNames.RequireSuccess}`]: { screen: RequireSuccessScreenContainer }
   },
   {
     initialRouteName: RouteNames.Splash,

@@ -6,7 +6,7 @@ import * as React from "react";
 import { Shoe } from "../../../Shared/Model";
 import { FlatList } from "react-native-gesture-handler";
 import { View, Image, StyleSheet } from "react-native";
-import { Text } from "../../../Shared/UI";
+import { Text, TransactionShoeCard } from "../../../Shared/UI";
 import { Icon } from "react-native-elements";
 import { Styles, Icons } from "../../../Assets";
 
@@ -20,11 +20,11 @@ export class TransactionSellTab extends React.Component<ITransactionSellTabProps
     tabBarLabel: "Đang bán"
   };
 
-  public /** override */ componentDidMount() {}
+  public /** override */ componentDidMount() { }
 
   public /** override */ render(): JSX.Element {
     return (
-      <View style={{ flex: 1, alignItems: "stretch", justifyContent: "center" }}>
+      <View style={{ flex: 1, alignItems: "stretch"}}>
         {this._renderSellTransactions()}
         {this._renderSellButton()}
       </View>
@@ -32,17 +32,28 @@ export class TransactionSellTab extends React.Component<ITransactionSellTabProps
   }
 
   private _renderSellTransactions(): JSX.Element {
-    if (this.props.shoes.length === 0) {
-      return <Text.Callout>Hiện tại bạn chưa bán sản phẩm nào</Text.Callout>;
-    }
+    // if (this.props.shoes.length === 0) {
+    //   return <Text.Callout>Hiện tại bạn chưa bán sản phẩm nào</Text.Callout>;
+    // }
 
     return (
-      <FlatList
-        style={{ flex: 1 }}
-        data={this.props.shoes.slice(0, 10)}
-        keyExtractor={(_itm, idx) => idx.toString()}
-        renderItem={({ item }) => this._renderSellItem(item)}
-      />
+      <View>
+        <TransactionShoeCard
+          mode='sell'
+        />
+         <TransactionShoeCard
+          mode='sell'
+        />
+         <TransactionShoeCard
+          mode='sell'
+        />
+      </View>
+      // <FlatList
+      //   style={{ flex: 1 }}
+      //   data={this.props.shoes.slice(0, 10)}
+      //   keyExtractor={(_itm, idx) => idx.toString()}
+      //   renderItem={({ item }) => this._renderSellItem(item)}
+      // />
     );
   }
 
@@ -90,6 +101,9 @@ export class TransactionSellTab extends React.Component<ITransactionSellTabProps
           </View>
         </View>
         <View style={styles.listDivider} />
+        {/* <TransactionShoeCard 
+          mode='sell'
+        /> */}
       </View>
     );
   }

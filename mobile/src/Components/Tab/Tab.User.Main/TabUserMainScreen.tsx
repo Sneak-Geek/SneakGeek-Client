@@ -90,25 +90,27 @@ export default class TabUserMainScreen extends React.Component<IUserTabMainProps
   }
 
   private _renderPageTitle(): JSX.Element {
-    return <Text.Title1 style={{ margin: 20 }}>Cá nhân</Text.Title1>;
+    return <Text.Title1 style={{ textAlign: 'center'  }}>Cá nhân</Text.Title1>;
   }
 
   private _renderBasicUserData(): JSX.Element {
     const { account } = this.props;
-    const { accountNameByProvider } = account;
-    const photo = account.accountProfilePicByProvider;
+    // const { accountNameByProvider } = account;
+    // const photo = account.accountProfilePicByProvider;
 
     return (
       <View style={styles.headerContainer}>
         <View style={{ position: "relative" }}>
-          <Image source={{ uri: photo }} style={styles.avatarContainer} />
+          {/* <Image source={{ uri: photo }} style={styles.avatarContainer} /> */}
+          <Image source={{ uri: 'https://saokpop.com/wp-content/uploads/2018/11/tuzy.jpg' }} style={styles.avatarContainer} />
           <TouchableOpacity style={styles.cameraButtonContainer}>
             <Image source={Assets.Icons.ProfileCamera} style={{ width: 22, height: 18 }} />
           </TouchableOpacity>
         </View>
         <View>
           <Text.Headline style={styles.name}>
-            {accountNameByProvider.familyName} {accountNameByProvider.givenName}
+            {/* {accountNameByProvider.familyName} {accountNameByProvider.givenName} */}
+            Trung Deps
           </Text.Headline>
           <Text.Callout style={styles.address}>Hà Nội, VN</Text.Callout>
         </View>
@@ -129,7 +131,7 @@ export default class TabUserMainScreen extends React.Component<IUserTabMainProps
           styles.settingsContainer
         ]}
       >
-        <Text.Callout style={{ fontWeight: "bold", fontSize: 16 }}>
+        <Text.Callout style={{ fontWeight: "bold", fontSize: 16, opacity: 0.6 }}>
           {item.title.toUpperCase()}
         </Text.Callout>
         <TouchableOpacity onPress={item.onClick.bind(this)}>
@@ -142,7 +144,7 @@ export default class TabUserMainScreen extends React.Component<IUserTabMainProps
   private _renderLogoutButton(): React.ReactNode {
     return (
       <TouchableOpacity style={[styles.settingsContainer, styles.signOutContainer]}>
-        <Text.Body style={{ color: Assets.Styles.AppErrorColor }}>Đăng xuất</Text.Body>
+        <Text.Body style={{ color: 'white', fontSize: 14, fontFamily: 'RobotoCondensed-Bold' }}>Đăng xuất</Text.Body>
       </TouchableOpacity>
     );
   }
@@ -190,12 +192,16 @@ const styles = StyleSheet.create({
   name: {
     marginTop: 25,
     fontWeight: "bold",
-    fontSize: 18
+    fontSize: 17,
+    textAlign: 'right',
+    paddingBottom: 9,
   },
 
   address: {
     fontSize: 14,
-    color: "gray"
+    fontFamily: 'RobotoCondensed-Bold',
+    opacity: 0.4,
+    textAlign: 'right'
   },
 
   contentContainer: {
@@ -246,6 +252,7 @@ const styles = StyleSheet.create({
   },
 
   signOutContainer: {
+    backgroundColor: Assets.Styles.AppErrorColor,
     alignItems: "center",
     justifyContent: "center",
     marginBottom: 30
