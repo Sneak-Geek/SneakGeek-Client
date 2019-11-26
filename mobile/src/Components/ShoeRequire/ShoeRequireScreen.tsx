@@ -37,7 +37,7 @@ export class ShoeRequireScreen extends React.Component<IShoeRequireScreenProps> 
       />
     )
   });
-  render() {
+  public render() {
     return (
       <SafeAreaView
         style={{
@@ -61,7 +61,7 @@ export class ShoeRequireScreen extends React.Component<IShoeRequireScreenProps> 
     )
   }
 
-  renderUpImage() {
+  private renderUpImage() {
     return (
       <View style={styles.row}>
         <TouchableOpacity style={{ paddingRight: 20 }}>
@@ -72,7 +72,7 @@ export class ShoeRequireScreen extends React.Component<IShoeRequireScreenProps> 
     )
   }
 
-  renderBrand() {
+  private renderBrand() {
     return (
       <TouchableOpacity style={[styles.itemContainer, { paddingTop: 17 }]} activeOpacity={0.9}>
         <Text style={styles.title}>THƯƠNG HIỆU</Text>
@@ -81,7 +81,7 @@ export class ShoeRequireScreen extends React.Component<IShoeRequireScreenProps> 
     )
   }
 
-  renderGender() {
+  private renderGender() {
     return (
       <TouchableOpacity style={[styles.itemContainer, { paddingTop: 17 }]} activeOpacity={0.9}>
         <Text style={styles.title}>GIỚI TÍNH</Text>
@@ -90,7 +90,7 @@ export class ShoeRequireScreen extends React.Component<IShoeRequireScreenProps> 
     )
   }
 
-  renderSize() {
+  private renderSize() {
     return (
       <TouchableOpacity style={[styles.itemContainer, { paddingTop: 17 }]} activeOpacity={0.9}>
         <Text style={styles.title}>KÍCH CỠ</Text>
@@ -99,7 +99,7 @@ export class ShoeRequireScreen extends React.Component<IShoeRequireScreenProps> 
     )
   }
 
-  renderColor() {
+  private renderColor() {
     return (
       <TouchableOpacity style={[styles.itemContainer, { paddingTop: 17 }]} activeOpacity={0.9}>
         <Text style={styles.title}>MÀU SẮC</Text>
@@ -108,7 +108,7 @@ export class ShoeRequireScreen extends React.Component<IShoeRequireScreenProps> 
     )
   }
 
-  renderCondition() {
+  private renderCondition() {
     return (
       <TouchableOpacity style={[styles.itemContainer, { paddingTop: 17 }]} activeOpacity={0.9}>
         <Text style={styles.title}>TÌNH TRẠNG</Text>
@@ -117,7 +117,7 @@ export class ShoeRequireScreen extends React.Component<IShoeRequireScreenProps> 
     )
   }
 
-  renderButton() {
+  private renderButton() {
     return (
       <TouchableOpacity style={styles.buttonContainer} onPress={this.props.navigateToRequireSuccess}>
         <Text style={styles.titleButton}>TIẾP TỤC</Text>

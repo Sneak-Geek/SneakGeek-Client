@@ -24,7 +24,7 @@ export class TransactionSellTab extends React.Component<ITransactionSellTabProps
 
   public /** override */ render(): JSX.Element {
     return (
-      <View style={{ flex: 1, alignItems: "stretch"}}>
+      <View style={{ flex: 1, alignItems: "stretch" }}>
         {this._renderSellTransactions()}
         {this._renderSellButton()}
       </View>
@@ -41,10 +41,10 @@ export class TransactionSellTab extends React.Component<ITransactionSellTabProps
         <TransactionShoeCard
           mode='sell'
         />
-         <TransactionShoeCard
+        <TransactionShoeCard
           mode='sell'
         />
-         <TransactionShoeCard
+        <TransactionShoeCard
           mode='sell'
         />
       </View>

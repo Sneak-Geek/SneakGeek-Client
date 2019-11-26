@@ -3,8 +3,8 @@
 //!
 
 import * as React from "react";
-import { NavigationScreenOptions, ScrollView } from "react-navigation";
-import { View, StyleSheet, SafeAreaView, TouchableOpacity } from "react-native";
+import { NavigationScreenOptions } from "react-navigation";
+import { View, StyleSheet, SafeAreaView, TouchableOpacity, ScrollView } from "react-native";
 import { Image } from "react-native-elements";
 import { Text } from "../../../Shared/UI";
 import * as Assets from "../../../Assets";
@@ -14,6 +14,10 @@ export interface IUserTabMainProps {
   account: Account;
   navigateToUserEdit: () => void;
   navigateToPayments: () => void;
+  navigateToShoeSize: () => void;
+  navigateToChangePassword: () => void;
+  navigateToContactInfo: () => void;
+  navigateToSearch: () => void;
 }
 
 type UserListOption = {
@@ -36,7 +40,7 @@ export default class TabUserMainScreen extends React.Component<IUserTabMainProps
     {
       title: "Đổi mật khẩu",
       hasMarginBottom: true,
-      onClick: () => {}
+      onClick: () => this.props.navigateToChangePassword()
     },
     {
       title: "Thông tin thanh toán",
@@ -47,6 +51,11 @@ export default class TabUserMainScreen extends React.Component<IUserTabMainProps
       title: "Địa chỉ",
       hasMarginBottom: true,
       onClick: () => {}
+    },
+    {
+      title: "Tiêu chuẩn size",
+      hasMarginBottom: false,
+      onClick: () => this.props.navigateToShoeSize()
     },
     {
       title: "Cài đặt thông báo",
@@ -61,12 +70,12 @@ export default class TabUserMainScreen extends React.Component<IUserTabMainProps
     {
       title: "Thông tin phiên bản",
       hasMarginBottom: false,
-      onClick: () => {}
+      onClick: () => this.props.navigateToSearch()
     },
     {
       title: "Liên hệ",
       hasMarginBottom: true,
-      onClick: () => {}
+      onClick: () => this.props.navigateToContactInfo()
     }
   ];
 

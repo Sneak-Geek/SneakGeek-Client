@@ -13,6 +13,7 @@ interface Props {
   // renderPriceOnly?: boolean;
   name?: string;
   mode: 'buy' | 'sell' | 'history';
+  onPress?: () => void;
 }
 
 export class TransactionShoeCard extends React.Component<Props, {}> {
@@ -59,9 +60,9 @@ export class TransactionShoeCard extends React.Component<Props, {}> {
   }
 
   renderSell() {
-    const { name } = this.props;
+    const { name, onPress } = this.props;
     return (
-      <TouchableOpacity style={styles.container} activeOpacity={0.7}>
+      <TouchableOpacity style={styles.container} activeOpacity={0.7} onPress={onPress}>
         <Image style={styles.image} source={{ uri: 'https://www.flightclub.com/media/catalog/product/cache/1/image/1600x1140/9df78eab33525d08d6e5fb8d27136e95/2/0/201357_01.jpg' }} />
         <View style={{ flex: 1, paddingTop: 30, }}>
           <View style={styles.row}>

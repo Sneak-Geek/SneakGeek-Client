@@ -12,7 +12,7 @@ export class RequireSuccessScreen extends React.Component<IRequireSuccessScreenP
   static navigationOptions = (transitionProp: NavigationScreenProps) => ({
     header: null
   });
-  render() {
+  public render() {
     return (
       <SafeAreaView
         style={{

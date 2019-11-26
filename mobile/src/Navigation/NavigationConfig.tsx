@@ -11,6 +11,8 @@ import {
 } from "react-navigation";
 import Tab from "../Components/Tab";
 import { LoginScreenContainer } from "../Components/Login/LoginScreen.Container";
+import { SignUpScreenContainer } from "../Components/SignUp/SignUpScreen.Container";
+import { ForgotPasswordScreenContainer } from "../Components/ForgotPassword/ForgotPasswordScreen.Container";
 import { SellDetailScreenContainer } from "../Components/SellDetail/SellDetailScreen.Container";
 import { RouteNames } from "./RouteNames";
 import { Icon } from "react-native-elements";
@@ -24,6 +26,10 @@ import { Styles } from "../Assets";
 import { TextStyle } from "../Shared/UI/Text";
 import { ShoeRequireScreenContainer } from "../Components/ShoeRequire/ShoeRequireScreen.Container";
 import { RequireSuccessScreenContainer } from "../Components/RequireSuccess/RequireSuccessScreen.Container";
+import { ShoeSizeScreenContainer } from "../Components/ShoeSize/ShoeSizeScreen.Container";
+import { ChangePasswordScreenContainer } from "../Components/ChangePassword/ChangePasswordScreen.Container";
+import { ContactInfoScreenContainer } from "../Components/ContactInfo/ContactInfoScreen.Container";
+import { SendRequireSuccessScreenContainer } from "../Components/SendReqrireSuccess/SendRequireSuccessScreen.Container";
 
 // const BuyTabNavigator = createStackNavigator(
 //   {
@@ -75,7 +81,8 @@ const HomeTabNavigator = createStackNavigator(
 const UserInfoTabNavigator = createStackNavigator(
   {
     [`${RouteNames.Tabs.UserInfoTab.Info}`]: { screen: Tab.User.Main },
-    [`${RouteNames.Tabs.UserInfoTab.Edit}`]: { screen: Tab.User.Edit }
+    [`${RouteNames.Tabs.UserInfoTab.Edit}`]: { screen: Tab.User.Edit },
+    [`${RouteNames.Tabs.UserInfoTab.Search}`]: { screen: Tab.User.Search }
   },
   {
     navigationOptions: {
@@ -157,12 +164,18 @@ export const AppNavigator = createStackNavigator(
     },
     [`${RouteNames.Splash}`]: { screen: SplashScreenContainer },
     [`${RouteNames.Login}`]: { screen: LoginScreenContainer },
+    [`${RouteNames.SignUp}`]: { screen: SignUpScreenContainer },
+    [`${RouteNames.ForgotPassword}`]: { screen: ForgotPasswordScreenContainer },
     [`${RouteNames.SellDetail}`]: { screen: SellDetailScreenContainer },
     [`${RouteNames.ShoeDetail}`]: { screen: ShoeDetailScreenContainer },
     [`${RouteNames.PaymentOptions}`]: { screen: PaymentOptionsScreenContainer },
     [`${RouteNames.AddCard}`]: { screen: AddCardScreenContainer },
     [`${RouteNames.ShoeRequire}`]: { screen: ShoeRequireScreenContainer },
-    [`${RouteNames.RequireSuccess}`]: { screen: RequireSuccessScreenContainer }
+    [`${RouteNames.RequireSuccess}`]: { screen: RequireSuccessScreenContainer },
+    [`${RouteNames.ShowSize}`]: { screen: ShoeSizeScreenContainer },
+    [`${RouteNames.ChangePassword}`]: { screen: ChangePasswordScreenContainer },
+    [`${RouteNames.ContactInfo}`]: { screen: ContactInfoScreenContainer },
+    [`${RouteNames.SendRequireSuccess}`]: { screen: SendRequireSuccessScreenContainer },
   },
   {
     initialRouteName: RouteNames.Splash,

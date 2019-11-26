@@ -9,6 +9,7 @@ import LoginScreen from "./LoginScreen";
 import { StackActions } from "react-navigation";
 import { RouteNames } from "../../Navigation/RouteNames";
 import { ModalTypes } from "../Modal/ModalTypes";
+import { NavigationActions } from "react-navigation";
 
 const mapStateToProps = (state: IAppState) => {
   const AccountState = state.AccountState;
@@ -34,7 +35,14 @@ const mapDispatchToProps = (dispatch: Function) => {
     },
     displayDebugDialog: () => {
       dispatch(Actions.displayModal({ modalType: ModalTypes.Debug, data: {} }));
-    }
+    },
+    navigateToSignUp: () => {
+      dispatch(
+        NavigationActions.navigate({
+          routeName: RouteNames.SignUp
+        })
+      );
+    },
   };
 };
 

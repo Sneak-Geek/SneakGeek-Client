@@ -23,6 +23,7 @@ export interface ILoginScreenProps {
   googleLogin: () => void;
   navigateToHome: () => void;
   displayDebugDialog: () => void;
+  navigateToSignUp: () => void;
 }
 
 interface State {
@@ -56,14 +57,19 @@ export default class LoginScreen extends React.Component<ILoginScreenProps, Stat
       <View style={styles.socialContainer}>
         <Text.Body style={styles.label}>Đăng nhập qua</Text.Body>
         {this._renderSocialButton(
+          "Tài khoản Google",
+          Assets.Icons.Google,
+          this.props.googleLogin
+        )}
+          {this._renderSocialButton(
           "Tài khoản Facebook",
           Assets.Icons.Facebook,
           this.props.facebookLogin
         )}
         {this._renderSocialButton(
-          "Tài khoản Google",
-          Assets.Icons.Google,
-          this.props.googleLogin
+          "Tài khoản Zalo",
+          Assets.Icons.Zalo,
+          this.props.navigateToSignUp
         )}
       </View>
     );
