@@ -8,7 +8,21 @@
     "test": "jest",
     "lint": "eslint .",
     "watch": "tsc --watch",
-    "build": "tsc --build"
+    "build": "tsc --build",
+    "prettier": "prettier --write src/**/*.ts"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged"
+    }
+  },
+  "lint-staged": {
+    "linters": {
+      "src/**/*.ts": [
+        "prettier --write",
+        "git add"
+      ]
+    }
   },
   "dependencies": {
     "@react-native-community/async-storage": "^1.6.1",
@@ -66,7 +80,9 @@
     "@types/uuid": "^3.4.5",
     "babel-jest": "24.8.0",
     "eslint": "6.1.0",
+    "husky": "^3.1.0",
     "jest": "24.8.0",
+    "lint-staged": "^9.5.0",
     "metro-react-native-babel-preset": "0.55.0",
     "prettier": "^1.19.1",
     "react-test-renderer": "16.8.6"
