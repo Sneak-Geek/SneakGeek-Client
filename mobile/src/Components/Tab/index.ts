@@ -10,6 +10,7 @@ import { TabSellMainScreenContainer as TabSellMain } from "./Tab.Sell.Main/TabSe
 
 import { TabUserMainScreenContainer as TabUserMain } from "./Tab.User.Main/TabUserMainScreen.Container";
 import { TabUserEditScreenContainer as TabUserEdit } from "./Tab.User.Edit/TabUserEditScreen.Container";
+import { TabUserSearchScreenContainer as TabUserSearch } from "./Tab.User.Search/TabUserSearchScreen.Container";
 
 import { TransactionBuyTabScreenContainer as TabTransactionBuy } from "./Tab.Transaction.Buy/TransactionBuyTabScreen.Container";
 import { TransactionHistoryScreenContainer as TabTransactionHistory } from "./Tab.Transaction.History/TransactionHistoryScreen.Container";
@@ -30,7 +31,8 @@ const Tabs = {
   },
   User: {
     Main: TabUserMain,
-    Edit: TabUserEdit
+    Edit: TabUserEdit,
+    Search: TabUserSearch
   },
   Transaction: {
     Buy: TabTransactionBuy,

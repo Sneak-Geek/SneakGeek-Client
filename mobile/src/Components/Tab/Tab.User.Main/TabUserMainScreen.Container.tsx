@@ -28,6 +28,46 @@ const mapDispatchToProps = (dispatch: Function) => {
           routeName: RouteNames.PaymentOptions
         })
       );
+    },
+
+    navigateToShoeSize: () => {
+      dispatch(
+        NavigationActions.navigate({
+          routeName: RouteNames.ShowSize
+        })
+      );
+    },
+
+    navigateToChangePassword: () => {
+      dispatch(
+        NavigationActions.navigate({
+          routeName: RouteNames.ChangePassword
+        })
+      );
+    },
+
+    navigateToContactInfo: () => {
+      dispatch(
+        NavigationActions.navigate({
+          routeName: RouteNames.ContactInfo
+        })
+      );
+    },
+
+    navigateToSearch: () => {
+      dispatch(
+        NavigationActions.navigate({
+          routeName: RouteNames.Tabs.UserInfoTab.Search
+        })
+      )
+    },
+
+    navigateToUserKind: () => {
+      dispatch(
+        NavigationActions.navigate({
+          routeName: RouteNames.UserKind,
+        })
+      )
     }
   };
 };

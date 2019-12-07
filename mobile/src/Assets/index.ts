@@ -5,3 +5,4 @@
 export * from "./Icons";
 export * from "./Styles";
 export * from "./Configuration";
+export * from "./Device";

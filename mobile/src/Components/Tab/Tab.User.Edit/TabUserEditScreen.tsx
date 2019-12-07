@@ -22,7 +22,8 @@ const optionsList = [
   {
     title: "Họ",
     value: (profile: Profile) =>
-      profile.userProvidedName ? profile.userProvidedName.lastName : "",
+      // profile.userProvidedName ? profile.userProvidedName.lastName : "Trung",
+      "trung",
     onUpdate: (value: string, profile: Profile) => {
       return Object.assign(profile, {
         userProvidedName: {
@@ -78,7 +79,7 @@ const optionsList = [
     hasMarginBottom: false
   },
   {
-    title: "Điện thoại",
+    title: "Số Điện thoại",
     value: (profile: Profile) => profile.userProvidedPhoneNumber,
     onUpdate: (value: string, profile: Profile) => {
       return Object.assign(profile, {
@@ -146,7 +147,7 @@ export class TabUserEditScreen extends React.Component<IUserEditScreenProps, IUs
   private _renderSettings() {
     const { updatedInfo } = this.state;
     return (
-      <View>
+      <View style={{paddingTop: 34}}>
         {optionsList.map((item, i) => (
           <View
             key={i}
@@ -155,20 +156,21 @@ export class TabUserEditScreen extends React.Component<IUserEditScreenProps, IUs
               item.hasMarginBottom ? styles.listItemStyleWithMarginBottom : {}
             ]}
           >
-            <Text.Headline style={{ flex: 1 }}>{item.title.toUpperCase()}</Text.Headline>
+            <Text.Headline style={{ flex: 1, fontSize: 14, fontFamily: 'RobotoCondensed-Bold' }}>{item.title.toUpperCase()}</Text.Headline>
             <TextInput
-              value={
-                updatedInfo && item.value(updatedInfo)
-                  ? (item.value(updatedInfo) as any).toString()
-                  : ""
-              }
+              // value={
+              //   updatedInfo && item.value(updatedInfo)
+              //     ? (item.value(updatedInfo) as any).toString()
+              //     : ""
+              // }
+              value="Trung"
               onChangeText={value => {
                 if (updatedInfo) {
                   const newProfile = item.onUpdate(value, updatedInfo);
                   this.setState({ updatedInfo: newProfile, editMode: true });
                 }
               }}
-              style={[{ textAlign: "left", flex: 2 }, Text.TextStyle.subhead]}
+              style={styles.input}
             />
           </View>
         ))}
@@ -177,9 +179,9 @@ export class TabUserEditScreen extends React.Component<IUserEditScreenProps, IUs
   }
 
   private _renderUpdateButton(): JSX.Element | null {
-    if (!this.state.editMode) {
-      return null;
-    }
+    // if (!this.state.editMode) {
+    //   return null;
+    // }
 
     return (
       <View style={styles.bottomButtonContainer}>
@@ -190,7 +192,7 @@ export class TabUserEditScreen extends React.Component<IUserEditScreenProps, IUs
           }}
         >
           <Text.Body style={{ color: Assets.Styles.TextSecondaryColor }}>
-            Cập nhật thông tin
+            Xác nhận
           </Text.Body>
         </TouchableOpacity>
       </View>
@@ -270,5 +272,12 @@ const styles = StyleSheet.create({
     backgroundColor: Assets.Styles.ButtonPrimaryColor,
     alignItems: "center",
     justifyContent: "center"
+  },
+
+  input: {
+    fontSize: 17,
+    color: Assets.Styles.AppPrimaryColor,
+    flex: 2,
+    fontFamily: 'RobotoCondensed-Regular',
   }
 });

@@ -48,10 +48,19 @@ export const AccountReducers = handleActions<IAccountState, any>(
       state: IAccountState,
       _action: Action<any>
     ) => {
-      return Object.assign(state, { isAuthenticationCancelled: true, isAuthenticating: false });
+      return Object.assign(state, {
+        isAuthenticationCancelled: true,
+        isAuthenticating: false
+      });
     },
-    [`${Actions.authenticationComplete}`]: (state: IAccountState, action: Action<Account>) => {
-      return Object.assign(state, { currentAccount: action.payload, isAuthenticating: false });
+    [`${Actions.authenticationComplete}`]: (
+      state: IAccountState,
+      action: Action<Account>
+    ) => {
+      return Object.assign(state, {
+        currentAccount: action.payload,
+        isAuthenticating: false
+      });
     },
     [`${Actions.authenticationError}`]: (state: IAccountState, action: Action<any>) => {
       return Object.assign(state, {

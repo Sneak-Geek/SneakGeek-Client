@@ -59,7 +59,10 @@ export const AppContentReducers = handleActions<IAppContentState, any>(
 
       return result;
     },
-    [`${updateGetShoesState}`]: (state: IAppContentState, action: Action<GetShoesPayload>) => ({
+    [`${updateGetShoesState}`]: (
+      state: IAppContentState,
+      action: Action<GetShoesPayload>
+    ) => ({
       ...state,
       getShoesState: {
         ...state.getShoesState,

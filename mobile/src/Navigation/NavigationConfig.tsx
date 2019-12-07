@@ -11,6 +11,9 @@ import {
 } from "react-navigation";
 import Tab from "../Components/Tab";
 import { LoginScreenContainer } from "../Components/Login/LoginScreen.Container";
+import { SignUpScreenContainer } from "../Components/SignUp/SignUpScreen.Container";
+import { SignInScreenContainer } from "../Components/SignIn/SignInScreen.Container";
+import { ForgotPasswordScreenContainer } from "../Components/ForgotPassword/ForgotPasswordScreen.Container";
 import { SellDetailScreenContainer } from "../Components/SellDetail/SellDetailScreen.Container";
 import { RouteNames } from "./RouteNames";
 import { Icon } from "react-native-elements";
@@ -22,6 +25,17 @@ import { AddCardScreenContainer } from "../Components/AddCard/AddCardScreen.Cont
 import { SafeAreaMaterialTopTabBar } from "./SafeAreaMaterialTop";
 import { Styles } from "../Assets";
 import { TextStyle } from "../Shared/UI/Text";
+import { ShoeRequireScreenContainer } from "../Components/ShoeRequire/ShoeRequireScreen.Container";
+import { RequireSuccessScreenContainer } from "../Components/RequireSuccess/RequireSuccessScreen.Container";
+import { ShoeSizeScreenContainer } from "../Components/ShoeSize/ShoeSizeScreen.Container";
+import { ChangePasswordScreenContainer } from "../Components/ChangePassword/ChangePasswordScreen.Container";
+import { ContactInfoScreenContainer } from "../Components/ContactInfo/ContactInfoScreen.Container";
+import { SendRequireSuccessScreenContainer } from "../Components/SendReqrireSuccess/SendRequireSuccessScreen.Container";
+import { TrackingSellScreenContainer } from "../Components/TrackingSell/TrackingSellScreen.Container";
+import { OrderSellScreenContainer } from "../Components/OrderSell/OrderSellScreen.Container";
+import { OrderAuctionScreenContainer } from "../Components/OrderAuction/OrderAuctionScreen.Container";
+import { UserKindScreenContainer } from "../Components/UserKind/UserKindScreen.Container";
+import { PaymentScreenContainer } from "../Components/Payment/PaymenScreen.Container";
 
 // const BuyTabNavigator = createStackNavigator(
 //   {
@@ -73,7 +87,8 @@ const HomeTabNavigator = createStackNavigator(
 const UserInfoTabNavigator = createStackNavigator(
   {
     [`${RouteNames.Tabs.UserInfoTab.Info}`]: { screen: Tab.User.Main },
-    [`${RouteNames.Tabs.UserInfoTab.Edit}`]: { screen: Tab.User.Edit }
+    [`${RouteNames.Tabs.UserInfoTab.Edit}`]: { screen: Tab.User.Edit },
+    [`${RouteNames.Tabs.UserInfoTab.Search}`]: { screen: Tab.User.Search }
   },
   {
     navigationOptions: {
@@ -155,10 +170,25 @@ export const AppNavigator = createStackNavigator(
     },
     [`${RouteNames.Splash}`]: { screen: SplashScreenContainer },
     [`${RouteNames.Login}`]: { screen: LoginScreenContainer },
+    [`${RouteNames.UserKind}`]: { screen: UserKindScreenContainer },
+    [`${RouteNames.SignUp}`]: { screen: SignUpScreenContainer },
+    [`${RouteNames.SignIn}`]: { screen: SignInScreenContainer },
+    [`${RouteNames.ForgotPassword}`]: { screen: ForgotPasswordScreenContainer },
     [`${RouteNames.SellDetail}`]: { screen: SellDetailScreenContainer },
     [`${RouteNames.ShoeDetail}`]: { screen: ShoeDetailScreenContainer },
     [`${RouteNames.PaymentOptions}`]: { screen: PaymentOptionsScreenContainer },
-    [`${RouteNames.AddCard}`]: { screen: AddCardScreenContainer }
+    [`${RouteNames.AddCard}`]: { screen: AddCardScreenContainer },
+    [`${RouteNames.ShoeRequire}`]: { screen: ShoeRequireScreenContainer },
+    [`${RouteNames.RequireSuccess}`]: { screen: RequireSuccessScreenContainer },
+    [`${RouteNames.ShowSize}`]: { screen: ShoeSizeScreenContainer },
+    [`${RouteNames.ChangePassword}`]: { screen: ChangePasswordScreenContainer },
+    [`${RouteNames.ContactInfo}`]: { screen: ContactInfoScreenContainer },
+    [`${RouteNames.SendRequireSuccess}`]: { screen: SendRequireSuccessScreenContainer },
+    [`${RouteNames.TrackingSell}`]: { screen: TrackingSellScreenContainer },
+    [`${RouteNames.OrderSell}`]: { screen: OrderSellScreenContainer },
+    [`${RouteNames.OrderAuction}`]: { screen: OrderAuctionScreenContainer },
+    [`${RouteNames.Payment}`]: { screen: PaymentScreenContainer },
+
   },
   {
     initialRouteName: RouteNames.Splash,

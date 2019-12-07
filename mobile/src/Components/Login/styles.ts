@@ -69,7 +69,7 @@ export default StyleSheet.create({
   emailBasedContainer: {
     height: "40%",
     flexDirection: "column",
-    alignItems: "center",
+    // alignItems: "center",
     justifyContent: "space-between"
   } as ViewStyle,
 
@@ -99,7 +99,6 @@ export default StyleSheet.create({
   authButtonContainer: {
     justifyContent: "center",
     alignItems: "center",
-    width: 170,
     height: Assets.Styles.ButtonHeight
   }
 });

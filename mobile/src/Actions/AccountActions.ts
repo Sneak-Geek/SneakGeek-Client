@@ -23,6 +23,9 @@ export module AccountActions {
   export const GO_TO_LOGIN = "GO_TO_LOGIN";
   export const UPDATE_GET_USER_PROFILE = "UPDATE_GET_USER_PROFILE";
   export const UPDATE_UPDATE_USER_PROFILE = "UPDATE_UPDATE_USER_PROFILE";
+  export const EMAIL_SIGNUP = "EMAIL_SIGNUP";
+  export const EMAIL_LOGIN = "EMAIL_LOGIN";
+  export const REQUEST_TOKEN_SUCCESS = "REQUEST_TOKEN_SUCCESS";
 }
 
 export const cancelThirdPartyAuthentication = createAction<"facebook" | "google">(
@@ -40,6 +43,82 @@ export const updateGetUserProfile = createAction<GetUserProfilePayload>(
 export const updateUpdateUserProfile = createAction<UpdateUserProfilePayload>(
   AccountActions.UPDATE_UPDATE_USER_PROFILE
 );
+
+export const signup = createAction(AccountActions.EMAIL_SIGNUP);
+export const login = createAction(AccountActions.EMAIL_LOGIN);
+export const requestTokenSuccess = createAction(AccountActions.REQUEST_TOKEN_SUCCESS);
+
+export const requestTokenConfirm = (email: string) => {
+  return async (dispatch: Function) => {
+    dispatch(requestTokenSuccess());
+    try {
+      const accountService = container.get<IAccountService>(Types.IAccountService);
+
+      const token = await accountService.requestToken(email);
+      if (token) {
+        return token;
+      }
+    } catch (error) {
+      dispatch(notifyError());
+    }
+  };
+};
+
+export const emailSignup = (email: string, password: string) => {
+  return async (dispatch: Function) => {
+    dispatch(signup());
+    try {
+      const accountService = container.get<IAccountService>(Types.IAccountService);
+      const settings = container.get<IAppSettingsService>(Types.IAppSettingsService);
+
+      const accountPayload = await accountService.signupEmail(email, password);
+      if (accountPayload) {
+        await settings.setValue(SettingsKeys.CurrentAccessToken, accountPayload.token);
+        await settings.loadServerSettings();
+
+        await dispatch(getUserProfile(accountPayload.token));
+        dispatch(authenticationComplete(accountPayload.user));
+        dispatch(notifySignupSuccess());
+      }
+    } catch (error) {
+      dispatch(authenticationError(error));
+    }
+  };
+};
+
+export const emailLogin = (email: string, password: string) => {
+  return async (dispatch: Function) => {
+    dispatch(login());
+    try {
+      const accountService = container.get<IAccountService>(Types.IAccountService);
+      const settings = container.get<IAppSettingsService>(Types.IAppSettingsService);
+
+      const accountPayload = await accountService.loginEmail(email, password);
+      if (accountPayload) {
+        await settings.setValue(SettingsKeys.CurrentAccessToken, accountPayload.token);
+        await settings.loadServerSettings();
+
+        await dispatch(getUserProfile(accountPayload.token));
+        dispatch(authenticationComplete(accountPayload.user));
+        dispatch(notifyLoginSuccess());
+      }
+    } catch (error) {
+      dispatch(authenticationError(error));
+    }
+  };
+};
+
+export const notifyError = () => {
+  return (dispatch: Function) => {
+    dispatch(showNotification("Xảy ra lỗi"));
+  };
+};
+
+export const notifySignupSuccess = () => {
+  return (dispatch: Function) => {
+    dispatch(showNotification("Đăng ký thành công"));
+  };
+};
 
 export const notifyLoginSuccess = () => {
   return (dispatch: Function) => {
@@ -188,7 +267,11 @@ export const addOwnedShoe = (
       const accessToken = appSettings.getSettings().CurrentAccessToken;
 
       if (accessToken) {
-        const success: boolean = await accountService.addOnwedShoes(accessToken, shoeId, owned);
+        const success: boolean = await accountService.addOnwedShoes(
+          accessToken,
+          shoeId,
+          owned
+        );
 
         if (success) {
           dispatch(showNotification("Đã thêm thành công"));

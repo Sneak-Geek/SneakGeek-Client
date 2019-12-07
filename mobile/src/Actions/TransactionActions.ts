@@ -29,7 +29,9 @@ export const sellShoes = (sellOrder: Transaction) => {
     dispatch(updateSellState(TransactionReduxState.SELL_UPLOADING));
     const appSettings = container.get<IAppSettingsService>(Types.IAppSettingsService);
     const cdnService = container.get<ICdnService>(Types.ICdnService);
-    const transactionService = container.get<ITransactionService>(Types.ITransactionService);
+    const transactionService = container.get<ITransactionService>(
+      Types.ITransactionService
+    );
 
     const pictures = sellOrder.shoePictures;
     const token = appSettings.getValue(SettingsKeys.CurrentAccessToken);
@@ -62,7 +64,9 @@ export const getSellHistory = () => {
   return async (dispatch: Function) => {
     dispatch(updateGetSellHistory({ state: NetworkRequestState.REQUESTING }));
     const appSettings = container.get<IAppSettingsService>(Types.IAppSettingsService);
-    const transactionService = container.get<ITransactionService>(Types.ITransactionService);
+    const transactionService = container.get<ITransactionService>(
+      Types.ITransactionService
+    );
     const token = appSettings.getValue(SettingsKeys.CurrentAccessToken);
 
     try {

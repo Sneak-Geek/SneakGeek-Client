@@ -19,8 +19,12 @@ namespace AppContentActionNames {
   export const UPDATE_GET_SHOES_STATE = "UPDATE_GET_SHOE_STATE";
 }
 
-export const updateStatusFetchShoes = createAction<boolean>(AppContentActionNames.FETCH_SHOES);
-export const updateShoesData = createAction<Shoe[]>(AppContentActionNames.UPDATE_SHOES_DATA);
+export const updateStatusFetchShoes = createAction<boolean>(
+  AppContentActionNames.FETCH_SHOES
+);
+export const updateShoesData = createAction<Shoe[]>(
+  AppContentActionNames.UPDATE_SHOES_DATA
+);
 export const updateFetchShoesError = createAction<any>(
   AppContentActionNames.UPDATE_FETCH_SHOES_ERROR
 );
@@ -57,7 +61,11 @@ export const searchShoes = (keyword: string) => {
       const appContentService = container.get<IAppContentService>(Types.IAppContentService);
       const shoes = await appContentService.searchShoes(keyword);
       dispatch(
-        updateSearchShoesState({ state: NetworkRequestState.SUCCESS, shoes, error: undefined })
+        updateSearchShoesState({
+          state: NetworkRequestState.SUCCESS,
+          shoes,
+          error: undefined
+        })
       );
     } catch (error) {
       dispatch(updateSearchShoesState({ state: NetworkRequestState.FAILED, error }));

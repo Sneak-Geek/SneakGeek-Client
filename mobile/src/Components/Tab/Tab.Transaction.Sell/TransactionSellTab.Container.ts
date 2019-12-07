@@ -24,6 +24,13 @@ const mapDispatchToProps = (dispatch: Function) => ({
       params: { isForSell: true }
     };
     dispatch(NavigationActions.navigate(navConfig));
+  },
+
+  onShoeClick: () => {
+    const navConfig = {
+      routeName: RouteNames.OrderSell
+    };
+    dispatch(NavigationActions.navigate(navConfig));
   }
 });
 
