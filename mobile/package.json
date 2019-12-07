@@ -9,7 +9,7 @@
     "lint": "eslint .",
     "watch": "tsc --watch",
     "build": "tsc --build",
-    "prettier": "prettier --write src/**/*.ts"
+    "prettier": "prettier --write ./**/*.ts"
   },
   "husky": {
     "hooks": {
@@ -17,12 +17,10 @@
     }
   },
   "lint-staged": {
-    "linters": {
-      "src/**/*.ts": [
-        "prettier --write",
-        "git add"
-      ]
-    }
+    "src/**/*.ts": [
+      "prettier --write",
+      "git add"
+    ]
   },
   "dependencies": {
     "@react-native-community/async-storage": "^1.6.1",
