@@ -11,7 +11,8 @@ import {
   FlatList,
   ScrollView,
   ViewStyle,
-  TextStyle
+  TextStyle,
+  Dimensions
 } from "react-native";
 import { Shoe, Account, Profile } from "../../Shared/Model";
 import {
@@ -20,7 +21,7 @@ import {
   NavigationRoute,
   NavigationScreenProps
 } from "react-navigation";
-import { Icon } from "react-native-elements";
+import { Icon, Button } from "react-native-elements";
 import styles from "./styles";
 import { ShoeCard, Text, ShoeSizePicker } from "../../Shared/UI";
 import StarRating from "react-native-star-rating";
@@ -37,6 +38,7 @@ export interface Props {
 
   navigateToShoeDetailWithReset: (index: number, shoe: Shoe) => void;
   addOwnedShoe: (shoeId: string, owned: Array<{ shoeSize: string; number: number }>) => void;
+  navigateToAuctionOrder: () => void;
 }
 
 interface State {
@@ -56,7 +58,7 @@ export class ShoeDetailScreen extends React.Component<Props, State> {
         name={"ios-arrow-back"}
         size={28}
         containerStyle={{ marginLeft: 10 }}
-        onPress={() => transitionProp.navigation.dispatch(StackActions.popToTop())}
+        onPress={() => transitionProp.navigation.dispatch(StackActions.pop({ n: 1 }))}
       />
     ),
     headerRight: (
@@ -91,7 +93,6 @@ export class ShoeDetailScreen extends React.Component<Props, State> {
       <SafeAreaView
         style={{
           flex: 1,
-          position: "relative",
           backgroundColor: Assets.Styles.AppSecondaryColorBlurred
         }}
       >
@@ -110,6 +111,7 @@ export class ShoeDetailScreen extends React.Component<Props, State> {
             </View>
           </ScrollView>
           {this._renderBuyerSection()}
+          {this._renderButton()}
         </View>
       </SafeAreaView>
     );
@@ -199,7 +201,7 @@ export class ShoeDetailScreen extends React.Component<Props, State> {
             textStyle,
             () => this._addOwnedShoe()
           )}
-          {this._renderSideButton("Bán".toUpperCase(), {}, {}, () => {})}
+          {this._renderSideButton("Bán".toUpperCase(), {}, {}, () => { })}
         </View>
       </View>
     );
@@ -356,8 +358,29 @@ export class ShoeDetailScreen extends React.Component<Props, State> {
     );
   }
 
+  private _renderButton() {
+    return (
+      <View style={{ flexDirection: 'row', backgroundColor: 'black' }}>
+        <View style={{ flex: 1, borderRightWidth: 1, borderColor: 'white', marginVertical: 8, }}>
+          <TouchableOpacity
+            style={styles.authButtonContainer}
+            onPress={() => this.setState({ isBuyTabClicked: !this.state.isBuyTabClicked })}
+          >
+            <Image source={Assets.Icons.Buy} style={styles.icon} />
+            <Text.Headline style={{ color: 'white', fontSize: 17 }}>Mua</Text.Headline>
+          </TouchableOpacity>
+        </View>
+        <View style={{ flex: 1, borderLeftWidth: 1, borderColor: 'white', marginVertical: 8, }}>
+          <TouchableOpacity style={styles.authButtonContainer}>
+            <Image source={Assets.Icons.Sell} style={styles.icon} />
+            <Text.Headline style={{ color: 'white', fontSize: 17 }}>Bán</Text.Headline>
+          </TouchableOpacity>
+        </View>
+      </View>
+    )
+  }
   private _renderBuyerSection(): JSX.Element {
-    const price = [{ condition: "mới", price: 1800000 }, { condition: "cũ", price: 1200000 }];
+    const price = [{ condition: "Mua mới", price: 1800000 }, { condition: "Mua cũ", price: 1200000 }, { condition: "Đặt giá" }];
     return (
       <View
         style={!this.state.isBuyTabClicked ? styles.buyerContainer : styles.buyerContainerFull}
@@ -378,37 +401,65 @@ export class ShoeDetailScreen extends React.Component<Props, State> {
     );
   }
 
-  private _renderBuyListItem(item: { condition: string; price: number }, index: number) {
+  private _renderBuyListItem(item: { condition: string; price?: number }, index: number) {
     return (
       <View
-        style={styles.priceListItem}
+        style={[styles.priceListItem, { flex: 1 }]}
         onLayout={event =>
           this.setState({
             bottomBuyerHeight: event.nativeEvent.layout.height
           })
         }
       >
-        <Text.Body style={{ color: "white" }}>Mua {item.condition}</Text.Body>
-        <Text.Title2 style={{ color: Assets.Styles.AppPrimaryColor }}>
-          {toCurrencyString(item.price.toString())}
-        </Text.Title2>
+        <TouchableOpacity style={{ alignItems: 'center' }} onPress={() => this.setState({ priceListIndex: index })}>
+          <Text.Body style={{ color: "white", fontSize: 24 }}>{item.condition}</Text.Body>
+          <Text.Title2 style={{ color: Assets.Styles.AppPrimaryColor, paddingBottom: 15, fontSize: 16 }}>
+            {item.price && toCurrencyString(item.price.toString())}
+          </Text.Title2>
+        </TouchableOpacity>
         {this.state.isBuyTabClicked && index === this.state.priceListIndex && (
           <View style={styles.divider} />
         )}
-        {this.state.isBuyTabClicked && this._renderAvailableSize()}
+        <View style={{ width: (Dimensions.get("window").width * 5) / 7, flex: 1, alignItems: 'center' }}>
+          {this.state.isBuyTabClicked && this._renderAvailableSize(index, item)}
+        </View>
       </View>
     );
   }
 
-  private _renderAvailableSize() {
+  private _renderAvailableSize(index: number, itemC: { condition: string; price?: number }) {
     const sizes = [8, 8.5, 9, 9.5, 10, 10.5, 11, 11.5, 12];
     return (
-      <FlatList
-        data={sizes}
-        showsVerticalScrollIndicator={false}
-        renderItem={({ item }) => <Text.Body style={styles.shoeSize}>{item}</Text.Body>}
-        keyExtractor={(_itm, idx) => idx.toString()}
-      />
+      <View style={{ flex: 1 }}>
+        <FlatList
+          data={sizes}
+          showsVerticalScrollIndicator={false}
+          renderItem={({ item }) => {
+            return (
+              <TouchableOpacity
+                style={{ flexDirection: 'row', justifyContent: 'center', alignItems: 'center', flex: 1, width: (Dimensions.get("window").width * 5) / 7 }}
+                onPress={() => {
+                  this.setState({ priceListIndex: index });
+                  switch (itemC.condition) {
+                    case 'Đặt giá':
+                      this.props.navigateToAuctionOrder()
+                      break;
+                  
+                    default:
+                      break;
+                  }
+                }}
+              >
+                {/* <Text.Body style={{ position: 'absolute', left: 15, fontSize: 14, color: 'white'}}>Cao nhất 180.800K</Text.Body> */}
+                <Text.Body style={styles.shoeSize}>{item}</Text.Body>
+              </TouchableOpacity>
+            )
+          }}
+          keyExtractor={(_itm, idx) => idx.toString()}
+        />
+      </View>
     );
   }
+
+
 }

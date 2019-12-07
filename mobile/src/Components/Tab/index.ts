@@ -37,7 +37,7 @@ const Tabs = {
   Transaction: {
     Buy: TabTransactionBuy,
     History: TabTransactionHistory,
-    Sell: TabTransactionSell
+    Sell: TabTransactionSell,
   }
 };
 

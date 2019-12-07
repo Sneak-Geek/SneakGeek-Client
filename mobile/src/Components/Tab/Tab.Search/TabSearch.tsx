@@ -18,12 +18,13 @@ import {
   TouchableOpacity,
   Keyboard,
   Modal,
-  Image
+  Image,
+  Alert
 } from "react-native";
 import { Input, Icon } from "react-native-elements";
 import { BlurView } from "@react-native-community/blur";
 import { Shoe } from "../../../Shared/Model";
-import { ShoeCard, Text } from "../../../Shared/UI";
+import { ShoeCard, Text, ShoeSizePicker } from "../../../Shared/UI";
 import { SearchShoePayload } from "../../../Shared/Payload";
 import * as Assets from "../../../Assets";
 
@@ -34,10 +35,11 @@ export interface ISearchScreenProps {
 
   onShoeClick: (forSell: boolean, shoe: Shoe) => void;
   search: (key: string) => void;
-  test: () => void;
+  navigateToShoeRequire: () => void;
 }
 
 interface ISearchScreenState {
+  placeholder: string;
   searchKey: string;
   searchFocus: boolean;
   shouldRenderTopShoes: boolean;
@@ -46,6 +48,7 @@ interface ISearchScreenState {
   fillPrice: string;
   fillGender: string;
   fillCondition: string;
+  isSelectingShoeSize: boolean;
 }
 
 export default class TabSearch extends React.Component<ISearchScreenProps, ISearchScreenState> {
@@ -65,6 +68,7 @@ export default class TabSearch extends React.Component<ISearchScreenProps, ISear
       ? this.props.navigation.getParam("isForSell") === true
       : false;
     this.state = {
+      placeholder: 'Tìm kiếm',
       searchKey: "",
       searchFocus: false,
       shouldRenderTopShoes: true,
@@ -72,7 +76,8 @@ export default class TabSearch extends React.Component<ISearchScreenProps, ISear
       showModal: false,
       fillPrice: "highToLow",
       fillGender: 'male',
-      fillCondition: 'new'
+      fillCondition: 'new',
+      isSelectingShoeSize: false,
     };
   }
 
@@ -84,8 +89,8 @@ export default class TabSearch extends React.Component<ISearchScreenProps, ISear
         {this._renderSearchBar()}
         <View style={styles.contentContainer}>
           {this.state.searchFocus &&
-            searchResult.shoes &&
-            searchResult.shoes.length > 0 &&
+            // searchResult.shoes &&
+            // searchResult.shoes.length > 0 &&
             this._renderSearchContent()}
           <ScrollView>
             {this._renderKeywordHeaderAndFilter()}
@@ -95,6 +100,8 @@ export default class TabSearch extends React.Component<ISearchScreenProps, ISear
               {this.state.showModal && this._renderModal()}
             </View>
           </ScrollView>
+          {this._renderShoeSelectionModal()}
+
         </View>
       </SafeAreaView>
     );
@@ -104,7 +111,7 @@ export default class TabSearch extends React.Component<ISearchScreenProps, ISear
     const isForSell = prevProps.navigation ? prevProps.navigation.getParam("isForSell") : false;
     if (typeof isForSell === "boolean" && isForSell !== this.state.shouldOpenSell) {
       this.setState({
-        shouldOpenSell: isForSell
+        shouldOpenSell: isForSell,
       });
     }
   }
@@ -114,7 +121,7 @@ export default class TabSearch extends React.Component<ISearchScreenProps, ISear
       <Input
         ref={refInput => (this._searchInputComponent = refInput)}
         onFocus={_event => this.setState({ searchFocus: true })}
-        placeholder={"Tìm kiếm"}
+        placeholder={this.state.placeholder}
         leftIcon={<Icon type={"ionicon"} name={"md-search"} size={25} />}
         leftIconContainerStyle={{ marginRight: 20 }}
         rightIcon={
@@ -142,7 +149,6 @@ export default class TabSearch extends React.Component<ISearchScreenProps, ISear
           <FlatList
             onScroll={_evt => Keyboard.dismiss()}
             keyboardShouldPersistTaps={"always"}
-            style={{ borderBottomWidth: 1, borderBottomColor: "black" }}
             data={searchResult.shoes}
             keyExtractor={(shoe, _index) => shoe.title}
             renderItem={({ item }) => (
@@ -155,6 +161,13 @@ export default class TabSearch extends React.Component<ISearchScreenProps, ISear
             showsVerticalScrollIndicator={false}
           />
         )}
+        <View style={{ borderBottomWidth: 1, borderBottomColor: 'black', paddingBottom: 17, paddingLeft: 43 }}>
+          <TouchableOpacity onPress={() => this.props.navigateToShoeRequire()}>
+            <Text.Body style={{ fontSize: 14, fontStyle: 'italic', color: Assets.Styles.AppPrimaryColor }}>
+              Không thấy sản phẩm cần tìm?
+            </Text.Body>
+          </TouchableOpacity>
+        </View>
       </BlurView>
     );
   }
@@ -163,10 +176,11 @@ export default class TabSearch extends React.Component<ISearchScreenProps, ISear
     return (
       <View style={styles.keywordContainer}>
         <Text.Subhead>Từ khoá hot</Text.Subhead>
-        <Icon type={"ionicon"} name={"md-options"} size={20}
-          // onPress={() => this.setState({ showModal: !this.state.showModal })}
-          onPress={() => this.props.test()}
-        />
+        <TouchableOpacity
+          onPress={() => this.setState({ showModal: !this.state.showModal })}
+        >
+          <Image source={Assets.Icons.Hamburger} style={{ width: 20, height: 20, resizeMode: 'contain' }} />
+        </TouchableOpacity>
       </View>
     );
   }
@@ -287,12 +301,15 @@ export default class TabSearch extends React.Component<ISearchScreenProps, ISear
                   <Text.Body style={{ color: Assets.Styles.AppPrimaryColor }}>Xanh lá, đen, trắng</Text.Body>
                 </View>
               </View>
-              <View style={{ paddingTop: 30, flexDirection: 'row', alignItems: 'flex-end', justifyContent: 'space-between' }}>
+              <TouchableOpacity
+                onPress={() => this.setState({ showModal: false, isSelectingShoeSize: true })}
+                style={{ paddingTop: 30, flexDirection: 'row', alignItems: 'flex-end', justifyContent: 'space-between' }}
+              >
                 <Text.Title1 style={{ color: 'white', fontSize: 14 }}>CỠ GIÀY</Text.Title1>
                 <View>
                   <Text.Body style={{ color: Assets.Styles.AppPrimaryColor }}>8.0, 8.5, 9, 9.5</Text.Body>
                 </View>
-              </View>
+              </TouchableOpacity>
               <View style={{ paddingTop: 30, flexDirection: 'row', alignItems: 'flex-end', justifyContent: 'space-between' }}>
                 <Text.Title1 style={{ color: 'white', fontSize: 14 }}>THƯƠNG HIỆU</Text.Title1>
                 <View>
@@ -307,6 +324,30 @@ export default class TabSearch extends React.Component<ISearchScreenProps, ISear
         </View>
       </Modal>
     )
+  }
+
+  private _renderShoeSelectionModal(): JSX.Element {
+    return (
+      <ShoeSizePicker
+        shouldRenderCounter={false}
+        pickerTitle={"Chọn cỡ giày của bạn"}
+        visible={this.state.isSelectingShoeSize}
+        onTogglePicker={(
+          exiting: boolean,
+          owned: string | Array<{ shoeSize: string; number: number }>
+        ) => {
+          typeof owned === "string" &&
+            this.setState(
+              {
+                isSelectingShoeSize: false
+              },
+              () => {
+                !exiting
+              }
+            );
+        }}
+      />
+    );
   }
 
   _renderFillPrice() {

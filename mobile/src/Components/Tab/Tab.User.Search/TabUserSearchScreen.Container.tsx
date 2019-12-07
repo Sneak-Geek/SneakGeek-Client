@@ -15,6 +15,9 @@ const mapDispatchToProps = (dispatch: Function) => ({
       routeName: RouteNames.SendRequireSuccess,
     };
     dispatch(NavigationActions.navigate(navConfig));
+  },
+  back: () => {
+    dispatch(NavigationActions.back());
   }
 });
 

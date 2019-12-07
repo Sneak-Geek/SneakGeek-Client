@@ -28,7 +28,7 @@ const mapDispatchToProps = (dispatch: Function) => ({
   search: (keyword: string) => {
     dispatch(searchShoes(keyword));
   },
-  test: () => {
+  navigateToShoeRequire: () => {
     const navConfig = {
       routeName: RouteNames.ShoeRequire,
     };

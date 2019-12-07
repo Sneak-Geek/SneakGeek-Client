@@ -3,9 +3,9 @@
 //!
 
 import * as React from "react";
-import { SafeAreaView, ScrollView, Text, View, StyleSheet } from "react-native";
+import { SafeAreaView, ScrollView, Text, View, StyleSheet, Image } from "react-native";
 import { TransactionShoeCard } from "../../../Shared/UI";
-import { Icon } from "react-native-elements";
+import * as Assets from "../../../Assets";
 
 export class TransactionHistoryScreen extends React.Component<{}> {
   static navigationOptions = {
@@ -18,7 +18,7 @@ export class TransactionHistoryScreen extends React.Component<{}> {
         <ScrollView>
           <View style={styles.topContainer}>
             <Text style={styles.title}>Lịch sử giao dịch</Text>
-            <Icon type={"ionicon"} name={"md-options"} size={20} />
+            <Image source={Assets.Icons.Hamburger} style={{ width: 20, height: 20, resizeMode: 'contain' }} />
           </View>
           <TransactionShoeCard
             mode="history"
@@ -46,7 +46,7 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 22,
     fontFamily: 'RobotoCondensed-Regular',
-   
+
   },
   line: {
     height: 0.3,

@@ -3,7 +3,7 @@
 //!
 
 import * as React from "react";
-import { View, TouchableOpacity, Image, SafeAreaView } from "react-native";
+import { View, TouchableOpacity, Image, SafeAreaView, Alert } from "react-native";
 import styles from "./styles";
 import { Input, Button, Icon } from "react-native-elements";
 import { Account } from "../../Shared/Model";
@@ -23,11 +23,13 @@ export interface ILoginScreenProps {
   googleLogin: () => void;
   navigateToHome: () => void;
   displayDebugDialog: () => void;
+  navigateToSignIn: (email: string) => void;
   navigateToSignUp: () => void;
 }
 
 interface State {
   currentEmail: string;
+  active: boolean;
 }
 
 export default class LoginScreen extends React.Component<ILoginScreenProps, State> {
@@ -38,8 +40,26 @@ export default class LoginScreen extends React.Component<ILoginScreenProps, Stat
   public constructor /** override */(props: ILoginScreenProps) {
     super(props);
     this.state = {
-      currentEmail: ""
+      currentEmail: "",
+      active: false,
     };
+  }
+
+  validateEmail = () => {
+    let { currentEmail } = this.state
+    let res = StringUtil.isValidEmail(currentEmail)
+    if (res === true) {
+      this.setState({ active: true })
+    } else { this.setState({ active: false }) }
+  }
+
+  login = () => {
+    let { active, currentEmail } = this.state;
+    if (active) {
+      this.props.navigateToSignIn(currentEmail)
+    } else {
+      Alert.alert('Email không hợp lệ')
+    }
   }
 
   public /** override */ render() {
@@ -61,15 +81,16 @@ export default class LoginScreen extends React.Component<ILoginScreenProps, Stat
           Assets.Icons.Google,
           this.props.googleLogin
         )}
-          {this._renderSocialButton(
+        {this._renderSocialButton(
           "Tài khoản Facebook",
           Assets.Icons.Facebook,
           this.props.facebookLogin
         )}
         {this._renderSocialButton(
-          "Tài khoản Zalo",
+          "Email",
           Assets.Icons.Zalo,
-          this.props.navigateToSignUp
+          this.props.navigateToSignUp,
+          // () => { this.props.emailSignup('trung1@example.com', '123123'); },
         )}
       </View>
     );
@@ -93,7 +114,7 @@ export default class LoginScreen extends React.Component<ILoginScreenProps, Stat
           <Text.Body style={styles.socialLabel}>Hoặc sử dụng email</Text.Body>
           <Input
             value={this.state.currentEmail}
-            onChangeText={currentEmail => this.setState({ currentEmail })}
+            onChangeText={currentEmail => this.setState({ currentEmail }, () => this.validateEmail())}
             containerStyle={{ width: "100%", paddingHorizontal: 0 }}
             inputContainerStyle={styles.emailContainerStyle}
             placeholder={"taikhoan@email.com"}
@@ -114,12 +135,16 @@ export default class LoginScreen extends React.Component<ILoginScreenProps, Stat
           buttonStyle={[
             styles.authButtonContainer,
             {
-              backgroundColor: StringUtil.isValidEmail(this.state.currentEmail)
-                ? Assets.Styles.ButtonPrimaryColor
+              backgroundColor: this.state.active
+                ? Assets.Styles.AppPrimaryColor
                 : Assets.Styles.ButtonDisabledColor
             }
           ]}
-          onPress={() => this.props.navigateToHome()}
+          titleStyle={{
+            fontSize: 18,
+            fontFamily: 'RobotoCondensed-Regular',
+          }}
+          onPress={this.login}
         />
       </View>
     );

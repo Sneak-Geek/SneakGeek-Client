@@ -17,4 +17,7 @@ export interface IAccountService {
     shoeId: string,
     owned: Array<{ shoeSize: string; number: number }>
   ): Promise<boolean>;
+  signupEmail(email: string, password: string): Promise<AccountPayload | undefined>;
+  loginEmail(email: string, password: string): Promise<AccountPayload | undefined>;
+  requestToken(email: string): Promise<any>;
 }

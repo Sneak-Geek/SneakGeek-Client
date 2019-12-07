@@ -10,10 +10,17 @@ import * as Assets from "../../Assets";
 interface IForgotPasswordScreenState {
     showVerification: boolean;
     type: string;
-    email: 'string';
-    code: 'string';
+    email: string;
+    code: string;
+    passwordConfirm: string;
+    password: string;
 }
-export class ForgotPasswordScreen extends React.Component<IForgotPasswordScreenState> {
+
+interface IForgotPasswordScreenProps {
+    requestTokenConfirm:(email: string) => Promise<{message: string}>
+}
+
+export class ForgotPasswordScreen extends React.Component<IForgotPasswordScreenProps, IForgotPasswordScreenState > {
 
     static navigationOptions = (transitionProp: NavigationScreenProps) => ({
         headerStyle: ({
@@ -33,13 +40,16 @@ export class ForgotPasswordScreen extends React.Component<IForgotPasswordScreenS
         ),
     });
 
-    state = {
-        showVerification: false,
-        email: '',
-        code: '',
-        passwordConfirm: '',
-        password: '',
-        type: 'inputEmail',
+    constructor(props: any) {
+        super(props)
+        this.state = {
+            showVerification: false,
+            email: 'trungdeps177@gmail.com',
+            code: '',
+            passwordConfirm: '',
+            password: '',
+            type: 'inputEmail',
+        }
     }
 
     onBack = (transitionProp: NavigationScreenProps) => {
@@ -51,11 +61,14 @@ export class ForgotPasswordScreen extends React.Component<IForgotPasswordScreenS
             this.setState({ type: 'inputEmail' });
         }
     }
-    onPress = () => {
-        let { type } = this.state;
+    onPress = async () => {
+        let { type, email } = this.state;
         this.setState({ showVerification: true })
         if (type === "inputEmail") {
-            this.setState({ type: 'inputCode' });
+            let res: {message: string} = await this.props.requestTokenConfirm(email);
+            if (res) {
+                this.setState({ type: 'inputCode' });
+            }
         }
         if (type === "inputCode") {
             this.setState({ type: 'inputPassword' });
@@ -110,7 +123,7 @@ export class ForgotPasswordScreen extends React.Component<IForgotPasswordScreenS
                         placeholder="Email của bạn"
                         value={email}
                         placeholderColor="rgba(0, 0, 0, 0.4)"
-                        // onChangeText={(email) => this.setState({ email }, () => this.validateButton())}
+                        onChangeText={(email) => this.setState({ email })}
                         selectionColor={Assets.Styles.AppPrimaryColor}
                     />
                 </View>
@@ -243,8 +256,6 @@ const styles = StyleSheet.create({
         height: 52,
         alignItems: 'center',
         justifyContent: 'center',
-        marginHorizontal: 42,
-        borderRadius: 4,
     },
     titleButton: {
         fontSize: 17,

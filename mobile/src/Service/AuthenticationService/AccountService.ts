@@ -10,6 +10,53 @@ import { Profile } from "../../Shared/Model";
 
 @injectable()
 export class AccountService implements IAccountService {
+
+  public async requestToken(
+    email: string,
+  ): Promise<boolean | undefined> {
+    const response = await ApiClient.post(`/account/send-confirmation-token`, { email });
+    if (
+      response &&
+      (response.status === HttpStatus.CREATED || response.status === HttpStatus.OK)
+    ) {
+      return response.data;
+    }
+
+    return undefined;
+  }
+
+  public async signupEmail(
+    email: string,
+    password: string,
+  ): Promise<AccountPayload | undefined> {
+    const response = await ApiClient.post(`/account/email-signup`, { email, password });
+
+    if (
+      response &&
+      (response.status === HttpStatus.CREATED || response.status === HttpStatus.OK)
+    ) {
+      return response.data as AccountPayload;
+    }
+
+    return undefined;
+  }
+
+  public async loginEmail(
+    email: string,
+    password: string,
+  ): Promise<AccountPayload | undefined> {
+    const response = await ApiClient.post(`/account/email-login`, { email, password });
+
+    if (
+      response &&
+      (response.status === HttpStatus.CREATED || response.status === HttpStatus.OK)
+    ) {
+      return response.data as AccountPayload;
+    }
+
+    return undefined;
+  }
+
   public async /** override */ login(
     token: string,
     provider: AuthProvider

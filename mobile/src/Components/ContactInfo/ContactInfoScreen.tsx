@@ -26,7 +26,7 @@ export class ContactInfoScreen extends React.Component<IContactInfoScreenProps> 
                 name={"ios-arrow-back"}
                 size={28}
                 containerStyle={{ marginLeft: 10 }}
-                onPress={() => transitionProp.navigation.dispatch(StackActions.popToTop())}
+                onPress={() => transitionProp.navigation.dispatch(StackActions.pop({n: 1}))}
             />
         ),
     });

@@ -60,6 +60,14 @@ const mapDispatchToProps = (dispatch: Function) => {
           routeName: RouteNames.Tabs.UserInfoTab.Search
         })
       )
+    },
+
+    navigateToUserKind: () => {
+      dispatch(
+        NavigationActions.navigate({
+          routeName: RouteNames.UserKind,
+        })
+      )
     }
   };
 };

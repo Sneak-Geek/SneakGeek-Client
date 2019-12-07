@@ -19,15 +19,30 @@ export class ShoeSizeScreen extends React.Component<IShoeSizeScreenState> {
   data = [
     {
       country: 'US',
-      size: ['6', '6.5', '7', '7.5', '8', '8.5', '9', '9.5', '10', '10.5', '11', '11.5', '12', '12.5']
+      size: ['6', '6.5', '7', '7.5', '8', '8.5', '9', '9.5', '10', '10.5', '11', '11.5', '12', '13', '14', '15', '16']
     },
     {
       country: 'EU',
-      size: ['39', '39 - 40', '40', '40 - 41', '41', '41 - 42', '42', '42 - 43', '43', '43 - 44', '44', '44 - 45', '45', '46']
+      size: ['39', '39 - 40', '40', '40 - 41', '41', '41 - 42', '42', '42 - 43', '43', '43 - 44', '44', '44 - 45', '45', '46', '47', '48', '49']
     },
     {
       country: 'UK',
-      size: ['5.5', '6', '6.5', '7', '7.5', '8', '8.5', '9', '9.5', '10', '10.5', '11', '11.5', '12.5']
+      size: ['5.5', '6', '6.5', '7', '7.5', '8', '8.5', '9', '9.5', '10', '10.5', '11', '11.5', '12.5', '13.5', '14.5', '15.5']
+    }
+  ]
+
+  dataFemale = [
+    {
+      country: 'US',
+      size: ['4', '4.5', '5', '5.5', '6', '6.5', '7', '7.5', '8', '8.5', '9', '9.5', '10', '10.5', '11', '11.5', '12']
+    },
+    {
+      country: 'EU',
+      size: ['34 - 35', '35', '35 - 36', '36', '36 - 37', '37', '37 - 38', '38', '38 - 39', '39', '39 - 40', '40', '40 - 41', '41', '41 - 42', '42', '42 - 43']
+    },
+    {
+      country: 'UK',
+      size: ['2', '2.5', '3', '3.5', '4', '4.5', '5', '5.5', '6', '6.5', '7', '7.5', '8', '8.5', '9', '9.5', '10']
     }
   ]
   static navigationOptions = (transitionProp: NavigationScreenProps) => ({
@@ -110,25 +125,49 @@ export class ShoeSizeScreen extends React.Component<IShoeSizeScreenState> {
   private renderSize() {
     return (
       <View style={styles.sizeContainer}>
-        {this.data.map((itemC, indexC) => {
-          let alignItems = 'center';
-          if (indexC === 0) { alignItems = 'flex-start' }
-          if (indexC === this.data.length - 1) { alignItems = 'flex-end' }
-          return (
-            <View style={{ flex: 1 }} key={indexC}>
-              <View>
-                <Text style={styles.sizeTitle}>SIZE {itemC.country}</Text>
+        {this.state.gender === 'male' ?
+          this.data.map((itemC, indexC) => {
+            let alignItems = 'center';
+            if (indexC === 0) { alignItems = 'flex-start' }
+            if (indexC === this.data.length - 1) { alignItems = 'flex-end' }
+            return (
+              <View style={{ flex: 1, alignItems }} key={indexC}>
                 <View>
-                  {itemC.size.map((itemR, indexR) => {
-                    return (
-                      <Text key={indexR} style={styles.size}>{itemR}</Text>
-                    )
-                  })}
+                  <Text style={styles.sizeTitle}>SIZE {itemC.country}</Text>
+                  <View>
+                    {itemC.size.map((itemR, indexR) => {
+                      return (
+                        <Text key={indexR} style={styles.size}>{itemR}</Text>
+                      )
+                    })}
+                  </View>
                 </View>
               </View>
-            </View>
-          )
-        })}
+            )
+          })
+          :
+          this.dataFemale.map((itemC, indexC) => {
+            let alignItems = 'center';
+            if (indexC === 0) { alignItems = 'flex-start' }
+            if (indexC === this.data.length - 1) { alignItems = 'flex-end' }
+            return (
+              <View style={{ flex: 1, alignItems }} key={indexC}>
+                <View>
+                  <Text style={styles.sizeTitle}>SIZE {itemC.country}</Text>
+                  <View>
+                    {itemC.size.map((itemR, indexR) => {
+                      return (
+                        <Text key={indexR} style={styles.size}>{itemR}</Text>
+                      )
+                    })}
+                  </View>
+                </View>
+              </View>
+            )
+          })
+
+        }
+
       </View>
     )
   }

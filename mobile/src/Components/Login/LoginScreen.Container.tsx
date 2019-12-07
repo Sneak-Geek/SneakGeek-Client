@@ -27,19 +27,32 @@ const mapDispatchToProps = (dispatch: Function) => {
     facebookLogin: () => {
       dispatch(Actions.authenticate("facebook"));
     },
+
     googleLogin: () => {
       dispatch(Actions.authenticate("google"));
     },
+
     navigateToHome: () => {
       dispatch(StackActions.replace({ routeName: RouteNames.Tabs.TabRoot }));
     },
+
     displayDebugDialog: () => {
       dispatch(Actions.displayModal({ modalType: ModalTypes.Debug, data: {} }));
     },
+
     navigateToSignUp: () => {
       dispatch(
         NavigationActions.navigate({
           routeName: RouteNames.SignUp
+        })
+      );
+    },
+
+    navigateToSignIn: (email: string) => {
+      dispatch(
+        NavigationActions.navigate({
+          routeName: RouteNames.SignIn,
+          params: { email }
         })
       );
     },

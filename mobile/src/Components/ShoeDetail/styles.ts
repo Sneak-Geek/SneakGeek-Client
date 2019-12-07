@@ -65,10 +65,12 @@ export default StyleSheet.create({
     bottom: 0,
     left: 0,
     right: 0,
-    flex: 1,
+    height: 52,
+    // flex: 1,
     flexDirection: "column",
     alignItems: "center",
-    backgroundColor: Assets.Styles.AppSecondaryColorBlurred
+    backgroundColor: 'red'
+    // backgroundColor: Assets.Styles.AppSecondaryColorBlurred
   },
 
   buyerContainerFull: {
@@ -100,7 +102,7 @@ export default StyleSheet.create({
     marginHorizontal: 35,
     height: 1,
     backgroundColor: Assets.Styles.AppSecondaryColor,
-    marginVertical: 15
+    // marginVertical: 15
   },
 
   shoeSize: {
@@ -114,5 +116,20 @@ export default StyleSheet.create({
     paddingHorizontal: 15,
     paddingVertical: 4,
     borderRadius: Assets.Styles.ButtonBorderRadius
-  }
+  },
+
+  authButtonContainer: {
+    flexDirection: 'row',
+    justifyContent: "center",
+    alignItems: "center",
+    height: Assets.Styles.ButtonHeight,
+    backgroundColor: 'black',
+    borderRadius: 0,
+},
+icon: {
+  width: 24,
+  height: 24,
+  resizeMode: 'contain',
+  marginRight: 8,
+}
 });

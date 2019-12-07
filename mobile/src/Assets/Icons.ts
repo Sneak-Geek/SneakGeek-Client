@@ -21,4 +21,9 @@ export const Icons = {
   Thumb1: require("../../../Icons/thumb1.png"),
   Thumb2: require("../../../Icons/thumb2.png"),
   Thumb3: require("../../../Icons/thumb3.png"),
+  Hamburger: require("../../../Icons/hamburger.png"),
+  Edit: require("../../../Icons/edit.png"),
+  Buy: require("../../../Icons/buy.png"),
+  Sell: require("../../../Icons/sell.png"),
+  Share: require("../../../Icons/share.png"),
 };

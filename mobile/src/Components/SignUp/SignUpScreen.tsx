@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { View, StyleSheet, SafeAreaView, Text, TouchableOpacity, TextInput } from 'react-native';
+import { View, StyleSheet, SafeAreaView, Text, TouchableOpacity, TextInput, Alert } from 'react-native';
 import {
     StackActions,
     NavigationScreenProps,
@@ -15,6 +15,8 @@ interface ISignUpScreenState {
 
 interface ISignUpScreenProps {
     navigateToFotgotPassword: () => void;
+    emailSignup: (email: string, password: string) => void;
+
 }
 
 export class SignUpScreen extends React.Component<ISignUpScreenProps, ISignUpScreenState> {
@@ -35,11 +37,29 @@ export class SignUpScreen extends React.Component<ISignUpScreenProps, ISignUpScr
         ),
     });
 
+    constructor(props: any) {
+        super(props);
+        this.state = {
+            email: '',
+            password: '',
+            active: false,
+        }
+    }
 
-    state = {
-        email: 'trungdeps177@gmail.com',
-        password: '',
-        active: false,
+    checkEmail = () => {
+        let { email } = this.state
+        var mailformat = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
+        if (email.match(mailformat)) {
+            this.signup();
+        }
+        else {
+            Alert.alert("Email không hợp lệ!");
+        }
+    }
+
+    signup = () => {
+        let { email, password } = this.state;
+        this.props.emailSignup(email, password);
     }
 
     validateButton = () => {
@@ -117,11 +137,12 @@ export class SignUpScreen extends React.Component<ISignUpScreenProps, ISignUpScr
     private renderButton() {
         let { active } = this.state;
         return (
-            <View style={{ alignItems: 'center' }}>
-                <TouchableOpacity style={[styles.buttonContainer, { backgroundColor: active === true ? Assets.Styles.AppPrimaryColor : '#C7C7C7' }]}>
+                <TouchableOpacity
+                    style={[styles.buttonContainer, { backgroundColor: active === true ? Assets.Styles.AppPrimaryColor : '#C7C7C7' }]}
+                    onPress={this.checkEmail}
+                >
                     <Text style={[styles.titleButton, { color: active === true ? 'white' : 'black' }]}>Đăng ký</Text>
                 </TouchableOpacity>
-            </View>
         )
     }
 }
@@ -179,7 +200,7 @@ const styles = StyleSheet.create({
         height: 56,
         paddingHorizontal: 57,
         justifyContent: 'center',
-        borderRadius: 4
+        alignItems: 'center',
     },
     titleButton: {
         fontFamily: 'RobotoCondensed-Regular',

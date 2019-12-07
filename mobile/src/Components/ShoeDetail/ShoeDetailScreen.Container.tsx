@@ -30,6 +30,12 @@ const mapDispatchToProps = (dispatch: Function) => {
     },
     addOwnedShoe: (shoeId: string, owned: Array<{ shoeSize: string; number: number }>) => {
       dispatch(addOwnedShoe(shoeId, owned));
+    },
+    navigateToAuctionOrder: () => {
+      const navConfig = {
+        routeName: RouteNames.OrderAuction,
+      };
+      dispatch(StackActions.push(navConfig));
     }
   };
 };

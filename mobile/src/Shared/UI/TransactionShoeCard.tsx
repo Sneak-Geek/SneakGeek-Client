@@ -4,8 +4,6 @@
 
 import * as React from "react";
 import { View, Image, StyleSheet, TouchableOpacity, Text } from "react-native";
-import { Shoe } from "../../Shared/Model";
-import { StringUtils } from "../../Utilities";
 import * as Assets from "../../Assets";
 
 interface Props {

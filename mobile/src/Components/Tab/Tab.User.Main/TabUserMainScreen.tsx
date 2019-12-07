@@ -18,6 +18,7 @@ export interface IUserTabMainProps {
   navigateToChangePassword: () => void;
   navigateToContactInfo: () => void;
   navigateToSearch: () => void;
+  navigateToUserKind: () => void;
 }
 
 type UserListOption = {
@@ -50,7 +51,7 @@ export default class TabUserMainScreen extends React.Component<IUserTabMainProps
     {
       title: "Địa chỉ",
       hasMarginBottom: true,
-      onClick: () => {}
+      onClick: () => this.props.navigateToUserKind()
     },
     {
       title: "Tiêu chuẩn size",

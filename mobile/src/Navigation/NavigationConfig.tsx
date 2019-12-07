@@ -12,6 +12,7 @@ import {
 import Tab from "../Components/Tab";
 import { LoginScreenContainer } from "../Components/Login/LoginScreen.Container";
 import { SignUpScreenContainer } from "../Components/SignUp/SignUpScreen.Container";
+import { SignInScreenContainer } from "../Components/SignIn/SignInScreen.Container";
 import { ForgotPasswordScreenContainer } from "../Components/ForgotPassword/ForgotPasswordScreen.Container";
 import { SellDetailScreenContainer } from "../Components/SellDetail/SellDetailScreen.Container";
 import { RouteNames } from "./RouteNames";
@@ -30,6 +31,11 @@ import { ShoeSizeScreenContainer } from "../Components/ShoeSize/ShoeSizeScreen.C
 import { ChangePasswordScreenContainer } from "../Components/ChangePassword/ChangePasswordScreen.Container";
 import { ContactInfoScreenContainer } from "../Components/ContactInfo/ContactInfoScreen.Container";
 import { SendRequireSuccessScreenContainer } from "../Components/SendReqrireSuccess/SendRequireSuccessScreen.Container";
+import { TrackingSellScreenContainer } from "../Components/TrackingSell/TrackingSellScreen.Container";
+import { OrderSellScreenContainer } from "../Components/OrderSell/OrderSellScreen.Container";
+import { OrderAuctionScreenContainer } from "../Components/OrderAuction/OrderAuctionScreen.Container";
+import { UserKindScreenContainer } from "../Components/UserKind/UserKindScreen.Container";
+import { PaymentScreenContainer } from "../Components/Payment/PaymenScreen.Container";
 
 // const BuyTabNavigator = createStackNavigator(
 //   {
@@ -164,7 +170,9 @@ export const AppNavigator = createStackNavigator(
     },
     [`${RouteNames.Splash}`]: { screen: SplashScreenContainer },
     [`${RouteNames.Login}`]: { screen: LoginScreenContainer },
+    [`${RouteNames.UserKind}`]: { screen: UserKindScreenContainer },
     [`${RouteNames.SignUp}`]: { screen: SignUpScreenContainer },
+    [`${RouteNames.SignIn}`]: { screen: SignInScreenContainer },
     [`${RouteNames.ForgotPassword}`]: { screen: ForgotPasswordScreenContainer },
     [`${RouteNames.SellDetail}`]: { screen: SellDetailScreenContainer },
     [`${RouteNames.ShoeDetail}`]: { screen: ShoeDetailScreenContainer },
@@ -176,6 +184,11 @@ export const AppNavigator = createStackNavigator(
     [`${RouteNames.ChangePassword}`]: { screen: ChangePasswordScreenContainer },
     [`${RouteNames.ContactInfo}`]: { screen: ContactInfoScreenContainer },
     [`${RouteNames.SendRequireSuccess}`]: { screen: SendRequireSuccessScreenContainer },
+    [`${RouteNames.TrackingSell}`]: { screen: TrackingSellScreenContainer },
+    [`${RouteNames.OrderSell}`]: { screen: OrderSellScreenContainer },
+    [`${RouteNames.OrderAuction}`]: { screen: OrderAuctionScreenContainer },
+    [`${RouteNames.Payment}`]: { screen: PaymentScreenContainer },
+
   },
   {
     initialRouteName: RouteNames.Splash,
