@@ -69,7 +69,7 @@ export default StyleSheet.create({
     // flex: 1,
     flexDirection: "column",
     alignItems: "center",
-    backgroundColor: 'red'
+    backgroundColor: "red"
     // backgroundColor: Assets.Styles.AppSecondaryColorBlurred
   },
 
@@ -101,7 +101,7 @@ export default StyleSheet.create({
     width: 130,
     marginHorizontal: 35,
     height: 1,
-    backgroundColor: Assets.Styles.AppSecondaryColor,
+    backgroundColor: Assets.Styles.AppSecondaryColor
     // marginVertical: 15
   },
 
@@ -119,17 +119,17 @@ export default StyleSheet.create({
   },
 
   authButtonContainer: {
-    flexDirection: 'row',
+    flexDirection: "row",
     justifyContent: "center",
     alignItems: "center",
     height: Assets.Styles.ButtonHeight,
-    backgroundColor: 'black',
-    borderRadius: 0,
-},
-icon: {
-  width: 24,
-  height: 24,
-  resizeMode: 'contain',
-  marginRight: 8,
-}
+    backgroundColor: "black",
+    borderRadius: 0
+  },
+  icon: {
+    width: 24,
+    height: 24,
+    resizeMode: "contain",
+    marginRight: 8
+  }
 });

@@ -28,7 +28,7 @@ const mapDispatchToProps = (dispatch: Function) => ({
 
   onShoeClick: () => {
     const navConfig = {
-      routeName: RouteNames.OrderSell,
+      routeName: RouteNames.OrderSell
     };
     dispatch(NavigationActions.navigate(navConfig));
   }

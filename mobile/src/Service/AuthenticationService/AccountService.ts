@@ -10,10 +10,7 @@ import { Profile } from "../../Shared/Model";
 
 @injectable()
 export class AccountService implements IAccountService {
-
-  public async requestToken(
-    email: string,
-  ): Promise<boolean | undefined> {
+  public async requestToken(email: string): Promise<boolean | undefined> {
     const response = await ApiClient.post(`/account/send-confirmation-token`, { email });
     if (
       response &&
@@ -27,7 +24,7 @@ export class AccountService implements IAccountService {
 
   public async signupEmail(
     email: string,
-    password: string,
+    password: string
   ): Promise<AccountPayload | undefined> {
     const response = await ApiClient.post(`/account/email-signup`, { email, password });
 
@@ -43,7 +40,7 @@ export class AccountService implements IAccountService {
 
   public async loginEmail(
     email: string,
-    password: string,
+    password: string
   ): Promise<AccountPayload | undefined> {
     const response = await ApiClient.post(`/account/email-login`, { email, password });
 

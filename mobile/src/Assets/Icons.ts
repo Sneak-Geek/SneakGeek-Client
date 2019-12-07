@@ -25,5 +25,5 @@ export const Icons = {
   Edit: require("../../../Icons/edit.png"),
   Buy: require("../../../Icons/buy.png"),
   Sell: require("../../../Icons/sell.png"),
-  Share: require("../../../Icons/share.png"),
+  Share: require("../../../Icons/share.png")
 };

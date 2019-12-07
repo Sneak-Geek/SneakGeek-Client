@@ -32,12 +32,12 @@ const Tabs = {
   User: {
     Main: TabUserMain,
     Edit: TabUserEdit,
-    Search: TabUserSearch,
+    Search: TabUserSearch
   },
   Transaction: {
     Buy: TabTransactionBuy,
     History: TabTransactionHistory,
-    Sell: TabTransactionSell,
+    Sell: TabTransactionSell
   }
 };
 

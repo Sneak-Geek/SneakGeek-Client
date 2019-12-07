@@ -54,20 +54,17 @@ export const requestTokenConfirm = (email: string) => {
     try {
       const accountService = container.get<IAccountService>(Types.IAccountService);
 
-        const token = await accountService.requestToken(email);
-        if (token) {
-          return token;
-        }
+      const token = await accountService.requestToken(email);
+      if (token) {
+        return token;
+      }
     } catch (error) {
       dispatch(notifyError());
     }
-  }
-}
+  };
+};
 
-export const emailSignup = (
-  email: string,
-  password: string,
-) => {
+export const emailSignup = (email: string, password: string) => {
   return async (dispatch: Function) => {
     dispatch(signup());
     try {
@@ -83,17 +80,13 @@ export const emailSignup = (
         dispatch(authenticationComplete(accountPayload.user));
         dispatch(notifySignupSuccess());
       }
-
     } catch (error) {
       dispatch(authenticationError(error));
     }
   };
-}
+};
 
-export const emailLogin = (
-  email: string,
-  password: string,
-) => {
+export const emailLogin = (email: string, password: string) => {
   return async (dispatch: Function) => {
     dispatch(login());
     try {
@@ -109,18 +102,17 @@ export const emailLogin = (
         dispatch(authenticationComplete(accountPayload.user));
         dispatch(notifyLoginSuccess());
       }
-
     } catch (error) {
       dispatch(authenticationError(error));
     }
   };
-}
+};
 
 export const notifyError = () => {
   return (dispatch: Function) => {
     dispatch(showNotification("Xảy ra lỗi"));
   };
-}
+};
 
 export const notifySignupSuccess = () => {
   return (dispatch: Function) => {
@@ -275,7 +267,11 @@ export const addOwnedShoe = (
       const accessToken = appSettings.getSettings().CurrentAccessToken;
 
       if (accessToken) {
-        const success: boolean = await accountService.addOnwedShoes(accessToken, shoeId, owned);
+        const success: boolean = await accountService.addOnwedShoes(
+          accessToken,
+          shoeId,
+          owned
+        );
 
         if (success) {
           dispatch(showNotification("Đã thêm thành công"));
