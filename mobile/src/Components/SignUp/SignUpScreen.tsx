@@ -6,6 +6,7 @@ import {
 } from "react-navigation";
 import { Icon } from 'react-native-elements';
 import * as Assets from "../../Assets";
+import KeyboardSpacer from 'react-native-keyboard-spacer';
 
 interface ISignUpScreenState {
     email: string;
@@ -86,6 +87,7 @@ export class SignUpScreen extends React.Component<ISignUpScreenProps, ISignUpScr
                         </View>
                     </View>
                     {this.renderButton()}
+                    {Assets.Device.IS_IOS && <KeyboardSpacer topSpacing={Assets.Device.isIphoneX ? -Assets.Device.bottomSpace : 0} />}
                 </View>
             </SafeAreaView>
         )
@@ -105,6 +107,7 @@ export class SignUpScreen extends React.Component<ISignUpScreenProps, ISignUpScr
                     placeholderColor="rgba(0, 0, 0, 0.4)"
                     onChangeText={(email) => this.setState({ email }, () => this.validateButton())}
                     selectionColor={Assets.Styles.AppPrimaryColor}
+                    autoCapitalize="none"
                 />
             </View>
         )
@@ -121,6 +124,7 @@ export class SignUpScreen extends React.Component<ISignUpScreenProps, ISignUpScr
                     placeholderColor="rgba(0, 0, 0, 0.4)"
                     onChangeText={(password) => this.setState({ password }, () => this.validateButton())}
                     selectionColor={Assets.Styles.AppPrimaryColor}
+                    autoCapitalize="none"
                 />
             </View>
         )

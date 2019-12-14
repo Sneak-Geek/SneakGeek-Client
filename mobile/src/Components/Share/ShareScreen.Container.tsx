@@ -3,23 +3,18 @@
 //!
 
 import { connect } from "react-redux";
-import { UserKindScreen } from "./UserKindScreen";
+import { ShareScreen } from "./ShareScreen";
 import { IAppState } from "../../Store";
 import { RouteNames } from "../../Navigation";
-import { StackActions } from "react-navigation";
+import { NavigationActions } from "react-navigation";
+
 const mapStateToProps = (_state: IAppState) => ({});
 const mapDispatchToProps = (dispatch: Function) => ({
 
-    navigateToHome: () => {
-        dispatch(
-            StackActions.replace({
-                routeName: RouteNames.Tabs.TabRoot
-            }),
-        );
-    },
+    
 });
 
-export const UserKindScreenContainer = connect(
+export const ShareScreenContainer = connect(
     mapStateToProps,
     mapDispatchToProps
-)(UserKindScreen);
+)(ShareScreen);

@@ -7,12 +7,31 @@ import {
 } from "react-navigation";
 import * as Assets from "../../Assets";
 import { TextInput } from 'react-native-gesture-handler';
+import ImagePicker, { ImagePickerResponse } from "react-native-image-picker";
 
 interface IContactInfoScreenProps {
     navigateToSendRequireSuccess: () => void;
+    onShoePictureAdded: (picUrl: string) => void;
+
 }
 
-export class ContactInfoScreen extends React.Component<IContactInfoScreenProps> {
+interface IContactInfoScreenState {
+    pictures: (string | null)[];
+}
+
+export class ContactInfoScreen extends React.Component<IContactInfoScreenProps, IContactInfoScreenState> {
+
+    state = {
+        pictures: [null]
+    };
+
+    private readonly imagePickerOptions = {
+        title: "Upload images",
+        storageOptions: {
+            skipBackup: true,
+            path: "images"
+        }
+    };
 
     static navigationOptions = (transitionProp: NavigationScreenProps) => ({
         headerStyle: ({
@@ -26,7 +45,7 @@ export class ContactInfoScreen extends React.Component<IContactInfoScreenProps> 
                 name={"ios-arrow-back"}
                 size={28}
                 containerStyle={{ marginLeft: 10 }}
-                onPress={() => transitionProp.navigation.dispatch(StackActions.pop({n: 1}))}
+                onPress={() => transitionProp.navigation.dispatch(StackActions.pop({ n: 1 }))}
             />
         ),
     });
@@ -43,17 +62,18 @@ export class ContactInfoScreen extends React.Component<IContactInfoScreenProps> 
                 <View style={styles.container}>
                     <ScrollView>
                         <Text style={styles.title}>Chúng tôi có thể giúp gì bạn</Text>
-                        {this.renderSelect()}
-                        {this.renderInput()}
-                        {this.renderInfo()}
+                        {this._renderSelect()}
+                        {this._renderInput()}
+                        {this._renderUpImage()}
+                        {this._renderInfo()}
                     </ScrollView>
-                    {this.renderButton()}
+                    {this._renderButton()}
                 </View>
             </SafeAreaView>
         )
     }
 
-    private renderSelect() {
+    private _renderSelect() {
         return (
             <TouchableOpacity style={styles.selectContainer}>
                 <Text style={styles.problem}>Vấn đề của tôi là</Text>
@@ -62,7 +82,7 @@ export class ContactInfoScreen extends React.Component<IContactInfoScreenProps> 
         )
     }
 
-    private renderInput() {
+    private _renderInput() {
         return (
             <View style={styles.inputContainer}>
                 <TextInput
@@ -74,7 +94,82 @@ export class ContactInfoScreen extends React.Component<IContactInfoScreenProps> 
         )
     }
 
-    private renderInfo() {
+    private _renderUpImage() {
+        return (
+            <View style={styles.upImageContainer}>
+                <Text style={styles.titleUpImage}>Ảnh đính kèm</Text>
+                <ScrollView
+                    style={{ flex: 1 }}
+                    horizontal={true}
+                    showsHorizontalScrollIndicator={false}
+                >
+                    <View style={{ flexDirection: "row" }}>
+                        {this._renderImagePicker()}
+                        {this.state.pictures.map((item, index) => {
+                            if (!item) {
+                                return this._renderThumbImage(index);
+                            }
+
+                            return this._renderPicture(item, index);
+                        })}
+                    </View>
+                </ScrollView>
+            </View>
+        )
+    }
+
+    private _renderImagePicker(): JSX.Element {
+        return (
+            <View style={styles.row}>
+                <TouchableOpacity style={{ paddingRight: 20 }}
+                // onPress={this._launchSystemImagePicker.bind(this)}
+                >
+                    <Image source={Assets.Icons.ContainerCamera} style={styles.containerCamera} />
+                </TouchableOpacity>
+            </View>
+        );
+    }
+
+    private _renderThumbImage(index: number): JSX.Element {
+        return (
+            <View key ={index}style={styles.row}>
+                <View style={{ paddingRight: 20 }}
+                // onPress={this._launchSystemImagePicker.bind(this)}
+                >
+                    <Image source={Assets.Icons.DashContainer} style={styles.containerCamera} />
+                </View>
+            </View>
+        );
+    }
+    private _launchSystemImagePicker(): void {
+        ImagePicker.launchImageLibrary(this.imagePickerOptions, (response: ImagePickerResponse) => {
+            if (!response.didCancel && !response.error) {
+                console.log(`Image picked: ${response.uri}`);
+                this.setState(prevState => {
+                    this.props.onShoePictureAdded(response.uri);
+
+                    return {
+                        pictures: [...prevState.pictures, response.uri]
+                    };
+                });
+            }
+        });
+    }
+
+    private _renderPicture(pictureUri: string | null, index: number) {
+        pictureUri = pictureUri as string;
+
+        return (
+            <Image
+                key={index}
+                source={{ uri: pictureUri }}
+                style={styles.imageContainer}
+                resizeMode={"cover"}
+            />
+        );
+    }
+
+    private _renderInfo() {
         return (
             <Text style={styles.info}>
                 {`Công ty TNHH Sneal Geek Việt Nam\nSneak Geek Vietnam Company Ltd.\nEmail: help@sneakgeek.vn`}
@@ -82,13 +177,13 @@ export class ContactInfoScreen extends React.Component<IContactInfoScreenProps> 
         )
     }
 
-    private renderButton() {
+    private _renderButton() {
         return (
-          <TouchableOpacity style={styles.buttonContainer} onPress={this.props.navigateToSendRequireSuccess}>
-            <Text style={styles.titleButton}>Xác nhận</Text>
-          </TouchableOpacity>
+            <TouchableOpacity style={styles.buttonContainer} onPress={this.props.navigateToSendRequireSuccess}>
+                <Text style={styles.titleButton}>Xác nhận</Text>
+            </TouchableOpacity>
         )
-      }
+    }
 }
 
 const styles = StyleSheet.create({
@@ -155,10 +250,33 @@ const styles = StyleSheet.create({
         height: 52,
         alignItems: 'center',
         justifyContent: 'center',
-      },
-      titleButton: {
+    },
+    titleButton: {
         fontSize: 20,
         fontFamily: 'RobotoCondensed-Regular',
         color: 'white',
-      }
+    },
+    titleUpImage: {
+        fontFamily: 'RobotoCondensed-Regular',
+        fontSize: 13,
+        paddingBottom: 10,
+    },
+    upImageContainer: {
+        paddingHorizontal: 20,
+        paddingTop: 38,
+    },
+    imageContainer: {
+        width: 93,
+        aspectRatio: 1,
+        marginRight: 12
+    },
+    row: {
+        flexDirection: 'row',
+        alignItems: 'flex-start',
+    },
+    containerCamera: {
+        width: 93,
+        height: 93,
+        resizeMode: 'contain',
+    },
 })

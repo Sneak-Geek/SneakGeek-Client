@@ -21,9 +21,10 @@ import { NetworkRequestState } from "../../../Shared/State";
 const optionsList = [
   {
     title: "Họ",
+    placeholder: "Họ",
     value: (profile: Profile) =>
-      // profile.userProvidedName ? profile.userProvidedName.lastName : "Trung",
-      "trung",
+      profile.userProvidedName ? profile.userProvidedName.lastName : "",
+      // "trung",
     onUpdate: (value: string, profile: Profile) => {
       return Object.assign(profile, {
         userProvidedName: {
@@ -36,6 +37,7 @@ const optionsList = [
   },
   {
     title: "Tên",
+    placeholder: "Tên",
     value: (profile: Profile) =>
       profile.userProvidedName ? profile.userProvidedName.firstName : "",
     onUpdate: (value: string, profile: Profile) => {
@@ -50,6 +52,7 @@ const optionsList = [
   },
   {
     title: "Giới tính",
+    placeholder: "Giới tính",
     value: (profile: Profile) => profile.userProvidedGender,
     onUpdate: (value: string, profile: Profile) => {
       return Object.assign(profile, {
@@ -60,6 +63,7 @@ const optionsList = [
   },
   {
     title: "Cỡ giày",
+    placeholder: "Cỡ giày",
     value: (profile: Profile) => profile.userProvidedShoeSize,
     onUpdate: (value: string, profile: Profile) => {
       return Object.assign(profile, {
@@ -70,6 +74,7 @@ const optionsList = [
   },
   {
     title: "Email",
+    email: "Email",
     value: (profile: Profile) => profile.userProvidedEmail,
     onUpdate: (value: string, profile: Profile) => {
       return Object.assign(profile, {
@@ -80,6 +85,7 @@ const optionsList = [
   },
   {
     title: "Số Điện thoại",
+    placeholder: "Số Điện thoại",
     value: (profile: Profile) => profile.userProvidedPhoneNumber,
     onUpdate: (value: string, profile: Profile) => {
       return Object.assign(profile, {
@@ -158,12 +164,13 @@ export class TabUserEditScreen extends React.Component<IUserEditScreenProps, IUs
           >
             <Text.Headline style={{ flex: 1, fontSize: 14, fontFamily: 'RobotoCondensed-Bold' }}>{item.title.toUpperCase()}</Text.Headline>
             <TextInput
-              // value={
-              //   updatedInfo && item.value(updatedInfo)
-              //     ? (item.value(updatedInfo) as any).toString()
-              //     : ""
-              // }
-              value="Trung"
+              value={
+                updatedInfo && item.value(updatedInfo)
+                  ? (item.value(updatedInfo) as any).toString()
+                  : ""
+              }
+              placeholder={item.placeholder}
+              // value="Trung"
               onChangeText={value => {
                 if (updatedInfo) {
                   const newProfile = item.onUpdate(value, updatedInfo);
@@ -179,9 +186,9 @@ export class TabUserEditScreen extends React.Component<IUserEditScreenProps, IUs
   }
 
   private _renderUpdateButton(): JSX.Element | null {
-    // if (!this.state.editMode) {
-    //   return null;
-    // }
+    if (!this.state.editMode) {
+      return null;
+    }
 
     return (
       <View style={styles.bottomButtonContainer}>

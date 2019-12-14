@@ -25,7 +25,6 @@ export module AccountActions {
   export const UPDATE_UPDATE_USER_PROFILE = "UPDATE_UPDATE_USER_PROFILE";
   export const EMAIL_SIGNUP = "EMAIL_SIGNUP";
   export const EMAIL_LOGIN = "EMAIL_LOGIN";
-  export const REQUEST_TOKEN_SUCCESS = "REQUEST_TOKEN_SUCCESS";
 }
 
 export const cancelThirdPartyAuthentication = createAction<"facebook" | "google">(
@@ -46,11 +45,54 @@ export const updateUpdateUserProfile = createAction<UpdateUserProfilePayload>(
 
 export const signup = createAction(AccountActions.EMAIL_SIGNUP);
 export const login = createAction(AccountActions.EMAIL_LOGIN);
-export const requestTokenSuccess = createAction(AccountActions.REQUEST_TOKEN_SUCCESS);
+
+export const checkEmail = (email: string) => {
+  return async (dispatch: Function) => {
+    try {
+      const accountService = container.get<IAccountService>(Types.IAccountService);
+
+      const response = await accountService.checkEmail(email);
+      if (response) {
+        return response;
+      }
+    } catch (error) {
+      dispatch(notifyError());
+    }
+  };
+};
+
+export const setNewPassword = (email: string, token: string, newPassword: string) => {
+  return async (dispatch: Function) => {
+    try {
+      const accountService = container.get<IAccountService>(Types.IAccountService);
+
+      const response = await accountService.setNewPassword(email, token, newPassword);
+      if (response) {
+        return response;
+      }
+    } catch (error) {
+      dispatch(notifyError());
+    }
+  };
+};
+
+export const verifyToken = (email: string, token: string) => {
+  return async (dispatch: Function) => {
+    try {
+      const accountService = container.get<IAccountService>(Types.IAccountService);
+
+      const response = await accountService.verifyToken(email, token);
+      if (response) {
+        return response;
+      }
+    } catch (error) {
+      dispatch(notifyError());
+    }
+  };
+};
 
 export const requestTokenConfirm = (email: string) => {
   return async (dispatch: Function) => {
-    dispatch(requestTokenSuccess());
     try {
       const accountService = container.get<IAccountService>(Types.IAccountService);
 
@@ -72,13 +114,14 @@ export const emailSignup = (email: string, password: string) => {
       const settings = container.get<IAppSettingsService>(Types.IAppSettingsService);
 
       const accountPayload = await accountService.signupEmail(email, password);
+      console.log("TCL: emailSignup -> accountPayload", accountPayload);
       if (accountPayload) {
         await settings.setValue(SettingsKeys.CurrentAccessToken, accountPayload.token);
         await settings.loadServerSettings();
 
         await dispatch(getUserProfile(accountPayload.token));
-        dispatch(authenticationComplete(accountPayload.user));
-        dispatch(notifySignupSuccess());
+        dispatch(showNotification("Đăng ký thành công"));
+        return accountPayload;
       }
     } catch (error) {
       dispatch(authenticationError(error));
@@ -94,6 +137,7 @@ export const emailLogin = (email: string, password: string) => {
       const settings = container.get<IAppSettingsService>(Types.IAppSettingsService);
 
       const accountPayload = await accountService.loginEmail(email, password);
+      console.log("TCL: emailLogin -> accountPayload", accountPayload);
       if (accountPayload) {
         await settings.setValue(SettingsKeys.CurrentAccessToken, accountPayload.token);
         await settings.loadServerSettings();
@@ -103,20 +147,14 @@ export const emailLogin = (email: string, password: string) => {
         dispatch(notifyLoginSuccess());
       }
     } catch (error) {
-      dispatch(authenticationError(error));
+      dispatch(showNotification("Email hoặc mật khẩu không chính xác!"));
     }
   };
 };
 
 export const notifyError = () => {
   return (dispatch: Function) => {
-    dispatch(showNotification("Xảy ra lỗi"));
-  };
-};
-
-export const notifySignupSuccess = () => {
-  return (dispatch: Function) => {
-    dispatch(showNotification("Đăng ký thành công"));
+    dispatch(showNotification("Xảy ra lỗi!"));
   };
 };
 
@@ -223,7 +261,6 @@ export const getUserProfile = (accessToken: string) => {
     try {
       const accountService = container.get<IAccountService>(Types.IAccountService);
       const userProfile = await accountService.getUserProfile(accessToken);
-
       if (userProfile) {
         dispatch(
           updateGetUserProfile({ state: NetworkRequestState.SUCCESS, profile: userProfile })

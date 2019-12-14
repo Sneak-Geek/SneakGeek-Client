@@ -56,6 +56,10 @@ const mapDispatchToProps = (dispatch: Function) => {
         })
       );
     },
+
+    checkEmail: (email: string) => {
+      return dispatch(Actions.checkEmail(email));
+    }
   };
 };
 

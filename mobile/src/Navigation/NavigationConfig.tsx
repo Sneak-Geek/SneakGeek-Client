@@ -36,6 +36,8 @@ import { OrderSellScreenContainer } from "../Components/OrderSell/OrderSellScree
 import { OrderAuctionScreenContainer } from "../Components/OrderAuction/OrderAuctionScreen.Container";
 import { UserKindScreenContainer } from "../Components/UserKind/UserKindScreen.Container";
 import { PaymentScreenContainer } from "../Components/Payment/PaymenScreen.Container";
+import { NotiSettingScreenContainer } from "../Components/NotiSetting/NotiSettingScreen.Container";
+import { ShareScreenContainer } from "../Components/Share/ShareScreen.Container";
 
 // const BuyTabNavigator = createStackNavigator(
 //   {
@@ -188,6 +190,8 @@ export const AppNavigator = createStackNavigator(
     [`${RouteNames.OrderSell}`]: { screen: OrderSellScreenContainer },
     [`${RouteNames.OrderAuction}`]: { screen: OrderAuctionScreenContainer },
     [`${RouteNames.Payment}`]: { screen: PaymentScreenContainer },
+    [`${RouteNames.NotiSetting}`]: { screen: NotiSettingScreenContainer },
+    [`${RouteNames.Share}`]: { screen: ShareScreenContainer },
 
   },
   {

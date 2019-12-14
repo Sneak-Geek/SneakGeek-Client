@@ -20,4 +20,7 @@ export interface IAccountService {
   signupEmail(email: string, password: string): Promise<AccountPayload | undefined>;
   loginEmail(email: string, password: string): Promise<AccountPayload | undefined>;
   requestToken(email: string): Promise<any>;
+  verifyToken(email: string, token: string): Promise<any>;
+  setNewPassword(email: string, token: string, newPassword: string): Promise<boolean>;
+  checkEmail(emai: string): Promise<any>;
 }

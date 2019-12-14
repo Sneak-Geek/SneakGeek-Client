@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { View, StyleSheet, Text, Image, SafeAreaView, TextInput, ScrollView, TouchableOpacity } from 'react-native';
+import { View, StyleSheet, Text, Image, SafeAreaView, TextInput, ScrollView, TouchableOpacity, Alert } from 'react-native';
 import { Icon } from 'react-native-elements';
 import {
     StackActions,
@@ -8,7 +8,6 @@ import {
 import * as Assets from "../../Assets";
 
 interface IForgotPasswordScreenState {
-    showVerification: boolean;
     type: string;
     email: string;
     code: string;
@@ -17,10 +16,13 @@ interface IForgotPasswordScreenState {
 }
 
 interface IForgotPasswordScreenProps {
-    requestTokenConfirm:(email: string) => Promise<{message: string}>
+    requestTokenConfirm: (email: string) => Promise<{ message: string }>;
+    verifyToken: (email: string, token: string) => Promise<{ message: string }>;
+    setNewPassword: (email: string, token: string, newPassword: string) => Promise<{ message: string }>;
+    navigateToHome: () => void;
 }
 
-export class ForgotPasswordScreen extends React.Component<IForgotPasswordScreenProps, IForgotPasswordScreenState > {
+export class ForgotPasswordScreen extends React.Component<IForgotPasswordScreenProps, IForgotPasswordScreenState> {
 
     static navigationOptions = (transitionProp: NavigationScreenProps) => ({
         headerStyle: ({
@@ -43,8 +45,7 @@ export class ForgotPasswordScreen extends React.Component<IForgotPasswordScreenP
     constructor(props: any) {
         super(props)
         this.state = {
-            showVerification: false,
-            email: 'trungdeps177@gmail.com',
+            email: '',
             code: '',
             passwordConfirm: '',
             password: '',
@@ -61,30 +62,44 @@ export class ForgotPasswordScreen extends React.Component<IForgotPasswordScreenP
             this.setState({ type: 'inputEmail' });
         }
     }
+
     onPress = async () => {
-        let { type, email } = this.state;
-        this.setState({ showVerification: true })
+        let { type, email, code, password, passwordConfirm } = this.state;
         if (type === "inputEmail") {
-            let res: {message: string} = await this.props.requestTokenConfirm(email);
+            let res: { message: string } = await this.props.requestTokenConfirm(email);
+            console.log("TCL: ForgotPasswordScreen -> onPress -> res", res)
             if (res) {
                 this.setState({ type: 'inputCode' });
-            }
+            } else { Alert.alert('Thông báo','Email không chính xác')}
         }
         if (type === "inputCode") {
-            this.setState({ type: 'inputPassword' });
+            let res = await this.props.verifyToken(email, code);
+            if (res) {
+                this.setState({ type: 'inputPassword' });
+            } else { Alert.alert('Thông báo', 'Mã code không chính xác')}
+        }
+        if (type === "inputPassword") {
+            if (password.length < 1) {
+                Alert.alert('Thông báo', 'Vui lòng nhập mật khẩu');
+                return;
+            }
+            if (password !== passwordConfirm) {
+                Alert.alert('Thông báo', 'Mật khẩu không trùng nhau');
+                return;
+            }
+            let res = await this.props.setNewPassword(email, code, password);
+            if (res) {
+                this.props.navigateToHome();
+            } else {Alert.alert('Thông báo', 'Quá trình xử lý đã xảy ra lỗi!\nVui lòng thử lại.')}
         }
     }
+
     public render() {
-        let { showVerification } = this.state;
         return (
             <SafeAreaView style={{ flex: 1 }}>
                 <View style={styles.container}>
                     <ScrollView>
-                        {/* {Boolean(showVerification) ?
-                            this.renderInputCode()
-                            :
-                            this.renderInputEmail()
-                        } */}
+
                         {this.renderContent()}
                     </ScrollView>
                 </View>
@@ -125,6 +140,7 @@ export class ForgotPasswordScreen extends React.Component<IForgotPasswordScreenP
                         placeholderColor="rgba(0, 0, 0, 0.4)"
                         onChangeText={(email) => this.setState({ email })}
                         selectionColor={Assets.Styles.AppPrimaryColor}
+                        autoCapitalize="none"
                     />
                 </View>
                 <Image source={Assets.Icons.Thumb1}
@@ -154,8 +170,9 @@ export class ForgotPasswordScreen extends React.Component<IForgotPasswordScreenP
                         placeholder="Mã code"
                         value={code}
                         placeholderColor="rgba(0, 0, 0, 0.4)"
-                        // onChangeText={(email) => this.setState({ email }, () => this.validateButton())}
+                        onChangeText={(code) => this.setState({ code })}
                         selectionColor={Assets.Styles.AppPrimaryColor}
+                        autoCapitalize="none"
                     />
                 </View>
                 <Image source={Assets.Icons.Thumb2}
@@ -184,20 +201,22 @@ export class ForgotPasswordScreen extends React.Component<IForgotPasswordScreenP
                         placeholder="Mật khẩu của bạn"
                         value={password}
                         placeholderColor="rgba(0, 0, 0, 0.4)"
-                        // onChangeText={(email) => this.setState({ email }, () => this.validateButton())}
+                        onChangeText={(password) => this.setState({ password })}
                         selectionColor={Assets.Styles.AppPrimaryColor}
+                        autoCapitalize="none"
                     />
                 </View>
                 <View style={styles.inputContainer}>
-                <TextInput
-                    style={styles.input}
-                    placeholder="Điền lại mật khẩu"
-                    value={passwordConfirm}
-                    placeholderColor="rgba(0, 0, 0, 0.4)"
-                    // onChangeText={(password) => this.setState({ password }, () => this.validateButton())}
-                    selectionColor={Assets.Styles.AppPrimaryColor}
-                />
-            </View>
+                    <TextInput
+                        style={styles.input}
+                        placeholder="Điền lại mật khẩu"
+                        value={passwordConfirm}
+                        placeholderColor="rgba(0, 0, 0, 0.4)"
+                        onChangeText={(passwordConfirm) => this.setState({ passwordConfirm })}
+                        selectionColor={Assets.Styles.AppPrimaryColor}
+                        autoCapitalize="none"
+                    />
+                </View>
                 <Image source={Assets.Icons.Thumb3}
                     style={{
                         marginTop: 48,

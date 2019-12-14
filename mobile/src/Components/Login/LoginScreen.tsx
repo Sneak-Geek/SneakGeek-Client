@@ -10,6 +10,8 @@ import { Account } from "../../Shared/Model";
 import { Text } from "../../Shared/UI";
 import * as Assets from "../../Assets";
 import * as StringUtil from "../../Utilities/StringUtil";
+import KeyboardSpacer from 'react-native-keyboard-spacer';
+import { ScrollView } from "react-native-gesture-handler";
 
 export interface ILoginScreenProps {
   currentAccount: Account | null;
@@ -25,6 +27,7 @@ export interface ILoginScreenProps {
   displayDebugDialog: () => void;
   navigateToSignIn: (email: string) => void;
   navigateToSignUp: () => void;
+  checkEmail: (email: string) => { existStatus: boolean };
 }
 
 interface State {
@@ -53,10 +56,25 @@ export default class LoginScreen extends React.Component<ILoginScreenProps, Stat
     } else { this.setState({ active: false }) }
   }
 
-  login = () => {
+  login = async () => {
     let { active, currentEmail } = this.state;
     if (active) {
-      this.props.navigateToSignIn(currentEmail)
+      let res = await this.props.checkEmail(currentEmail);
+      if (res.existStatus === true) {
+        this.props.navigateToSignIn(currentEmail)
+      } else {
+        Alert.alert(
+          'Thông báo',
+          `Email chưa được đăng ký.\nVui lòng đăng ký!`,
+          [
+            {
+              text: 'Cancel',
+              style: 'cancel',
+            },
+            { text: 'OK', onPress: () => this.props.navigateToSignUp() },
+          ],
+        );
+      }
     } else {
       Alert.alert('Email không hợp lệ')
     }
@@ -65,9 +83,15 @@ export default class LoginScreen extends React.Component<ILoginScreenProps, Stat
   public /** override */ render() {
     return (
       <SafeAreaView style={styles.rootContainer}>
-        {this._renderSocialContainer()}
-        <View style={styles.separator} />
-        {this._renderEmailBasedContainer()}
+        <View style={{ flex: 1 }}>
+          <ScrollView>
+            {this._renderSocialContainer()}
+            <View style={styles.separator} />
+            {this._renderEmailBasedContainer()}
+          </ScrollView>
+        </View>
+        {this._renderButton()}
+        {Assets.Device.IS_IOS && <KeyboardSpacer topSpacing={Assets.Device.isIphoneX ? -Assets.Device.bottomSpace : 0} />}
       </SafeAreaView>
     );
   }
@@ -86,12 +110,12 @@ export default class LoginScreen extends React.Component<ILoginScreenProps, Stat
           Assets.Icons.Facebook,
           this.props.facebookLogin
         )}
-        {this._renderSocialButton(
+        {/* {this._renderSocialButton(
           "Email",
           Assets.Icons.Zalo,
           this.props.navigateToSignUp,
           // () => { this.props.emailSignup('trung1@example.com', '123123'); },
-        )}
+        )} */}
       </View>
     );
   }
@@ -128,25 +152,32 @@ export default class LoginScreen extends React.Component<ILoginScreenProps, Stat
             }
             underlineColorAndroid={"transparent"}
             inputStyle={styles.emailInputStyle}
+            autoCapitalize="none"
           />
         </View>
-        <Button
-          title="Đăng nhập"
-          buttonStyle={[
-            styles.authButtonContainer,
-            {
-              backgroundColor: this.state.active
-                ? Assets.Styles.AppPrimaryColor
-                : Assets.Styles.ButtonDisabledColor
-            }
-          ]}
-          titleStyle={{
-            fontSize: 18,
-            fontFamily: 'RobotoCondensed-Regular',
-          }}
-          onPress={this.login}
-        />
+
       </View>
     );
+  }
+
+  _renderButton() {
+    return (
+      <Button
+        title="Đăng nhập"
+        buttonStyle={[
+          styles.authButtonContainer,
+          {
+            backgroundColor: this.state.active
+              ? Assets.Styles.AppPrimaryColor
+              : Assets.Styles.ButtonDisabledColor,
+          }
+        ]}
+        titleStyle={{
+          fontSize: 18,
+          fontFamily: 'RobotoCondensed-Regular',
+        }}
+        onPress={this.login}
+      />
+    )
   }
 }

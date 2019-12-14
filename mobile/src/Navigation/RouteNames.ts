@@ -24,6 +24,8 @@ export const RouteNames = {
   OrderAuction: "OrderAuction",
   OrderSell: "OrderSell",
   Payment: "Payment",
+  NotiSetting: "NotiSetting",
+  Share: "Share",
   Tabs: {
     TabRoot: "TabRoot",
     HomeTab: {

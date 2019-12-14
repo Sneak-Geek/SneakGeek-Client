@@ -57,7 +57,7 @@ export class ShoeSizeScreen extends React.Component<IShoeSizeScreenState> {
         name={"ios-arrow-back"}
         size={28}
         containerStyle={{ marginLeft: 10 }}
-        onPress={() => transitionProp.navigation.dispatch(StackActions.popToTop())}
+        onPress={() => transitionProp.navigation.dispatch(StackActions.pop({ n: 1 }))}
       />
     ),
     headerRight: (
@@ -165,9 +165,7 @@ export class ShoeSizeScreen extends React.Component<IShoeSizeScreenState> {
               </View>
             )
           })
-
         }
-
       </View>
     )
   }

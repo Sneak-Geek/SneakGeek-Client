@@ -9,7 +9,8 @@ import { NavigationActions } from "react-navigation";
 import { RouteNames } from "../../../Navigation";
 
 const mapStateToProps = (state: IAppState) => ({
-  account: state.AccountState.currentAccount
+  account: state.AccountState.currentAccount,
+  profile: state.AccountState.userProfileState.profile,
 });
 
 const mapDispatchToProps = (dispatch: Function) => {
@@ -68,7 +69,24 @@ const mapDispatchToProps = (dispatch: Function) => {
           routeName: RouteNames.UserKind,
         })
       )
-    }
+    },
+
+    navigateToNotiSetting: () => {
+      dispatch(
+        NavigationActions.navigate({
+          routeName: RouteNames.NotiSetting,
+        })
+      )
+    },
+
+    navigateToShare: () => {
+      dispatch(
+        NavigationActions.navigate({
+          routeName: RouteNames.Share,
+        })
+      )
+    },
+
   };
 };
 

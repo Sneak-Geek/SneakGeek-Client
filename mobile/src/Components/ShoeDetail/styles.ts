@@ -107,7 +107,7 @@ export default StyleSheet.create({
 
   shoeSize: {
     color: Assets.Styles.AppSecondaryColor,
-    marginVertical: 35
+    fontSize: 24
   },
 
   smallButtonBorder: {

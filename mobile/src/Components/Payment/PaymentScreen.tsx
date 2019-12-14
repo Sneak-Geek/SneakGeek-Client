@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { View, StyleSheet, SafeAreaView, TouchableOpacity, Image, Text, ScrollView } from 'react-native';
+import { View, StyleSheet, SafeAreaView, TouchableOpacity, Image, Text, ScrollView, Alert } from 'react-native';
 import {
   StackActions,
   NavigationScreenProps,
@@ -7,6 +7,7 @@ import {
 import { Icon } from 'react-native-elements';
 import * as Assets from "../../Assets";
 import { RowCard } from '../../Shared/UI';
+import ActionSheet from 'react-native-actionsheet'
 
 interface IPaymentScreenState {
 
@@ -37,6 +38,14 @@ export class PaymentScreen extends React.Component<IPaymentScreenProps, IPayment
     ),
   });
 
+  state = {
+    value: '',
+  }
+  public actionSheetOpress = (index: number) => {
+    if (index === 0) { this.setState({ value: 'Thanh toán nội địa' }) }
+    if (index === 1) { this.setState({ value: 'Thanh toán quốc tế' }) }
+  }
+
   public render() {
     return (
       <SafeAreaView style={styles.container}>
@@ -47,6 +56,7 @@ export class PaymentScreen extends React.Component<IPaymentScreenProps, IPayment
           </ScrollView>
         </View>
         {this._renderButton()}
+        {this._renderActionSheet()}
       </SafeAreaView>
     )
   }
@@ -93,9 +103,11 @@ export class PaymentScreen extends React.Component<IPaymentScreenProps, IPayment
         />
         <RowCard
           title='THANH TOÁN'
-          descrip='Lựa chọn'
+          value={this.state.value}
+          buttonTitle="Lựa chọn"
           border
           descripStyle={{ opacity: 0.3 }}
+          onPress={() => this.ActionSheet.show()}
         />
         <RowCard
           title='GIÁ MUA'
@@ -119,6 +131,17 @@ export class PaymentScreen extends React.Component<IPaymentScreenProps, IPayment
       <TouchableOpacity style={styles.containerButton} >
         <Text style={styles.titleButton}>MUA SẢN PHẨM</Text>
       </TouchableOpacity>
+    )
+  }
+
+  private _renderActionSheet() {
+    return (
+      <ActionSheet
+        ref={(ref: any) => this.ActionSheet = ref}
+        options={['Thanh toán nội địa', 'Thanh toán quốc tế', 'Cancel']}
+        cancelButtonIndex={2}
+        onPress={(index: number) => this.actionSheetOpress(index)}
+      />
     )
   }
 

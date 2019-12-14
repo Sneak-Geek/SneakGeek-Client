@@ -1,13 +1,10 @@
 import * as React from 'react';
 import { View, StyleSheet, SafeAreaView, Text, ScrollView, TouchableOpacity } from 'react-native';
-import {
-    NavigationScreenProps
-} from "react-navigation";
 import SmoothPicker from "react-native-smooth-picker";
 import * as Assets from "../../Assets";
 
 interface IUserKindScreenProps {
-
+    navigateToHome:() => void;
 }
 
 interface IUserKindScreenState {
@@ -17,7 +14,7 @@ interface IUserKindScreenState {
     selectedSize: { id: number, title: string },
 }
 export class UserKindScreen extends React.Component<IUserKindScreenProps, IUserKindScreenState> {
-    static navigationOptions = (transitionProp: NavigationScreenProps) => ({
+    static navigationOptions = () => ({
         header: null
     });
 
@@ -114,6 +111,7 @@ export class UserKindScreen extends React.Component<IUserKindScreenProps, IUserK
         return (
                 <TouchableOpacity
                     style={[styles.buttonContainer, { backgroundColor:'black' }]}
+                    onPress={this.props.navigateToHome}
                 >
                     <Text style={[styles.titleButton, { color: 'white' }]}>Xác nhận</Text>
                 </TouchableOpacity>

@@ -10,7 +10,35 @@ import { Profile } from "../../Shared/Model";
 
 @injectable()
 export class AccountService implements IAccountService {
-  public async requestToken(email: string): Promise<boolean | undefined> {
+  public async /** override */ setNewPassword(
+    email: string,
+    token: string,
+    newPassword: string
+  ): Promise<boolean> {
+    const response = await ApiClient.put("/account/set-user-password", {
+      email,
+      token,
+      newPassword
+    });
+    if (response && response.status === HttpStatus.OK) {
+      return true;
+    }
+    return false;
+  }
+
+  public async verifyToken(email: string, token: string): Promise<any | undefined> {
+    const response = await ApiClient.post(`/account/verify-token`, { email, token });
+    if (
+      response &&
+      (response.status === HttpStatus.CREATED || response.status === HttpStatus.OK)
+    ) {
+      return response.data;
+    }
+
+    return undefined;
+  }
+
+  public async requestToken(email: string): Promise<any | undefined> {
     const response = await ApiClient.post(`/account/send-confirmation-token`, { email });
     if (
       response &&
@@ -78,6 +106,15 @@ export class AccountService implements IAccountService {
     const response = await ApiClient.get(`/account/get`, { headers });
     if (response && response.status === HttpStatus.OK) {
       return response.data as AccountPayload;
+    }
+
+    return undefined;
+  }
+
+  public async /** override */ checkEmail(email: string): Promise<any | undefined> {
+    const response = await ApiClient.get(`/account/email-exists?email=${email}`);
+    if (response && response.status === HttpStatus.OK) {
+      return response.data;
     }
 
     return undefined;

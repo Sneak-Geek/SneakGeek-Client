@@ -9,6 +9,7 @@ import {
 import { Icon, Button } from 'react-native-elements';
 import * as Assets from "../../Assets";
 import * as StringUtil from "../../Utilities/StringUtil";
+import KeyboardSpacer from 'react-native-keyboard-spacer';
 
 interface ISignInScreenState {
     email: string;
@@ -57,7 +58,7 @@ export class SignInScreen extends React.Component<ISignInScreenProps, ISignInScr
         }
     }
 
-    
+
 
     validateButton = () => {
         let { email, password } = this.state;
@@ -75,7 +76,7 @@ export class SignInScreen extends React.Component<ISignInScreenProps, ISignInScr
                 <View style={styles.container}>
                     <View style={{ flex: 1 }}>
                         <Text style={styles.title}>
-                            {`Xin chào, email của bạn chưa đăng ký, mời\nbạn điền mật khẩu để tạo tài khoản mới:`}
+                            {`Vui lòng nhập mật khẩu để đăng nhập`}
                         </Text>
                         <View style={{ paddingHorizontal: 42 }}>
                             {this.renderEmail()}
@@ -84,6 +85,7 @@ export class SignInScreen extends React.Component<ISignInScreenProps, ISignInScr
                         </View>
                     </View>
                     {this.renderButton()}
+                    {Assets.Device.IS_IOS && <KeyboardSpacer topSpacing={Assets.Device.isIphoneX ? -Assets.Device.bottomSpace : 0} />}
                 </View>
             </SafeAreaView>
         )
@@ -103,6 +105,7 @@ export class SignInScreen extends React.Component<ISignInScreenProps, ISignInScr
                     placeholderColor="rgba(0, 0, 0, 0.4)"
                     onChangeText={(email) => this.setState({ email }, () => this.validateButton())}
                     selectionColor={Assets.Styles.AppPrimaryColor}
+                    autoCapitalize="none"
                 />
             </View>
         )
@@ -113,6 +116,7 @@ export class SignInScreen extends React.Component<ISignInScreenProps, ISignInScr
         return (
             <View style={styles.inputContainer}>
                 <TextInput
+                    autoFocus
                     style={styles.input}
                     placeholder="Mật khẩu"
                     value={password}
@@ -120,6 +124,7 @@ export class SignInScreen extends React.Component<ISignInScreenProps, ISignInScr
                     onChangeText={(password) => this.setState({ password }, () => this.validateButton())}
                     selectionColor={Assets.Styles.AppPrimaryColor}
                     secureTextEntry={true}
+                    autoCapitalize="none"
                 />
             </View>
         )

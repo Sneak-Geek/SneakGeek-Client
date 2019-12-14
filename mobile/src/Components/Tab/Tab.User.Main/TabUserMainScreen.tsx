@@ -4,14 +4,16 @@
 
 import * as React from "react";
 import { NavigationScreenOptions } from "react-navigation";
-import { View, StyleSheet, SafeAreaView, TouchableOpacity, ScrollView } from "react-native";
+import { View, StyleSheet, SafeAreaView, TouchableOpacity, ScrollView, Alert } from "react-native";
 import { Image } from "react-native-elements";
 import { Text } from "../../../Shared/UI";
 import * as Assets from "../../../Assets";
-import { Account } from "../../../Shared/Model";
+import { Account, Profile } from "../../../Shared/Model";
+import ActionSheet from 'react-native-actionsheet'
 
 export interface IUserTabMainProps {
   account: Account;
+  profile: Profile;
   navigateToUserEdit: () => void;
   navigateToPayments: () => void;
   navigateToShoeSize: () => void;
@@ -19,6 +21,8 @@ export interface IUserTabMainProps {
   navigateToContactInfo: () => void;
   navigateToSearch: () => void;
   navigateToUserKind: () => void;
+  navigateToNotiSetting: () => void;
+  navigateToShare: () => void;
 }
 
 type UserListOption = {
@@ -61,12 +65,12 @@ export default class TabUserMainScreen extends React.Component<IUserTabMainProps
     {
       title: "Cài đặt thông báo",
       hasMarginBottom: true,
-      onClick: () => {}
+      onClick: () => this.props.navigateToNotiSetting()
     },
     {
       title: "Chia sẻ ứng dụng",
       hasMarginBottom: false,
-      onClick: () => {}
+      onClick: () => this.props.navigateToShare()
     },
     {
       title: "Thông tin phiên bản",
@@ -82,8 +86,20 @@ export default class TabUserMainScreen extends React.Component<IUserTabMainProps
 
   public constructor /** override */(props: any) {
     super(props);
+    this.state = {
+      profile: {},
+    }
   }
 
+  public componentDidMount = async () => {
+      // let res = await this.props.getUserProfile();
+      console.log('thong tin khach', this.props.profile )
+  }
+
+  public  actionSheetOpress = (index: number) => {
+    if (index === 0) { Alert.alert('Chọn ảnh từ thư viện') }
+    if (index === 1) { Alert.alert('Chụp ảnh') }
+  }
   public /** override */ render(): React.ReactNode {
     return (
       <SafeAreaView>
@@ -93,6 +109,7 @@ export default class TabUserMainScreen extends React.Component<IUserTabMainProps
             {this._renderBasicUserData()}
             {this._renderSettingsList()}
             {this._renderLogoutButton()}
+            {this._renderActionSheet()}
           </View>
         </ScrollView>
       </SafeAreaView>
@@ -113,7 +130,7 @@ export default class TabUserMainScreen extends React.Component<IUserTabMainProps
         <View style={{ position: "relative" }}>
           {/* <Image source={{ uri: photo }} style={styles.avatarContainer} /> */}
           <Image source={{ uri: 'https://saokpop.com/wp-content/uploads/2018/11/tuzy.jpg' }} style={styles.avatarContainer} />
-          <TouchableOpacity style={styles.cameraButtonContainer}>
+          <TouchableOpacity style={styles.cameraButtonContainer} onPress={() =>  this.ActionSheet.show()}>
             <Image source={Assets.Icons.ProfileCamera} style={{ width: 22, height: 18 }} />
           </TouchableOpacity>
         </View>
@@ -157,6 +174,17 @@ export default class TabUserMainScreen extends React.Component<IUserTabMainProps
         <Text.Body style={{ color: 'white', fontSize: 14, fontFamily: 'RobotoCondensed-Bold' }}>Đăng xuất</Text.Body>
       </TouchableOpacity>
     );
+  }
+
+  private _renderActionSheet() {
+    return (
+      <ActionSheet
+      ref={(ref: any) => this.ActionSheet = ref}
+      options={['Đăng ảnh từ Thư Viện', 'Chụp từ Camera', 'Cancel']}
+      cancelButtonIndex={2}
+      onPress={(index: number) => this.actionSheetOpress(index)}
+    />
+    )
   }
 }
 

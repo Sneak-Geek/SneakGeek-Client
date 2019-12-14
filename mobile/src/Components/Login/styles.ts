@@ -15,7 +15,8 @@ export default StyleSheet.create({
 
   socialContainer: {
     marginHorizontal: 42,
-    height: "45%",
+    paddingTop: 83,
+    // height: "45%",
     alignItems: "stretch",
     flexDirection: "column",
     justifyContent: "flex-end"
@@ -77,7 +78,8 @@ export default StyleSheet.create({
     backgroundColor: "#BCBBC1",
     height: 1,
     alignSelf: "stretch",
-    marginHorizontal: 42
+    marginHorizontal: 42,
+    marginVertical: 70
   } as ViewStyle,
 
   emailContainerStyle: {
