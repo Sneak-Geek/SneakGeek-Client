@@ -3,15 +3,22 @@
 //!
 
 import * as React from "react";
-import { View, TouchableOpacity, Image, SafeAreaView, Alert } from "react-native";
+import {
+  View,
+  TouchableOpacity,
+  Image,
+  SafeAreaView,
+  ActivityIndicator
+} from "react-native";
 import styles from "./styles";
 import { Input, Button, Icon } from "react-native-elements";
 import { Account } from "../../Shared/Model";
 import { Text } from "../../Shared/UI";
 import * as Assets from "../../Assets";
 import * as StringUtil from "../../Utilities/StringUtil";
-import KeyboardSpacer from 'react-native-keyboard-spacer';
+import KeyboardSpacer from "react-native-keyboard-spacer";
 import { ScrollView } from "react-native-gesture-handler";
+import { NetworkRequestState } from "../../Shared/State";
 
 export interface ILoginScreenProps {
   currentAccount: Account | null;
@@ -19,20 +26,23 @@ export interface ILoginScreenProps {
   authenticationError?: any;
   isAuthenticatingWithFacebook: boolean;
   isAuthenticationCancelled: boolean;
+  checkAccountWithEmailState: {
+    state: NetworkRequestState;
+    error?: any;
+    existStatus?: boolean;
+  };
 
   // dispatch props
   facebookLogin: () => void;
   googleLogin: () => void;
   navigateToHome: () => void;
   displayDebugDialog: () => void;
-  navigateToSignIn: (email: string) => void;
-  navigateToSignUp: () => void;
-  checkEmail: (email: string) => { existStatus: boolean };
+  checkEmailExists: (email: string) => void;
 }
 
 interface State {
   currentEmail: string;
-  active: boolean;
+  shouldEmailActive: boolean;
 }
 
 export default class LoginScreen extends React.Component<ILoginScreenProps, State> {
@@ -44,39 +54,19 @@ export default class LoginScreen extends React.Component<ILoginScreenProps, Stat
     super(props);
     this.state = {
       currentEmail: "",
-      active: false,
+      shouldEmailActive: false
     };
   }
 
-  validateEmail = () => {
-    let { currentEmail } = this.state
-    let res = StringUtil.isValidEmail(currentEmail)
-    if (res === true) {
-      this.setState({ active: true })
-    } else { this.setState({ active: false }) }
+  private _validateEmail() {
+    const { currentEmail } = this.state;
+    this.setState({ shouldEmailActive: StringUtil.isValidEmail(currentEmail) });
   }
 
-  login = async () => {
-    let { active, currentEmail } = this.state;
-    if (active) {
-      let res = await this.props.checkEmail(currentEmail);
-      if (res.existStatus === true) {
-        this.props.navigateToSignIn(currentEmail)
-      } else {
-        Alert.alert(
-          'Thông báo',
-          `Email chưa được đăng ký.\nVui lòng đăng ký!`,
-          [
-            {
-              text: 'Cancel',
-              style: 'cancel',
-            },
-            { text: 'OK', onPress: () => this.props.navigateToSignUp() },
-          ],
-        );
-      }
-    } else {
-      Alert.alert('Email không hợp lệ')
+  private _checkEmailExistsAndLogin() {
+    let { shouldEmailActive, currentEmail } = this.state;
+    if (shouldEmailActive) {
+      this.props.checkEmailExists(currentEmail);
     }
   }
 
@@ -91,7 +81,9 @@ export default class LoginScreen extends React.Component<ILoginScreenProps, Stat
           </ScrollView>
         </View>
         {this._renderButton()}
-        {Assets.Device.IS_IOS && <KeyboardSpacer topSpacing={Assets.Device.isIphoneX ? -Assets.Device.bottomSpace : 0} />}
+        <KeyboardSpacer
+          topSpacing={Assets.Device.isIphoneX ? -Assets.Device.bottomSpace : 0}
+        />
       </SafeAreaView>
     );
   }
@@ -110,12 +102,6 @@ export default class LoginScreen extends React.Component<ILoginScreenProps, Stat
           Assets.Icons.Facebook,
           this.props.facebookLogin
         )}
-        {/* {this._renderSocialButton(
-          "Email",
-          Assets.Icons.Zalo,
-          this.props.navigateToSignUp,
-          // () => { this.props.emailSignup('trung1@example.com', '123123'); },
-        )} */}
       </View>
     );
   }
@@ -138,7 +124,9 @@ export default class LoginScreen extends React.Component<ILoginScreenProps, Stat
           <Text.Body style={styles.socialLabel}>Hoặc sử dụng email</Text.Body>
           <Input
             value={this.state.currentEmail}
-            onChangeText={currentEmail => this.setState({ currentEmail }, () => this.validateEmail())}
+            onChangeText={currentEmail =>
+              this.setState({ currentEmail }, () => this._validateEmail())
+            }
             containerStyle={{ width: "100%", paddingHorizontal: 0 }}
             inputContainerStyle={styles.emailContainerStyle}
             placeholder={"taikhoan@email.com"}
@@ -150,34 +138,48 @@ export default class LoginScreen extends React.Component<ILoginScreenProps, Stat
                 color={Assets.Styles.ButtonDisabledColor}
               />
             }
+            rightIcon={
+              this.props.checkAccountWithEmailState.state ===
+                NetworkRequestState.REQUESTING && (
+                <ActivityIndicator style={{ marginRight: 10 }} />
+              )
+            }
             underlineColorAndroid={"transparent"}
             inputStyle={styles.emailInputStyle}
             autoCapitalize="none"
           />
+          {this.props.checkAccountWithEmailState.error && (
+            <Text.Body style={{ color: "red" }}>
+              Đăng nhập không hợp lệ {this.props.checkAccountWithEmailState.error}
+            </Text.Body>
+          )}
         </View>
-
       </View>
     );
   }
 
-  _renderButton() {
+  private _renderButton() {
     return (
       <Button
-        title="Đăng nhập"
+        title={
+          this.props.checkAccountWithEmailState.state === NetworkRequestState.REQUESTING
+            ? "Kiểm tra tài khoản..."
+            : "Đăng nhập"
+        }
         buttonStyle={[
           styles.authButtonContainer,
           {
-            backgroundColor: this.state.active
+            backgroundColor: this.state.shouldEmailActive
               ? Assets.Styles.AppPrimaryColor
-              : Assets.Styles.ButtonDisabledColor,
+              : Assets.Styles.ButtonDisabledColor
           }
         ]}
         titleStyle={{
           fontSize: 18,
-          fontFamily: 'RobotoCondensed-Regular',
+          fontFamily: "RobotoCondensed-Regular"
         }}
-        onPress={this.login}
+        onPress={() => this._checkEmailExistsAndLogin()}
       />
-    )
+    );
   }
 }

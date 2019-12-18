@@ -8,7 +8,8 @@ import Dash from "react-native-dash";
 interface ITrackingSellScreenState {
   step: number;
 }
-export class TrackingSellScreen extends React.Component<ITrackingSellScreenState> {
+
+export class TrackingSellScreen extends React.Component<{}, ITrackingSellScreenState> {
   static navigationOptions = (transitionProp: NavigationScreenProps) => ({
     title: "Bán sản phẩm",
     headerLeft: (
@@ -89,7 +90,8 @@ export class TrackingSellScreen extends React.Component<ITrackingSellScreenState
   }
 
   private renderStep() {
-    let { step } = this.state;
+    const { step } = this.state;
+
     return (
       <View style={styles.stepContainer}>
         <View style={{ flexDirection: "row", paddingLeft: step === 1 ? 31 : 40 }}>

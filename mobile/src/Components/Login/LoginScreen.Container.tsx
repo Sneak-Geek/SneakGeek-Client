@@ -9,7 +9,6 @@ import LoginScreen from "./LoginScreen";
 import { StackActions } from "react-navigation";
 import { RouteNames } from "../../Navigation/RouteNames";
 import { ModalTypes } from "../Modal/ModalTypes";
-import { NavigationActions } from "react-navigation";
 
 const mapStateToProps = (state: IAppState) => {
   const AccountState = state.AccountState;
@@ -18,7 +17,8 @@ const mapStateToProps = (state: IAppState) => {
     isAuthenticating: AccountState.isAuthenticating,
     authenticationError: AccountState.authenticationError,
     isAuthenticatingWithFacebook: AccountState.isAuthenticatingWithFacebook,
-    isAuthenticationCancelled: AccountState.isAuthenticationCancelled
+    isAuthenticationCancelled: AccountState.isAuthenticationCancelled,
+    checkAccountWithEmailState: AccountState.checkAccountWithEmailState
   };
 };
 
@@ -40,25 +40,8 @@ const mapDispatchToProps = (dispatch: Function) => {
       dispatch(Actions.displayModal({ modalType: ModalTypes.Debug, data: {} }));
     },
 
-    navigateToSignUp: () => {
-      dispatch(
-        NavigationActions.navigate({
-          routeName: RouteNames.SignUp
-        })
-      );
-    },
-
-    navigateToSignIn: (email: string) => {
-      dispatch(
-        NavigationActions.navigate({
-          routeName: RouteNames.SignIn,
-          params: { email }
-        })
-      );
-    },
-
-    checkEmail: (email: string) => {
-      return dispatch(Actions.checkEmail(email));
+    checkEmailExists: (email: string) => {
+      dispatch(Actions.checkAccountWithEmail(email));
     }
   };
 };

@@ -26,7 +26,10 @@ export class AccountService implements IAccountService {
     return false;
   }
 
-  public async verifyToken(email: string, token: string): Promise<any | undefined> {
+  public async verifyConfirmationToken(
+    email: string,
+    token: string
+  ): Promise<any | undefined> {
     const response = await ApiClient.post(`/account/verify-token`, { email, token });
     if (
       response &&
@@ -38,7 +41,7 @@ export class AccountService implements IAccountService {
     return undefined;
   }
 
-  public async requestToken(email: string): Promise<any | undefined> {
+  public async requestConfirmationToken(email: string): Promise<any | undefined> {
     const response = await ApiClient.post(`/account/send-confirmation-token`, { email });
     if (
       response &&
@@ -111,7 +114,9 @@ export class AccountService implements IAccountService {
     return undefined;
   }
 
-  public async /** override */ checkEmail(email: string): Promise<any | undefined> {
+  public async /** override */ isAccountWithEmailExists(
+    email: string
+  ): Promise<any | undefined> {
     const response = await ApiClient.get(`/account/email-exists?email=${email}`);
     if (response && response.status === HttpStatus.OK) {
       return response.data;

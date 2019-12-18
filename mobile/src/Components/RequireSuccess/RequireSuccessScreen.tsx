@@ -1,24 +1,29 @@
-import * as React from 'react';
-import { View, StyleSheet, SafeAreaView, Text, Image, TouchableOpacity } from 'react-native';
+import * as React from "react";
 import {
-  NavigationScreenProps
-} from "react-navigation";
+  View,
+  StyleSheet,
+  SafeAreaView,
+  Text,
+  Image,
+  TouchableOpacity
+} from "react-native";
 import * as Assets from "../../Assets";
 
 export interface IRequireSuccessScreenProps {
   navigateToHome: () => void;
 }
 export class RequireSuccessScreen extends React.Component<IRequireSuccessScreenProps> {
-  static navigationOptions = (transitionProp: NavigationScreenProps) => ({
+  static navigationOptions = {
     header: null
-  });
+  };
+
   public render() {
     return (
       <SafeAreaView
         style={{
           flex: 1,
           position: "relative",
-          backgroundColor: 'white'
+          backgroundColor: "white"
         }}
       >
         <View style={styles.container}>
@@ -29,58 +34,61 @@ export class RequireSuccessScreen extends React.Component<IRequireSuccessScreenP
             <Text style={styles.name}>NMD "Americana"</Text>
           </View>
         </View>
-        <TouchableOpacity style={styles.buttonContainer} onPress={this.props.navigateToHome}>
+        <TouchableOpacity
+          style={styles.buttonContainer}
+          onPress={this.props.navigateToHome}
+        >
           <Text style={styles.titleButton}>TIẾP TỤC MUA SẮM</Text>
         </TouchableOpacity>
       </SafeAreaView>
-    )
+    );
   }
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: 'white',
+    backgroundColor: "white"
   },
   label: {
-    alignSelf: 'center',
+    alignSelf: "center",
     fontSize: 24,
-    fontFamily: 'RobotoCondensed-Regular',
-    color: 'black',
-    paddingTop: 16,
+    fontFamily: "RobotoCondensed-Regular",
+    color: "black",
+    paddingTop: 16
   },
   contentContainer: {
     flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
+    alignItems: "center",
+    justifyContent: "center"
   },
   logo: {
     width: 154,
     height: 154,
-    resizeMode: 'contain',
-    marginBottom: 82,
+    resizeMode: "contain",
+    marginBottom: 82
   },
   title: {
-    fontFamily: 'RobotoCondensed-Regular',
+    fontFamily: "RobotoCondensed-Regular",
     fontSize: 17,
     paddingBottom: 6,
-    textAlign: 'center',
+    textAlign: "center"
   },
   name: {
-    fontFamily: 'RobotoCondensed-Bold',
+    fontFamily: "RobotoCondensed-Bold",
     fontSize: 22,
     lineHeight: 26,
-    textAlign: 'center',
+    textAlign: "center"
   },
   buttonContainer: {
-    backgroundColor: 'black',
+    backgroundColor: "black",
     height: 52,
-    alignItems: 'center',
-    justifyContent: 'center',
+    alignItems: "center",
+    justifyContent: "center"
   },
   titleButton: {
     fontSize: 17,
-    fontFamily: 'RobotoCondensed-Bold',
-    color: 'white',
+    fontFamily: "RobotoCondensed-Bold",
+    color: "white"
   }
-})
+});

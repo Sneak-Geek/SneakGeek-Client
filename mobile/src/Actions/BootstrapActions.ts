@@ -5,7 +5,7 @@
 import { container, Types } from "../Config/Inversify";
 import { IAppSettingsService } from "../Service/AppSettingsService";
 import { SettingsKeys } from "../Service/AppSettingsService/SettingsKeys";
-import { getCurrentUser, goToLogin } from "./AccountActions";
+import { getCurrentUser, navigateToLogin } from ".";
 import SplashScreen from "react-native-splash-screen";
 
 export const bootstrap = () => {
@@ -22,7 +22,7 @@ export const bootstrap = () => {
       await dispatch(getCurrentUser(accessToken));
       await settingsProvider.loadServerSettings();
     } else {
-      dispatch(goToLogin());
+      dispatch(navigateToLogin());
     }
   };
 };

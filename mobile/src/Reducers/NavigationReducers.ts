@@ -34,11 +34,28 @@ export const NavigationReducers = (
         state
       );
       break;
-    case Actions.AccountActions.GO_TO_LOGIN:
+    case Actions.NavigationActions.NAVIGATE_TO_LOGIN:
     case Actions.AccountActions.AUTHENTICATE_ERROR:
       nextState = AppNavigator.router.getStateForAction(
         StackActions.replace({
           routeName: RouteNames.Login
+        }),
+        state
+      );
+      break;
+    case Actions.NavigationActions.NAVIGATE_TO_EMAIL_SIGNIN:
+      nextState = AppNavigator.router.getStateForAction(
+        StackActions.push({
+          routeName: RouteNames.EmailSignIn,
+          params: { email: action.payload }
+        }),
+        state
+      );
+      break;
+    case Actions.NavigationActions.NAVIGATE_TO_EMAIL_SIGNUP:
+      nextState = AppNavigator.router.getStateForAction(
+        StackActions.push({
+          routeName: RouteNames.EmailSignUp
         }),
         state
       );

@@ -4,6 +4,7 @@
 
 import { StyleSheet, ViewStyle } from "react-native";
 import * as Assets from "../../Assets";
+import { Text } from "../../Shared/UI";
 
 export default StyleSheet.create({
   rootContainer: {
@@ -94,8 +95,7 @@ export default StyleSheet.create({
 
   emailInputStyle: {
     marginLeft: 20,
-    fontSize: 16,
-    fontWeight: "normal"
+    ...Text.TextStyle.body
   } as ViewStyle,
 
   authButtonContainer: {

@@ -173,8 +173,8 @@ export const AppNavigator = createStackNavigator(
     [`${RouteNames.Splash}`]: { screen: SplashScreenContainer },
     [`${RouteNames.Login}`]: { screen: LoginScreenContainer },
     [`${RouteNames.UserKind}`]: { screen: UserKindScreenContainer },
-    [`${RouteNames.SignUp}`]: { screen: SignUpScreenContainer },
-    [`${RouteNames.SignIn}`]: { screen: SignInScreenContainer },
+    [`${RouteNames.EmailSignUp}`]: { screen: SignUpScreenContainer },
+    [`${RouteNames.EmailSignIn}`]: { screen: SignInScreenContainer },
     [`${RouteNames.ForgotPassword}`]: { screen: ForgotPasswordScreenContainer },
     [`${RouteNames.SellDetail}`]: { screen: SellDetailScreenContainer },
     [`${RouteNames.ShoeDetail}`]: { screen: ShoeDetailScreenContainer },
@@ -191,8 +191,7 @@ export const AppNavigator = createStackNavigator(
     [`${RouteNames.OrderAuction}`]: { screen: OrderAuctionScreenContainer },
     [`${RouteNames.Payment}`]: { screen: PaymentScreenContainer },
     [`${RouteNames.NotiSetting}`]: { screen: NotiSettingScreenContainer },
-    [`${RouteNames.Share}`]: { screen: ShareScreenContainer },
-
+    [`${RouteNames.Share}`]: { screen: ShareScreenContainer }
   },
   {
     initialRouteName: RouteNames.Splash,

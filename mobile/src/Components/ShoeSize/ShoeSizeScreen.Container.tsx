@@ -5,13 +5,9 @@
 import { connect } from "react-redux";
 import { ShoeSizeScreen } from "./ShoeSizeScreen";
 import { IAppState } from "../../Store";
-import { RouteNames } from "../../Navigation";
-import { NavigationActions } from "react-navigation";
 
 const mapStateToProps = (_state: IAppState) => ({});
-const mapDispatchToProps = (dispatch: Function) => ({
- 
-});
+const mapDispatchToProps = (_dispatch: Function) => ({});
 
 export const ShoeSizeScreenContainer = connect(
   mapStateToProps,

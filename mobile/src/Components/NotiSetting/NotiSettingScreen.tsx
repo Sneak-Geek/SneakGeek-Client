@@ -1,12 +1,20 @@
-import * as React from 'react';
-import { TouchableOpacity, View, StyleSheet, ScrollView, SafeAreaView, Text, Switch } from 'react-native';
-import {
-  StackActions,
-  NavigationScreenProps,
-} from "react-navigation";
-import { Icon } from 'react-native-elements';
-import * as Assets from "../../Assets";
+//!
+//! Copyright (c) 2019 - SneakGeek. All rights reserved
+//!
 
+import * as React from "react";
+import {
+  TouchableOpacity,
+  View,
+  StyleSheet,
+  ScrollView,
+  SafeAreaView,
+  Text,
+  Switch
+} from "react-native";
+import { StackActions, NavigationScreenProps } from "react-navigation";
+import { Icon } from "react-native-elements";
+import * as Assets from "../../Assets";
 
 interface INotiSettingScreenProps {
   onSetNewShoe: (newShoe: boolean) => void;
@@ -15,7 +23,7 @@ interface INotiSettingScreenProps {
   onSetOrderVerify: (orderVerify: boolean) => void;
   onSetOrderSend: (orderSend: boolean) => void;
   onSetOrderReceive: (orderReceive: boolean) => void;
-};
+}
 
 interface INotiSettingScreenState {
   [key: string]: any;
@@ -32,15 +40,17 @@ interface Setting {
   title: string;
   onValueChange: (currentValue: boolean) => void;
   marginBottom?: boolean;
-};
+}
 
-export class NotiSettingScreen extends React.Component<INotiSettingScreenProps, INotiSettingScreenState> {
-
+export class NotiSettingScreen extends React.Component<
+  INotiSettingScreenProps,
+  INotiSettingScreenState
+> {
   static navigationOptions = (transitionProp: NavigationScreenProps) => ({
     title: "Cài đặt thông báo",
     headerTitleStyle: {
       fontSize: 17,
-      fontFamily: 'RobotoCondensed-Bold',
+      fontFamily: "RobotoCondensed-Bold"
     },
     headerLeft: (
       <Icon
@@ -50,7 +60,7 @@ export class NotiSettingScreen extends React.Component<INotiSettingScreenProps, 
         containerStyle={{ marginLeft: 10 }}
         onPress={() => transitionProp.navigation.dispatch(StackActions.pop({ n: 1 }))}
       />
-    ),
+    )
   });
 
   private settingsAndOptions: Setting[] = [
@@ -63,7 +73,7 @@ export class NotiSettingScreen extends React.Component<INotiSettingScreenProps, 
       stateName: "news",
       title: "Tin tức",
       onValueChange: this.props.onSetNews,
-      marginBottom: true,
+      marginBottom: true
     },
     {
       stateName: "orderSell",
@@ -97,7 +107,7 @@ export class NotiSettingScreen extends React.Component<INotiSettingScreenProps, 
       orderSell: true,
       orderVerify: true,
       orderSend: false,
-      orderReceive: false,
+      orderReceive: false
     };
   }
 
@@ -105,18 +115,25 @@ export class NotiSettingScreen extends React.Component<INotiSettingScreenProps, 
     return (
       <SafeAreaView style={styles.container}>
         <View style={styles.contentContainer}>
-          <ScrollView style={{paddingTop: 34}} showsVerticalScrollIndicator={false} keyboardShouldPersistTaps="always">
+          <ScrollView
+            style={{ paddingTop: 34 }}
+            showsVerticalScrollIndicator={false}
+            keyboardShouldPersistTaps="always"
+          >
             {this.settingsAndOptions.map(setting => this._renderSettingAndOptions(setting))}
           </ScrollView>
           {this._renderButton()}
         </View>
       </SafeAreaView>
-    )
+    );
   }
 
   private _renderSettingAndOptions(setting: Setting): JSX.Element {
     return (
-      <View key={setting.stateName} style={[styles.settingContainer, { marginBottom: setting.marginBottom ? 20 : 0 }]}>
+      <View
+        key={setting.stateName}
+        style={[styles.settingContainer, { marginBottom: setting.marginBottom ? 20 : 0 }]}
+      >
         <Text style={styles.title}>{setting.title.toUpperCase()}</Text>
         <Switch
           trackColor={{ true: "#1ABC9C", false: "gainsboro" }}
@@ -137,20 +154,20 @@ export class NotiSettingScreen extends React.Component<INotiSettingScreenProps, 
 
   private _renderButton() {
     return (
-        <TouchableOpacity style={styles.containerButton}>
-            <Text style={styles.titleButton}>Xác nhận</Text>
-        </TouchableOpacity>
-    )
-}
+      <TouchableOpacity style={styles.containerButton}>
+        <Text style={styles.titleButton}>Xác nhận</Text>
+      </TouchableOpacity>
+    );
+  }
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: 'white'
+    backgroundColor: "white"
   },
   contentContainer: {
-    flex: 1,
+    flex: 1
   },
   settingContainer: {
     flexDirection: "row",
@@ -158,23 +175,23 @@ const styles = StyleSheet.create({
     paddingVertical: 12,
     alignItems: "center",
     justifyContent: "space-between",
-    backgroundColor: "rgba(196, 196, 196, 0.1)",
+    backgroundColor: "rgba(196, 196, 196, 0.1)"
   },
   title: {
     fontSize: 14,
-    fontFamily: 'RobotoCondensed-Bold',
-    color: 'black',
-    opacity: 0.6,
+    fontFamily: "RobotoCondensed-Bold",
+    color: "black",
+    opacity: 0.6
   },
   containerButton: {
     height: Assets.Styles.ButtonHeight,
-    backgroundColor: 'black',
-    alignItems: 'center',
-    justifyContent: 'center',
-},
-titleButton: {
+    backgroundColor: "black",
+    alignItems: "center",
+    justifyContent: "center"
+  },
+  titleButton: {
     fontSize: 17,
-    fontFamily: 'RobotoCondensed-Bold',
-    color: 'white'
-}
-})
+    fontFamily: "RobotoCondensed-Bold",
+    color: "white"
+  }
+});
