@@ -3,7 +3,7 @@
 //!
 
 import { NetworkRequestState } from "../State";
-import { Transaction, Shoe, Profile, Account } from "../Model";
+import { Transaction, Shoe, Profile } from "../Model";
 
 type NetworkPayload = {
   state: NetworkRequestState;

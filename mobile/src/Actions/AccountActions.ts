@@ -113,11 +113,11 @@ export const setNewPassword = (email: string, token: string, newPassword: string
       const response = await accountService.setNewPassword(email, token, newPassword);
 
       dispatch(updateStateSetPassword({ state: NetworkRequestState.SUCCESS }));
-      if (response?.user) {
-        dispatch(authenticationComplete(response!.user));
+      if (response && response.user) {
+        dispatch(authenticationComplete(response.user));
       }
     } catch (error) {
-      dispatch(notifyError());
+      dispatch(updateStateSetPassword({ state: NetworkRequestState.FAILED, error }));
     }
   };
 };
