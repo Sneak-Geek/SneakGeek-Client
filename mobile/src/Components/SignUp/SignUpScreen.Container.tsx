@@ -11,8 +11,16 @@ import * as Actions from "../../Actions";
 
 const mapStateToProps = (_state: IAppState) => ({});
 const mapDispatchToProps = (dispatch: Function) => ({
-  emailSignup: (email: string, password: string) => {
-    dispatch(Actions.emailSignup(email, password));
+
+  emailSignup: async (email: string, password: string) => {
+    let res = await dispatch(Actions.emailSignup(email, password));
+    if (res) {
+      dispatch(
+        NavigationActions.navigate({
+          routeName: RouteNames.UserKind,
+        })
+      );
+    }
   },
 
   navigateToFotgotPassword: () => {

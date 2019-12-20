@@ -3,13 +3,13 @@
 //!
 
 import { connect } from "react-redux";
-import { ShoeSizeScreen } from "./ShoeSizeScreen";
+import { NotiSettingScreen } from "./NotiSettingScreen";
 import { IAppState } from "../../Store";
 
 const mapStateToProps = (_state: IAppState) => ({});
 const mapDispatchToProps = (_dispatch: Function) => ({});
 
-export const ShoeSizeScreenContainer = connect(
+export const NotiSettingScreenContainer = connect(
   mapStateToProps,
   mapDispatchToProps
-)(ShoeSizeScreen);
+)(NotiSettingScreen);

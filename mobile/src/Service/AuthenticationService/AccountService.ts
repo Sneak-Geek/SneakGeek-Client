@@ -6,11 +6,44 @@ import ApiClient from "../ApiClient";
 import * as HttpStatus from "http-status";
 import { IAccountService, AuthProvider, AccountPayload } from "./IAccountService";
 import { injectable } from "inversify";
-import { Profile } from "../../Shared/Model";
+import { Profile, Account } from "../../Shared/Model";
+import { SetPasswordPayload } from "../../Shared/Payload";
 
 @injectable()
 export class AccountService implements IAccountService {
-  public async requestToken(email: string): Promise<boolean | undefined> {
+  public async /** override */ setNewPassword(
+    email: string,
+    token: string,
+    newPassword: string
+  ): Promise<(SetPasswordPayload & { user?: Account }) | undefined> {
+    const response = await ApiClient.put("/account/set-user-password", {
+      email,
+      token,
+      newPassword
+    });
+    if (response && response.status === HttpStatus.OK) {
+      return response.data;
+    }
+
+    return undefined;
+  }
+
+  public async verifyConfirmationToken(
+    email: string,
+    token: string
+  ): Promise<any | undefined> {
+    const response = await ApiClient.post(`/account/verify-token`, { email, token });
+    if (
+      response &&
+      (response.status === HttpStatus.CREATED || response.status === HttpStatus.OK)
+    ) {
+      return response.data;
+    }
+
+    return undefined;
+  }
+
+  public async requestConfirmationToken(email: string): Promise<any | undefined> {
     const response = await ApiClient.post(`/account/send-confirmation-token`, { email });
     if (
       response &&
@@ -78,6 +111,17 @@ export class AccountService implements IAccountService {
     const response = await ApiClient.get(`/account/get`, { headers });
     if (response && response.status === HttpStatus.OK) {
       return response.data as AccountPayload;
+    }
+
+    return undefined;
+  }
+
+  public async /** override */ isAccountWithEmailExists(
+    email: string
+  ): Promise<any | undefined> {
+    const response = await ApiClient.get(`/account/email-exists?email=${email}`);
+    if (response && response.status === HttpStatus.OK) {
+      return response.data;
     }
 
     return undefined;

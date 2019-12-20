@@ -25,4 +25,14 @@ export type GetUserProfilePayload = {
   profile?: Profile;
 } & NetworkPayload;
 
-export type UpdateUserProfilePayload = NetworkPayload;
+export type CheckAccountWithEmailPayload = {
+  existStatus?: boolean;
+} & NetworkPayload;
+
+export type RequestTokenPayload = NetworkPayload;
+export type VerifyTokenPayload = NetworkPayload;
+export type SetPasswordPayload = NetworkPayload;
+
+export type UpdateUserProfilePayload = {
+  profile?: Profile;
+} & NetworkPayload;

@@ -3,6 +3,7 @@
 //!
 
 import { Account, Profile } from "../../Shared/Model";
+import { SetPasswordPayload } from "../../Shared/Payload";
 
 export type AuthProvider = "facebook" | "google";
 export type AccountPayload = { user: Account; token: string };
@@ -19,5 +20,12 @@ export interface IAccountService {
   ): Promise<boolean>;
   signupEmail(email: string, password: string): Promise<AccountPayload | undefined>;
   loginEmail(email: string, password: string): Promise<AccountPayload | undefined>;
-  requestToken(email: string): Promise<any>;
+  requestConfirmationToken(email: string): Promise<any>;
+  verifyConfirmationToken(email: string, token: string): Promise<any>;
+  setNewPassword(
+    email: string,
+    token: string,
+    newPassword: string
+  ): Promise<(SetPasswordPayload & { user?: Account }) | undefined>;
+  isAccountWithEmailExists(emai: string): Promise<any>;
 }

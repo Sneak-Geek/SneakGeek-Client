@@ -5,6 +5,7 @@
 import * as React from "react";
 import { View, StyleSheet, Text } from "react-native";
 import * as Assets from "../../Assets";
+import { TouchableOpacity } from "react-native-gesture-handler";
 
 interface Props {
   title?: string;
@@ -12,21 +13,32 @@ interface Props {
   border?: boolean;
   green?: boolean;
   descripStyle?: any;
+  onPress?: () => void;
+  buttonTitle?: string;
+  value?: string;
 }
 
 export class RowCard extends React.Component<Props, {}> {
   render() {
-    let { title, descrip, border, green, descripStyle } = this.props;
+    let { title, descrip, border, green, descripStyle, onPress, buttonTitle, value } = this.props;
     return (
       <View style={border ? styles.rowBorder : styles.row}>
         <View style={{ flex: 1 }}>
           <Text style={styles.boldText}>{title}</Text>
         </View>
-        <View style={{ flex: 1 }}>
-          <Text style={[green ? styles.regularTextGreen : styles.regularText, descripStyle]} numberOfLines={2} ellipsizeMode="tail">
-            {descrip}
-          </Text>
-        </View>
+        {onPress ?
+          <TouchableOpacity style={{ flex: 1 }} onPress={onPress} activeOpacity={onPress ? 0.7 : 1}>
+            <Text style={[value ? styles.regularTextGreen : styles.regularText, {opacity: value ? 1 : 0.3}]} numberOfLines={2} ellipsizeMode="tail">
+              {value ? value : buttonTitle}
+            </Text>
+          </TouchableOpacity>
+          :
+          <View style={{ flex: 1 }}>
+            <Text style={[green ? styles.regularTextGreen : styles.regularText, descripStyle]} numberOfLines={2} ellipsizeMode="tail">
+              {descrip}
+            </Text>
+          </View>
+        }
       </View>
     )
   }

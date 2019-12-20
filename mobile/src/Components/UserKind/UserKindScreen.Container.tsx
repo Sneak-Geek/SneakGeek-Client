@@ -6,20 +6,15 @@ import { connect } from "react-redux";
 import { UserKindScreen } from "./UserKindScreen";
 import { IAppState } from "../../Store";
 import { RouteNames } from "../../Navigation";
-import { NavigationActions } from "react-navigation";
-import * as Actions from "../../Actions";
-
+import { StackActions } from "react-navigation";
 const mapStateToProps = (_state: IAppState) => ({});
 const mapDispatchToProps = (dispatch: Function) => ({
-    emailLogin: (email: string, password: string) => {
-        dispatch(Actions.emailLogin(email, password));
-    },
 
-    navigateToFotgotPassword: () => {
+    navigateToHome: () => {
         dispatch(
-            NavigationActions.navigate({
-                routeName: RouteNames.ForgotPassword
-            })
+            StackActions.replace({
+                routeName: RouteNames.Tabs.TabRoot
+            }),
         );
     },
 });

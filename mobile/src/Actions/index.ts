@@ -8,3 +8,4 @@ export * from "./ModalActions";
 export * from "./BootstrapActions";
 export * from "./TransactionActions";
 export * from "./NotificationActions";
+export * from "./NavigationActions";

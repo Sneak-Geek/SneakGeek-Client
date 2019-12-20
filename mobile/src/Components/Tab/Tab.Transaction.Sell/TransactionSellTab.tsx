@@ -4,11 +4,9 @@
 
 import * as React from "react";
 import { Shoe } from "../../../Shared/Model";
-import { FlatList } from "react-native-gesture-handler";
-import { View, Image, StyleSheet } from "react-native";
-import { Text, TransactionShoeCard } from "../../../Shared/UI";
+import { View } from "react-native";
+import { TransactionShoeCard } from "../../../Shared/UI";
 import { Icon } from "react-native-elements";
-import { Styles, Icons } from "../../../Assets";
 
 export interface ITransactionSellTabProps {
   shoes: Shoe[];
@@ -21,7 +19,7 @@ export class TransactionSellTab extends React.Component<ITransactionSellTabProps
     tabBarLabel: "Đang bán"
   };
 
-  public /** override */ componentDidMount() { }
+  public /** override */ componentDidMount() {}
 
   public /** override */ render(): JSX.Element {
     return (
@@ -39,16 +37,9 @@ export class TransactionSellTab extends React.Component<ITransactionSellTabProps
 
     return (
       <View>
-        <TransactionShoeCard
-          mode='sell'
-          onPress={this.props.onShoeClick}
-        />
-        <TransactionShoeCard
-          mode='sell'
-        />
-        <TransactionShoeCard
-          mode='sell'
-        />
+        <TransactionShoeCard mode="sell" onPress={this.props.onShoeClick} />
+        <TransactionShoeCard mode="sell" />
+        <TransactionShoeCard mode="sell" />
       </View>
       // <FlatList
       //   style={{ flex: 1 }}
@@ -103,7 +94,7 @@ export class TransactionSellTab extends React.Component<ITransactionSellTabProps
   //         </View>
   //       </View>
   //       <View style={styles.listDivider} />
-  //       {/* <TransactionShoeCard 
+  //       {/* <TransactionShoeCard
   //         mode='sell'
   //       /> */}
   //     </View>
@@ -111,27 +102,27 @@ export class TransactionSellTab extends React.Component<ITransactionSellTabProps
   // }
 }
 
-const styles = StyleSheet.create({
-  transactionItemContainer: {
-    flexDirection: "row",
-    marginVertical: 10,
-    marginHorizontal: 25,
-    alignItems: "center"
-  },
+// const styles = StyleSheet.create({
+//   transactionItemContainer: {
+//     flexDirection: "row",
+//     marginVertical: 10,
+//     marginHorizontal: 25,
+//     alignItems: "center"
+//   },
 
-  remainingTimeContainer: {
-    flexDirection: "row",
-    marginTop: 10,
-    alignItems: "center"
-  },
+//   remainingTimeContainer: {
+//     flexDirection: "row",
+//     marginTop: 10,
+//     alignItems: "center"
+//   },
 
-  clockIcon: { width: 18, aspectRatio: 1, tintColor: "black", marginRight: 5 },
+//   clockIcon: { width: 18, aspectRatio: 1, tintColor: "black", marginRight: 5 },
 
-  priceContainer: { flexDirection: "row", marginTop: 25, justifyContent: "space-between" },
+//   priceContainer: { flexDirection: "row", marginTop: 25, justifyContent: "space-between" },
 
-  listDivider: {
-    marginHorizontal: 25,
-    height: 1,
-    backgroundColor: "gainsboro"
-  }
-});
+//   listDivider: {
+//     marginHorizontal: 25,
+//     height: 1,
+//     backgroundColor: "gainsboro"
+//   }
+// });

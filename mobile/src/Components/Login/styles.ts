@@ -4,6 +4,7 @@
 
 import { StyleSheet, ViewStyle } from "react-native";
 import * as Assets from "../../Assets";
+import { Text } from "../../Shared/UI";
 
 export default StyleSheet.create({
   rootContainer: {
@@ -15,7 +16,8 @@ export default StyleSheet.create({
 
   socialContainer: {
     marginHorizontal: 42,
-    height: "45%",
+    paddingTop: 83,
+    // height: "45%",
     alignItems: "stretch",
     flexDirection: "column",
     justifyContent: "flex-end"
@@ -77,7 +79,8 @@ export default StyleSheet.create({
     backgroundColor: "#BCBBC1",
     height: 1,
     alignSelf: "stretch",
-    marginHorizontal: 42
+    marginHorizontal: 42,
+    marginVertical: 70
   } as ViewStyle,
 
   emailContainerStyle: {
@@ -92,8 +95,7 @@ export default StyleSheet.create({
 
   emailInputStyle: {
     marginLeft: 20,
-    fontSize: 16,
-    fontWeight: "normal"
+    ...Text.TextStyle.body
   } as ViewStyle,
 
   authButtonContainer: {

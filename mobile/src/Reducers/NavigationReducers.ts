@@ -28,17 +28,34 @@ export const NavigationReducers = (
   switch (action.type) {
     case Actions.AccountActions.AUTHENTICATION_COMPLETE:
       nextState = AppNavigator.router.getStateForAction(
-        StackActions.replace({
-          routeName: RouteNames.Tabs.TabRoot
+        StackActions.reset({
+          index: 0,
+          actions: [NavigationActions.navigate({ routeName: RouteNames.Tabs.TabRoot })]
         }),
         state
       );
       break;
-    case Actions.AccountActions.GO_TO_LOGIN:
-    case Actions.AccountActions.AUTHENTICATE_ERROR:
+    case Actions.NavigationActions.NAVIGATE_TO_LOGIN:
       nextState = AppNavigator.router.getStateForAction(
         StackActions.replace({
-          routeName: RouteNames.Login
+          routeName: RouteNames.Authentication
+        }),
+        state
+      );
+      break;
+    case Actions.NavigationActions.NAVIGATE_TO_EMAIL_SIGNIN:
+      nextState = AppNavigator.router.getStateForAction(
+        StackActions.push({
+          routeName: RouteNames.EmailSignIn,
+          params: { email: action.payload }
+        }),
+        state
+      );
+      break;
+    case Actions.NavigationActions.NAVIGATE_TO_EMAIL_SIGNUP:
+      nextState = AppNavigator.router.getStateForAction(
+        StackActions.push({
+          routeName: RouteNames.EmailSignUp
         }),
         state
       );

@@ -21,7 +21,7 @@ import {
   NavigationRoute,
   NavigationScreenProps
 } from "react-navigation";
-import { Icon, Button } from "react-native-elements";
+import { Icon } from "react-native-elements";
 import styles from "./styles";
 import { ShoeCard, Text, ShoeSizePicker } from "../../Shared/UI";
 import StarRating from "react-native-star-rating";
@@ -37,7 +37,10 @@ export interface Props {
   routeIndex: number;
 
   navigateToShoeDetailWithReset: (index: number, shoe: Shoe) => void;
-  addOwnedShoe: (shoeId: string, owned: Array<{ shoeSize: string; number: number }>) => void;
+  addOwnedShoe: (
+    shoeId: string,
+    owned: Array<{ shoeSize: string; number: number }>
+  ) => void;
   navigateToAuctionOrder: () => void;
 }
 
@@ -47,6 +50,7 @@ interface State {
   isBuyTabClicked?: boolean;
   priceListIndex: number;
   ownedShoeModal: boolean;
+  showModal: boolean;
 }
 
 export class ShoeDetailScreen extends React.Component<Props, State> {
@@ -81,7 +85,9 @@ export class ShoeDetailScreen extends React.Component<Props, State> {
     this.state = {
       favorited: false,
       priceListIndex: 0,
-      ownedShoeModal: false
+      ownedShoeModal: false,
+      showModal: false,
+      isBuyTabClicked: false
     };
   }
 
@@ -112,6 +118,7 @@ export class ShoeDetailScreen extends React.Component<Props, State> {
           </ScrollView>
           {this._renderBuyerSection()}
           {this._renderButton()}
+          {/* {this._renderModal()} */}
         </View>
       </SafeAreaView>
     );
@@ -153,7 +160,9 @@ export class ShoeDetailScreen extends React.Component<Props, State> {
         ownedShoeModal: false
       },
       () => {
-        !exiting && typeof owned !== "string" && this.props.addOwnedShoe(this.shoe._id, owned);
+        !exiting &&
+          typeof owned !== "string" &&
+          this.props.addOwnedShoe(this.shoe._id, owned);
       }
     );
   }
@@ -201,7 +210,7 @@ export class ShoeDetailScreen extends React.Component<Props, State> {
             textStyle,
             () => this._addOwnedShoe()
           )}
-          {this._renderSideButton("Bán".toUpperCase(), {}, {}, () => { })}
+          {this._renderSideButton("Bán".toUpperCase(), {}, {}, () => {})}
         </View>
       </View>
     );
@@ -301,7 +310,9 @@ export class ShoeDetailScreen extends React.Component<Props, State> {
       <View style={{ flex: 1, paddingHorizontal: 20, marginTop: 40 }}>
         <View style={styles.ratingContainer}>
           <Text.Headline>{"giá sản phẩm".toUpperCase()}</Text.Headline>
-          <Text.Headline style={{ color: Assets.Styles.AppPrimaryColor }}>3.5/5</Text.Headline>
+          <Text.Headline style={{ color: Assets.Styles.AppPrimaryColor }}>
+            3.5/5
+          </Text.Headline>
         </View>
         <View style={{ flex: 1, flexDirection: "column" }}>
           <View style={styles.reviewTitleContainer}>
@@ -320,11 +331,11 @@ export class ShoeDetailScreen extends React.Component<Props, State> {
           </View>
           <Text.Body numberOfLines={2} style={{ color: "darkgray" }}>
             Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor
-            incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud
-            exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute
-            irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla
-            pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia
-            deserunt mollit anim id est laborum.
+            incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis
+            nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
+            Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu
+            fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in
+            culpa qui officia deserunt mollit anim id est laborum.
           </Text.Body>
         </View>
         <TouchableOpacity style={{ alignSelf: "flex-end", marginTop: 10 }}>
@@ -360,30 +371,78 @@ export class ShoeDetailScreen extends React.Component<Props, State> {
 
   private _renderButton() {
     return (
-      <View style={{ flexDirection: 'row', backgroundColor: 'black' }}>
-        <View style={{ flex: 1, borderRightWidth: 1, borderColor: 'white', marginVertical: 8, }}>
+      <View style={{ flexDirection: "row", backgroundColor: "black" }}>
+        <View
+          style={{ flex: 1, borderRightWidth: 1, borderColor: "white", marginVertical: 8 }}
+        >
           <TouchableOpacity
             style={styles.authButtonContainer}
             onPress={() => this.setState({ isBuyTabClicked: !this.state.isBuyTabClicked })}
+            // onPress={() => this.setState({ showModal: true })}
           >
             <Image source={Assets.Icons.Buy} style={styles.icon} />
-            <Text.Headline style={{ color: 'white', fontSize: 17 }}>Mua</Text.Headline>
+            <Text.Headline style={{ color: "white", fontSize: 17 }}>Mua</Text.Headline>
           </TouchableOpacity>
         </View>
-        <View style={{ flex: 1, borderLeftWidth: 1, borderColor: 'white', marginVertical: 8, }}>
+        <View
+          style={{ flex: 1, borderLeftWidth: 1, borderColor: "white", marginVertical: 8 }}
+        >
           <TouchableOpacity style={styles.authButtonContainer}>
             <Image source={Assets.Icons.Sell} style={styles.icon} />
-            <Text.Headline style={{ color: 'white', fontSize: 17 }}>Bán</Text.Headline>
+            <Text.Headline style={{ color: "white", fontSize: 17 }}>Bán</Text.Headline>
           </TouchableOpacity>
         </View>
       </View>
-    )
+    );
   }
+
+  // private _renderModal() {
+  //   const price = [
+  //     { condition: "Mua mới", price: 1800000 },
+  //     { condition: "Mua cũ", price: 1200000 },
+  //     { condition: "Đặt giá" }
+  //   ];
+  //   return (
+  //     <Modal
+  //       visible={this.state.isBuyTabClicked}
+  //       transparent={true}
+  //       animationType={"slide"}
+  //       animated={true}
+  //     >
+  //       <SafeAreaView style={{ flex: 1 }}>
+  //         <View style={{ height: 88, backgroundColor: "#0C0C0C", opacity: 0.75 }} />
+  //         <View style={{ flex: 1, backgroundColor: "rgba(0, 0, 0, 0.85)" }}>
+  //           <View style={[styles.buyerContainerFull, { flex: 1 }]}>
+  //             <TouchableOpacity
+  //               style={styles.pullHandle}
+  //               onPress={() => this.setState({ isBuyTabClicked: false })}
+  //             />
+  //             <FlatList
+  //               bounces={false}
+  //               data={price}
+  //               keyExtractor={(_itm, idx) => idx.toString()}
+  //               horizontal={true}
+  //               renderItem={({ item, index }) => this._renderBuyListItem(item, index)}
+  //               showsHorizontalScrollIndicator={false}
+  //             />
+  //           </View>
+  //         </View>
+  //       </SafeAreaView>
+  //     </Modal>
+  //   );
+  // }
+
   private _renderBuyerSection(): JSX.Element {
-    const price = [{ condition: "Mua mới", price: 1800000 }, { condition: "Mua cũ", price: 1200000 }, { condition: "Đặt giá" }];
+    const price = [
+      { condition: "Mua mới", price: 1800000 },
+      { condition: "Mua cũ", price: 1200000 },
+      { condition: "Đặt giá" }
+    ];
     return (
       <View
-        style={!this.state.isBuyTabClicked ? styles.buyerContainer : styles.buyerContainerFull}
+        style={
+          !this.state.isBuyTabClicked ? styles.buyerContainer : styles.buyerContainerFull
+        }
       >
         <TouchableOpacity
           style={styles.pullHandle}
@@ -394,6 +453,7 @@ export class ShoeDetailScreen extends React.Component<Props, State> {
           data={price}
           keyExtractor={(_itm, idx) => idx.toString()}
           horizontal={true}
+          pagingEnabled={true}
           renderItem={({ item, index }) => this._renderBuyListItem(item, index)}
           showsHorizontalScrollIndicator={false}
         />
@@ -401,65 +461,110 @@ export class ShoeDetailScreen extends React.Component<Props, State> {
     );
   }
 
+  // private _renderBuyListItem(item: { condition: string; price?: number }, index: number) {
+  //   return (
+  //     <View>
+  //     </View>
+  //   );
+  // }
+
   private _renderBuyListItem(item: { condition: string; price?: number }, index: number) {
     return (
       <View
-        style={[styles.priceListItem, { flex: 1 }]}
+        style={[styles.priceListItem]}
         onLayout={event =>
           this.setState({
             bottomBuyerHeight: event.nativeEvent.layout.height
           })
         }
       >
-        <TouchableOpacity style={{ alignItems: 'center' }} onPress={() => this.setState({ priceListIndex: index })}>
+        <TouchableOpacity
+          style={{ alignItems: "center" }}
+          onPress={() => this.setState({ priceListIndex: index })}
+        >
           <Text.Body style={{ color: "white", fontSize: 24 }}>{item.condition}</Text.Body>
-          <Text.Title2 style={{ color: Assets.Styles.AppPrimaryColor, paddingBottom: 15, fontSize: 16 }}>
+          <Text.Title2
+            style={{
+              color: Assets.Styles.AppPrimaryColor,
+              paddingBottom: 15,
+              fontSize: 16
+            }}
+          >
             {item.price && toCurrencyString(item.price.toString())}
           </Text.Title2>
         </TouchableOpacity>
         {this.state.isBuyTabClicked && index === this.state.priceListIndex && (
-          <View style={styles.divider} />
+          <View style={{ alignItems: "center" }}>
+            <View style={styles.divider} />
+            <Text.Body
+              style={{
+                lineHeight: 18,
+                color: "white",
+                fontSize: 13,
+                fontFamily: "RobotoCondensed-Regular"
+              }}
+            >
+              Cỡ giày
+            </Text.Body>
+          </View>
         )}
-        <View style={{ width: (Dimensions.get("window").width * 5) / 7, flex: 1, alignItems: 'center' }}>
+        <View
+          style={{
+            width: (Dimensions.get("window").width * 5) / 7,
+            flex: 1,
+            alignItems: "center"
+          }}
+        >
           {this.state.isBuyTabClicked && this._renderAvailableSize(index, item)}
         </View>
       </View>
     );
   }
 
-  private _renderAvailableSize(index: number, itemC: { condition: string; price?: number }) {
+  private _renderAvailableSize(
+    _index: number,
+    itemC: { condition: string; price?: number }
+  ) {
     const sizes = [8, 8.5, 9, 9.5, 10, 10.5, 11, 11.5, 12];
     return (
       <View style={{ flex: 1 }}>
         <FlatList
           data={sizes}
           showsVerticalScrollIndicator={false}
-          renderItem={({ item }) => {
+          renderItem={({ item, index }) => {
             return (
               <TouchableOpacity
-                style={{ flexDirection: 'row', justifyContent: 'center', alignItems: 'center', flex: 1, width: (Dimensions.get("window").width * 5) / 7 }}
+                style={{
+                  marginBottom: index === sizes.length - 1 ? 30 : 0,
+                  justifyContent: "center",
+                  alignItems: "center",
+                  flex: 1,
+                  width: (Dimensions.get("window").width * 5) / 7
+                }}
                 onPress={() => {
-                  this.setState({ priceListIndex: index });
+                  this.setState({ priceListIndex: index, isBuyTabClicked: false });
                   switch (itemC.condition) {
-                    case 'Đặt giá':
-                      this.props.navigateToAuctionOrder()
+                    case "Đặt giá":
+                      this.props.navigateToAuctionOrder();
                       break;
-                  
+
                     default:
                       break;
                   }
                 }}
               >
-                {/* <Text.Body style={{ position: 'absolute', left: 15, fontSize: 14, color: 'white'}}>Cao nhất 180.800K</Text.Body> */}
-                <Text.Body style={styles.shoeSize}>{item}</Text.Body>
+                <Text.Body style={[styles.shoeSize, { marginTop: index === 0 ? 16 : 47 }]}>
+                  {item}
+                </Text.Body>
+                <Text.Body style={{ paddingTop: 3, fontSize: 14, color: "white" }}>
+                  Cao nhất 1.800.000đ
+                </Text.Body>
               </TouchableOpacity>
-            )
+            );
           }}
           keyExtractor={(_itm, idx) => idx.toString()}
         />
       </View>
     );
   }
-
-
 }

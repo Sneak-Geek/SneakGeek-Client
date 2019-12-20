@@ -36,36 +36,21 @@ import { OrderSellScreenContainer } from "../Components/OrderSell/OrderSellScree
 import { OrderAuctionScreenContainer } from "../Components/OrderAuction/OrderAuctionScreen.Container";
 import { UserKindScreenContainer } from "../Components/UserKind/UserKindScreen.Container";
 import { PaymentScreenContainer } from "../Components/Payment/PaymenScreen.Container";
+import { NotiSettingScreenContainer } from "../Components/NotiSetting/NotiSettingScreen.Container";
+import { ShareScreenContainer } from "../Components/Share/ShareScreen.Container";
 
-// const BuyTabNavigator = createStackNavigator(
-//   {
-//     [`${RouteNames.Tabs.BuyTab.MainScreen}`]: { screen: Tab.Buy.Main }
-//   },
-//   {
-//     navigationOptions: {
-//       tabBarLabel: "Mua",
-//       tabBarIcon: ({ tintColor }) => {
-//         tintColor = tintColor as string;
-//         return <Icon type={"ionicon"} name={"md-trending-up"} size={28} color={tintColor} />;
-//       }
-//     }
-//   }
-// );
-
-// const SellTabNavigator = createStackNavigator(
-//   {
-//     [`${RouteNames.Tabs.SellTab.MainScreen}`]: { screen: Tab.Sell.Main }
-//   },
-//   {
-//     navigationOptions: {
-//       tabBarLabel: "Bán",
-//       tabBarIcon: ({ tintColor }) => {
-//         tintColor = tintColor as string;
-//         return <Icon type={"ionicon"} name={"md-pricetag"} size={28} color={tintColor} />;
-//       }
-//     }
-//   }
-// );
+const AuthenticationStack = createStackNavigator(
+  {
+    [`${RouteNames.Login}`]: { screen: LoginScreenContainer },
+    [`${RouteNames.UserKind}`]: { screen: UserKindScreenContainer },
+    [`${RouteNames.EmailSignUp}`]: { screen: SignUpScreenContainer },
+    [`${RouteNames.EmailSignIn}`]: { screen: SignInScreenContainer },
+    [`${RouteNames.ForgotPassword}`]: { screen: ForgotPasswordScreenContainer }
+  },
+  {
+    initialRouteName: RouteNames.Login
+  }
+);
 
 const HomeTabNavigator = createStackNavigator(
   {
@@ -169,11 +154,7 @@ export const AppNavigator = createStackNavigator(
       }
     },
     [`${RouteNames.Splash}`]: { screen: SplashScreenContainer },
-    [`${RouteNames.Login}`]: { screen: LoginScreenContainer },
-    [`${RouteNames.UserKind}`]: { screen: UserKindScreenContainer },
-    [`${RouteNames.SignUp}`]: { screen: SignUpScreenContainer },
-    [`${RouteNames.SignIn}`]: { screen: SignInScreenContainer },
-    [`${RouteNames.ForgotPassword}`]: { screen: ForgotPasswordScreenContainer },
+    [`${RouteNames.Authentication}`]: { screen: AuthenticationStack },
     [`${RouteNames.SellDetail}`]: { screen: SellDetailScreenContainer },
     [`${RouteNames.ShoeDetail}`]: { screen: ShoeDetailScreenContainer },
     [`${RouteNames.PaymentOptions}`]: { screen: PaymentOptionsScreenContainer },
@@ -188,12 +169,15 @@ export const AppNavigator = createStackNavigator(
     [`${RouteNames.OrderSell}`]: { screen: OrderSellScreenContainer },
     [`${RouteNames.OrderAuction}`]: { screen: OrderAuctionScreenContainer },
     [`${RouteNames.Payment}`]: { screen: PaymentScreenContainer },
-
+    [`${RouteNames.NotiSetting}`]: { screen: NotiSettingScreenContainer },
+    [`${RouteNames.Share}`]: { screen: ShareScreenContainer }
   },
   {
     initialRouteName: RouteNames.Splash,
     mode: "card",
+    headerMode: "none",
     navigationOptions: {
+      header: null,
       gesturesEnabled: true
     }
   }

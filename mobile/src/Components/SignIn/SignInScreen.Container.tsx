@@ -9,19 +9,24 @@ import { RouteNames } from "../../Navigation";
 import { NavigationActions } from "react-navigation";
 import * as Actions from "../../Actions";
 
-const mapStateToProps = (_state: IAppState) => ({});
+const mapStateToProps = (state: IAppState) => ({
+  isAuthenticating: state.AccountState.isAuthenticating,
+  authenticationError: state.AccountState.authenticationError
+});
+
 const mapDispatchToProps = (dispatch: Function) => ({
   emailLogin: (email: string, password: string) => {
     dispatch(Actions.emailLogin(email, password));
   },
 
-  navigateToFotgotPassword: () => {
+  navigateToFotgotPassword: (email: string) => {
     dispatch(
       NavigationActions.navigate({
-        routeName: RouteNames.ForgotPassword
+        routeName: RouteNames.ForgotPassword,
+        params: { email }
       })
     );
-  },
+  }
 });
 
 export const SignInScreenContainer = connect(

@@ -5,10 +5,11 @@
 export const RouteNames = {
   AppNavigator: "AppNavigator",
   Splash: "Splash",
+  Authentication: "Authentication",
   Login: "Login",
   UserKind: "UserKind",
-  SignUp: "SignUp",
-  SignIn: "SignIn",
+  EmailSignUp: "EmailSignUp",
+  EmailSignIn: "EmailSignIn",
   ForgotPassword: "ForgotPassword",
   SellDetail: "SellDetail",
   ShoeDetail: "ShoeDetail",
@@ -24,6 +25,8 @@ export const RouteNames = {
   OrderAuction: "OrderAuction",
   OrderSell: "OrderSell",
   Payment: "Payment",
+  NotiSetting: "NotiSetting",
+  Share: "Share",
   Tabs: {
     TabRoot: "TabRoot",
     HomeTab: {
