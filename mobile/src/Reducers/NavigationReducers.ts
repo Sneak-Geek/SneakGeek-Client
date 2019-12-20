@@ -28,17 +28,17 @@ export const NavigationReducers = (
   switch (action.type) {
     case Actions.AccountActions.AUTHENTICATION_COMPLETE:
       nextState = AppNavigator.router.getStateForAction(
-        StackActions.replace({
-          routeName: RouteNames.Tabs.TabRoot
+        StackActions.reset({
+          index: 0,
+          actions: [NavigationActions.navigate({ routeName: RouteNames.Tabs.TabRoot })]
         }),
         state
       );
       break;
     case Actions.NavigationActions.NAVIGATE_TO_LOGIN:
-    case Actions.AccountActions.AUTHENTICATE_ERROR:
       nextState = AppNavigator.router.getStateForAction(
         StackActions.replace({
-          routeName: RouteNames.Login
+          routeName: RouteNames.Authentication
         }),
         state
       );

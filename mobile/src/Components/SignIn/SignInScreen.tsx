@@ -2,9 +2,8 @@ import * as React from "react";
 import {
   View,
   StyleSheet,
-  SafeAreaView,
-  Text,
   TouchableOpacity,
+  SafeAreaView,
   TextInput,
   Alert
 } from "react-native";
@@ -18,15 +17,18 @@ import { Icon, Button } from "react-native-elements";
 import * as Assets from "../../Assets";
 import * as StringUtil from "../../Utilities/StringUtil";
 import KeyboardSpacer from "react-native-keyboard-spacer";
+import { Text } from "../../Shared/UI";
 
 interface ISignInScreenState {
   email: string;
   password: string;
-  active: boolean;
+  isEmailValid: boolean;
 }
 
 interface ISignInScreenProps {
-  navigateToFotgotPassword: () => void;
+  isAuthenticating: boolean;
+  authenticationError: any;
+  navigateToFotgotPassword: (email: string) => void;
   emailLogin: (email: string, password: string) => void;
   navigation?: NavigationScreenProp<NavigationRoute>;
 }
@@ -44,40 +46,52 @@ export class SignInScreen extends React.Component<ISignInScreenProps, ISignInScr
         containerStyle={{ marginLeft: 10 }}
         onPress={() => transitionProp.navigation.dispatch(StackActions.popToTop())}
       />
-    )
+    ),
+    headerTitleStyle: Text.TextStyle.title2,
+    title: "Đăng nhập"
   });
 
-  state = {
-    email: this.props.navigation ? this.props.navigation.getParam("email") : "",
-    password: "",
-    active: false
-  };
+  public constructor(props: ISignInScreenProps) {
+    super(props);
+    this.state = {
+      email: this.props.navigation ? this.props.navigation.getParam("email") : "",
+      password: "",
+      isEmailValid: false
+    };
+  }
 
-  login = () => {
-    let { email, password, active } = this.state;
+  private login() {
+    let { email, password, isEmailValid: active } = this.state;
     if (active) {
       this.props.emailLogin(email, password);
-    } else {
-      Alert.alert("Thông báo", "Email hoặc mật khẩu không chính xác");
     }
-  };
+  }
 
-  validateButton = () => {
+  private validateButton() {
     let { email, password } = this.state;
     let res = StringUtil.isValidEmail(email);
     if (res === true && password.length > 0) {
-      this.setState({ active: true });
+      this.setState({ isEmailValid: true });
     } else {
-      this.setState({ active: false });
+      this.setState({ isEmailValid: false });
     }
-  };
+  }
+
+  public componentDidUpdate(prevProps: ISignInScreenProps) {
+    if (
+      this.props.authenticationError &&
+      prevProps.authenticationError !== this.props.authenticationError
+    ) {
+      Alert.alert("Mật khẩu không đúng, vui lòng thử lại");
+    }
+  }
 
   public render() {
     return (
       <SafeAreaView style={{ flex: 1, backgroundColor: "white" }}>
         <View style={styles.container}>
           <View style={{ flex: 1 }}>
-            <Text style={styles.title}>{`Vui lòng nhập mật khẩu để đăng nhập`}</Text>
+            <Text.Body style={styles.title}>Vui lòng nhập mật khẩu để đăng nhập</Text.Body>
             <View style={{ paddingHorizontal: 42 }}>
               {this.renderEmail()}
               {this.renderPassword()}
@@ -85,11 +99,9 @@ export class SignInScreen extends React.Component<ISignInScreenProps, ISignInScr
             </View>
           </View>
           {this.renderButton()}
-          {Assets.Device.IS_IOS && (
-            <KeyboardSpacer
-              topSpacing={Assets.Device.isIphoneX ? -Assets.Device.bottomSpace : 0}
-            />
-          )}
+          <KeyboardSpacer
+            topSpacing={Assets.Device.isIphoneX ? -Assets.Device.bottomSpace : 0}
+          />
         </View>
       </SafeAreaView>
     );
@@ -100,13 +112,13 @@ export class SignInScreen extends React.Component<ISignInScreenProps, ISignInScr
     return (
       <View style={styles.inputContainer}>
         <View style={styles.absolute}>
-          <Text style={styles.email}>Email</Text>
+          <Text.Footnote style={styles.email}>Email</Text.Footnote>
         </View>
         <TextInput
           style={styles.input}
-          placeholder="Email của bạn"
+          placeholder={"Email của bạn"}
           value={email}
-          placeholderTextColor="rgba(0, 0, 0, 0.4)"
+          placeholderTextColor={"rgba(0, 0, 0, 0.4)"}
           onChangeText={email => this.setState({ email }, () => this.validateButton())}
           selectionColor={Assets.Styles.AppPrimaryColor}
           autoCapitalize="none"
@@ -124,7 +136,7 @@ export class SignInScreen extends React.Component<ISignInScreenProps, ISignInScr
           style={styles.input}
           placeholder="Mật khẩu"
           value={password}
-          placeholderTextColor="rgba(0, 0, 0, 0.4)"
+          placeholderTextColor={"rgba(0, 0, 0, 0.4)"}
           onChangeText={password =>
             this.setState({ password }, () => this.validateButton())
           }
@@ -140,31 +152,28 @@ export class SignInScreen extends React.Component<ISignInScreenProps, ISignInScr
     return (
       <TouchableOpacity
         style={styles.forgotContainer}
-        onPress={this.props.navigateToFotgotPassword}
+        onPress={() => this.props.navigateToFotgotPassword(this.state.email)}
       >
-        <Text style={styles.forgotTitle}>Quên mật khẩu?</Text>
+        <Text.Body style={styles.forgotTitle}>Quên mật khẩu?</Text.Body>
       </TouchableOpacity>
     );
   }
 
   private renderButton() {
-    let { active } = this.state;
+    const { isEmailValid } = this.state;
     return (
       <Button
-        title="Đăng nhập"
+        title={this.props.isAuthenticating ? "Đang đăng nhập..." : "Đăng nhập"}
         buttonStyle={[
           styles.authButtonContainer,
           {
-            backgroundColor: active
+            backgroundColor: isEmailValid
               ? Assets.Styles.AppPrimaryColor
               : Assets.Styles.ButtonDisabledColor
           }
         ]}
-        titleStyle={{
-          fontSize: 18,
-          fontFamily: "RobotoCondensed-Regular"
-        }}
-        onPress={this.login}
+        titleStyle={Text.TextStyle.body}
+        onPress={this.login.bind(this)}
       />
     );
   }
@@ -176,9 +185,7 @@ const styles = StyleSheet.create({
     flex: 1
   },
   title: {
-    fontSize: 18,
     lineHeight: 25,
-    fontFamily: "RobotoCondensed-Regular",
     textAlign: "left",
     paddingLeft: 42
   },
@@ -192,8 +199,6 @@ const styles = StyleSheet.create({
     marginTop: 30
   },
   email: {
-    fontSize: 12,
-    fontFamily: "RobotoCondensed-Regular",
     color: "black",
     opacity: 0.4,
     paddingLeft: 3,
@@ -211,8 +216,6 @@ const styles = StyleSheet.create({
     flex: 1
   },
   forgotTitle: {
-    fontFamily: "RobotoCondensed-Regular",
-    fontSize: 16,
     textDecorationLine: "underline"
   },
   forgotContainer: {

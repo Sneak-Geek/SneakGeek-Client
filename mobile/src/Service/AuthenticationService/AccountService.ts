@@ -6,7 +6,8 @@ import ApiClient from "../ApiClient";
 import * as HttpStatus from "http-status";
 import { IAccountService, AuthProvider, AccountPayload } from "./IAccountService";
 import { injectable } from "inversify";
-import { Profile } from "../../Shared/Model";
+import { Profile, Account } from "../../Shared/Model";
+import { SetPasswordPayload } from "../../Shared/Payload";
 
 @injectable()
 export class AccountService implements IAccountService {
@@ -14,16 +15,17 @@ export class AccountService implements IAccountService {
     email: string,
     token: string,
     newPassword: string
-  ): Promise<boolean> {
+  ): Promise<(SetPasswordPayload & { user?: Account }) | undefined> {
     const response = await ApiClient.put("/account/set-user-password", {
       email,
       token,
       newPassword
     });
     if (response && response.status === HttpStatus.OK) {
-      return true;
+      return response.data;
     }
-    return false;
+
+    return undefined;
   }
 
   public async verifyConfirmationToken(

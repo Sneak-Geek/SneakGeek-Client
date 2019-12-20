@@ -15,10 +15,17 @@ import { showNotification } from "./NotificationActions";
 import {
   GetUserProfilePayload,
   UpdateUserProfilePayload,
-  CheckAccountWithEmailPayload
+  CheckAccountWithEmailPayload,
+  RequestTokenPayload,
+  VerifyTokenPayload,
+  SetPasswordPayload
 } from "../Shared/Payload";
 import { NetworkRequestState } from "../Shared/State";
-import { navigateToEmailSignIn, navigateToEmailSignUp } from "./NavigationActions";
+import {
+  navigateToEmailSignIn,
+  navigateToEmailSignUp,
+  navigateToLogin
+} from "./NavigationActions";
 
 export module AccountActions {
   export const AUTHENTICATE_ERROR = "AUTHENTICATION_ERROR";
@@ -30,8 +37,9 @@ export module AccountActions {
   export const UPDATE_STATE_UPDATE_USER_PROFILE = "UPDATE_UPDATE_USER_PROFILE";
   export const UPDATE_STATE_CHECK_ACCOUNT_WITH_EMAIL =
     "UPDATE_STATE_CHECK_ACCOUNT_WITH_EMAIL";
-  export const EMAIL_SIGNUP = "EMAIL_SIGNUP";
-  export const EMAIL_LOGIN = "EMAIL_LOGIN";
+  export const UPDATE_STATE_REQUEST_TOKEN = "UPDATE_STATE_REQUEST_TOKEN";
+  export const UPDATE_STATE_VERIFY_TOKEN = "UPDATE_STATE_VERIFY_TOKEN";
+  export const UPDATE_STATE_SET_PASSWORD = "UPDATE_STATE_SET_PASSWORD";
 }
 
 export const cancelThirdPartyAuthentication = createAction<"facebook" | "google">(
@@ -51,9 +59,15 @@ export const updateStateUpdateUserProfile = createAction<UpdateUserProfilePayloa
 export const updateStateCheckAccountWithEmail = createAction<CheckAccountWithEmailPayload>(
   AccountActions.UPDATE_STATE_CHECK_ACCOUNT_WITH_EMAIL
 );
-
-export const signup = createAction(AccountActions.EMAIL_SIGNUP);
-export const login = createAction(AccountActions.EMAIL_LOGIN);
+export const updateStateRequestToken = createAction<RequestTokenPayload>(
+  AccountActions.UPDATE_STATE_REQUEST_TOKEN
+);
+export const updateStateVerifyToken = createAction<VerifyTokenPayload>(
+  AccountActions.UPDATE_STATE_VERIFY_TOKEN
+);
+export const updateStateSetPassword = createAction<SetPasswordPayload>(
+  AccountActions.UPDATE_STATE_SET_PASSWORD
+);
 
 export const checkAccountWithEmail = (email: string) => {
   return async (dispatch: Function) => {
@@ -87,14 +101,21 @@ export const checkAccountWithEmail = (email: string) => {
   };
 };
 
-export const setNewPassword = (_email: string, _token: string, _newPassword: string) => {
+export const setNewPassword = (email: string, token: string, newPassword: string) => {
   return async (dispatch: Function) => {
+    dispatch(
+      updateStateSetPassword({
+        state: NetworkRequestState.REQUESTING
+      })
+    );
     try {
-      // const accountService = container.get<IAccountService>(Types.IAccountService);
-      // const response = await accountService.setNewPassword(email, token, newPassword);
-      // if (response) {
-      //   return response;
-      // }
+      const accountService = container.get<IAccountService>(Types.IAccountService);
+      const response = await accountService.setNewPassword(email, token, newPassword);
+
+      dispatch(updateStateSetPassword({ state: NetworkRequestState.SUCCESS }));
+      if (response?.user) {
+        dispatch(authenticationComplete(response!.user));
+      }
     } catch (error) {
       dispatch(notifyError());
     }
@@ -103,49 +124,75 @@ export const setNewPassword = (_email: string, _token: string, _newPassword: str
 
 export const verifyToken = (email: string, token: string) => {
   return async (dispatch: Function) => {
+    dispatch(
+      updateStateVerifyToken({
+        state: NetworkRequestState.REQUESTING,
+        error: null
+      })
+    );
     try {
       const accountService = container.get<IAccountService>(Types.IAccountService);
-      const response = await accountService.verifyConfirmationToken(email, token);
-      if (response) {
-        return response;
-      }
+      await accountService.verifyConfirmationToken(email, token);
+      dispatch(
+        updateStateVerifyToken({
+          state: NetworkRequestState.SUCCESS
+        })
+      );
     } catch (error) {
-      dispatch(notifyError());
+      dispatch(
+        updateStateVerifyToken({
+          state: NetworkRequestState.FAILED,
+          error
+        })
+      );
     }
   };
 };
 
 export const requestTokenConfirm = (email: string) => {
   return async (dispatch: Function) => {
+    dispatch(
+      updateStateRequestToken({
+        state: NetworkRequestState.REQUESTING,
+        error: null
+      })
+    );
     try {
       const accountService = container.get<IAccountService>(Types.IAccountService);
+      await accountService.requestConfirmationToken(email);
 
-      const token = await accountService.requestConfirmationToken(email);
-      if (token) {
-        return token;
-      }
+      dispatch(
+        updateStateRequestToken({
+          state: NetworkRequestState.SUCCESS,
+          error: null
+        })
+      );
     } catch (error) {
-      dispatch(notifyError());
+      dispatch(
+        updateStateRequestToken({
+          error,
+          state: NetworkRequestState.FAILED
+        })
+      );
     }
   };
 };
 
 export const emailSignup = (email: string, password: string) => {
   return async (dispatch: Function) => {
-    dispatch(signup());
+    dispatch(onPremAuthenticate());
     try {
       const accountService = container.get<IAccountService>(Types.IAccountService);
       const settings = container.get<IAppSettingsService>(Types.IAppSettingsService);
 
       const accountPayload = await accountService.signupEmail(email, password);
-      console.log("TCL: emailSignup -> accountPayload", accountPayload);
       if (accountPayload) {
         await settings.setValue(SettingsKeys.CurrentAccessToken, accountPayload.token);
         await settings.loadServerSettings();
 
         await dispatch(getUserProfile(accountPayload.token));
         dispatch(showNotification("Đăng ký thành công"));
-        // return accountPayload;
+        dispatch(authenticationComplete(accountPayload.user));
       }
     } catch (error) {
       dispatch(authenticationError(error));
@@ -155,23 +202,21 @@ export const emailSignup = (email: string, password: string) => {
 
 export const emailLogin = (email: string, password: string) => {
   return async (dispatch: Function) => {
-    dispatch(login());
+    dispatch(onPremAuthenticate());
     try {
       const accountService = container.get<IAccountService>(Types.IAccountService);
       const settings = container.get<IAppSettingsService>(Types.IAppSettingsService);
 
       const accountPayload = await accountService.loginEmail(email, password);
-      console.log("TCL: emailLogin -> accountPayload", accountPayload);
       if (accountPayload) {
         await settings.setValue(SettingsKeys.CurrentAccessToken, accountPayload.token);
         await settings.loadServerSettings();
 
         await dispatch(getUserProfile(accountPayload.token));
         dispatch(authenticationComplete(accountPayload.user));
-        dispatch(notifyLoginSuccess());
       }
     } catch (error) {
-      dispatch(showNotification("Email hoặc mật khẩu không chính xác!"));
+      dispatch(authenticationError(error));
     }
   };
 };
@@ -179,12 +224,6 @@ export const emailLogin = (email: string, password: string) => {
 export const notifyError = () => {
   return (dispatch: Function) => {
     dispatch(showNotification("Xảy ra lỗi!"));
-  };
-};
-
-export const notifyLoginSuccess = () => {
-  return (dispatch: Function) => {
-    dispatch(showNotification("Đăng nhập thành công"));
   };
 };
 
@@ -205,7 +244,6 @@ export const authenticateVsnkrsService = (
 
         await dispatch(getUserProfile(accountPayload.token));
         dispatch(authenticationComplete(accountPayload.user));
-        dispatch(notifyLoginSuccess());
       }
     } catch (error) {
       dispatch(authenticationError(error));
@@ -270,11 +308,11 @@ export const getCurrentUser = (accessToken: string) => {
       dispatch(getUserProfile(accessToken));
 
       if (accountPayload) {
-        dispatch(notifyLoginSuccess());
         dispatch(authenticationComplete(accountPayload.user));
       }
     } catch (error) {
       dispatch(authenticationError(error));
+      dispatch(navigateToLogin());
     }
   };
 };

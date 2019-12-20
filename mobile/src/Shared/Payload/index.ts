@@ -3,7 +3,7 @@
 //!
 
 import { NetworkRequestState } from "../State";
-import { Transaction, Shoe, Profile } from "../Model";
+import { Transaction, Shoe, Profile, Account } from "../Model";
 
 type NetworkPayload = {
   state: NetworkRequestState;
@@ -29,4 +29,10 @@ export type CheckAccountWithEmailPayload = {
   existStatus?: boolean;
 } & NetworkPayload;
 
-export type UpdateUserProfilePayload = NetworkPayload;
+export type RequestTokenPayload = NetworkPayload;
+export type VerifyTokenPayload = NetworkPayload;
+export type SetPasswordPayload = NetworkPayload;
+
+export type UpdateUserProfilePayload = {
+  profile?: Profile;
+} & NetworkPayload;

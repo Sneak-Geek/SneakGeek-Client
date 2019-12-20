@@ -4,30 +4,25 @@
 
 import { handleActions, Action } from "redux-actions";
 import * as Actions from "../Actions";
-import { Account, Profile } from "../Shared/Model";
+import { Account } from "../Shared/Model";
 import {
   GetUserProfilePayload,
   UpdateUserProfilePayload,
-  CheckAccountWithEmailPayload
+  CheckAccountWithEmailPayload,
+  RequestTokenPayload,
+  VerifyTokenPayload,
+  SetPasswordPayload
 } from "../Shared/Payload";
 import { NetworkRequestState } from "../Shared/State";
 
 export interface IAccountState {
   currentAccount: Account | null;
-  userProfileState: {
-    state: NetworkRequestState;
-    profile?: Profile;
-    error?: any;
-  };
-  updateProfileState: {
-    state: NetworkRequestState;
-    error?: any;
-  };
-  checkAccountWithEmailState: {
-    state: NetworkRequestState;
-    error?: any;
-    existStatus?: boolean;
-  };
+  userProfileState: UpdateUserProfilePayload;
+  updateProfileState: UpdateUserProfilePayload;
+  checkAccountWithEmailState: CheckAccountWithEmailPayload;
+  requestTokenState: RequestTokenPayload;
+  verifyTokenState: VerifyTokenPayload;
+  setPasswordState: SetPasswordPayload;
   isAuthenticating: boolean;
   authenticationError?: any;
   isAuthenticatingWithFacebook: boolean;
@@ -45,6 +40,15 @@ let initialState: IAccountState = {
   checkAccountWithEmailState: {
     state: NetworkRequestState.NOT_STARTED
   },
+  requestTokenState: {
+    state: NetworkRequestState.NOT_STARTED
+  },
+  verifyTokenState: {
+    state: NetworkRequestState.NOT_STARTED
+  },
+  setPasswordState: {
+    state: NetworkRequestState.NOT_STARTED
+  },
   isAuthenticating: false,
   authenticationError: null,
   isAuthenticatingWithFacebook: false,
@@ -54,25 +58,31 @@ let initialState: IAccountState = {
 export const AccountReducers = handleActions<IAccountState, any>(
   {
     [`${Actions.onPremAuthenticate}`]: (state: IAccountState, _action: Action<any>) => {
-      return Object.assign(state, { isAuthenticating: true, authenticationError: null });
+      return {
+        ...state,
+        isAuthenticating: true,
+        authenticationError: null
+      };
     },
     [`${Actions.cancelThirdPartyAuthentication}`]: (
       state: IAccountState,
       _action: Action<any>
     ) => {
-      return Object.assign(state, {
+      return {
+        ...state,
         isAuthenticationCancelled: true,
         isAuthenticating: false
-      });
+      };
     },
     [`${Actions.authenticationComplete}`]: (
       state: IAccountState,
       action: Action<Account>
     ) => {
-      return Object.assign(state, {
+      return {
+        ...state,
         currentAccount: action.payload,
         isAuthenticating: false
-      });
+      };
     },
     [`${Actions.authenticationError}`]: (state: IAccountState, action: Action<any>) => {
       return Object.assign(state, {
@@ -97,6 +107,26 @@ export const AccountReducers = handleActions<IAccountState, any>(
       ...state,
       updateProfileState: {
         ...state.updateProfileState,
+        ...action.payload
+      }
+    }),
+    [`${Actions.updateStateRequestToken}`]: (
+      state: IAccountState,
+      action: Action<RequestTokenPayload>
+    ) => ({
+      ...state,
+      requestTokenState: {
+        ...state.requestTokenState,
+        ...action.payload
+      }
+    }),
+    [`${Actions.updateStateVerifyToken}`]: (
+      state: IAccountState,
+      action: Action<VerifyTokenPayload>
+    ) => ({
+      ...state,
+      verifyTokenState: {
+        ...state.verifyTokenState,
         ...action.payload
       }
     }),

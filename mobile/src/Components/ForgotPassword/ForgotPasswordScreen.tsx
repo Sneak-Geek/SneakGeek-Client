@@ -11,8 +11,15 @@ import {
   Alert
 } from "react-native";
 import { Icon } from "react-native-elements";
-import { StackActions, NavigationScreenProps } from "react-navigation";
+import {
+  StackActions,
+  NavigationScreenProps,
+  NavigationScreenProp,
+  NavigationRoute
+} from "react-navigation";
 import * as Assets from "../../Assets";
+import { TextStyle } from "../../Shared/UI/Text";
+import { NetworkRequestState } from "../../Shared/State";
 
 interface IForgotPasswordScreenState {
   type: string;
@@ -23,6 +30,10 @@ interface IForgotPasswordScreenState {
 }
 
 interface IForgotPasswordScreenProps {
+  requestTokenState: NetworkRequestState;
+  verifyTokenState: NetworkRequestState;
+
+  // dispatch props
   requestTokenConfirm: (email: string) => Promise<{ message: string }>;
   verifyToken: (email: string, token: string) => Promise<{ message: string }>;
   setNewPassword: (
@@ -31,6 +42,7 @@ interface IForgotPasswordScreenProps {
     newPassword: string
   ) => Promise<{ message: string }>;
   navigateToHome: () => void;
+  navigation: NavigationScreenProp<NavigationRoute>;
 }
 
 export class ForgotPasswordScreen extends React.Component<
@@ -41,7 +53,7 @@ export class ForgotPasswordScreen extends React.Component<
     headerStyle: {
       borderBottomWidth: 0
     },
-    headerTitleStyle: { fontSize: 22, fontFamily: "RobotoCondensed-Bold" },
+    headerTitleStyle: TextStyle.title2,
     title: "Quên mật khẩu",
     headerLeft: (
       <Icon
@@ -57,7 +69,7 @@ export class ForgotPasswordScreen extends React.Component<
   constructor(props: any) {
     super(props);
     this.state = {
-      email: "",
+      email: this.props.navigation.getParam("email") || "",
       code: "",
       passwordConfirm: "",
       password: "",
@@ -65,52 +77,49 @@ export class ForgotPasswordScreen extends React.Component<
     };
   }
 
-  onBack = (transitionProp: NavigationScreenProps) => {
-    let { type } = this.state;
-    if (type === "inputEmail") {
-      transitionProp.navigation.dispatch(StackActions.pop({ n: 1 }));
+  public componentDidUpdate(prevProps: IForgotPasswordScreenProps) {
+    switch (this.state.type) {
+      case "inputEmail":
+        if (
+          prevProps.requestTokenState !== this.props.requestTokenState &&
+          this.props.requestTokenState === NetworkRequestState.SUCCESS
+        ) {
+          this.setState({ type: "inputCode" });
+        }
+        break;
+      case "inputPassword":
+        if (
+          prevProps.verifyTokenState !== this.props.verifyTokenState &&
+          this.props.verifyTokenState === NetworkRequestState.SUCCESS
+        ) {
+          this.setState({ type: "inputPassword" });
+        }
+        break;
+      default:
+        break;
     }
-    if (type === "inputCode") {
-      this.setState({ type: "inputEmail" });
-    }
-  };
+  }
 
-  onPress = async () => {
+  private _onPress() {
     let { type, email, code, password, passwordConfirm } = this.state;
     if (type === "inputEmail") {
-      let res: { message: string } = await this.props.requestTokenConfirm(email);
-      console.log("TCL: ForgotPasswordScreen -> onPress -> res", res);
-      if (res) {
-        this.setState({ type: "inputCode" });
-      } else {
-        Alert.alert("Thông báo", "Email không chính xác");
-      }
-    }
-    if (type === "inputCode") {
-      let res = await this.props.verifyToken(email, code);
-      if (res) {
-        this.setState({ type: "inputPassword" });
-      } else {
-        Alert.alert("Thông báo", "Mã code không chính xác");
-      }
-    }
-    if (type === "inputPassword") {
+      this.props.requestTokenConfirm(email);
+    } else if (type === "inputCode") {
+      this.props.verifyToken(email, code);
+    } else if (type === "inputPassword") {
       if (password.length < 1) {
         Alert.alert("Thông báo", "Vui lòng nhập mật khẩu");
         return;
       }
+
       if (password !== passwordConfirm) {
         Alert.alert("Thông báo", "Mật khẩu không trùng nhau");
         return;
       }
-      let res = await this.props.setNewPassword(email, code, password);
-      if (res) {
-        this.props.navigateToHome();
-      } else {
-        Alert.alert("Thông báo", "Quá trình xử lý đã xảy ra lỗi!\nVui lòng thử lại.");
-      }
+
+      this.props.setNewPassword(email, code, password);
     }
-  };
+  }
 
   public render() {
     return (
@@ -121,7 +130,7 @@ export class ForgotPasswordScreen extends React.Component<
         <TouchableOpacity
           style={styles.buttonContainer}
           activeOpacity={0.7}
-          onPress={this.onPress}
+          onPress={this._onPress.bind(this)}
         >
           <Text style={styles.titleButton}>TIẾP TỤC</Text>
         </TouchableOpacity>
@@ -138,8 +147,9 @@ export class ForgotPasswordScreen extends React.Component<
         return this.renderInputCode();
       case "inputPassword":
         return this.renderInputPassword();
+      default:
+        return null;
     }
-    return null;
   }
 
   private renderInputEmail() {
@@ -184,21 +194,21 @@ export class ForgotPasswordScreen extends React.Component<
         <Text
           style={styles.title}
         >{`Email chứa mã code để đặt lại mật khẩu đã được gửi đến hòm thư của bạn.`}</Text>
-        <Text
-          style={[styles.title, { paddingTop: 20 }]}
-        >{`Nhập mã code trong email của bạn vào đây:`}</Text>
+        <Text style={[styles.title, { paddingTop: 20 }]}>
+          Nhập mã code trong email của bạn vào đây:
+        </Text>
         <View style={styles.inputContainer}>
           <View style={styles.absolute}>
             <Text style={styles.email}>Mã code</Text>
           </View>
           <TextInput
             style={styles.input}
-            placeholder="Mã code"
+            placeholder={"Mã code"}
             value={code}
             placeholderTextColor={"rgba(0, 0, 0, 0.4)"}
             onChangeText={code => this.setState({ code })}
             selectionColor={Assets.Styles.AppPrimaryColor}
-            autoCapitalize="none"
+            autoCapitalize={"none"}
           />
         </View>
         <Image

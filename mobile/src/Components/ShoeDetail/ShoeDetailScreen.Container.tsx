@@ -33,7 +33,7 @@ const mapDispatchToProps = (dispatch: Function) => {
     },
     navigateToAuctionOrder: () => {
       const navConfig = {
-        routeName: RouteNames.OrderAuction,
+        routeName: RouteNames.OrderAuction
       };
       dispatch(StackActions.push(navConfig));
     }

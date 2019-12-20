@@ -9,28 +9,31 @@ import { RouteNames } from "../../Navigation";
 import { StackActions } from "react-navigation";
 import * as Actions from "../../Actions";
 
-const mapStateToProps = (_state: IAppState) => ({});
+const mapStateToProps = (state: IAppState) => ({
+  requestTokenState: state.AccountState.requestTokenState.state,
+  verifyTokenState: state.AccountState.verifyTokenState.state
+});
+
 const mapDispatchToProps = (dispatch: Function) => ({
- 
   requestTokenConfirm: (email: string) => {
-    return dispatch(Actions.requestTokenConfirm(email));
+    dispatch(Actions.requestTokenConfirm(email));
   },
 
-  verifyToken: (email: string, token: string) => {
-    return dispatch(Actions.verifyToken(email, token));
+  verifyToken: (email: string, verificationToken: string) => {
+    dispatch(Actions.verifyToken(email, verificationToken));
   },
 
-  setNewPassword: (email: string, token: string, newPassword: string) => {
-    return dispatch(Actions.setNewPassword(email, token, newPassword));
+  setNewPassword: (email: string, verificationToken: string, newPassword: string) => {
+    dispatch(Actions.setNewPassword(email, verificationToken, newPassword));
   },
 
   navigateToHome: () => {
     dispatch(
-        StackActions.replace({
-            routeName: RouteNames.Tabs.TabRoot
-        }),
+      StackActions.replace({
+        routeName: RouteNames.Tabs.TabRoot
+      })
     );
-},
+  }
 });
 
 export const ForgotPasswordScreenContainer = connect(

@@ -123,15 +123,16 @@ export class SignUpScreen extends React.Component<ISignUpScreenProps, ISignUpScr
     return (
       <View style={styles.inputContainer}>
         <TextInput
+          secureTextEntry={true}
           style={styles.input}
-          placeholder="Mật khẩu"
+          placeholder={"Mật khẩu"}
           value={password}
           placeholderTextColor="rgba(0, 0, 0, 0.4)"
           onChangeText={password =>
             this.setState({ password }, () => this.validateButton())
           }
           selectionColor={Assets.Styles.AppPrimaryColor}
-          autoCapitalize="none"
+          autoCapitalize={"none"}
         />
       </View>
     );

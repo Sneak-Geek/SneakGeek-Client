@@ -5,6 +5,7 @@
 export const RouteNames = {
   AppNavigator: "AppNavigator",
   Splash: "Splash",
+  Authentication: "Authentication",
   Login: "Login",
   UserKind: "UserKind",
   EmailSignUp: "EmailSignUp",
