@@ -4,12 +4,12 @@
 
 import axios from "axios";
 
+export const baseUrl = __DEV__
+  ? "http://localhost:8080/api/v1"
+  : "https://sneakgeek-test.azurewebsites.net/api/v1";
+
 const ApiClient = axios.create({
-  // baseURL: __DEV__ ? `http://localhost:8080/api/v1` : "http://3.15.28.92:8080/api/v1/",
-  // baseURL: "http://sneakgeek-success.azurewebsites.net/api/v1",
-  baseURL: __DEV__
-    ? "http://localhost:8080/api/v1"
-    : "https://sneakgeek-test.azurewebsites.net/api/v1",
+  baseURL: baseUrl,
   timeout: 10000
 });
 

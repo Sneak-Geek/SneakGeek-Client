@@ -6,13 +6,13 @@ import {
   TouchableOpacity,
   Image,
   Text,
-  ScrollView
+  ScrollView,
+  ActionSheetIOS
 } from "react-native";
 import { StackActions, NavigationScreenProps } from "react-navigation";
 import { Icon } from "react-native-elements";
 import * as Assets from "../../Assets";
 import { RowCard } from "../../Shared/UI";
-import ActionSheet from "react-native-actionsheet";
 import { Types, container } from "../../Config/Inversify";
 import { ITransactionService } from "../../Service";
 
@@ -50,7 +50,6 @@ export class PaymentScreen extends React.Component<
     value: ""
   };
 
-  private actionSheet: ActionSheet | null = null;
   private transactionService: ITransactionService = container.get<ITransactionService>(
     Types.ITransactionService
   );
@@ -59,7 +58,7 @@ export class PaymentScreen extends React.Component<
     super(props);
   }
 
-  public actionSheetOpress = (index: number) => {
+  public actionSheetOnpress = (index: number) => {
     if (index === 0) {
       this.setState({ value: "Thanh toán nội địa" });
     }
@@ -78,7 +77,6 @@ export class PaymentScreen extends React.Component<
           </ScrollView>
         </View>
         {this._renderButton()}
-        {this._renderActionSheet()}
       </SafeAreaView>
     );
   }
@@ -108,25 +106,25 @@ export class PaymentScreen extends React.Component<
   private _renderContent() {
     return (
       <View style={{ paddingHorizontal: 20, paddingTop: 15 }}>
-        <RowCard title="CỠ GIÀY" descrip="Cỡ 8.5" />
-        <RowCard title="TÌNH TRẠNG" descrip="Có hộp, mới" border />
+        <RowCard title="CỠ GIÀY" description="Cỡ 8.5" />
+        <RowCard title="TÌNH TRẠNG" description="Có hộp, mới" border />
         <RowCard
           title="ĐỊA CHỈ GIAO HÀNG"
-          descrip="Số 20 phố huế, quận hai bà trưng, hà nội"
+          description="Số 20 phố huế, quận hai bà trưng, hà nội"
           green
         />
-        <RowCard title="HÌNH THỨC GIAO HÀNG" descrip="Chuyển phát nhanh" green />
+        <RowCard title="HÌNH THỨC GIAO HÀNG" description="Chuyển phát nhanh" green />
         <RowCard
           title="THANH TOÁN"
           value={this.state.value}
           buttonTitle="Lựa chọn"
           border
-          descripStyle={{ opacity: 0.3 }}
-          onPress={() => this.actionSheet && this.actionSheet.show()}
+          descriptionStyle={{ opacity: 0.3 }}
+          onPress={() => {}}
         />
-        <RowCard title="GIÁ MUA" descrip="VND 1,800,000" green />
-        <RowCard title="PHÍ GIAO HÀNG" descrip="VND 1,800,000" />
-        <RowCard title="TỔNG CỘNG" descrip="VND 1,800,000" />
+        <RowCard title="GIÁ MUA" description="VND 1,800,000" green />
+        <RowCard title="PHÍ GIAO HÀNG" description="VND 1,800,000" />
+        <RowCard title="TỔNG CỘNG" description="VND 1,800,000" />
       </View>
     );
   }
@@ -136,22 +134,24 @@ export class PaymentScreen extends React.Component<
       <TouchableOpacity
         style={styles.containerButton}
         onPress={() => {
-          this.transactionService.launchPaymentPage();
+          const options = ["Thanh toán nội địa", "Thanh toán quốc tế", "Huỷ"];
+          ActionSheetIOS.showActionSheetWithOptions(
+            {
+              options,
+              cancelButtonIndex: 2
+            },
+            buttonIndex => {
+              if (options[buttonIndex] === "Thanh toán quốc tế") {
+                this.transactionService.launchIntlPaymentPage();
+              } else if (options[buttonIndex] === "Thanh toán nội địa") {
+                this.transactionService.launchDomesticPaymentPage();
+              }
+            }
+          );
         }}
       >
         <Text style={styles.titleButton}>MUA SẢN PHẨM</Text>
       </TouchableOpacity>
-    );
-  }
-
-  private _renderActionSheet() {
-    return (
-      <ActionSheet
-        ref={(ref: any) => (this.actionSheet = ref)}
-        options={["Thanh toán nội địa", "Thanh toán quốc tế", "Cancel"]}
-        cancelButtonIndex={2}
-        onPress={(index: number) => this.actionSheetOpress(index)}
-      />
     );
   }
 }
