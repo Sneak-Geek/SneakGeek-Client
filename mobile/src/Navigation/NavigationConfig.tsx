@@ -154,7 +154,10 @@ export const AppNavigator = createStackNavigator(
       }
     },
     [`${RouteNames.Splash}`]: { screen: SplashScreenContainer },
-    [`${RouteNames.Authentication}`]: { screen: AuthenticationStack },
+    [`${RouteNames.Authentication}`]: {
+      screen: AuthenticationStack,
+      navigationOptions: { header: null }
+    },
     [`${RouteNames.SellDetail}`]: { screen: SellDetailScreenContainer },
     [`${RouteNames.ShoeDetail}`]: { screen: ShoeDetailScreenContainer },
     [`${RouteNames.PaymentOptions}`]: { screen: PaymentOptionsScreenContainer },
@@ -175,10 +178,8 @@ export const AppNavigator = createStackNavigator(
   {
     initialRouteName: RouteNames.Splash,
     mode: "card",
-    headerMode: "none",
     navigationOptions: {
-      gesturesEnabled: true,
-      header: null
+      gesturesEnabled: true
     }
   }
 );

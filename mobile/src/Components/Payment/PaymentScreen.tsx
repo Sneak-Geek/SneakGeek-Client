@@ -13,6 +13,8 @@ import { Icon } from "react-native-elements";
 import * as Assets from "../../Assets";
 import { RowCard } from "../../Shared/UI";
 import ActionSheet from "react-native-actionsheet";
+import { Types, container } from "../../Config/Inversify";
+import { ITransactionService } from "../../Service";
 
 interface IPaymentScreenState {}
 
@@ -49,6 +51,9 @@ export class PaymentScreen extends React.Component<
   };
 
   private actionSheet: ActionSheet | null = null;
+  private transactionService: ITransactionService = container.get<ITransactionService>(
+    Types.ITransactionService
+  );
 
   public constructor(props: any) {
     super(props);
@@ -128,7 +133,12 @@ export class PaymentScreen extends React.Component<
 
   private _renderButton() {
     return (
-      <TouchableOpacity style={styles.containerButton}>
+      <TouchableOpacity
+        style={styles.containerButton}
+        onPress={() => {
+          this.transactionService.launchPaymentPage();
+        }}
+      >
         <Text style={styles.titleButton}>MUA SẢN PHẨM</Text>
       </TouchableOpacity>
     );
