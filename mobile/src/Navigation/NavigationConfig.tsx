@@ -177,8 +177,8 @@ export const AppNavigator = createStackNavigator(
     mode: "card",
     headerMode: "none",
     navigationOptions: {
-      header: null,
-      gesturesEnabled: true
+      gesturesEnabled: true,
+      header: null
     }
   }
 );
