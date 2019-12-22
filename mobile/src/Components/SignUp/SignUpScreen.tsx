@@ -155,7 +155,7 @@ export class SignUpScreen extends React.Component<ISignUpScreenProps, ISignUpScr
       <TouchableOpacity
         style={[
           styles.buttonContainer,
-          { backgroundColor: active === true ? Assets.Styles.AppPrimaryColor : "#C7C7C7" }
+          { backgroundColor: active === true ? Assets.Styles.ButtonPrimaryColor : "#C7C7C7" }
         ]}
         onPress={this.checkEmail}
       >

@@ -288,7 +288,6 @@ export class ShoeSizePicker extends React.Component<ShoeSizePickerProps, ShoeSiz
       const button = this.buttons.get(item);
       if (button) {
         button.measure((_fx, _fy, _width, _height, px: number, py: number) => {
-          console.log(item, px, py);
           this.setState(prevState => ({
             ...prevState,
             buttonsLayout: prevState.buttonsLayout.set(item, { x: px, y: py })

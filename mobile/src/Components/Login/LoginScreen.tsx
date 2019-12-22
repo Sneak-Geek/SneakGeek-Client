@@ -170,7 +170,7 @@ export default class LoginScreen extends React.Component<ILoginScreenProps, Stat
           styles.authButtonContainer,
           {
             backgroundColor: this.state.shouldEmailActive
-              ? Assets.Styles.AppPrimaryColor
+              ? Assets.Styles.ButtonPrimaryColor
               : Assets.Styles.ButtonDisabledColor
           }
         ]}

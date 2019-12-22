@@ -10,13 +10,14 @@ import {
   NavigationRoute,
   BottomTabBarProps
 } from "react-navigation";
-import { View, StyleSheet, TextInput, SafeAreaView } from "react-native";
-import { Text } from "../../../Shared/UI";
+import { View, StyleSheet, TextInput, SafeAreaView, TouchableOpacity, ActionSheetIOS } from "react-native";
 import { Icon } from "react-native-elements";
 import { Profile } from "../../../Shared/Model";
 import * as Assets from "../../../Assets";
-import { TouchableOpacity } from "react-native-gesture-handler";
 import { NetworkRequestState } from "../../../Shared/State";
+import { IAppSettingsService } from "../../../Service/AppSettingsService";
+import { container, Types } from "../../../Config/Inversify";
+import { Text, ShoeSizePicker } from "../../../Shared/UI";
 
 const optionsList = [
   {
@@ -24,7 +25,6 @@ const optionsList = [
     placeholder: "Họ",
     value: (profile: Profile) =>
       profile.userProvidedName ? profile.userProvidedName.lastName : "",
-      // "trung",
     onUpdate: (value: string, profile: Profile) => {
       return Object.assign(profile, {
         userProvidedName: {
@@ -50,28 +50,9 @@ const optionsList = [
     },
     hasMarginBottom: true
   },
-  {
-    title: "Giới tính",
-    placeholder: "Giới tính",
-    value: (profile: Profile) => profile.userProvidedGender,
-    onUpdate: (value: string, profile: Profile) => {
-      return Object.assign(profile, {
-        userProvidedGender: value
-      });
-    },
-    hasMarginBottom: false
-  },
-  {
-    title: "Cỡ giày",
-    placeholder: "Cỡ giày",
-    value: (profile: Profile) => profile.userProvidedShoeSize,
-    onUpdate: (value: string, profile: Profile) => {
-      return Object.assign(profile, {
-        userProvidedShoeSize: value
-      });
-    },
-    hasMarginBottom: true
-  },
+];
+
+const optionsList2 = [
   {
     title: "Email",
     email: "Email",
@@ -94,8 +75,7 @@ const optionsList = [
     },
     hasMarginBottom: true
   }
-];
-
+]
 export interface IUserEditScreenProps {
   profile?: Profile;
   updateProfileState: { state: NetworkRequestState };
@@ -106,6 +86,8 @@ export interface IUserEditScreenProps {
 export interface IUserEditState {
   editMode: boolean;
   updatedInfo?: Profile;
+  isSelectingShoeSize: boolean;
+  shoeSize: string;
 }
 
 export class TabUserEditScreen extends React.Component<IUserEditScreenProps, IUserEditState> {
@@ -127,14 +109,70 @@ export class TabUserEditScreen extends React.Component<IUserEditScreenProps, IUs
     super(props);
     this.state = {
       editMode: false,
-      updatedInfo: this.props.profile
+      updatedInfo: this.props.profile,
+      isSelectingShoeSize: false,
+      shoeSize: '',
     };
   }
+
+  private appSettings: IAppSettingsService = container.get<IAppSettingsService>(
+    Types.IAppSettingsService
+  );
+  private remoteSettings = this.appSettings.getSettings().RemoteSettings;
+  public componentDidMount = () => {
+    console.log('thong tin setting', this.remoteSettings)
+
+  }
+
+  public pickGender = () => {
+    ActionSheetIOS.showActionSheetWithOptions(
+      {
+        options: ['Cancel', 'Man', 'Women', 'Unisex'],
+        cancelButtonIndex: 0,
+      },
+      (buttonIndex) => {
+        if (buttonIndex === 1) {
+          let newProfile = Object.assign(this.state.updatedInfo, {
+            userProvidedGender: 'Man'
+          });
+          this.setState({ updatedInfo: newProfile, editMode: true });
+        }
+        if (buttonIndex === 2) {
+          let newProfile = Object.assign(this.state.updatedInfo, {
+            userProvidedGender: 'Women'
+          });
+          this.setState({ updatedInfo: newProfile, editMode: true });
+        }
+        if (buttonIndex === 3) {
+          let newProfile = Object.assign(this.state.updatedInfo, {
+            userProvidedGender: 'Unisex'
+          });
+          this.setState({ updatedInfo: newProfile, editMode: true });
+        }
+      },
+    )
+  }
+
+  public pickSize = () => {
+    this.setState({ isSelectingShoeSize: true })
+  }
+
+  public onSetShoeSize = (shoeSize: string) => {
+    let newProfile = Object.assign(this.state.updatedInfo, {
+      userProvidedShoeSize: shoeSize
+    });
+    this.setState({ updatedInfo: newProfile, editMode: true });
+  }
+
 
   public /** override */ render() {
     return (
       <SafeAreaView style={{ flex: 1 }}>
         <ScrollView showsVerticalScrollIndicator={false}>{this._renderSettings()}</ScrollView>
+        <View style={{ flex: 1 }}>
+          {this._renderSettings()}
+          {this._renderShoeSelectionModal()}
+        </View>
         {this._renderUpdateButton()}
       </SafeAreaView>
     );
@@ -152,8 +190,9 @@ export class TabUserEditScreen extends React.Component<IUserEditScreenProps, IUs
 
   private _renderSettings() {
     const { updatedInfo } = this.state;
+    const { profile } = this.props;
     return (
-      <View style={{paddingTop: 34}}>
+      <View style={{ paddingTop: 34 }}>
         {optionsList.map((item, i) => (
           <View
             key={i}
@@ -164,13 +203,62 @@ export class TabUserEditScreen extends React.Component<IUserEditScreenProps, IUs
           >
             <Text.Headline style={{ flex: 1, fontSize: 14, fontFamily: 'RobotoCondensed-Bold' }}>{item.title.toUpperCase()}</Text.Headline>
             <TextInput
+              placeholderTextColor='#999999'
               value={
                 updatedInfo && item.value(updatedInfo)
                   ? (item.value(updatedInfo) as any).toString()
                   : ""
               }
               placeholder={item.placeholder}
-              // value="Trung"
+              onChangeText={value => {
+                if (updatedInfo) {
+                  const newProfile = item.onUpdate(value, updatedInfo);
+                  this.setState({ updatedInfo: newProfile, editMode: true });
+                }
+              }}
+              style={styles.input}
+            />
+          </View>
+        ))}
+        <TouchableOpacity
+          style={styles.listItem}
+          onPress={this.pickGender}
+        >
+          <Text.Headline style={{ flex: 1, fontSize: 14, fontFamily: 'RobotoCondensed-Bold' }}>GIỚI TÍNH</Text.Headline>
+          {profile && profile.userProvidedGender ?
+            <Text.Body style={[styles.input, { flex: 2 }]}>{profile.userProvidedGender}</Text.Body>
+            :
+            <Text.Body style={[styles.input, { flex: 2, color: '#999999' }]}>Giới tính</Text.Body>
+          }
+        </TouchableOpacity>
+        <TouchableOpacity
+          style={[styles.listItem, styles.listItemStyleWithMarginBottom]}
+          onPress={this.pickSize}
+        >
+          <Text.Headline style={{ flex: 1, fontSize: 14, fontFamily: 'RobotoCondensed-Bold' }}>CỠ GIÀY</Text.Headline>
+          {profile && profile.userProvidedShoeSize ?
+            <Text.Body style={[styles.input, { flex: 2 }]}>{profile.userProvidedShoeSize}</Text.Body>
+            :
+            <Text.Body style={[styles.input, { flex: 2, color: '#999999' }]}>Cỡ giày</Text.Body>
+          }
+        </TouchableOpacity>
+        {optionsList2.map((item, i) => (
+          <View
+            key={i}
+            style={[
+              styles.listItem,
+              item.hasMarginBottom ? styles.listItemStyleWithMarginBottom : {}
+            ]}
+          >
+            <Text.Headline style={{ flex: 1, fontSize: 14, fontFamily: 'RobotoCondensed-Bold' }}>{item.title.toUpperCase()}</Text.Headline>
+            <TextInput
+              placeholderTextColor='#999999'
+              value={
+                updatedInfo && item.value(updatedInfo)
+                  ? (item.value(updatedInfo) as any).toString()
+                  : ""
+              }
+              placeholder={item.placeholder}
               onChangeText={value => {
                 if (updatedInfo) {
                   const newProfile = item.onUpdate(value, updatedInfo);
@@ -182,6 +270,31 @@ export class TabUserEditScreen extends React.Component<IUserEditScreenProps, IUs
           </View>
         ))}
       </View>
+    );
+  }
+
+  private _renderShoeSelectionModal(): JSX.Element {
+    return (
+      <ShoeSizePicker
+        shouldRenderCounter={false}
+        pickerTitle={"Cỡ giày của bạn"}
+        visible={this.state.isSelectingShoeSize}
+        onTogglePicker={(
+          exiting: boolean,
+          owned: string | Array<{ shoeSize: string; number: number }>
+        ) => {
+          typeof owned === "string" &&
+            this.setState(
+              {
+                shoeSize: owned,
+                isSelectingShoeSize: false
+              },
+              () => {
+                !exiting && this.onSetShoeSize(owned);
+              }
+            );
+        }}
+      />
     );
   }
 

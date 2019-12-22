@@ -10,13 +10,13 @@ import {
   SafeAreaView,
   TouchableOpacity,
   ScrollView,
-  Alert
+  Alert,
+  ActionSheetIOS
 } from "react-native";
 import { Image } from "react-native-elements";
 import { Text } from "../../../Shared/UI";
 import * as Assets from "../../../Assets";
 import { Account, Profile } from "../../../Shared/Model";
-import ActionSheet from "react-native-actionsheet";
 
 export interface IUserTabMainProps {
   account: Account;
@@ -75,6 +75,11 @@ export default class TabUserMainScreen extends React.Component<IUserTabMainProps
       onClick: () => this.props.navigateToNotiSetting()
     },
     {
+      title: "Câu hỏi thường gặp",
+      hasMarginBottom: false,
+      onClick: () => this.props.navigateToSearch()
+    },
+    {
       title: "Chia sẻ ứng dụng",
       hasMarginBottom: false,
       onClick: () => this.props.navigateToShare()
@@ -91,7 +96,6 @@ export default class TabUserMainScreen extends React.Component<IUserTabMainProps
     }
   ];
 
-  private actionSheet: ActionSheet | null = null;
 
   public constructor /** override */(props: any) {
     super(props);
@@ -105,14 +109,26 @@ export default class TabUserMainScreen extends React.Component<IUserTabMainProps
     console.log("thong tin khach", this.props.profile);
   };
 
-  public actionSheetOpress = (index: number) => {
-    if (index === 0) {
-      Alert.alert("Chọn ảnh từ thư viện");
-    }
-    if (index === 1) {
-      Alert.alert("Chụp ảnh");
-    }
-  };
+  public openActionSheet = () => {
+    ActionSheetIOS.showActionSheetWithOptions(
+      {
+        options: ['Cancel', 'Chọn ảnh từ thư viện', 'Chụp ảnh'],
+        cancelButtonIndex: 0,
+      },
+      (buttonIndex) => {
+        switch (buttonIndex) {
+          case 1:
+            Alert.alert("Chọn ảnh từ thư viện");
+            break;
+            case 2:
+              Alert.alert("Chụp ảnh");
+              break;
+          default:
+            break;
+        }
+      },
+    );
+  }
   public /** override */ render(): React.ReactNode {
     return (
       <SafeAreaView>
@@ -122,7 +138,6 @@ export default class TabUserMainScreen extends React.Component<IUserTabMainProps
             {this._renderBasicUserData()}
             {this._renderSettingsList()}
             {this._renderLogoutButton()}
-            {this._renderActionSheet()}
           </View>
         </ScrollView>
       </SafeAreaView>
@@ -137,7 +152,8 @@ export default class TabUserMainScreen extends React.Component<IUserTabMainProps
     // const { account } = this.props;
     // const { accountNameByProvider } = account;
     // const photo = account.accountProfilePicByProvider;
-
+    const { profile } = this.props;
+    const { userProvidedName } = profile;
     return (
       <View style={styles.headerContainer}>
         <View style={{ position: "relative" }}>
@@ -148,16 +164,21 @@ export default class TabUserMainScreen extends React.Component<IUserTabMainProps
           />
           <TouchableOpacity
             style={styles.cameraButtonContainer}
-            onPress={() => this.actionSheet && this.actionSheet.show()}
+            onPress={this.openActionSheet}
           >
             <Image source={Assets.Icons.ProfileCamera} style={{ width: 22, height: 18 }} />
           </TouchableOpacity>
         </View>
         <View>
-          <Text.Headline style={styles.name}>
-            {/* {accountNameByProvider.familyName} {accountNameByProvider.givenName} */}
-            Trung Deps
-          </Text.Headline>
+          {userProvidedName && (userProvidedName.lastName || userProvidedName.firstName) ?
+            <Text.Headline style={styles.name}>
+              {userProvidedName.lastName} {userProvidedName.firstName}
+            </Text.Headline>
+            :
+            <Text.Headline style={styles.name}>
+              Họ và tên
+            </Text.Headline>
+          }
           <Text.Callout style={styles.address}>Hà Nội, VN</Text.Callout>
         </View>
       </View>
@@ -199,16 +220,6 @@ export default class TabUserMainScreen extends React.Component<IUserTabMainProps
     );
   }
 
-  private _renderActionSheet() {
-    return (
-      <ActionSheet
-        ref={(ref: ActionSheet) => (this.actionSheet = ref)}
-        options={["Đăng ảnh từ Thư Viện", "Chụp từ Camera", "Cancel"]}
-        cancelButtonIndex={2}
-        onPress={(index: number) => this.actionSheetOpress(index)}
-      />
-    );
-  }
 }
 
 const styles = StyleSheet.create({

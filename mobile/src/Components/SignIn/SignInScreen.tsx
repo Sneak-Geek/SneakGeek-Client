@@ -168,7 +168,7 @@ export class SignInScreen extends React.Component<ISignInScreenProps, ISignInScr
           styles.authButtonContainer,
           {
             backgroundColor: isEmailValid
-              ? Assets.Styles.AppPrimaryColor
+              ? Assets.Styles.ButtonPrimaryColor
               : Assets.Styles.ButtonDisabledColor
           }
         ]}
