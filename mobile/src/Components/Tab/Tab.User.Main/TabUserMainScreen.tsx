@@ -102,7 +102,6 @@ export default class TabUserMainScreen extends React.Component<IUserTabMainProps
 
   public componentDidMount = async () => {
     // let res = await this.props.getUserProfile();
-    console.log("thong tin khach", this.props.profile);
   };
 
   public actionSheetOpress = (index: number) => {

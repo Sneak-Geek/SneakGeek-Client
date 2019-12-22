@@ -7,6 +7,7 @@ export { HorizontalShoeCard } from "./HorizontalShoeCard";
 export { ShoeProgressCircle } from "./ShoeProgressCircle";
 export { TransactionShoeCard } from "./TransactionShoeCard";
 export { RowCard } from "./RowCard";
+export { FaqItem } from "./FaqItem";
 
 export { AppButton } from "./AppButton";
 

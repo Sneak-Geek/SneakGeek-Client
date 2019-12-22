@@ -28,4 +28,5 @@ export interface IAccountService {
     newPassword: string
   ): Promise<(SetPasswordPayload & { user?: Account }) | undefined>;
   isAccountWithEmailExists(emai: string): Promise<any>;
+  changePassword(token: string, currentPassword: string, newPassword: string): Promise<any>;
 }

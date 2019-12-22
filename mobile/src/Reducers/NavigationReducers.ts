@@ -26,6 +26,9 @@ export const NavigationReducers = (
 ) => {
   let nextState;
   switch (action.type) {
+    case Actions.NavigationActions.POP:
+      nextState = AppNavigator.router.getStateForAction(StackActions.pop({ n: 1 }), state);
+      break;
     case Actions.AccountActions.AUTHENTICATION_COMPLETE:
       nextState = AppNavigator.router.getStateForAction(
         StackActions.reset({

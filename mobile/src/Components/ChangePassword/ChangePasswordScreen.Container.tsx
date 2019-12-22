@@ -7,6 +7,7 @@ import { ChangePasswordScreen } from "./ChangePasswordScreen";
 import { IAppState } from "../../Store";
 import { RouteNames } from "../../Navigation";
 import { NavigationActions } from "react-navigation";
+import * as Actions from "../../Actions";
 
 const mapStateToProps = (_state: IAppState) => ({});
 const mapDispatchToProps = (dispatch: Function) => ({
@@ -15,7 +16,11 @@ const mapDispatchToProps = (dispatch: Function) => ({
       routeName: RouteNames.RequireSuccess,
     };
     dispatch(NavigationActions.navigate(navConfig));
-  }
+  },
+
+  onChangePassword: (currentPassword: string, newPassword: string) => {
+    dispatch(Actions.changePassword(currentPassword, newPassword));
+  },
 });
 
 export const ChangePasswordScreenContainer = connect(

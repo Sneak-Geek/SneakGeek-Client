@@ -7,7 +7,7 @@ import * as HttpStatus from "http-status";
 import { IAccountService, AuthProvider, AccountPayload } from "./IAccountService";
 import { injectable } from "inversify";
 import { Profile, Account } from "../../Shared/Model";
-import { SetPasswordPayload } from "../../Shared/Payload";
+import { SetPasswordPayload, ChangePasswordPayload } from "../../Shared/Payload";
 
 @injectable()
 export class AccountService implements IAccountService {
@@ -22,6 +22,28 @@ export class AccountService implements IAccountService {
       newPassword
     });
     if (response && response.status === HttpStatus.OK) {
+      return response.data;
+    }
+
+    return undefined;
+  }
+
+  public async /** override */ changePassword(
+    token: string,
+    currentPassword: string,
+    newPassword: string
+  ): Promise<(ChangePasswordPayload & { user?: Account }) | undefined> {
+    const headers = { authorization: token };
+    const response = await ApiClient.patch(
+      `/account/change-password`,
+      { currentPassword, newPassword },
+      { headers }
+    );
+
+    if (
+      response &&
+      (response.status === HttpStatus.CREATED || response.status === HttpStatus.OK)
+    ) {
       return response.data;
     }
 

@@ -7,7 +7,8 @@ import { createAction } from "redux-actions";
 export const NavigationActions = {
   NAVIGATE_TO_LOGIN: "NAVIGATE_TO_LOGIN",
   NAVIGATE_TO_EMAIL_SIGNIN: "NAVIGATE_TO_EMAIL_SIGNIN",
-  NAVIGATE_TO_EMAIL_SIGNUP: "NAVIGATE_TO_EMAIL_SIGNUP"
+  NAVIGATE_TO_EMAIL_SIGNUP: "NAVIGATE_TO_EMAIL_SIGNUP",
+  POP: "POP"
 };
 
 export const navigateToLogin = createAction(NavigationActions.NAVIGATE_TO_LOGIN);
@@ -17,3 +18,5 @@ export const navigateToEmailSignIn = createAction<string>(
 export const navigateToEmailSignUp = createAction(
   NavigationActions.NAVIGATE_TO_EMAIL_SIGNUP
 );
+
+export const pop = createAction(NavigationActions.POP);
