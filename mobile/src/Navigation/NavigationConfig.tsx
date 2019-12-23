@@ -156,6 +156,7 @@ export const AppNavigator = createStackNavigator(
     [`${RouteNames.Splash}`]: { screen: SplashScreenContainer },
     [`${RouteNames.Authentication}`]: {
       screen: AuthenticationStack,
+      headerMode: "none",
       navigationOptions: { header: null }
     },
     [`${RouteNames.SellDetail}`]: { screen: SellDetailScreenContainer },

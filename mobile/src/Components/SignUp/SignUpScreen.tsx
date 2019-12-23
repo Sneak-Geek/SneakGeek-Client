@@ -8,10 +8,16 @@ import {
   TextInput,
   Alert
 } from "react-native";
-import { StackActions, NavigationScreenProps } from "react-navigation";
+import {
+  StackActions,
+  NavigationScreenProps,
+  NavigationScreenProp,
+  NavigationRoute
+} from "react-navigation";
 import { Icon } from "react-native-elements";
 import * as Assets from "../../Assets";
 import KeyboardSpacer from "react-native-keyboard-spacer";
+import { TextStyle } from "../../Shared/UI/Text";
 
 interface ISignUpScreenState {
   email: string;
@@ -20,6 +26,7 @@ interface ISignUpScreenState {
 }
 
 interface ISignUpScreenProps {
+  navigation: NavigationScreenProp<NavigationRoute>;
   navigateToFotgotPassword: () => void;
   emailSignup: (email: string, password: string) => void;
 }
@@ -37,41 +44,43 @@ export class SignUpScreen extends React.Component<ISignUpScreenProps, ISignUpScr
         containerStyle={{ marginLeft: 10 }}
         onPress={() => transitionProp.navigation.dispatch(StackActions.popToTop())}
       />
-    )
+    ),
+    title: "Đăng ký tài khoản",
+    headerTitleStyle: TextStyle.title2
   });
 
   constructor(props: any) {
     super(props);
     this.state = {
-      email: "",
+      email: this.props.navigation.getParam("email") || "",
       password: "",
       active: false
     };
   }
 
-  checkEmail = () => {
+  private _checkEmail() {
     let { email } = this.state;
     var mailformat = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
     if (email.match(mailformat)) {
-      this.signup();
+      this._signup();
     } else {
       Alert.alert("Email không hợp lệ!");
     }
-  };
+  }
 
-  signup = () => {
+  private _signup() {
     let { email, password } = this.state;
     this.props.emailSignup(email, password);
-  };
+  }
 
-  validateButton = () => {
+  private _validateButton() {
     let { email, password } = this.state;
     if (email.length > 0 && password.length > 0) {
       this.setState({ active: true });
     } else {
       this.setState({ active: false });
     }
-  };
+  }
 
   public render() {
     return (
@@ -110,7 +119,7 @@ export class SignUpScreen extends React.Component<ISignUpScreenProps, ISignUpScr
           placeholder="Email của bạn"
           value={email}
           placeholderTextColor="rgba(0, 0, 0, 0.4)"
-          onChangeText={email => this.setState({ email }, () => this.validateButton())}
+          onChangeText={email => this.setState({ email }, () => this._validateButton())}
           selectionColor={Assets.Styles.AppPrimaryColor}
           autoCapitalize="none"
         />
@@ -129,7 +138,7 @@ export class SignUpScreen extends React.Component<ISignUpScreenProps, ISignUpScr
           value={password}
           placeholderTextColor="rgba(0, 0, 0, 0.4)"
           onChangeText={password =>
-            this.setState({ password }, () => this.validateButton())
+            this.setState({ password }, () => this._validateButton())
           }
           selectionColor={Assets.Styles.AppPrimaryColor}
           autoCapitalize={"none"}
@@ -142,7 +151,7 @@ export class SignUpScreen extends React.Component<ISignUpScreenProps, ISignUpScr
     return (
       <TouchableOpacity
         style={styles.forgotContainer}
-        onPress={this.props.navigateToFotgotPassword}
+        onPress={this.props.navigateToFotgotPassword.bind(this)}
       >
         <Text style={styles.forgotTitle}>Quên mật khẩu?</Text>
       </TouchableOpacity>
@@ -157,7 +166,7 @@ export class SignUpScreen extends React.Component<ISignUpScreenProps, ISignUpScr
           styles.buttonContainer,
           { backgroundColor: active === true ? Assets.Styles.AppPrimaryColor : "#C7C7C7" }
         ]}
-        onPress={this.checkEmail}
+        onPress={this._checkEmail.bind(this)}
       >
         <Text style={[styles.titleButton, { color: active === true ? "white" : "black" }]}>
           Đăng ký

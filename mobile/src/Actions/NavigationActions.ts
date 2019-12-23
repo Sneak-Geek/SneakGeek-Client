@@ -14,6 +14,6 @@ export const navigateToLogin = createAction(NavigationActions.NAVIGATE_TO_LOGIN)
 export const navigateToEmailSignIn = createAction<string>(
   NavigationActions.NAVIGATE_TO_EMAIL_SIGNIN
 );
-export const navigateToEmailSignUp = createAction(
+export const navigateToEmailSignUp = createAction<string>(
   NavigationActions.NAVIGATE_TO_EMAIL_SIGNUP
 );

@@ -91,7 +91,7 @@ export const checkAccountWithEmail = (email: string) => {
       if (accountExists) {
         dispatch(navigateToEmailSignIn(email));
       } else {
-        dispatch(navigateToEmailSignUp());
+        dispatch(navigateToEmailSignUp(email));
       }
     } catch (error) {
       dispatch(
