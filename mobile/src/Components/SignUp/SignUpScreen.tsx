@@ -1,3 +1,7 @@
+//!
+//! Copyright (c) 2019 - SneakGeek. All rights reserved
+//!
+
 import * as React from "react";
 import {
   View,
