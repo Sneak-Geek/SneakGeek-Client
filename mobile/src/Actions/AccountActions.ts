@@ -26,6 +26,7 @@ import {
   navigateToEmailSignUp,
   navigateToLogin
 } from "./NavigationActions";
+import { ICdnService } from "../Service";
 
 export module AccountActions {
   export const AUTHENTICATE_ERROR = "AUTHENTICATION_ERROR";
@@ -40,6 +41,7 @@ export module AccountActions {
   export const UPDATE_STATE_REQUEST_TOKEN = "UPDATE_STATE_REQUEST_TOKEN";
   export const UPDATE_STATE_VERIFY_TOKEN = "UPDATE_STATE_VERIFY_TOKEN";
   export const UPDATE_STATE_SET_PASSWORD = "UPDATE_STATE_SET_PASSWORD";
+  export const UPDATE_STATE_UPLOAD_PROFILE_PIC = "UPDATE_STATE_UPLOAD_PROFILE_PIC";
 }
 
 export const cancelThirdPartyAuthentication = createAction<"facebook" | "google">(
@@ -343,7 +345,13 @@ export const updateUserProfile = (data: Partial<Profile>) => {
     try {
       const appSettings = container.get<IAppSettingsService>(Types.IAppSettingsService);
       const accountService = container.get<IAccountService>(Types.IAccountService);
+      const cdnService = container.get<ICdnService>(Types.ICdnService);
       const accessToken = appSettings.getSettings().CurrentAccessToken as string;
+
+      if (data.userProvidedProfilePic) {
+        const urls = await cdnService.getImageUploadUrls(accessToken, 1);
+        cdnService.uploadImage(data.userProvidedProfilePic, urls[0]);
+      }
 
       const result: boolean = await accountService.updateUserProfile(accessToken, data);
 

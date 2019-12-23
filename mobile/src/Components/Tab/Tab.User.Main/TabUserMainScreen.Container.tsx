@@ -7,10 +7,12 @@ import TabUserMainScreen from "./TabUserMainScreen";
 import { IAppState } from "../../../Store";
 import { NavigationActions } from "react-navigation";
 import { RouteNames } from "../../../Navigation";
+import { updateUserProfile } from "../../../Actions";
 
 const mapStateToProps = (state: IAppState) => ({
   account: state.AccountState.currentAccount,
   profile: state.AccountState.userProfileState.profile,
+  updateUserProfileState: state.AccountState.userProfileState.state
 });
 
 const mapDispatchToProps = (dispatch: Function) => {
@@ -60,33 +62,36 @@ const mapDispatchToProps = (dispatch: Function) => {
         NavigationActions.navigate({
           routeName: RouteNames.Tabs.UserInfoTab.Search
         })
-      )
+      );
     },
 
     navigateToUserKind: () => {
       dispatch(
         NavigationActions.navigate({
-          routeName: RouteNames.UserKind,
+          routeName: RouteNames.UserKind
         })
-      )
+      );
     },
 
     navigateToNotiSetting: () => {
       dispatch(
         NavigationActions.navigate({
-          routeName: RouteNames.NotiSetting,
+          routeName: RouteNames.NotiSetting
         })
-      )
+      );
     },
 
     navigateToShare: () => {
       dispatch(
         NavigationActions.navigate({
-          routeName: RouteNames.Share,
+          routeName: RouteNames.Share
         })
-      )
+      );
     },
 
+    updateProfilePic: (imageUri: string) => {
+      dispatch(updateUserProfile({ userProvidedProfilePic: imageUri }));
+    }
   };
 };
 

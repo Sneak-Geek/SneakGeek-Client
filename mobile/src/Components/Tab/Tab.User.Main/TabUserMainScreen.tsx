@@ -10,13 +10,13 @@ import {
   SafeAreaView,
   TouchableOpacity,
   ScrollView,
-  Alert
+  ActionSheetIOS
 } from "react-native";
 import { Image } from "react-native-elements";
+import ImagePicker, { ImagePickerResponse } from "react-native-image-picker";
 import { Text } from "../../../Shared/UI";
 import * as Assets from "../../../Assets";
 import { Account, Profile } from "../../../Shared/Model";
-import ActionSheet from "react-native-actionsheet";
 
 export interface IUserTabMainProps {
   account: Account;
@@ -30,6 +30,7 @@ export interface IUserTabMainProps {
   navigateToUserKind: () => void;
   navigateToNotiSetting: () => void;
   navigateToShare: () => void;
+  updateProfilePic: (imageUri: string) => void;
 }
 
 type UserListOption = {
@@ -91,28 +92,19 @@ export default class TabUserMainScreen extends React.Component<IUserTabMainProps
     }
   ];
 
-  private actionSheet: ActionSheet | null = null;
+  private readonly imagePickerOptions = {
+    title: "Upload profile picture",
+    storageOptions: {
+      skipBackup: true,
+      path: "images"
+    }
+  };
 
   public constructor /** override */(props: any) {
     super(props);
-    this.state = {
-      profile: {}
-    };
+    this.state = {};
   }
 
-  public componentDidMount = async () => {
-    // let res = await this.props.getUserProfile();
-    console.log("thong tin khach", this.props.profile);
-  };
-
-  public actionSheetOpress = (index: number) => {
-    if (index === 0) {
-      Alert.alert("Chọn ảnh từ thư viện");
-    }
-    if (index === 1) {
-      Alert.alert("Chụp ảnh");
-    }
-  };
   public /** override */ render(): React.ReactNode {
     return (
       <SafeAreaView>
@@ -122,7 +114,6 @@ export default class TabUserMainScreen extends React.Component<IUserTabMainProps
             {this._renderBasicUserData()}
             {this._renderSettingsList()}
             {this._renderLogoutButton()}
-            {this._renderActionSheet()}
           </View>
         </ScrollView>
       </SafeAreaView>
@@ -134,29 +125,26 @@ export default class TabUserMainScreen extends React.Component<IUserTabMainProps
   }
 
   private _renderBasicUserData(): JSX.Element {
-    // const { account } = this.props;
-    // const { accountNameByProvider } = account;
-    // const photo = account.accountProfilePicByProvider;
+    const { account, profile } = this.props;
+    const name = profile.userProvidedName;
 
     return (
       <View style={styles.headerContainer}>
         <View style={{ position: "relative" }}>
-          {/* <Image source={{ uri: photo }} style={styles.avatarContainer} /> */}
           <Image
-            source={{ uri: "https://saokpop.com/wp-content/uploads/2018/11/tuzy.jpg" }}
+            source={{ uri: profile.userProvidedProfilePic }}
             style={styles.avatarContainer}
           />
           <TouchableOpacity
             style={styles.cameraButtonContainer}
-            onPress={() => this.actionSheet && this.actionSheet.show()}
+            onPress={() => this._uploadProfilePicture()}
           >
             <Image source={Assets.Icons.ProfileCamera} style={{ width: 22, height: 18 }} />
           </TouchableOpacity>
         </View>
         <View>
           <Text.Headline style={styles.name}>
-            {/* {accountNameByProvider.familyName} {accountNameByProvider.givenName} */}
-            Trung Deps
+            {name ? `${name.firstName} ${name.lastName}` : "Chỉnh sửa tên"}
           </Text.Headline>
           <Text.Callout style={styles.address}>Hà Nội, VN</Text.Callout>
         </View>
@@ -190,24 +178,48 @@ export default class TabUserMainScreen extends React.Component<IUserTabMainProps
   private _renderLogoutButton(): React.ReactNode {
     return (
       <TouchableOpacity style={[styles.settingsContainer, styles.signOutContainer]}>
-        <Text.Body
-          style={{ color: "white", fontSize: 14, fontFamily: "RobotoCondensed-Bold" }}
-        >
-          Đăng xuất
-        </Text.Body>
+        <Text.Body style={{ color: "white" }}>Đăng xuất</Text.Body>
       </TouchableOpacity>
     );
   }
 
-  private _renderActionSheet() {
-    return (
-      <ActionSheet
-        ref={(ref: ActionSheet) => (this.actionSheet = ref)}
-        options={["Đăng ảnh từ Thư Viện", "Chụp từ Camera", "Cancel"]}
-        cancelButtonIndex={2}
-        onPress={(index: number) => this.actionSheetOpress(index)}
-      />
+  private _uploadProfilePicture() {
+    const options = [
+      {
+        title: "Chọn ảnh từ thư viện",
+        onPress: this._onSelectPhoto.bind(this),
+        isCancel: false
+      },
+      { title: "Chụp ảnh mới", onPress: this._onTakePhoto.bind(this), isCancel: false },
+      { title: "Huỷ", onPress: () => {}, isCancel: true }
+    ];
+
+    ActionSheetIOS.showActionSheetWithOptions(
+      {
+        options: options.map(t => t.title),
+        cancelButtonIndex: options.findIndex(t => t.isCancel)
+      },
+      index => options[index].onPress()
     );
+  }
+
+  private _onSelectPhoto() {
+    ImagePicker.launchImageLibrary(
+      this.imagePickerOptions,
+      (response: ImagePickerResponse) => {
+        if (!response.didCancel && !response.error) {
+          this.props.updateProfilePic(response.uri);
+        }
+      }
+    );
+  }
+
+  private _onTakePhoto() {
+    ImagePicker.launchCamera(this.imagePickerOptions, response => {
+      if (!response.didCancel && !response.error) {
+        this.props.updateProfilePic(response.uri);
+      }
+    });
   }
 }
 
