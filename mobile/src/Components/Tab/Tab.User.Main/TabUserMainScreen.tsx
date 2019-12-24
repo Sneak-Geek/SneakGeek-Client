@@ -125,7 +125,7 @@ export default class TabUserMainScreen extends React.Component<IUserTabMainProps
   }
 
   private _renderBasicUserData(): JSX.Element {
-    const { account, profile } = this.props;
+    const { profile } = this.props;
     const name = profile.userProvidedName;
 
     return (
