@@ -32,7 +32,7 @@ export class AccountService implements IAccountService {
     token: string,
     currentPassword: string,
     newPassword: string
-  ): Promise<(ChangePasswordPayload & { user?: Account }) | undefined> {
+  ): Promise<ChangePasswordPayload | undefined> {
     const headers = { authorization: token };
     const response = await ApiClient.patch(
       `/account/change-password`,

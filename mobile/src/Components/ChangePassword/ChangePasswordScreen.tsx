@@ -6,9 +6,11 @@ import {
 } from "react-navigation";
 import { Icon } from 'react-native-elements';
 import * as Assets from "../../Assets";
+import { NetworkRequestState } from "../../Shared/State";
 
 interface IChangePasswordScreenProps {
   onChangePassword: (currentPassword: string, newPassword: string) => void;
+  changePasswordState: NetworkRequestState;
 }
 interface IChangePasswordScreenState {
   showCurPass: boolean,
@@ -42,6 +44,21 @@ export class ChangePasswordScreen extends React.Component<IChangePasswordScreenP
     currentPassword: '',
     newPassword: '',
     newPasswordConfirm: ''
+  }
+
+  public componentDidUpdate(prevProps: IChangePasswordScreenProps) {
+    if (
+      prevProps.changePasswordState !== this.props.changePasswordState &&
+      this.props.changePasswordState === NetworkRequestState.SUCCESS
+    ) {
+      Alert.alert('Thông báo', 'Đổi mật khẩu thành công!')
+    }
+    if (
+      prevProps.changePasswordState !== this.props.changePasswordState &&
+      this.props.changePasswordState === NetworkRequestState.FAILED
+    ) {
+      Alert.alert('Thông báo', 'Đã xảy ra lỗi!')
+    }
   }
 
   public onConfirm = () => {

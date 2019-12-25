@@ -9,7 +9,9 @@ import { RouteNames } from "../../Navigation";
 import { NavigationActions } from "react-navigation";
 import * as Actions from "../../Actions";
 
-const mapStateToProps = (_state: IAppState) => ({});
+const mapStateToProps = (state: IAppState) => ({
+  changePasswordState: state.AccountState.changePasswordState.state,
+});
 const mapDispatchToProps = (dispatch: Function) => ({
   navigateToRequireSuccess: () => {
     const navConfig = {
