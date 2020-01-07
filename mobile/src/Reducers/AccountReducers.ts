@@ -9,6 +9,7 @@ import {
   GetUserProfilePayload,
   UpdateUserProfilePayload,
   CheckAccountWithEmailPayload,
+  ChangePasswordPayload,
   RequestTokenPayload,
   VerifyTokenPayload,
   SetPasswordPayload
@@ -20,6 +21,7 @@ export interface IAccountState {
   userProfileState: UpdateUserProfilePayload;
   updateProfileState: UpdateUserProfilePayload;
   checkAccountWithEmailState: CheckAccountWithEmailPayload;
+  changePasswordState: ChangePasswordPayload;
   requestTokenState: RequestTokenPayload;
   verifyTokenState: VerifyTokenPayload;
   setPasswordState: SetPasswordPayload;
@@ -38,6 +40,9 @@ let initialState: IAccountState = {
     state: NetworkRequestState.NOT_STARTED
   },
   checkAccountWithEmailState: {
+    state: NetworkRequestState.NOT_STARTED
+  },
+  changePasswordState: {
     state: NetworkRequestState.NOT_STARTED
   },
   requestTokenState: {
@@ -137,6 +142,16 @@ export const AccountReducers = handleActions<IAccountState, any>(
       ...state,
       checkAccountWithEmailState: {
         ...state.checkAccountWithEmailState,
+        ...action.payload
+      }
+    }),
+    [`${Actions.updateStateChangePassword}`]: (
+      state: IAccountState,
+      action: Action<ChangePasswordPayload>
+    ) => ({
+      ...state,
+      changePasswordState: {
+        ...state.changePasswordState,
         ...action.payload
       }
     })

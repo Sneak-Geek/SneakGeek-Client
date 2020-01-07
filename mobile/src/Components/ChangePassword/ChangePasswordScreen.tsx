@@ -1,17 +1,25 @@
 import * as React from 'react';
-import { View, StyleSheet, Text, TextInput, SafeAreaView, Image, TouchableOpacity } from 'react-native';
+import { View, StyleSheet, Text, TextInput, SafeAreaView, Image, TouchableOpacity, Alert } from 'react-native';
 import {
   StackActions,
   NavigationScreenProps,
 } from "react-navigation";
 import { Icon } from 'react-native-elements';
 import * as Assets from "../../Assets";
+import { NetworkRequestState } from "../../Shared/State";
 
-
-interface IChangePasswordScreenState {
-  showPass: boolean
+interface IChangePasswordScreenProps {
+  onChangePassword: (currentPassword: string, newPassword: string) => void;
+  changePasswordState: NetworkRequestState;
 }
-export class ChangePasswordScreen extends React.Component<IChangePasswordScreenState> {
+interface IChangePasswordScreenState {
+  showCurPass: boolean,
+  showNewPass: boolean,
+  currentPassword: string,
+  newPassword: string,
+  newPasswordConfirm: string,
+}
+export class ChangePasswordScreen extends React.Component<IChangePasswordScreenProps, IChangePasswordScreenState> {
 
   static navigationOptions = (transitionProp: NavigationScreenProps) => ({
     headerStyle: ({
@@ -28,22 +36,41 @@ export class ChangePasswordScreen extends React.Component<IChangePasswordScreenS
         onPress={() => transitionProp.navigation.dispatch(StackActions.popToTop())}
       />
     ),
-    headerRight: (
-      <Icon
-        type={"ionicon"}
-        name={"ios-share"}
-        size={28}
-        containerStyle={{ marginRight: 10 }}
-      />
-    )
   });
 
   state = {
-    showPass: false,
+    showCurPass: false,
+    showNewPass: false,
+    currentPassword: '',
+    newPassword: '',
+    newPasswordConfirm: ''
   }
 
+  public componentDidUpdate(prevProps: IChangePasswordScreenProps) {
+    if (
+      prevProps.changePasswordState !== this.props.changePasswordState &&
+      this.props.changePasswordState === NetworkRequestState.SUCCESS
+    ) {
+      Alert.alert('Thông báo', 'Đổi mật khẩu thành công!')
+    }
+    if (
+      prevProps.changePasswordState !== this.props.changePasswordState &&
+      this.props.changePasswordState === NetworkRequestState.FAILED
+    ) {
+      Alert.alert('Thông báo', 'Đã xảy ra lỗi!')
+    }
+  }
+
+  public onConfirm = () => {
+    let { currentPassword, newPassword, newPasswordConfirm } = this.state;
+    if (newPassword !== newPasswordConfirm) {
+      Alert.alert('Thông báo', 'Mật khẩu mới không khớp nhau');
+      return;
+    }
+    this.props.onChangePassword(currentPassword, newPassword)
+  }
   public render() {
-    let { showPass } = this.state;
+    let { showCurPass, showNewPass } = this.state;
     return (
       <SafeAreaView
         style={{
@@ -58,39 +85,52 @@ export class ChangePasswordScreen extends React.Component<IChangePasswordScreenS
               <View style={{ flex: 1 }}>
                 <Text style={styles.label}>Mật khẩu hiện tại</Text>
               </View>
-              <TouchableOpacity activeOpacity={0.7} onPress={() => this.setState({ showPass: !this.state.showPass })}>
+              <TouchableOpacity activeOpacity={0.7} onPress={() => this.setState({ showCurPass: !this.state.showCurPass })}>
                 <Image source={Assets.Icons.Eye} style={styles.logo} />
               </TouchableOpacity>
             </View>
             <TextInput
               style={styles.input}
+              value={this.state.currentPassword}
+              onChangeText={currentPassword => this.setState({ currentPassword })}
               underlineColorAndroid="transparent"
               selectionColor={Assets.Styles.AppPrimaryColor}
               placeholder="Điền mật khẩu hiện tại"
-              secureTextEntry={!showPass}
+              secureTextEntry={!showCurPass}
             />
           </View>
           <View style={{ paddingTop: 40 }}>
             <View style={styles.titleContainer}>
-              <Text style={styles.label}>Mật khẩu mới</Text>
+              <View style={{ flex: 1 }}>
+                <Text style={styles.label}>Mật khẩu mới</Text>
+              </View>
+              <TouchableOpacity activeOpacity={0.7} onPress={() => this.setState({ showNewPass: !this.state.showNewPass })}>
+                <Image source={Assets.Icons.Eye} style={styles.logo} />
+              </TouchableOpacity>
             </View>
             <TextInput
               style={styles.input}
+              value={this.state.newPassword}
+              onChangeText={newPassword => this.setState({ newPassword })}
               underlineColorAndroid="transparent"
               selectionColor={Assets.Styles.AppPrimaryColor}
               placeholder="Điền mật khẩu mới"
+              secureTextEntry={!showNewPass}
             />
             <View style={{ paddingTop: 20 }}>
               <TextInput
                 style={styles.input}
+                value={this.state.newPasswordConfirm}
+                onChangeText={newPasswordConfirm => this.setState({ newPasswordConfirm })}
                 underlineColorAndroid="transparent"
                 selectionColor={Assets.Styles.AppPrimaryColor}
                 placeholder="Xác nhận mật khẩu mới"
+                secureTextEntry={!showNewPass}
               />
             </View>
           </View>
         </View>
-        <TouchableOpacity style={styles.buttonContainer}>
+        <TouchableOpacity style={styles.buttonContainer} onPress={this.onConfirm}>
           <Text style={styles.titleButton}>Xác nhận</Text>
         </TouchableOpacity>
       </SafeAreaView>

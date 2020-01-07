@@ -9,6 +9,7 @@ export const Icons = {
   Zalo: require("../../../Icons/zalo.png"),
   ProfileCamera: require("../../../Icons/ProfileCamera.png"),
   ChevronLeft: require("../../../Icons/ChevronLeft.png"),
+  ChevronDown: require("../../../Icons/ChevronDown.png"),
   CheckMark: require("../../../Icons/CheckMark.png"),
   Clock: require("../../../Icons/Clock.png"),
   Up: require("../../../Icons/Up.png"),
