@@ -55,6 +55,14 @@ export const NavigationReducers = (
         state
       );
       break;
+    case Actions.NavigationActions.NAVIGATE_TO_REQUIRE_SUCCESS:
+      nextState = AppNavigator.router.getStateForAction(
+        StackActions.push({
+          routeName: RouteNames.RequireSuccess
+        }),
+        state
+      );
+      break;
     case Actions.NavigationActions.NAVIGATE_TO_EMAIL_SIGNUP:
       nextState = AppNavigator.router.getStateForAction(
         StackActions.push({

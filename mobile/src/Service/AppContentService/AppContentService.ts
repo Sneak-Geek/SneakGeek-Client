@@ -39,4 +39,29 @@ export class AppContentService implements IAppContentService {
 
     return [];
   }
+
+  public async requestProduct(
+    title: string,
+    brand: string
+    // gender: string,
+    // colorways: string[],
+    // productLink: string,
+    // imageUrls: string[]
+  ): Promise<any | undefined> {
+    const response = await ApiClient.post(`/product-request`, {
+      title,
+      brand
+      //  gender, colorways,
+      // productLink,
+      //  imageUrls
+    });
+    if (
+      response &&
+      (response.status === HttpStatus.CREATED || response.status === HttpStatus.OK)
+    ) {
+      return response.data;
+    }
+
+    return undefined;
+  }
 }

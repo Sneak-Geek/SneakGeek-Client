@@ -28,5 +28,7 @@ export const Icons = {
   Sell: require("../../../Icons/sell.png"),
   Share: require("../../../Icons/share.png"),
   DashContainer: require("../../../Icons/dashContainer.png"),
-  QrCode: require("../../../Icons/qrcode.png")
+  QrCode: require("../../../Icons/qrcode.png"),
+  BackWhite: require("../../../Icons/backWhite.png"),
+  Close: require("../../../Icons/close.png")
 };
