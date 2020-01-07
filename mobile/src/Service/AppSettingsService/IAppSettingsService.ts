@@ -46,7 +46,17 @@ export interface IAppSettings {
       };
     };
     sellDuration: { duration: number; unit: string; stringRep: string }[];
-    faq: string[];
+    faq: [
+      {
+        category: string;
+        info: [
+          {
+            answer: string;
+            question: string;
+          }
+        ];
+      }
+    ];
   };
   [key: string]: any;
 }

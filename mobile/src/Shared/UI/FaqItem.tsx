@@ -3,9 +3,10 @@
 //!
 
 import * as React from "react";
-import { View, StyleSheet, Text, Image } from "react-native";
+import { View, StyleSheet, Image } from "react-native";
 import * as Assets from "../../Assets";
 import { TouchableOpacity } from "react-native-gesture-handler";
+import { Text } from "./";
 
 interface Props {
   data: {
@@ -26,7 +27,7 @@ export class FaqItem extends React.Component<Props, State> {
     }
   }
 
-  onPress = () => {
+  private _onFaqItemPress() {
     this.setState({ showAnswer: !this.state.showAnswer })
   }
   render() {
@@ -34,9 +35,9 @@ export class FaqItem extends React.Component<Props, State> {
     let { showAnswer } = this.state;
     return (
       <View>
-        <TouchableOpacity style={[styles.row, {paddingBottom: showAnswer ? 9 : 30}]} onPress={this.onPress}>
+        <TouchableOpacity style={[styles.row, { paddingBottom: showAnswer ? 9 : 30 }]} onPress={this._onFaqItemPress.bind(this)}>
           <View style={{ flex: 1, paddingRight: 14, paddingLeft: 20 }}>
-            <Text style={styles.question}>Q: {data.question}</Text>
+            <Text.Title2>Q: {data.question}</Text.Title2>
           </View>
           {Boolean(showAnswer) ?
             <Image source={Assets.Icons.ChevronDown} />
@@ -46,9 +47,9 @@ export class FaqItem extends React.Component<Props, State> {
         </TouchableOpacity>
         {Boolean(showAnswer) &&
           <View style={styles.answerContainer}>
-            <Text style={styles.answerTitle}>
+            <Text.Body>
               {data.answer}
-            </Text>
+            </Text.Body>
           </View>
         }
       </View>
@@ -58,24 +59,16 @@ export class FaqItem extends React.Component<Props, State> {
 
 const styles = StyleSheet.create({
   row: {
-    
+
     flexDirection: "row",
     alignItems: "center",
     paddingRight: 14
   },
-  question: {
-    fontFamily: "RobotoCondensed-Bold",
-    fontSize: 22
-  },
   answerContainer: {
     backgroundColor: '#E9E9E9',
-     paddingHorizontal: 20,
+    paddingHorizontal: 20,
     paddingVertical: 22,
     marginBottom: 33,
     flex: 1,
   },
-  answerTitle: {
-    fontSize: 17, 
-    fontFamily: "RobotoCondensed-Regular"
-  }
 });

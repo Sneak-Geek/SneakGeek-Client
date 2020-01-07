@@ -26,7 +26,7 @@ import {
   navigateToEmailSignIn,
   navigateToEmailSignUp,
   navigateToLogin,
-  pop
+  navigateToPreviousScreen
 } from "./NavigationActions";
 import { ICdnService } from "../Service";
 
@@ -96,11 +96,20 @@ export const changePassword = (currentPassword: string, newPassword: string) => 
         newPassword
       );
       if (response) {
-        dispatch(showNotification(response.message));
-        dispatch(pop());
+        dispatch(
+          updateStateChangePassword({
+            state: NetworkRequestState.SUCCESS
+          })
+        );
+        dispatch(navigateToPreviousScreen());
       }
     } catch (error) {
-      dispatch(showNotification("Đã xảy ra lỗi!"));
+      dispatch(
+        updateStateChangePassword({
+          state: NetworkRequestState.FAILED,
+          error
+        })
+      );
     }
   };
 };
