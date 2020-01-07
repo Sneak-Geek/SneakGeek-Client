@@ -35,6 +35,8 @@ export type CheckAccountWithEmailPayload = {
   existStatus?: boolean;
 } & NetworkPayload;
 
+export type ChangePasswordPayload = NetworkPayload;
+
 export type RequestTokenPayload = NetworkPayload;
 export type VerifyTokenPayload = NetworkPayload;
 export type SetPasswordPayload = NetworkPayload;

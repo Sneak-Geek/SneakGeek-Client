@@ -5,11 +5,12 @@ import {
   SafeAreaView,
   Text,
   TouchableOpacity,
-  Image
 } from "react-native";
 import { ScrollView } from "react-navigation";
 import { Input, Icon } from "react-native-elements";
-import * as Assets from "../../../Assets";
+import { container, Types } from "../../../Config/Inversify";
+import { IAppSettingsService } from "../../../Service/AppSettingsService";
+import { FaqItem } from "../../../Shared/UI";
 
 interface ITabUserSearchProps {
   back: () => void;
@@ -18,125 +19,58 @@ interface ITabUserSearchProps {
 interface ITabUserSearchState {
   modeRender: string;
   searchFocus: boolean;
+  listCategory: any;
+  listFAQ: any;
 }
 export class TabUserSearchScreen extends React.Component<
   ITabUserSearchProps,
   ITabUserSearchState
-> {
+  > {
   static navigationOptions = {
     header: null
   };
+
+  private appSettings: IAppSettingsService = container.get<IAppSettingsService>(
+    Types.IAppSettingsService
+  );
+  private remoteSetting = this.appSettings.getSettings().RemoteSettings;
+
 
   constructor(props: ITabUserSearchProps) {
     super(props);
 
     this.state = {
       modeRender: "listHelper",
-      searchFocus: false
+      searchFocus: false,
+      listCategory: this.remoteSetting ? this.remoteSetting.faq : [],
+      listFAQ: [],
     };
   }
-
-  listHelp = [
-    {
-      title: "Tổng quan",
-      onPress: () => {
-        this.setState({ modeRender: "overviewQ" });
-      }
-    },
-    {
-      title: "Đặt mua, vận chuyển, trả",
-      onPress: () => {
-        this.setState({ modeRender: "transportQ" });
-      }
-    },
-    {
-      title: "Bán hàng"
-    }
-  ];
-
-  listOverview = [
-    {
-      title: "SneakGeek là gì?",
-      onPress: () => {
-        this.setState({ modeRender: "overviewA" });
-      }
-    },
-    {
-      title: "SneakGeek hoạt động như thế nào?"
-    },
-    {
-      title: "Làm thế  nào để liên hệ với chúng tôi?"
-    }
-  ];
-
-  listTransport = [
-    {
-      title: "Làm thế  nào để mua hàng?",
-      onPress: () => {
-        this.setState({ modeRender: "transportA" });
-      }
-    },
-    {
-      title: "Các phương thức thanh toán"
-    },
-    {
-      title: "Tôi có thể làm gì nếu gặp các vấn đề về thanh toán?"
-    },
-    {
-      title: "Tôi có thể huỷ giao dịch mua của mình được không?"
-    },
-    {
-      title: "Làm thế nào để tôi biết món đồ tôi nhận được là chính hãng?"
-    },
-    {
-      title: "Người mua sẽ phải chịu phí giao dịch trên SneakGeek?"
-    },
-    {
-      title: "Chi phí vận chuyển là bao nhiêu?"
-    },
-    {
-      title: "Bao giờ thì tôi nhận được sản phẩm?"
-    },
-    {
-      title: "Làm thế nào để tôi theo dõi sẩn phẩm đã đặt mua của mình?"
-    },
-    {
-      title: "Tôi có thể thay đổi địa chỉ sau khi đặt mua không?"
-    },
-    {
-      title: "Tôi không nhận được sản phẩm của mình?"
-    }
-  ];
 
   goBack = () => {
     switch (this.state.modeRender) {
       case "listHelper":
         this.props.back();
         break;
-      case "overviewQ":
+      case "listFAQ":
         this.setState({ modeRender: "listHelper" });
-        break;
-      case "transportQ":
-        this.setState({ modeRender: "listHelper" });
-        break;
-      case "overviewA":
-        this.setState({ modeRender: "overviewQ" });
-        break;
-      case "transportA":
-        this.setState({ modeRender: "overviewQ" });
         break;
       default:
         break;
     }
   };
+
+  toCategory = (item: any) => {
+    this.setState({ modeRender: "listFAQ", listFAQ: item });
+  }
+
   public render() {
     return (
       <SafeAreaView style={{ flex: 1, backgroundColor: "white" }}>
         <View style={styles.container}>
           {this.renderSearchBar()}
           {this.state.modeRender === "listHelper" && this.renderListHelp()}
-          {this.state.modeRender === "overviewQ" && this.renderOverview()}
-          {this.state.modeRender === "transportQ" && this.renderTransport()}
+          {this.state.modeRender === "listFAQ" && this.renderListFAQ()}
         </View>
       </SafeAreaView>
     );
@@ -176,68 +110,55 @@ export class TabUserSearchScreen extends React.Component<
           //     )
           // }
           inputStyle={{ fontSize: 17, fontFamily: "RobotoCondensed-Regular" }}
-          // onChangeText={this._search.bind(this)}
-          // onSubmitEditing={this._onEndEditing.bind(this)}
+        // onChangeText={this._search.bind(this)}
+        // onSubmitEditing={this._onEndEditing.bind(this)}
         />
       </View>
     );
   }
 
   private renderListHelp() {
-    return this.listHelp.map((item, index) => {
-      return (
-        <TouchableOpacity key={index} style={styles.item} onPress={item.onPress}>
-          <Text style={styles.titleItem}>{item.title}</Text>
-        </TouchableOpacity>
-      );
-    });
-  }
-
-  private renderOverview() {
     return (
       <View>
-        <View style={[styles.item, { paddingBottom: 30 }]}>
-          <Text style={styles.titleItem}>Tổng quan</Text>
-        </View>
-        <View style={{ paddingLeft: 20, paddingRight: 17 }}>
-          {this.listOverview.map((item, index) => {
-            return (
-              <TouchableOpacity key={index} style={styles.row} onPress={item.onPress}>
-                <View style={{ flex: 1 }}>
-                  <Text style={styles.question}>Q: {item.title}</Text>
-                </View>
-                <Image source={Assets.Icons.ChevronLeft} />
-              </TouchableOpacity>
-            );
-          })}
-        </View>
+        {this.state.listCategory.length > 0 && this.state.listCategory.map((item: any, index: number) => {
+          return (
+            <TouchableOpacity key={index} style={styles.item} onPress={() => this.toCategory(item)}>
+              <Text style={styles.titleItem}>{item.category}</Text>
+            </TouchableOpacity>
+          );
+        })}
       </View>
-    );
+    )
   }
 
-  private renderTransport() {
+  private renderListFAQ() {
     return (
       <View>
         <View style={[styles.item, { paddingBottom: 30 }]}>
-          <Text style={styles.titleItem}>Đặt mua, vận chuyển, trả</Text>
+          <Text style={styles.titleItem}>{this.state.listFAQ.category}</Text>
         </View>
-        <ScrollView style={{ paddingLeft: 20, paddingRight: 17 }}>
+        <ScrollView>
           <View style={{ paddingBottom: 200 }}>
-            {this.listTransport.map((item, index) => {
+            {this.state.listFAQ.info.map((item: any, index: number) => {
               return (
-                <TouchableOpacity key={index} style={styles.row} onPress={item.onPress}>
-                  <View style={{ flex: 1 }}>
-                    <Text style={styles.question}>Q: {item.title}</Text>
-                  </View>
-                  <Image source={Assets.Icons.ChevronLeft} />
-                </TouchableOpacity>
+                // <TouchableOpacity key={index} style={styles.row} onPress={item.onPress}>
+                //   <View style={{ flex: 1 }}>
+                //     <Text style={styles.question}>Q: {item.question}</Text>
+                //   </View>
+                //   <Image source={Assets.Icons.ChevronLeft} />
+                // </TouchableOpacity>
+                <FaqItem
+                  key={index}
+                  data={item}
+                />
               );
             })}
           </View>
         </ScrollView>
       </View>
-    );
+    )
   }
+
 }
 
 const styles = StyleSheet.create({

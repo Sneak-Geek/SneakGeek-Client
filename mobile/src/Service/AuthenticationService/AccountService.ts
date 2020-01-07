@@ -7,7 +7,7 @@ import * as HttpStatus from "http-status";
 import { IAccountService, AuthProvider, AccountPayload } from "./IAccountService";
 import { injectable } from "inversify";
 import { Profile, Account } from "../../Shared/Model";
-import { SetPasswordPayload } from "../../Shared/Payload";
+import { SetPasswordPayload, ChangePasswordPayload } from "../../Shared/Payload";
 
 @injectable()
 export class AccountService implements IAccountService {
@@ -28,15 +28,24 @@ export class AccountService implements IAccountService {
     return undefined;
   }
 
-  public async verifyConfirmationToken(
-    email: string,
-    token: string
-  ): Promise<any | undefined> {
+  public async /** override */ changePassword(
+    token: string,
+    currentPassword: string,
+    newPassword: string
+  ): Promise<ChangePasswordPayload | undefined> {
+    const headers = { authorization: token };
+    const response = await ApiClient.patch(`/account/change-password`, { currentPassword, newPassword }, { headers });
+
+    if (response && (response.status === HttpStatus.CREATED || response.status === HttpStatus.OK)) {
+      return response.data;
+    }
+
+    return undefined;
+  }
+
+  public async verifyConfirmationToken(email: string, token: string): Promise<any | undefined> {
     const response = await ApiClient.post(`/account/verify-token`, { email, token });
-    if (
-      response &&
-      (response.status === HttpStatus.CREATED || response.status === HttpStatus.OK)
-    ) {
+    if (response && (response.status === HttpStatus.CREATED || response.status === HttpStatus.OK)) {
       return response.data;
     }
 
@@ -45,68 +54,45 @@ export class AccountService implements IAccountService {
 
   public async requestConfirmationToken(email: string): Promise<any | undefined> {
     const response = await ApiClient.post(`/account/send-confirmation-token`, { email });
-    if (
-      response &&
-      (response.status === HttpStatus.CREATED || response.status === HttpStatus.OK)
-    ) {
+    if (response && (response.status === HttpStatus.CREATED || response.status === HttpStatus.OK)) {
       return response.data;
     }
 
     return undefined;
   }
 
-  public async signupEmail(
-    email: string,
-    password: string
-  ): Promise<AccountPayload | undefined> {
+  public async signupEmail(email: string, password: string): Promise<AccountPayload | undefined> {
     const response = await ApiClient.post(`/account/email-signup`, { email, password });
 
-    if (
-      response &&
-      (response.status === HttpStatus.CREATED || response.status === HttpStatus.OK)
-    ) {
+    if (response && (response.status === HttpStatus.CREATED || response.status === HttpStatus.OK)) {
       return response.data as AccountPayload;
     }
 
     return undefined;
   }
 
-  public async loginEmail(
-    email: string,
-    password: string
-  ): Promise<AccountPayload | undefined> {
+  public async loginEmail(email: string, password: string): Promise<AccountPayload | undefined> {
     const response = await ApiClient.post(`/account/email-login`, { email, password });
 
-    if (
-      response &&
-      (response.status === HttpStatus.CREATED || response.status === HttpStatus.OK)
-    ) {
+    if (response && (response.status === HttpStatus.CREATED || response.status === HttpStatus.OK)) {
       return response.data as AccountPayload;
     }
 
     return undefined;
   }
 
-  public async /** override */ login(
-    token: string,
-    provider: AuthProvider
-  ): Promise<AccountPayload | undefined> {
+  public async /** override */ login(token: string, provider: AuthProvider): Promise<AccountPayload | undefined> {
     const headers = { access_token: token };
     const response = await ApiClient.post(`/account/${provider}`, {}, { headers });
 
-    if (
-      response &&
-      (response.status === HttpStatus.CREATED || response.status === HttpStatus.OK)
-    ) {
+    if (response && (response.status === HttpStatus.CREATED || response.status === HttpStatus.OK)) {
       return response.data as AccountPayload;
     }
 
     return undefined;
   }
 
-  public async /** override */ getCurrentUser(
-    accessToken: string
-  ): Promise<AccountPayload | undefined> {
+  public async /** override */ getCurrentUser(accessToken: string): Promise<AccountPayload | undefined> {
     const headers = { authorization: accessToken };
     const response = await ApiClient.get(`/account/get`, { headers });
     if (response && response.status === HttpStatus.OK) {
@@ -116,9 +102,7 @@ export class AccountService implements IAccountService {
     return undefined;
   }
 
-  public async /** override */ isAccountWithEmailExists(
-    email: string
-  ): Promise<any | undefined> {
+  public async /** override */ isAccountWithEmailExists(email: string): Promise<any | undefined> {
     const response = await ApiClient.get(`/account/email-exists?email=${email}`);
     if (response && response.status === HttpStatus.OK) {
       return response.data;
@@ -141,9 +125,7 @@ export class AccountService implements IAccountService {
     return false;
   }
 
-  public async /** override */ getUserProfile(
-    accessToken: string
-  ): Promise<Profile | undefined> {
+  public async /** override */ getUserProfile(accessToken: string): Promise<Profile | undefined> {
     const headers = { authorization: accessToken };
     const response = await ApiClient.get("/profile", { headers });
     if (response && response.status === HttpStatus.OK) {
@@ -153,10 +135,7 @@ export class AccountService implements IAccountService {
     return undefined;
   }
 
-  public async /** override */ updateUserProfile(
-    accessToken: string,
-    newProfile: Partial<Profile>
-  ): Promise<boolean> {
+  public async /** override */ updateUserProfile(accessToken: string, newProfile: Partial<Profile>): Promise<boolean> {
     const headers = { authorization: accessToken };
     const response = await ApiClient.put("/profile/update", newProfile, { headers });
 
