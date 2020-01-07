@@ -3,9 +3,9 @@
 //!
 
 import { handleActions, Action } from "redux-actions";
-import { updateShoesData, updateSearchShoesState, updateGetShoesState } from "../Actions";
+import { updateShoesData, updateSearchShoesState, updateGetShoesState, updateStateRequestProduct } from "../Actions";
 import { Shoe } from "../Shared/Model";
-import { SearchShoePayload, GetShoesPayload } from "../Shared/Payload";
+import { SearchShoePayload, GetShoesPayload, RequestProductPayload } from "../Shared/Payload";
 import { NetworkRequestState } from "../Shared/State";
 
 export interface IAppContentState {
@@ -20,6 +20,10 @@ export interface IAppContentState {
     state: NetworkRequestState;
     error?: any;
   };
+  requestProductState: {
+    state: NetworkRequestState;
+    error?: any;
+  };
 }
 
 const initialAppContentState: IAppContentState = {
@@ -31,6 +35,9 @@ const initialAppContentState: IAppContentState = {
   searchShoesState: {
     shoes: [],
     state: NetworkRequestState.NOT_STARTED
+  },
+  requestProductState: {
+    state: NetworkRequestState.NOT_STARTED
   }
 };
 
@@ -39,14 +46,11 @@ export const AppContentReducers = handleActions<IAppContentState, any>(
     [`${updateShoesData}`]: (state: IAppContentState, action: Action<Shoe[]>) => {
       return Object.assign({}, state, { shoes: action.payload });
     },
-    [`${updateSearchShoesState}`]: (
-      state: IAppContentState,
-      action: Action<SearchShoePayload>
-    ) => {
+    [`${updateSearchShoesState}`]: (state: IAppContentState, action: Action<SearchShoePayload>) => {
       const { payload } = action;
       let result = {
         ...state,
-        shoesSearchResult: {
+        searchShoesState: {
           shoes: payload.shoes,
           state: payload.state,
           error: payload.error
@@ -56,16 +60,19 @@ export const AppContentReducers = handleActions<IAppContentState, any>(
       if (payload.shoes && payload.shoes.length > 0) {
         result = { ...result, shoes: [...result.shoes, ...payload.shoes] };
       }
-
       return result;
     },
-    [`${updateGetShoesState}`]: (
-      state: IAppContentState,
-      action: Action<GetShoesPayload>
-    ) => ({
+    [`${updateGetShoesState}`]: (state: IAppContentState, action: Action<GetShoesPayload>) => ({
       ...state,
       getShoesState: {
         ...state.getShoesState,
+        ...action.payload
+      }
+    }),
+    [`${updateStateRequestProduct}`]: (state: IAppContentState, action: Action<RequestProductPayload>) => ({
+      ...state,
+      requestProductState: {
+        ...state.requestProductState,
         ...action.payload
       }
     })

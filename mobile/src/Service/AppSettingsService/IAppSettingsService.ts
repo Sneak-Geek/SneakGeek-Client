@@ -45,6 +45,8 @@ export interface IAppSettings {
         Toddler: string[];
       };
     };
+    shoeBrands: string[];
+    genders: string[];
     sellDuration: { duration: number; unit: string; stringRep: string }[];
     faq: [
       {

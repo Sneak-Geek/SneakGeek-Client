@@ -1,6 +1,6 @@
-//!
-//! Copyright (c) 2019 - SneakGeek. All rights reserved
-//!
+// !
+// ! Copyright (c) 2019 - SneakGeek. All rights reserved
+// !
 
 import { connect } from "react-redux";
 import TabSearch from "./TabSearch";
@@ -28,9 +28,10 @@ const mapDispatchToProps = (dispatch: Function) => ({
   search: (keyword: string) => {
     dispatch(searchShoes(keyword));
   },
-  navigateToShoeRequire: () => {
+  navigateToShoeRequire: (shoeName: string) => {
     const navConfig = {
-      routeName: RouteNames.ShoeRequire
+      routeName: RouteNames.ShoeRequire,
+      params: { shoeName }
     };
     dispatch(NavigationActions.navigate(navConfig));
   }

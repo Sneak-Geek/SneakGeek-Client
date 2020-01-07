@@ -40,6 +40,7 @@ export type ChangePasswordPayload = NetworkPayload;
 export type RequestTokenPayload = NetworkPayload;
 export type VerifyTokenPayload = NetworkPayload;
 export type SetPasswordPayload = NetworkPayload;
+export type RequestProductPayload = NetworkPayload;
 
 export type UpdateUserProfilePayload = {
   profile?: Profile;

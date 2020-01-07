@@ -8,14 +8,31 @@ import {
   TouchableOpacity
 } from "react-native";
 import * as Assets from "../../Assets";
+import {
+  NavigationScreenProp,
+  NavigationRoute
+} from "react-navigation";
 
 export interface IRequireSuccessScreenProps {
   navigateToHome: () => void;
+  navigation?: NavigationScreenProp<NavigationRoute>;
+
 }
-export class RequireSuccessScreen extends React.Component<IRequireSuccessScreenProps> {
+
+export interface IRequireSuccessScreenState {
+  title: string;
+}
+export class RequireSuccessScreen extends React.Component<IRequireSuccessScreenProps, IRequireSuccessScreenState> {
   static navigationOptions = {
     header: null
   };
+
+  public constructor(props: IRequireSuccessScreenProps) {
+    super(props);
+    this.state = {
+      title: this.props.navigation ? this.props.navigation.getParam("shoeName") : "",
+    };
+  }
 
   public render() {
     return (
@@ -31,7 +48,7 @@ export class RequireSuccessScreen extends React.Component<IRequireSuccessScreenP
           <View style={styles.contentContainer}>
             <Image style={styles.logo} source={Assets.Icons.SuccessLogo} />
             <Text style={styles.title}>Yêu cầu thành công sản phẩm</Text>
-            <Text style={styles.name}>NMD "Americana"</Text>
+            <Text style={styles.name}>{this.state.title}</Text>
           </View>
         </View>
         <TouchableOpacity
