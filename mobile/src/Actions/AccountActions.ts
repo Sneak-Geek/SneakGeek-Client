@@ -18,13 +18,15 @@ import {
   CheckAccountWithEmailPayload,
   RequestTokenPayload,
   VerifyTokenPayload,
-  SetPasswordPayload
+  SetPasswordPayload,
+  ChangePasswordPayload
 } from "../Shared/Payload";
 import { NetworkRequestState } from "../Shared/State";
 import {
   navigateToEmailSignIn,
   navigateToEmailSignUp,
-  navigateToLogin
+  navigateToLogin,
+  navigateToPreviousScreen
 } from "./NavigationActions";
 import { ICdnService } from "../Service";
 
@@ -41,6 +43,7 @@ export module AccountActions {
   export const UPDATE_STATE_REQUEST_TOKEN = "UPDATE_STATE_REQUEST_TOKEN";
   export const UPDATE_STATE_VERIFY_TOKEN = "UPDATE_STATE_VERIFY_TOKEN";
   export const UPDATE_STATE_SET_PASSWORD = "UPDATE_STATE_SET_PASSWORD";
+  export const UPDATE_STATE_CHANGE_PASSWORD = "UPDATE_STATE_CHANGE_PASSWORD";
   export const UPDATE_STATE_UPLOAD_PROFILE_PIC = "UPDATE_STATE_UPLOAD_PROFILE_PIC";
 }
 
@@ -61,6 +64,9 @@ export const updateStateUpdateUserProfile = createAction<UpdateUserProfilePayloa
 export const updateStateCheckAccountWithEmail = createAction<CheckAccountWithEmailPayload>(
   AccountActions.UPDATE_STATE_CHECK_ACCOUNT_WITH_EMAIL
 );
+export const updateStateChangePassword = createAction<ChangePasswordPayload>(
+  AccountActions.UPDATE_STATE_CHANGE_PASSWORD
+);
 export const updateStateRequestToken = createAction<RequestTokenPayload>(
   AccountActions.UPDATE_STATE_REQUEST_TOKEN
 );
@@ -71,6 +77,42 @@ export const updateStateSetPassword = createAction<SetPasswordPayload>(
   AccountActions.UPDATE_STATE_SET_PASSWORD
 );
 
+export const changePassword = (currentPassword: string, newPassword: string) => {
+  return async (dispatch: Function) => {
+    const appSettings = container.get<IAppSettingsService>(Types.IAppSettingsService);
+    const token = appSettings.getValue(SettingsKeys.CurrentAccessToken);
+
+    try {
+      dispatch(
+        updateStateChangePassword({
+          state: NetworkRequestState.REQUESTING,
+          error: null
+        })
+      );
+      const accountService = container.get<IAccountService>(Types.IAccountService);
+      const response = await accountService.changePassword(
+        token,
+        currentPassword,
+        newPassword
+      );
+      if (response) {
+        dispatch(
+          updateStateChangePassword({
+            state: NetworkRequestState.SUCCESS
+          })
+        );
+        dispatch(navigateToPreviousScreen());
+      }
+    } catch (error) {
+      dispatch(
+        updateStateChangePassword({
+          state: NetworkRequestState.FAILED,
+          error
+        })
+      );
+    }
+  };
+};
 export const checkAccountWithEmail = (email: string) => {
   return async (dispatch: Function) => {
     try {
