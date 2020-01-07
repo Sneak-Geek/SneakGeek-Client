@@ -1,9 +1,9 @@
-//!
-//! Copyright (c) 2019 - SneakGeek. All rights reserved
-//!
+// !
+// ! Copyright (c) 2019 - SneakGeek. All rights reserved
+// !
 
 import * as React from "react";
-import { ScrollView, View, Dimensions, StyleSheet, Image } from "react-native";
+import { Dimensions, Image, ScrollView, StyleSheet, View } from "react-native";
 import * as StringUtil from "../../../Utilities/StringUtil";
 import { Transaction } from "../../../Shared/Model";
 import { TouchableOpacity } from "react-native-gesture-handler";
@@ -17,11 +17,11 @@ interface Props {
 }
 
 interface State {
-  pictures: (string | null)[];
+  pictures: Array<string | null>;
 }
 
 export class ShoeSellOrderSummaryComponent extends React.PureComponent<Props, State> {
-  state = {
+  public state = {
     pictures: [null]
   };
 
@@ -47,16 +47,12 @@ export class ShoeSellOrderSummaryComponent extends React.PureComponent<Props, St
   }
 
   private _renderPriceSummary(): JSX.Element {
-    const price = this.props.orderSummary.currentPrice
-      ? this.props.orderSummary.currentPrice.toString()
-      : "";
+    const price = this.props.orderSummary.currentPrice ? this.props.orderSummary.currentPrice.toString() : "";
 
     return (
       <View style={styles.sectionContainer}>
         <Text.Subhead>Giá bán</Text.Subhead>
-        <Text.Body style={styles.detail}>
-          VND {StringUtil.toCurrencyString(price)}
-        </Text.Body>
+        <Text.Body style={styles.detail}>VND {StringUtil.toCurrencyString(price)}</Text.Body>
       </View>
     );
   }
@@ -67,8 +63,7 @@ export class ShoeSellOrderSummaryComponent extends React.PureComponent<Props, St
       <View style={styles.sectionContainer}>
         <Text.Subhead>Miêu tả</Text.Subhead>
         <Text.Body style={styles.detail}>
-          Cỡ {orderSummary.shoeSize}, {orderSummary.shoeCondition},{" "}
-          {orderSummary.boxCondition}
+          Cỡ {orderSummary.shoeSize}, {orderSummary.shoeCondition}, {orderSummary.boxCondition}
         </Text.Body>
       </View>
     );
@@ -96,11 +91,7 @@ export class ShoeSellOrderSummaryComponent extends React.PureComponent<Props, St
     return (
       <View style={{ flex: 1, flexDirection: "column" }}>
         <Text.Subhead>Ảnh sản phẩm</Text.Subhead>
-        <ScrollView
-          style={{ flex: 1 }}
-          horizontal={true}
-          showsHorizontalScrollIndicator={false}
-        >
+        <ScrollView style={{ flex: 1 }} horizontal={true} showsHorizontalScrollIndicator={false}>
           <View style={{ flexDirection: "row" }}>
             {this.state.pictures.map((item, index) => {
               if (!item) {
@@ -128,33 +119,23 @@ export class ShoeSellOrderSummaryComponent extends React.PureComponent<Props, St
   }
 
   private _launchSystemImagePicker(): void {
-    ImagePicker.launchImageLibrary(
-      this.imagePickerOptions,
-      (response: ImagePickerResponse) => {
-        if (!response.didCancel && !response.error) {
-          this.setState(prevState => {
-            this.props.onShoePictureAdded(response.uri);
+    ImagePicker.launchImageLibrary(this.imagePickerOptions, (response: ImagePickerResponse) => {
+      if (!response.didCancel && !response.error) {
+        this.setState(prevState => {
+          this.props.onShoePictureAdded(response.uri);
 
-            return {
-              pictures: [...prevState.pictures, response.uri]
-            };
-          });
-        }
+          return {
+            pictures: [...prevState.pictures, response.uri]
+          };
+        });
       }
-    );
+    });
   }
 
   private _renderPicture(pictureUri: string | null, index: number) {
     pictureUri = pictureUri as string;
 
-    return (
-      <Image
-        key={index}
-        source={{ uri: pictureUri }}
-        style={styles.imageContainer}
-        resizeMode={"cover"}
-      />
-    );
+    return <Image key={index} source={{ uri: pictureUri }} style={styles.imageContainer} resizeMode={"cover"} />;
   }
 }
 

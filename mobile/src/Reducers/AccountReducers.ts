@@ -69,20 +69,14 @@ export const AccountReducers = handleActions<IAccountState, any>(
         authenticationError: null
       };
     },
-    [`${Actions.cancelThirdPartyAuthentication}`]: (
-      state: IAccountState,
-      _action: Action<any>
-    ) => {
+    [`${Actions.cancelThirdPartyAuthentication}`]: (state: IAccountState, _action: Action<any>) => {
       return {
         ...state,
         isAuthenticationCancelled: true,
         isAuthenticating: false
       };
     },
-    [`${Actions.authenticationComplete}`]: (
-      state: IAccountState,
-      action: Action<Account>
-    ) => {
+    [`${Actions.authenticationComplete}`]: (state: IAccountState, action: Action<Account>) => {
       return {
         ...state,
         currentAccount: action.payload,
@@ -95,40 +89,28 @@ export const AccountReducers = handleActions<IAccountState, any>(
         isAuthenticating: false
       });
     },
-    [`${Actions.updateStateGetUserProfile}`]: (
-      state: IAccountState,
-      action: Action<GetUserProfilePayload>
-    ) => ({
+    [`${Actions.updateStateGetUserProfile}`]: (state: IAccountState, action: Action<GetUserProfilePayload>) => ({
       ...state,
       userProfileState: {
         ...state.userProfileState,
         ...action.payload
       }
     }),
-    [`${Actions.updateStateUpdateUserProfile}`]: (
-      state: IAccountState,
-      action: Action<UpdateUserProfilePayload>
-    ) => ({
+    [`${Actions.updateStateUpdateUserProfile}`]: (state: IAccountState, action: Action<UpdateUserProfilePayload>) => ({
       ...state,
       updateProfileState: {
         ...state.updateProfileState,
         ...action.payload
       }
     }),
-    [`${Actions.updateStateRequestToken}`]: (
-      state: IAccountState,
-      action: Action<RequestTokenPayload>
-    ) => ({
+    [`${Actions.updateStateRequestToken}`]: (state: IAccountState, action: Action<RequestTokenPayload>) => ({
       ...state,
       requestTokenState: {
         ...state.requestTokenState,
         ...action.payload
       }
     }),
-    [`${Actions.updateStateVerifyToken}`]: (
-      state: IAccountState,
-      action: Action<VerifyTokenPayload>
-    ) => ({
+    [`${Actions.updateStateVerifyToken}`]: (state: IAccountState, action: Action<VerifyTokenPayload>) => ({
       ...state,
       verifyTokenState: {
         ...state.verifyTokenState,
@@ -145,10 +127,7 @@ export const AccountReducers = handleActions<IAccountState, any>(
         ...action.payload
       }
     }),
-    [`${Actions.updateStateChangePassword}`]: (
-      state: IAccountState,
-      action: Action<ChangePasswordPayload>
-    ) => ({
+    [`${Actions.updateStateChangePassword}`]: (state: IAccountState, action: Action<ChangePasswordPayload>) => ({
       ...state,
       changePasswordState: {
         ...state.changePasswordState,

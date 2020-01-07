@@ -11,12 +11,7 @@ import {
   Alert
 } from "react-native";
 import { Icon } from "react-native-elements";
-import {
-  StackActions,
-  NavigationScreenProps,
-  NavigationScreenProp,
-  NavigationRoute
-} from "react-navigation";
+import { StackActions, NavigationScreenProps, NavigationScreenProp, NavigationRoute } from "react-navigation";
 import * as Assets from "../../Assets";
 import { TextStyle } from "../../Shared/UI/Text";
 import { NetworkRequestState } from "../../Shared/State";
@@ -36,20 +31,13 @@ interface IForgotPasswordScreenProps {
   // dispatch props
   requestTokenConfirm: (email: string) => Promise<{ message: string }>;
   verifyToken: (email: string, token: string) => Promise<{ message: string }>;
-  setNewPassword: (
-    email: string,
-    token: string,
-    newPassword: string
-  ) => Promise<{ message: string }>;
+  setNewPassword: (email: string, token: string, newPassword: string) => Promise<{ message: string }>;
   navigateToHome: () => void;
   navigation: NavigationScreenProp<NavigationRoute>;
 }
 
-export class ForgotPasswordScreen extends React.Component<
-  IForgotPasswordScreenProps,
-  IForgotPasswordScreenState
-> {
-  static navigationOptions = (transitionProp: NavigationScreenProps) => ({
+export class ForgotPasswordScreen extends React.Component<IForgotPasswordScreenProps, IForgotPasswordScreenState> {
+  public static navigationOptions = (transitionProp: NavigationScreenProps) => ({
     headerStyle: {
       borderBottomWidth: 0
     },
@@ -127,11 +115,7 @@ export class ForgotPasswordScreen extends React.Component<
         <View style={styles.container}>
           <ScrollView>{this.renderContent()}</ScrollView>
         </View>
-        <TouchableOpacity
-          style={styles.buttonContainer}
-          activeOpacity={0.7}
-          onPress={this._onPress.bind(this)}
-        >
+        <TouchableOpacity style={styles.buttonContainer} activeOpacity={0.7} onPress={this._onPress.bind(this)}>
           <Text style={styles.titleButton}>TIẾP TỤC</Text>
         </TouchableOpacity>
       </SafeAreaView>
@@ -191,12 +175,8 @@ export class ForgotPasswordScreen extends React.Component<
     let { code } = this.state;
     return (
       <View>
-        <Text
-          style={styles.title}
-        >{`Email chứa mã code để đặt lại mật khẩu đã được gửi đến hòm thư của bạn.`}</Text>
-        <Text style={[styles.title, { paddingTop: 20 }]}>
-          Nhập mã code trong email của bạn vào đây:
-        </Text>
+        <Text style={styles.title}>{`Email chứa mã code để đặt lại mật khẩu đã được gửi đến hòm thư của bạn.`}</Text>
+        <Text style={[styles.title, { paddingTop: 20 }]}>Nhập mã code trong email của bạn vào đây:</Text>
         <View style={styles.inputContainer}>
           <View style={styles.absolute}>
             <Text style={styles.email}>Mã code</Text>

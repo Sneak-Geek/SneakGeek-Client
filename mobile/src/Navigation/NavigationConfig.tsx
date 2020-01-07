@@ -1,13 +1,13 @@
-//!
-//! Copyright (c) 2019 - SneakGeek. All rights reserved
-//!
+// !
+// ! Copyright (c) 2019 - SneakGeek. All rights reserved
+// !
 
 import * as React from "react";
 import {
-  createStackNavigator,
   createAppContainer,
   createBottomTabNavigator,
-  createMaterialTopTabNavigator
+  createMaterialTopTabNavigator,
+  createStackNavigator
 } from "react-navigation";
 import Tab from "../Components/Tab";
 import { LoginScreenContainer } from "../Components/Login/LoginScreen.Container";
@@ -38,6 +38,7 @@ import { UserKindScreenContainer } from "../Components/UserKind/UserKindScreen.C
 import { PaymentScreenContainer } from "../Components/Payment/PaymenScreen.Container";
 import { NotiSettingScreenContainer } from "../Components/NotiSetting/NotiSettingScreen.Container";
 import { ShareScreenContainer } from "../Components/Share/ShareScreen.Container";
+import { BuySelectionScreenContainer } from "../Components/BuySelection/BuySelectionScreen.Container";
 
 const AuthenticationStack = createStackNavigator(
   {
@@ -89,8 +90,8 @@ const UserInfoTabNavigator = createStackNavigator(
 const TransactionTabNavigator = createMaterialTopTabNavigator(
   {
     [`${RouteNames.Tabs.Transaction.BuyTab}`]: { screen: Tab.Transaction.Buy },
-    [`${RouteNames.Tabs.Transaction.SellTab}`]: { screen: Tab.Transaction.Sell },
-    [`${RouteNames.Tabs.Transaction.HistoryTab}`]: { screen: Tab.Transaction.History }
+    [`${RouteNames.Tabs.Transaction.SellTab}`]: { screen: Tab.Transaction.Sell }
+    // [`${RouteNames.Tabs.Transaction.HistoryTab}`]: { screen: Tab.Transaction.History }
   },
   {
     lazy: true,
@@ -161,6 +162,7 @@ export const AppNavigator = createStackNavigator(
     },
     [`${RouteNames.SellDetail}`]: { screen: SellDetailScreenContainer },
     [`${RouteNames.ShoeDetail}`]: { screen: ShoeDetailScreenContainer },
+    [`${RouteNames.BuySelection}`]: { screen: BuySelectionScreenContainer },
     [`${RouteNames.PaymentOptions}`]: { screen: PaymentOptionsScreenContainer },
     [`${RouteNames.AddCard}`]: { screen: AddCardScreenContainer },
     [`${RouteNames.ShoeRequire}`]: { screen: ShoeRequireScreenContainer },

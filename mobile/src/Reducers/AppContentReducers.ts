@@ -3,18 +3,9 @@
 //!
 
 import { handleActions, Action } from "redux-actions";
-import {
-  updateShoesData,
-  updateSearchShoesState,
-  updateGetShoesState,
-  updateStateRequestProduct
-} from "../Actions";
+import { updateShoesData, updateSearchShoesState, updateGetShoesState, updateStateRequestProduct } from "../Actions";
 import { Shoe } from "../Shared/Model";
-import {
-  SearchShoePayload,
-  GetShoesPayload,
-  RequestProductPayload
-} from "../Shared/Payload";
+import { SearchShoePayload, GetShoesPayload, RequestProductPayload } from "../Shared/Payload";
 import { NetworkRequestState } from "../Shared/State";
 
 export interface IAppContentState {
@@ -55,10 +46,7 @@ export const AppContentReducers = handleActions<IAppContentState, any>(
     [`${updateShoesData}`]: (state: IAppContentState, action: Action<Shoe[]>) => {
       return Object.assign({}, state, { shoes: action.payload });
     },
-    [`${updateSearchShoesState}`]: (
-      state: IAppContentState,
-      action: Action<SearchShoePayload>
-    ) => {
+    [`${updateSearchShoesState}`]: (state: IAppContentState, action: Action<SearchShoePayload>) => {
       const { payload } = action;
       let result = {
         ...state,
@@ -74,20 +62,14 @@ export const AppContentReducers = handleActions<IAppContentState, any>(
       }
       return result;
     },
-    [`${updateGetShoesState}`]: (
-      state: IAppContentState,
-      action: Action<GetShoesPayload>
-    ) => ({
+    [`${updateGetShoesState}`]: (state: IAppContentState, action: Action<GetShoesPayload>) => ({
       ...state,
       getShoesState: {
         ...state.getShoesState,
         ...action.payload
       }
     }),
-    [`${updateStateRequestProduct}`]: (
-      state: IAppContentState,
-      action: Action<RequestProductPayload>
-    ) => ({
+    [`${updateStateRequestProduct}`]: (state: IAppContentState, action: Action<RequestProductPayload>) => ({
       ...state,
       requestProductState: {
         ...state.requestProductState,

@@ -1,16 +1,16 @@
 import * as React from "react";
 import {
-  View,
-  StyleSheet,
+  Dimensions,
   SafeAreaView,
   ScrollView,
+  StyleSheet,
   Text,
-  Dimensions,
   TextInput,
-  TouchableOpacity
+  TouchableOpacity,
+  View
 } from "react-native";
 import { Icon } from "react-native-elements";
-import { StackActions, NavigationScreenProps } from "react-navigation";
+import { NavigationScreenProps, StackActions } from "react-navigation";
 import * as Assets from "../../Assets";
 import Swiper from "react-native-swiper";
 import KeyboardSpacer from "react-native-keyboard-spacer";
@@ -22,11 +22,8 @@ interface IOrderAuctionScreenProps {
   navigateToPayment: () => void;
 }
 
-export class OrderAuctionScreen extends React.Component<
-  IOrderAuctionScreenProps,
-  IOrderAuctionScreenState
-> {
-  static navigationOptions = (transitionProp: NavigationScreenProps) => ({
+export class OrderAuctionScreen extends React.Component<IOrderAuctionScreenProps, IOrderAuctionScreenState> {
+  public static navigationOptions = (transitionProp: NavigationScreenProps) => ({
     title: "Đặt giá mua",
     headerTitleStyle: {
       fontSize: 24,
@@ -65,9 +62,7 @@ export class OrderAuctionScreen extends React.Component<
           {this._renderButton()}
         </View>
         {Assets.Device.IS_IOS && (
-          <KeyboardSpacer
-            topSpacing={Assets.Device.isIphoneX ? -Assets.Device.bottomSpace : 0}
-          />
+          <KeyboardSpacer topSpacing={Assets.Device.isIphoneX ? -Assets.Device.bottomSpace : 0} />
         )}
       </SafeAreaView>
     );
@@ -76,11 +71,7 @@ export class OrderAuctionScreen extends React.Component<
   private _renderImage() {
     return (
       <View style={styles.swipercontainer}>
-        <Swiper
-          dotStyle={styles.dot}
-          activeDotStyle={styles.activeDot}
-          paginationStyle={styles.paginationStyle}
-        >
+        <Swiper dotStyle={styles.dot} activeDotStyle={styles.activeDot} paginationStyle={styles.paginationStyle}>
           <View
             style={{
               backgroundColor: "red",
@@ -132,9 +123,7 @@ export class OrderAuctionScreen extends React.Component<
             </Text>
           </View>
           <View>
-            <Text style={[styles.title, { textAlign: "right" }]}>
-              Giá cao nhất hiện tại
-            </Text>
+            <Text style={[styles.title, { textAlign: "right" }]}>Giá cao nhất hiện tại</Text>
             <Text style={[styles.curency, { textAlign: "right" }]}>
               VND <Text style={[styles.money, { textAlign: "right" }]}>1.600.000</Text>
             </Text>
@@ -182,10 +171,7 @@ export class OrderAuctionScreen extends React.Component<
 
   private _renderButton() {
     return (
-      <TouchableOpacity
-        style={styles.containerButton}
-        onPress={this.props.navigateToPayment}
-      >
+      <TouchableOpacity style={styles.containerButton} onPress={this.props.navigateToPayment}>
         <Text style={styles.titleButton}>TIẾP TỤC</Text>
       </TouchableOpacity>
     );

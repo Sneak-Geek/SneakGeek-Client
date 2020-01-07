@@ -95,7 +95,4 @@ const mapDispatchToProps = (dispatch: Function) => {
   };
 };
 
-export const TabUserMainScreenContainer = connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(TabUserMainScreen);
+export const TabUserMainScreenContainer = connect(mapStateToProps, mapDispatchToProps)(TabUserMainScreen);

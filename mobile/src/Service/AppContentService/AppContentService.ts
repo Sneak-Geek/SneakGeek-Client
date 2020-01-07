@@ -55,10 +55,7 @@ export class AppContentService implements IAppContentService {
       // productLink,
       //  imageUrls
     });
-    if (
-      response &&
-      (response.status === HttpStatus.CREATED || response.status === HttpStatus.OK)
-    ) {
+    if (response && (response.status === HttpStatus.CREATED || response.status === HttpStatus.OK)) {
       return response.data;
     }
 

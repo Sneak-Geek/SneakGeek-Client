@@ -1,11 +1,11 @@
-//!
-//! Copyright (c) 2019 - SneakGeek. All rights reserved
-//!
+// !
+// ! Copyright (c) 2019 - SneakGeek. All rights reserved
+// !
 
 import * as React from "react";
-import { View, Dimensions, Switch, Text, StyleSheet, TextInput } from "react-native";
+import { Dimensions, StyleSheet, Switch, Text, TextInput, View } from "react-native";
 
-type State = {
+interface IShoeConditionExtraInfoState {
   tainted: boolean; // ố vàng
   soleWorn: boolean; // đế mòn
   heavilyTorn: boolean; // rách
@@ -14,24 +14,27 @@ type State = {
 
   // indexing purposes
   [key: string]: any;
-};
+}
 
-type Props = {
+interface IShoeConditionExtraInfoProps {
   onSetShoeTainted: (tainted: boolean) => void;
   onSetShoeOutsoleWorn: (outsoleWorn: boolean) => void;
   onSetShoeInsoleWorn: (insoleWorn: boolean) => void;
   onSetShoeHeavilyTorn: (heavilyTorn: boolean) => void;
   onSetShoeOtherDetail: (otherDetail: string) => void;
-};
+}
 
-type Setting = {
+interface ISetting {
   stateName: string;
   title: string;
   onValueChange: (currentValue: boolean) => void;
-};
+}
 
-export class ShoeConditionExtraInfoComponent extends React.PureComponent<Props, State> {
-  private settingsAndOptions: Setting[] = [
+export class ShoeConditionExtraInfoComponent extends React.PureComponent<
+  IShoeConditionExtraInfoProps,
+  IShoeConditionExtraInfoState
+> {
+  private settingsAndOptions: ISetting[] = [
     {
       stateName: "tainted",
       title: "Ố vàng",
@@ -77,7 +80,7 @@ export class ShoeConditionExtraInfoComponent extends React.PureComponent<Props, 
     );
   }
 
-  private _renderSettingAndOptions(setting: Setting): JSX.Element {
+  private _renderSettingAndOptions(setting: ISetting): JSX.Element {
     return (
       <View key={setting.stateName} style={styles.settingContainer}>
         <Text style={{ fontSize: 16 }}>{setting.title}</Text>

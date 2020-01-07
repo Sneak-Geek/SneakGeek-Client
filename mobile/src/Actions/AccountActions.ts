@@ -1,11 +1,11 @@
-//!
-//! Copyright (c) 2019 - SneakGeek. All rights reserved
-//!
+// !
+// ! Copyright (c) 2019 - SneakGeek. All rights reserved
+// !
 
 import { createAction } from "redux-actions";
 import { invariant } from "ts-invariant";
 import { Account, Profile } from "../Shared/Model";
-import { LoginManager, LoginResult, AccessToken } from "react-native-fbsdk";
+import { AccessToken, LoginManager, LoginResult } from "react-native-fbsdk";
 import { GoogleSignin, User as GoogleUser } from "react-native-google-signin";
 import AppConfig from "../Config/ThirdParty";
 import { container, Types } from "../Config/Inversify";
@@ -13,13 +13,13 @@ import { IAccountService } from "../Service/AuthenticationService";
 import { IAppSettingsService, SettingsKeys } from "../Service/AppSettingsService";
 import { showNotification } from "./NotificationActions";
 import {
-  GetUserProfilePayload,
-  UpdateUserProfilePayload,
+  ChangePasswordPayload,
   CheckAccountWithEmailPayload,
+  GetUserProfilePayload,
   RequestTokenPayload,
-  VerifyTokenPayload,
   SetPasswordPayload,
-  ChangePasswordPayload
+  UpdateUserProfilePayload,
+  VerifyTokenPayload
 } from "../Shared/Payload";
 import { NetworkRequestState } from "../Shared/State";
 import {
@@ -30,7 +30,7 @@ import {
 } from "./NavigationActions";
 import { ICdnService } from "../Service";
 
-export module AccountActions {
+export namespace AccountActions {
   export const AUTHENTICATE_ERROR = "AUTHENTICATION_ERROR";
   export const AUTHENTICATE_ON_PREM = "AUTHENTICATE_ON_PREM";
   export const AUTHENTICATION_COMPLETE = "AUTHENTICATION_COMPLETE";
@@ -38,8 +38,7 @@ export module AccountActions {
   export const GO_TO_LOGIN = "GO_TO_LOGIN";
   export const UPDATE_STATE_GET_USER_PROFILE = "UPDATE_GET_USER_PROFILE";
   export const UPDATE_STATE_UPDATE_USER_PROFILE = "UPDATE_UPDATE_USER_PROFILE";
-  export const UPDATE_STATE_CHECK_ACCOUNT_WITH_EMAIL =
-    "UPDATE_STATE_CHECK_ACCOUNT_WITH_EMAIL";
+  export const UPDATE_STATE_CHECK_ACCOUNT_WITH_EMAIL = "UPDATE_STATE_CHECK_ACCOUNT_WITH_EMAIL";
   export const UPDATE_STATE_REQUEST_TOKEN = "UPDATE_STATE_REQUEST_TOKEN";
   export const UPDATE_STATE_VERIFY_TOKEN = "UPDATE_STATE_VERIFY_TOKEN";
   export const UPDATE_STATE_SET_PASSWORD = "UPDATE_STATE_SET_PASSWORD";
@@ -52,9 +51,7 @@ export const cancelThirdPartyAuthentication = createAction<"facebook" | "google"
 );
 export const authenticationError = createAction(AccountActions.AUTHENTICATE_ERROR);
 export const onPremAuthenticate = createAction(AccountActions.AUTHENTICATE_ON_PREM);
-export const authenticationComplete = createAction<Account>(
-  AccountActions.AUTHENTICATION_COMPLETE
-);
+export const authenticationComplete = createAction<Account>(AccountActions.AUTHENTICATION_COMPLETE);
 export const updateStateGetUserProfile = createAction<GetUserProfilePayload>(
   AccountActions.UPDATE_STATE_GET_USER_PROFILE
 );
@@ -64,17 +61,11 @@ export const updateStateUpdateUserProfile = createAction<UpdateUserProfilePayloa
 export const updateStateCheckAccountWithEmail = createAction<CheckAccountWithEmailPayload>(
   AccountActions.UPDATE_STATE_CHECK_ACCOUNT_WITH_EMAIL
 );
+export const updateStateRequestToken = createAction<RequestTokenPayload>(AccountActions.UPDATE_STATE_REQUEST_TOKEN);
+export const updateStateVerifyToken = createAction<VerifyTokenPayload>(AccountActions.UPDATE_STATE_VERIFY_TOKEN);
+export const updateStateSetPassword = createAction<SetPasswordPayload>(AccountActions.UPDATE_STATE_SET_PASSWORD);
 export const updateStateChangePassword = createAction<ChangePasswordPayload>(
   AccountActions.UPDATE_STATE_CHANGE_PASSWORD
-);
-export const updateStateRequestToken = createAction<RequestTokenPayload>(
-  AccountActions.UPDATE_STATE_REQUEST_TOKEN
-);
-export const updateStateVerifyToken = createAction<VerifyTokenPayload>(
-  AccountActions.UPDATE_STATE_VERIFY_TOKEN
-);
-export const updateStateSetPassword = createAction<SetPasswordPayload>(
-  AccountActions.UPDATE_STATE_SET_PASSWORD
 );
 
 export const changePassword = (currentPassword: string, newPassword: string) => {
@@ -90,11 +81,7 @@ export const changePassword = (currentPassword: string, newPassword: string) => 
         })
       );
       const accountService = container.get<IAccountService>(Types.IAccountService);
-      const response = await accountService.changePassword(
-        token,
-        currentPassword,
-        newPassword
-      );
+      const response = await accountService.changePassword(token, currentPassword, newPassword);
       if (response) {
         dispatch(
           updateStateChangePassword({
@@ -138,9 +125,7 @@ export const checkAccountWithEmail = (email: string) => {
         dispatch(navigateToEmailSignUp(email));
       }
     } catch (error) {
-      dispatch(
-        updateStateCheckAccountWithEmail({ error, state: NetworkRequestState.FAILED })
-      );
+      dispatch(updateStateCheckAccountWithEmail({ error, state: NetworkRequestState.FAILED }));
     }
   };
 };
@@ -271,10 +256,7 @@ export const notifyError = () => {
   };
 };
 
-export const authenticateVsnkrsService = (
-  accessToken: string,
-  provider: "facebook" | "google"
-) => {
+export const authenticateVsnkrsService = (accessToken: string, provider: "facebook" | "google") => {
   return async (dispatch: Function) => {
     dispatch(onPremAuthenticate());
     try {
@@ -384,14 +366,16 @@ export const getUserProfile = (accessToken: string) => {
 export const updateUserProfile = (data: Partial<Profile>) => {
   return async (dispatch: Function) => {
     dispatch(updateStateUpdateUserProfile({ state: NetworkRequestState.REQUESTING }));
-    try {
-      const appSettings = container.get<IAppSettingsService>(Types.IAppSettingsService);
-      const accountService = container.get<IAccountService>(Types.IAccountService);
-      const cdnService = container.get<ICdnService>(Types.ICdnService);
-      const accessToken = appSettings.getSettings().CurrentAccessToken as string;
 
+    const appSettings = container.get<IAppSettingsService>(Types.IAppSettingsService);
+    const accountService = container.get<IAccountService>(Types.IAccountService);
+    const cdnService = container.get<ICdnService>(Types.ICdnService);
+    const accessToken = appSettings.getSettings().CurrentAccessToken as string;
+
+    try {
       if (data.userProvidedProfilePic) {
         const urls = await cdnService.getImageUploadUrls(accessToken, 1);
+        data.userProvidedProfilePic = urls[0];
         cdnService.uploadImage(data.userProvidedProfilePic, urls[0]);
       }
 
@@ -408,10 +392,7 @@ export const updateUserProfile = (data: Partial<Profile>) => {
   };
 };
 
-export const addOwnedShoe = (
-  shoeId: string,
-  owned: Array<{ shoeSize: string; number: number }>
-) => {
+export const addOwnedShoe = (shoeId: string, owned: Array<{ shoeSize: string; number: number }>) => {
   return async (dispatch: Function) => {
     try {
       const appSettings = container.get<IAppSettingsService>(Types.IAppSettingsService);
@@ -419,11 +400,7 @@ export const addOwnedShoe = (
       const accessToken = appSettings.getSettings().CurrentAccessToken;
 
       if (accessToken) {
-        const success: boolean = await accountService.addOnwedShoes(
-          accessToken,
-          shoeId,
-          owned
-        );
+        const success: boolean = await accountService.addOnwedShoes(accessToken, shoeId, owned);
 
         if (success) {
           dispatch(showNotification("Đã thêm thành công"));

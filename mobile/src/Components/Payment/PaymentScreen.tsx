@@ -1,30 +1,39 @@
+// !
+// ! Copyright (c) 2019 - SneakGeek. All rights reserved
+// !
+
 import * as React from "react";
 import {
-  View,
-  StyleSheet,
-  SafeAreaView,
-  TouchableOpacity,
+  ActionSheetIOS,
   Image,
-  Text,
+  SafeAreaView,
   ScrollView,
-  ActionSheetIOS
+  StyleSheet,
+  TouchableOpacity,
+  View,
+  Alert
 } from "react-native";
-import { StackActions, NavigationScreenProps } from "react-navigation";
+import { NavigationScreenProps, ScreenProps, StackActions } from "react-navigation";
 import { Icon } from "react-native-elements";
 import * as Assets from "../../Assets";
-import { RowCard } from "../../Shared/UI";
-import { Types, container } from "../../Config/Inversify";
-import { ITransactionService } from "../../Service";
+import { RowCard, Text } from "../../Shared/UI";
+import { getLatestPrice, SellOrder } from "../../Shared/Model";
+import { toCurrencyString } from "../../Utilities/StringUtil";
+import { NetworkRequestState } from "../../Shared/State";
 
-interface IPaymentScreenState {}
+export interface IPaymentScreenProps {
+  navigation: ScreenProps;
+  buyState: NetworkRequestState;
+  // dispatch props
+  buyShoe: (sellOrder: SellOrder) => void;
+}
 
-interface IPaymentScreenProps {}
+interface IPaymentScreenState {
+  value: string;
+}
 
-export class PaymentScreen extends React.Component<
-  IPaymentScreenProps,
-  IPaymentScreenState
-> {
-  static navigationOptions = (transitionProp: NavigationScreenProps) => ({
+export class PaymentScreen extends React.Component<IPaymentScreenProps, IPaymentScreenState> {
+  public static navigationOptions = (transitionProp: NavigationScreenProps) => ({
     title: "Thanh toán",
     headerTitleStyle: { fontSize: 17, fontFamily: "RobotoCondensed-Regular" },
     headerLeft: (
@@ -38,24 +47,22 @@ export class PaymentScreen extends React.Component<
     ),
     headerRight: (
       <TouchableOpacity style={{ paddingRight: 20 }}>
-        <Image
-          source={Assets.Icons.Share}
-          style={{ width: 20, height: 20, resizeMode: "contain" }}
-        />
+        <Image source={Assets.Icons.Share} style={{ width: 20, height: 20, resizeMode: "contain" }} />
       </TouchableOpacity>
     )
   });
 
-  state = {
-    value: ""
-  };
-
-  private transactionService: ITransactionService = container.get<ITransactionService>(
-    Types.ITransactionService
-  );
+  private order: SellOrder | null = null;
 
   public constructor(props: any) {
     super(props);
+    this.state = {
+      value: ""
+    };
+    this.order = this.props.navigation.getParam("order");
+    if (!this.order) {
+      throw new Error("Missing order for payment");
+    }
   }
 
   public actionSheetOnpress = (index: number) => {
@@ -67,7 +74,7 @@ export class PaymentScreen extends React.Component<
     }
   };
 
-  public render() {
+  public /** override */ render() {
     return (
       <SafeAreaView style={styles.container}>
         <View style={styles.contentContainer}>
@@ -81,48 +88,40 @@ export class PaymentScreen extends React.Component<
     );
   }
 
+  public /** override */ componentDidUpdate(prevProps: IPaymentScreenProps) {
+    if (prevProps.buyState !== this.props.buyState && this.props.buyState === NetworkRequestState.SUCCESS) {
+      Alert.alert("Mua thành công");
+    }
+  }
+
   private _renderShoe() {
+    const shoe = this.order?.shoe?.[0];
     return (
       <View style={styles.topContentContainer}>
         <View style={styles.imgContainer}>
-          <Image
-            style={styles.image}
-            source={{
-              uri:
-                "https://images.timberland.com/is/image/timberland/A228P001-HERO?$PDP-FULL-IMAGE$"
-            }}
-          />
+          <Image style={styles.image} source={{ uri: shoe?.imageUrl }} resizeMode={"contain"} />
         </View>
         <View style={styles.titleContainer}>
-          <Text style={styles.title} numberOfLines={2} ellipsizeMode="tail">
-            PHARELL X BILLIONAIRE BOYS CLUB X NMD HUMAN RACE TRAIL BLUEE PLAID
-          </Text>
-          <Text style={styles.code}>SKU: EF3326</Text>
+          <Text.Body numberOfLines={2} ellipsizeMode="tail">
+            {shoe?.title}
+          </Text.Body>
+          <Text.Footnote numberOfLines={1} ellipsizeMode="tail">
+            {shoe?.colorway.join(",")}
+          </Text.Footnote>
         </View>
       </View>
     );
   }
 
   private _renderContent() {
+    const order = this.order as SellOrder;
     return (
       <View style={{ paddingHorizontal: 20, paddingTop: 15 }}>
-        <RowCard title="CỠ GIÀY" description="Cỡ 8.5" />
-        <RowCard title="TÌNH TRẠNG" description="Có hộp, mới" border />
-        <RowCard
-          title="ĐỊA CHỈ GIAO HÀNG"
-          description="Số 20 phố huế, quận hai bà trưng, hà nội"
-          green
-        />
-        <RowCard title="HÌNH THỨC GIAO HÀNG" description="Chuyển phát nhanh" green />
-        <RowCard
-          title="THANH TOÁN"
-          value={this.state.value}
-          buttonTitle="Lựa chọn"
-          border
-          descriptionStyle={{ opacity: 0.3 }}
-          onPress={() => {}}
-        />
-        <RowCard title="GIÁ MUA" description="VND 1,800,000" green />
+        <RowCard title="CỠ GIÀY" description={this.order?.shoeSize} />
+        <RowCard title="TÌNH TRẠNG" description={this.order?.shoeCondition} border={true} />
+        <RowCard title="ĐỊA CHỈ GIAO HÀNG" description="Số 20 phố huế, quận hai bà trưng, hà nội" green={true} />
+        <RowCard title="HÌNH THỨC GIAO HÀNG" description="Chuyển phát nhanh" green={true} />
+        <RowCard title="GIÁ MUA" description={toCurrencyString(getLatestPrice(order).toString())} green={true} />
         <RowCard title="PHÍ GIAO HÀNG" description="VND 1,800,000" />
         <RowCard title="TỔNG CỘNG" description="VND 1,800,000" />
       </View>
@@ -142,15 +141,17 @@ export class PaymentScreen extends React.Component<
             },
             buttonIndex => {
               if (options[buttonIndex] === "Thanh toán quốc tế") {
-                this.transactionService.launchIntlPaymentPage();
+                // this.transactionService.launchIntlPaymentPage(order);
+                this.props.buyShoe(this.order!);
               } else if (options[buttonIndex] === "Thanh toán nội địa") {
-                this.transactionService.launchDomesticPaymentPage();
+                // this.transactionService.launchDomesticPaymentPage(order);
+                this.props.buyShoe(this.order!);
               }
             }
           );
         }}
       >
-        <Text style={styles.titleButton}>MUA SẢN PHẨM</Text>
+        <Text.Body style={styles.titleButton}>MUA SẢN PHẨM</Text.Body>
       </TouchableOpacity>
     );
   }
@@ -173,8 +174,8 @@ const styles = StyleSheet.create({
   topContentContainer: {
     flexDirection: "row",
     alignItems: "center",
-    paddingLeft: 24,
-    paddingRight: 14
+    marginHorizontal: 20,
+    marginVertical: 10
   },
   imgContainer: {
     width: 78,
@@ -183,19 +184,14 @@ const styles = StyleSheet.create({
     justifyContent: "center"
   },
   image: {
-    width: 73,
-    height: 73,
-    resizeMode: "cover"
+    width: 100,
+    aspectRatio: 0.5
   },
+
   titleContainer: {
     flex: 1,
-    paddingLeft: 17,
+    marginLeft: 25,
     paddingBottom: 7
-  },
-  title: {
-    fontFamily: "RobotoCondensed-Bold",
-    fontSize: 17,
-    paddingTop: 17
   },
   code: {
     fontFamily: "RobotoCondensed-Regular",

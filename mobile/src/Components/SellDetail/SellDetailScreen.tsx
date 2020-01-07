@@ -1,57 +1,54 @@
-//!
-//! Copyright (c) 2019 - SneakGeek. All rights reserved
-//!
+// !
+// ! Copyright (c) 2019 - SneakGeek. All rights reserved
+// !
 
 import * as React from "react";
 import { ITransactionState } from "../../Reducers";
 import {
-  View,
-  Image,
-  TouchableOpacity,
-  Dimensions,
-  SafeAreaView,
-  Modal,
   ActivityIndicator,
-  StyleSheet
+  Dimensions,
+  Image,
+  Modal,
+  SafeAreaView,
+  StyleSheet,
+  TouchableOpacity,
+  View
 } from "react-native";
+import { FlatList, NavigationRoute, NavigationScreenProp, NavigationScreenProps, StackActions } from "react-navigation";
 import {
-  NavigationScreenProp,
-  NavigationRoute,
-  StackActions,
-  FlatList,
-  ScreenProps
-} from "react-navigation";
-import {
-  ShoeConditionRequiredInfoComponent,
   ShoeConditionExtraInfoComponent,
-  ShoeSetPriceComponent,
-  ShoeSellOrderSummaryComponent
+  ShoeConditionRequiredInfoComponent,
+  ShoeSellOrderSummaryComponent,
+  ShoeSetPriceComponent
 } from "./ChildComponents";
 import { Icon } from "react-native-elements";
 import styles from "./styles";
 import { Text } from "../../Shared/UI";
-import { TransactionReduxState } from "../../Shared/State";
-import { Transaction, Shoe } from "../../Shared/Model";
+import { Shoe, Transaction } from "../../Shared/Model";
 import * as Assets from "../../Assets";
+import { NetworkRequestState } from "../../Shared/State";
 
 export interface ISellDetailScreenProps {
   navigation: NavigationScreenProp<NavigationRoute>;
   transactionState: ITransactionState;
+
+  // dispatch props
   sellShoe: (sellOrder: Transaction) => void;
+  showNotification: (notification: string) => void;
 }
 
-interface State {
+interface ISellDetailScreenState {
   sellOrderInfo: Transaction;
   currentChildComponentIndex: number;
 }
 
-type SellDetailChildren = {
+interface ISellDetailChildren {
   render: () => JSX.Element;
   canProceed: () => boolean;
-};
+}
 
-export class SellDetailScreen extends React.Component<ISellDetailScreenProps, State> {
-  static navigationOptions = (navigationConfig: ScreenProps) => ({
+export class SellDetailScreen extends React.Component<ISellDetailScreenProps, ISellDetailScreenState> {
+  public static navigationOptions = (transitionProps: NavigationScreenProps) => ({
     title: "Đăng sản phẩm",
     headerTitleStyle: Text.TextStyle.title3,
     headerLeft: (
@@ -60,14 +57,14 @@ export class SellDetailScreen extends React.Component<ISellDetailScreenProps, St
         name={"ios-arrow-back"}
         size={28}
         containerStyle={{ marginLeft: 10 }}
-        onPress={() => navigationConfig.navigation.dispatch(StackActions.pop({ n: 1 }))}
+        onPress={() => transitionProps.navigation.dispatch(StackActions.pop({ n: 1 }))}
       />
     )
   });
 
   private shoe: Shoe;
-  private detailComponentList: FlatList<SellDetailChildren> | null = null;
-  private childComponents: SellDetailChildren[] = [];
+  private detailComponentList: FlatList<ISellDetailChildren> | null = null;
+  private childComponents: ISellDetailChildren[] = [];
 
   public constructor /** override */(props: ISellDetailScreenProps) {
     super(props);
@@ -123,9 +120,7 @@ export class SellDetailScreen extends React.Component<ISellDetailScreenProps, St
         ),
         canProceed: () => {
           const { sellOrderInfo } = this.state;
-          return (
-            sellOrderInfo.currentPrice !== undefined && sellOrderInfo.sellDuration !== undefined
-          );
+          return sellOrderInfo.currentPrice !== undefined && sellOrderInfo.sellDuration !== undefined;
         }
       },
       {
@@ -154,6 +149,20 @@ export class SellDetailScreen extends React.Component<ISellDetailScreenProps, St
     ];
   }
 
+  public componentDidUpdate(prevProps: ISellDetailScreenProps) {
+    const currentState = this.props.transactionState.sellShoeState?.state;
+    const prevState = prevProps.transactionState.sellShoeState?.state;
+
+    if (prevState !== currentState && currentState === NetworkRequestState.SUCCESS) {
+      this.props.showNotification(`Đã bán đôi ${this.shoe.title} thành công!`);
+      this.props.navigation.dispatch(StackActions.pop({ n: 1 }));
+    }
+
+    if (prevState !== currentState && currentState === NetworkRequestState.FAILED) {
+      this.props.showNotification("Đã xảy ra lỗi, xin vui lòng thử lại");
+    }
+  }
+
   public /** override */ render(): JSX.Element {
     return (
       <SafeAreaView style={{ flex: 1, position: "relative" }}>
@@ -173,15 +182,11 @@ export class SellDetailScreen extends React.Component<ISellDetailScreenProps, St
 
   private _renderActivityIndicator() {
     const { transactionState } = this.props;
-    const sellState = transactionState.sell.state;
+    const sellState = transactionState.sellOrderHistoryState?.state;
     return (
       <Modal
         presentationStyle={"overFullScreen"}
-        visible={
-          sellState !== TransactionReduxState.SELL_NOT_STARTED &&
-          sellState !== TransactionReduxState.SELL_SUCCESS &&
-          sellState !== TransactionReduxState.SELL_FAILURE
-        }
+        visible={sellState === NetworkRequestState.REQUESTING}
         transparent={true}
         animationType={"fade"}
         animated={true}
@@ -189,9 +194,7 @@ export class SellDetailScreen extends React.Component<ISellDetailScreenProps, St
         <View style={[StyleSheet.absoluteFill, styles.activityIndicatorModalContainer]}>
           <View style={styles.acitivytIndicatorContainer}>
             <ActivityIndicator size={"large"} color={"white"} />
-            <Text.Subhead style={{ color: Assets.Styles.AppSecondaryColor }}>
-              Đang tải
-            </Text.Subhead>
+            <Text.Subhead style={{ color: Assets.Styles.AppSecondaryColor }}>Đang tải</Text.Subhead>
           </View>
         </View>
       </Modal>
@@ -221,13 +224,13 @@ export class SellDetailScreen extends React.Component<ISellDetailScreenProps, St
         ref={ref => (this.detailComponentList = ref)}
         bounces={false}
         style={{ flex: 1 }}
-        horizontal
-        pagingEnabled
+        horizontal={true}
+        pagingEnabled={true}
         data={this.childComponents}
         renderItem={({ item }) => item.render()}
         alwaysBounceHorizontal={false}
         scrollEnabled={false}
-        keyExtractor={(_itm, idx) => idx.toString()}
+        keyExtractor={(_item, idx) => idx.toString()}
       />
     );
   }
@@ -328,16 +331,12 @@ export class SellDetailScreen extends React.Component<ISellDetailScreenProps, St
     const halfWidth = { width: width / 2 };
     const currentChildComponent = this.childComponents[this.state.currentChildComponentIndex];
     const halfButtonCondition = this.state.currentChildComponentIndex > 0;
-    const shouldRenderUpdate =
-      this.state.currentChildComponentIndex === this.childComponents.length - 1;
+    const shouldRenderUpdate = this.state.currentChildComponentIndex === this.childComponents.length - 1;
 
     return (
       <View style={styles.bottomButtonContainer}>
         {halfButtonCondition && (
-          <TouchableOpacity
-            style={[styles.backButtonStyle, halfWidth]}
-            onPress={() => this._scrollToNext(false)}
-          >
+          <TouchableOpacity style={[styles.backButtonStyle, halfWidth]} onPress={() => this._scrollToNext(false)}>
             <Text.Body style={{ textAlign: "center", color: "black" }}>Quay lại</Text.Body>
           </TouchableOpacity>
         )}
@@ -345,9 +344,7 @@ export class SellDetailScreen extends React.Component<ISellDetailScreenProps, St
           style={[
             styles.nextButtonStyle,
             !halfButtonCondition ? fullWidth : halfWidth,
-            currentChildComponent.canProceed()
-              ? { backgroundColor: "black" }
-              : { backgroundColor: "gray" }
+            currentChildComponent.canProceed() ? { backgroundColor: "black" } : { backgroundColor: "gray" }
           ]}
           onPress={() => (shouldRenderUpdate ? this._sellShoe() : this._scrollToNext(true))}
         >
@@ -361,20 +358,26 @@ export class SellDetailScreen extends React.Component<ISellDetailScreenProps, St
 
   private _scrollToNext(isNext: boolean) {
     const currentChildComponent = this.childComponents[this.state.currentChildComponentIndex];
-    if (isNext && !currentChildComponent.canProceed()) return;
+    if (isNext && !currentChildComponent.canProceed()) {
+      return;
+    }
 
     if (this.detailComponentList) {
       const nextIndex = isNext
         ? Math.min(this.state.currentChildComponentIndex + 1, this.childComponents.length - 1)
         : Math.max(this.state.currentChildComponentIndex - 1, 0);
 
-      this.detailComponentList.scrollToIndex({
-        index: nextIndex,
-        animated: true
-      });
-      this.setState({
-        currentChildComponentIndex: nextIndex
-      });
+      this.setState(
+        {
+          currentChildComponentIndex: nextIndex
+        },
+        () => {
+          this.detailComponentList?.scrollToIndex({
+            index: nextIndex,
+            animated: true
+          });
+        }
+      );
     }
   }
 

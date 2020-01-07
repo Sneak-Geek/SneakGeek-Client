@@ -1,6 +1,6 @@
-//!
-//! Copyright (c) 2019 - SneakGeek. All rights reserved
-//!
+// !
+// ! Copyright (c) 2019 - SneakGeek. All rights reserved
+// !
 
 import { connect } from "react-redux";
 import TabSearch from "./TabSearch";
@@ -37,7 +37,4 @@ const mapDispatchToProps = (dispatch: Function) => ({
   }
 });
 
-export const TabSearchContainer = connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(TabSearch);
+export const TabSearchContainer = connect(mapStateToProps, mapDispatchToProps)(TabSearch);

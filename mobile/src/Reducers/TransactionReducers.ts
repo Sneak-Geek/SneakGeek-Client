@@ -1,57 +1,78 @@
-//!
-//! Copyright (c) 2019 - SneakGeek. All rights reserved
-//!
+// !
+// ! Copyright (c) 2019 - SneakGeek. All rights reserved
+// !
 
-import { handleActions, Action } from "redux-actions";
-import { TransactionReduxState, NetworkRequestState } from "../Shared/State";
-import { updateSellState, updateGetSellHistory } from "../Actions";
-import { Transaction, Shoe } from "../Shared/Model";
-import { SellOrderHistoryPayload } from "../Shared/Payload";
+import { Action, handleActions } from "redux-actions";
+import {
+  updateGetAvailableSellOrders,
+  updateGetSellHistory,
+  updateSellState,
+  updateBuyState,
+  updateGetBuyHistory
+} from "../Actions";
+import {
+  AvailableSellOrdersPayload,
+  BuyOrderHistoryPayload,
+  BuyShoePayload,
+  SellOrderHistoryPayload,
+  SellShoePayload
+} from "../Shared/Payload";
+import { NetworkRequestState } from "../Shared/State";
 
 export interface ITransactionState {
-  sell: {
-    state: TransactionReduxState;
-  };
-  transactions: {
-    state: NetworkRequestState;
-    sells: Transaction[];
-    shoes: Shoe[];
-    error?: any;
-  };
+  sellShoeState: SellShoePayload;
+  buyShoeState: BuyShoePayload;
+  buyOrderHistoryState?: BuyOrderHistoryPayload;
+  sellOrderHistoryState?: SellOrderHistoryPayload;
+  availableSellOrdersState?: AvailableSellOrdersPayload;
 }
 
 const initialState: ITransactionState = {
-  sell: {
-    state: TransactionReduxState.SELL_NOT_STARTED
+  sellShoeState: {
+    isUploadingPictures: false,
+    state: NetworkRequestState.NOT_STARTED
   },
-  transactions: {
+  buyShoeState: {
+    state: NetworkRequestState.NOT_STARTED
+  },
+  buyOrderHistoryState: {
     state: NetworkRequestState.NOT_STARTED,
-    sells: [],
-    shoes: []
+    buyHistory: []
+  },
+  sellOrderHistoryState: {
+    state: NetworkRequestState.NOT_STARTED,
+    sellHistory: []
+  },
+  availableSellOrdersState: {
+    state: NetworkRequestState.NOT_STARTED,
+    sellOrders: []
   }
 };
 
 export const TransactionReducers = handleActions<ITransactionState, any>(
   {
-    [`${updateSellState}`]: (
-      state: ITransactionState,
-      action: Action<TransactionReduxState>
-    ) => {
+    [`${updateBuyState}`]: (state: ITransactionState, action: Action<BuyShoePayload>) => ({
+      ...state,
+      buyShoeState: { ...state.buyShoeState, ...action.payload }
+    }),
+    [`${updateSellState}`]: (state: ITransactionState, action: Action<SellShoePayload>) => ({
+      ...state,
+      sellShoeState: { ...state.sellShoeState, ...action.payload }
+    }),
+    [`${updateGetBuyHistory}`]: (state: ITransactionState, action: Action<BuyOrderHistoryPayload>) => ({
+      ...state,
+      buyOrderHistoryState: { ...state.buyOrderHistoryState, ...action.payload }
+    }),
+    [`${updateGetSellHistory}`]: (state: ITransactionState, action: Action<SellOrderHistoryPayload>) => {
       return {
         ...state,
-        sell: { ...state.sell, state: action.payload }
+        sellOrderHistoryState: { ...state.sellOrderHistoryState, ...action.payload }
       };
     },
-    [`${updateGetSellHistory}`]: (
-      state: ITransactionState,
-      action: Action<Partial<SellOrderHistoryPayload>>
-    ) => {
+    [`${updateGetAvailableSellOrders}`]: (state: ITransactionState, action: Action<AvailableSellOrdersPayload>) => {
       return {
         ...state,
-        transactions: {
-          ...state.transactions,
-          ...action.payload
-        }
+        availableSellOrdersState: { ...state, ...action.payload }
       };
     }
   },

@@ -1,29 +1,23 @@
-//!
-//! Copyright (c) 2019 - SneakGeek. All rights reserved
-//!
+// !
+// ! Copyright (c) 2019 - SneakGeek. All rights reserved
+// !
 
 import * as React from "react";
+import { FlatList, NavigationRoute, NavigationScreenOptions, NavigationScreenProp, ScrollView } from "react-navigation";
 import {
-  NavigationScreenOptions,
-  ScrollView,
-  FlatList,
-  NavigationScreenProp,
-  NavigationRoute
-} from "react-navigation";
-import {
-  View,
-  SafeAreaView,
-  StyleSheet,
-  NativeSyntheticEvent,
-  TouchableOpacity,
+  Image,
   Keyboard,
   Modal,
-  Image
+  NativeSyntheticEvent,
+  SafeAreaView,
+  StyleSheet,
+  TouchableOpacity,
+  View
 } from "react-native";
-import { Input, Icon } from "react-native-elements";
+import { Icon, Input } from "react-native-elements";
 import { BlurView } from "@react-native-community/blur";
 import { Shoe } from "../../../Shared/Model";
-import { ShoeCard, Text, CustomPicker } from "../../../Shared/UI";
+import { CustomPicker, ShoeCard, Text } from "../../../Shared/UI";
 import { SearchShoePayload } from "../../../Shared/Payload";
 import * as Assets from "../../../Assets";
 import { IAppSettingsService } from "../../../Service/AppSettingsService";
@@ -52,35 +46,42 @@ interface ISearchScreenState {
   typeModal: string;
   brand: string[];
   isModalOpen: boolean;
-  shoeSize: string,
+  shoeSize: string;
   [key: string]: any;
-
 }
 
-export default class TabSearch extends React.Component<
-  ISearchScreenProps,
-  ISearchScreenState
-  > {
-  static navigationOptions: NavigationScreenOptions = {
+export default class TabSearch extends React.Component<ISearchScreenProps, ISearchScreenState> {
+  public static navigationOptions: NavigationScreenOptions = {
     tabBarIcon: ({ tintColor }) => {
       tintColor = tintColor as string;
       return <Icon type={"ionicon"} name="md-search" size={28} color={tintColor} />;
     }
   };
 
-  private appSettings: IAppSettingsService = container.get<IAppSettingsService>(
-    Types.IAppSettingsService
-  );
+  private appSettings: IAppSettingsService = container.get<IAppSettingsService>(Types.IAppSettingsService);
   private remoteSettings = this.appSettings.getSettings().RemoteSettings;
 
   private _searchInputComponent: Input | null = null;
   private isForSell: boolean = false;
 
+  private dataFill = [
+    {
+      data: ["Giá (Thấp - Cao)", "Giá (Cao - Thấp)", "Độ Hot", "Đánh giá tốt"],
+      title: "SẮP XẾP THEO",
+      stateName: "fillPrice"
+    },
+    { data: this.remoteSettings && this.remoteSettings.genders, title: "GIỚI TÍNH", stateName: "fillGender" },
+    { data: ["Mới", "Cũ"], title: "TÌNH TRẠNG SỬ DỤNG", stateName: "fillCondition" }
+  ];
+
+  private dataOption = [
+    { title: "CỠ GIÀY", stateName: "shoeSize", onPressItem: () => this.setState({ isModalOpen: true }) },
+    { title: "THUƠNG HIỆU", stateName: "brand", onPressItem: () => this.setState({ typeModal: "brand" }) }
+  ];
+
   public constructor /** override */(props: any) {
     super(props);
-    this.isForSell = this.props.navigation
-      ? this.props.navigation.getParam("isForSell") === true
-      : false;
+    this.isForSell = this.props.navigation ? this.props.navigation.getParam("isForSell") === true : false;
     this.state = {
       placeholder: "Tìm kiếm",
       searchKey: "",
@@ -91,34 +92,11 @@ export default class TabSearch extends React.Component<
       fillPrice: "Giá (Thấp - Cao)",
       fillGender: "men",
       fillCondition: "Mới",
-      typeModal: 'home',
+      typeModal: "home",
       brand: [],
       isModalOpen: false,
-      shoeSize: "",
+      shoeSize: ""
     };
-  }
-
-  dataFill = [
-    { data: ['Giá (Thấp - Cao)', 'Giá (Cao - Thấp)', 'Độ Hot', 'Đánh giá tốt'], title: 'SẮP XẾP THEO', stateName: 'fillPrice' },
-    { data: this.remoteSettings && this.remoteSettings.genders, title: 'GIỚI TÍNH', stateName: 'fillGender' },
-    { data: ['Mới', 'Cũ'], title: 'TÌNH TRẠNG SỬ DỤNG', stateName: 'fillCondition' },
-  ]
-
-  dataOption = [
-    { title: 'CỠ GIÀY', stateName: 'shoeSize', onPressItem: () => this.setState({ isModalOpen: true }) },
-    { title: 'THUƠNG HIỆU', stateName: 'brand', onPressItem: () => this.setState({ typeModal: 'brand' }) },
-  ]
-  private _addBrand = (item: string) => {
-    let newArr = this.state.brand;
-    newArr.push(item);
-    this.setState({ brand: newArr });
-
-  }
-
-  private _removeBrand = (item: string) => {
-    let newArr = this.state.brand;
-    let arr = newArr.filter(value => value !== item)
-    this.setState({ brand: arr })
   }
 
   public /** override */ render(): React.ReactNode {
@@ -128,10 +106,7 @@ export default class TabSearch extends React.Component<
       <SafeAreaView style={{ flex: 1 }}>
         {this._renderSearchBar()}
         <View style={styles.contentContainer}>
-          {this.state.searchFocus &&
-            searchResult.shoes &&
-            searchResult.shoes.length > 0 &&
-            this._renderSearchContent()}
+          {this.state.searchFocus && searchResult.shoes && searchResult.shoes.length > 0 && this._renderSearchContent()}
           <ScrollView>
             {this._renderKeywordHeaderAndFilter()}
             <View>
@@ -146,15 +121,24 @@ export default class TabSearch extends React.Component<
   }
 
   public componentDidUpdate(prevProps: ISearchScreenProps) {
-    const isForSell = prevProps.navigation
-      ? prevProps.navigation.getParam("isForSell")
-      : false;
+    const isForSell = prevProps.navigation ? prevProps.navigation.getParam("isForSell") : false;
     if (typeof isForSell === "boolean" && isForSell !== this.state.shouldOpenSell) {
       this.setState({
         shouldOpenSell: isForSell
       });
     }
   }
+  private _addBrand = (item: string) => {
+    let newArr = this.state.brand;
+    newArr.push(item);
+    this.setState({ brand: newArr });
+  };
+
+  private _removeBrand = (item: string) => {
+    let newArr = this.state.brand;
+    let arr = newArr.filter(value => value !== item);
+    this.setState({ brand: arr });
+  };
 
   private _renderSearchBar(): React.ReactNode {
     return (
@@ -166,12 +150,7 @@ export default class TabSearch extends React.Component<
         leftIconContainerStyle={{ marginRight: 20 }}
         rightIcon={
           this.state.searchFocus && (
-            <Icon
-              type={"ionicon"}
-              name={"md-close"}
-              size={25}
-              onPress={this._toggleSearchFocus.bind(this)}
-            />
+            <Icon type={"ionicon"} name={"md-close"} size={25} onPress={this._toggleSearchFocus.bind(this)} />
           )
         }
         labelStyle={{ fontSize: 16 }}
@@ -192,9 +171,7 @@ export default class TabSearch extends React.Component<
             data={searchResult.shoes}
             keyExtractor={(shoe, _index) => shoe.title}
             renderItem={({ item }) => (
-              <TouchableOpacity
-                onPress={() => this.props.onShoeClick(this.state.shouldOpenSell, item)}
-              >
+              <TouchableOpacity onPress={() => this.props.onShoeClick(this.state.shouldOpenSell, item)}>
                 <Text.Callout style={styles.searchResult}>{item.title}</Text.Callout>
               </TouchableOpacity>
             )}
@@ -229,26 +206,15 @@ export default class TabSearch extends React.Component<
     return (
       <View style={styles.keywordContainer}>
         <Text.Subhead>Từ khoá hot</Text.Subhead>
-        <TouchableOpacity
-          onPress={() => this.setState({ showModal: !this.state.showModal })}
-        >
-          <Image
-            source={Assets.Icons.Hamburger}
-            style={{ width: 20, height: 20, resizeMode: "contain" }}
-          />
+        <TouchableOpacity onPress={() => this.setState({ showModal: !this.state.showModal })}>
+          <Image source={Assets.Icons.Hamburger} style={{ width: 20, height: 20, resizeMode: "contain" }} />
         </TouchableOpacity>
       </View>
     );
   }
 
   private _renderHotKeywords(): React.ReactNode {
-    const keywords = [
-      "Air Jordan",
-      "Nike Air",
-      "Adidas X",
-      "Nike Air Max",
-      "Yeezy Boost White"
-    ];
+    const keywords = ["Air Jordan", "Nike Air", "Adidas X", "Nike Air Max", "Yeezy Boost White"];
 
     const buttons = keywords.map((k, idx) => (
       <View style={styles.keywordWrapper} key={idx}>
@@ -303,12 +269,7 @@ export default class TabSearch extends React.Component<
       <FlatList
         data={topShoes}
         keyExtractor={(_data, index) => index.toString()}
-        renderItem={({ item }) => (
-          <ShoeCard
-            shoe={item}
-            onPress={() => onShoeClick(this.state.shouldOpenSell, item)}
-          />
-        )}
+        renderItem={({ item }) => <ShoeCard shoe={item} onPress={() => onShoeClick(this.state.shouldOpenSell, item)} />}
         numColumns={2}
         style={{ marginTop: 30 }}
       />
@@ -323,10 +284,7 @@ export default class TabSearch extends React.Component<
         data={shoes}
         keyExtractor={(_data, index) => index.toString()}
         renderItem={({ item }) => (
-          <ShoeCard
-            shoe={item}
-            onPress={() => this.props.onShoeClick(this.state.shouldOpenSell, item)}
-          />
+          <ShoeCard shoe={item} onPress={() => this.props.onShoeClick(this.state.shouldOpenSell, item)} />
         )}
         numColumns={2}
         style={{ marginTop: 30 }}
@@ -349,7 +307,7 @@ export default class TabSearch extends React.Component<
             onPress={() => this.setState({ showModal: false })}
             style={{ height: 140, backgroundColor: "transparent" }}
           />
-          {this.state.typeModal === 'home' &&
+          {this.state.typeModal === "home" && (
             <View style={{ flex: 1 }}>
               <ScrollView style={{ flex: 1, backgroundColor: "rgba(0,0,0,0.85)" }}>
                 <View style={{ paddingLeft: 20, paddingTop: 37, flex: 1 }}>
@@ -369,28 +327,26 @@ export default class TabSearch extends React.Component<
                 <Text.Body style={{ fontSize: 20, color: "white" }}>Xem kết quả</Text.Body>
               </TouchableOpacity>
             </View>
-          }
-          {this.state.typeModal === 'brand' && this._renderBrandSelection()}
+          )}
+          {this.state.typeModal === "brand" && this._renderBrandSelection()}
         </View>
       </Modal>
     );
   }
 
   private _renderFill() {
-    return (
-      this.dataFill.map((item, index) => {
-        return (
-          <View key={index}>
-            <Text.Title1 style={{ color: "white", fontSize: 14 }}>{item.title}</Text.Title1>
-            <View style={{ flexDirection: "row", paddingTop: 20, paddingBottom: 37 }}>
-              <ScrollView style={{ flex: 1 }} horizontal showsHorizontalScrollIndicator={false}>
-                {item.data && item.data.map((itemC, indexC) => {
+    return this.dataFill.map((item, index) => {
+      return (
+        <View key={index}>
+          <Text.Title1 style={{ color: "white", fontSize: 14 }}>{item.title}</Text.Title1>
+          <View style={{ flexDirection: "row", paddingTop: 20, paddingBottom: 37 }}>
+            <ScrollView style={{ flex: 1 }} horizontal showsHorizontalScrollIndicator={false}>
+              {item.data &&
+                item.data.map((itemC, indexC) => {
                   return (
                     <TouchableOpacity
                       key={indexC}
-                      style={[
-                        this.state[item.stateName] === itemC ? styles.buttonSelected : styles.button,
-                      ]}
+                      style={[this.state[item.stateName] === itemC ? styles.buttonSelected : styles.button]}
                       onPress={() => this.setState({ [item.stateName]: itemC })}
                     >
                       <Text.Body style={this.state[item.stateName] === itemC ? styles.titleSelected : styles.title}>
@@ -400,14 +356,13 @@ export default class TabSearch extends React.Component<
                         <Image source={Assets.Icons.CheckMark} style={styles.icon} />
                       )}
                     </TouchableOpacity>
-                  )
+                  );
                 })}
-              </ScrollView>
-            </View>
+            </ScrollView>
           </View>
-        )
-      })
-    )
+        </View>
+      );
+    });
   }
 
   private _renderOption() {
@@ -415,26 +370,20 @@ export default class TabSearch extends React.Component<
       <View style={{ paddingRight: 20 }}>
         {this.dataOption.map((item, index) => {
           return (
-            <TouchableOpacity
-              key={index}
-              onPress={item.onPressItem}
-              style={styles.itemOptionContainer}
-            >
+            <TouchableOpacity key={index} onPress={item.onPressItem} style={styles.itemOptionContainer}>
               <Text.Title1 style={{ color: "white", fontSize: 14 }}>{item.title}</Text.Title1>
               <View>
-                {this.state[item.stateName].length > 0 ?
-                  <Text.Body style={{ color: Assets.Styles.AppPrimaryColor }}>
-                    {this.state[item.stateName]}
-                  </Text.Body>
-                  :
-                  <Image source={Assets.Icons.RightArrow} style={{ width: 12, height: 20, resizeMode: "contain" }}/>
-                }
+                {this.state[item.stateName].length > 0 ? (
+                  <Text.Body style={{ color: Assets.Styles.AppPrimaryColor }}>{this.state[item.stateName]}</Text.Body>
+                ) : (
+                  <Image source={Assets.Icons.RightArrow} style={{ width: 12, height: 20, resizeMode: "contain" }} />
+                )}
               </View>
             </TouchableOpacity>
-          )
+          );
         })}
       </View>
-    )
+    );
   }
 
   private _renderPickerModal() {
@@ -454,60 +403,96 @@ export default class TabSearch extends React.Component<
   private _renderBrandSelection() {
     return (
       <View style={{ flex: 1, backgroundColor: "rgba(0,0,0,0.85)" }}>
-        <TouchableOpacity style={{ width: 100, height: 44, justifyContent: 'center', paddingLeft: 9 }} onPress={() => { this.setState({ typeModal: 'home' }) }}>
+        <TouchableOpacity
+          style={{ width: 100, height: 44, justifyContent: "center", paddingLeft: 9 }}
+          onPress={() => {
+            this.setState({ typeModal: "home" });
+          }}
+        >
           <Image source={Assets.Icons.BackWhite} style={{ width: 12, height: 20 }} />
         </TouchableOpacity>
         <View style={{ paddingHorizontal: 20 }}>
-          <Text.Headline style={{ fontSize: 14, color: 'white' }}>
-            Thương hiệu
-          </Text.Headline>
-          <View style={{ flexDirection: 'row', paddingTop: 20, paddingBottom: 8, borderBottomWidth: 1, borderColor: '#C4C4C4' }}>
-            <View style={{ flexDirection: 'row', flex: 1 }}>
-              <ScrollView
-                horizontal
-                showsHorizontalScrollIndicator={false}
-              >
-                {this.state.brand.length > 0 && this.state.brand.map((item, index) => {
-                  return (
-                    <View key={index} style={{ marginRight: 5, borderRadius: 3, alignItems: 'center', backgroundColor: 'white', flexDirection: 'row', height: 28, paddingHorizontal: 15 }}>
-                      <Text.Body>{item}</Text.Body>
-                      <TouchableOpacity style={{ paddingLeft: 12 }} onPress={() => this._removeBrand(item)}>
-                        <Image source={Assets.Icons.Close} style={{ width: 13, height: 13, resizeMode: 'contain' }} />
-                      </TouchableOpacity>
-                    </View>
-                  )
-                })}
+          <Text.Headline style={{ fontSize: 14, color: "white" }}>Thương hiệu</Text.Headline>
+          <View
+            style={{
+              flexDirection: "row",
+              paddingTop: 20,
+              paddingBottom: 8,
+              borderBottomWidth: 1,
+              borderColor: "#C4C4C4"
+            }}
+          >
+            <View style={{ flexDirection: "row", flex: 1 }}>
+              <ScrollView horizontal showsHorizontalScrollIndicator={false}>
+                {this.state.brand.length > 0 &&
+                  this.state.brand.map((item, index) => {
+                    return (
+                      <View
+                        key={index}
+                        style={{
+                          marginRight: 5,
+                          borderRadius: 3,
+                          alignItems: "center",
+                          backgroundColor: "white",
+                          flexDirection: "row",
+                          height: 28,
+                          paddingHorizontal: 15
+                        }}
+                      >
+                        <Text.Body>{item}</Text.Body>
+                        <TouchableOpacity style={{ paddingLeft: 12 }} onPress={() => this._removeBrand(item)}>
+                          <Image source={Assets.Icons.Close} style={{ width: 13, height: 13, resizeMode: "contain" }} />
+                        </TouchableOpacity>
+                      </View>
+                    );
+                  })}
               </ScrollView>
             </View>
             <TouchableOpacity
-              onPress={() => { this.setState({ brand: [] }) }}
-              style={{ borderRadius: 10, width: 20, height: 20, alignItems: 'center', justifyContent: 'center', backgroundColor: 'white' }}>
-              <Image source={Assets.Icons.Close} style={{ width: 10, height: 10, resizeMode: 'contain' }} />
+              onPress={() => {
+                this.setState({ brand: [] });
+              }}
+              style={{
+                borderRadius: 10,
+                width: 20,
+                height: 20,
+                alignItems: "center",
+                justifyContent: "center",
+                backgroundColor: "white"
+              }}
+            >
+              <Image source={Assets.Icons.Close} style={{ width: 10, height: 10, resizeMode: "contain" }} />
             </TouchableOpacity>
           </View>
           <View>
-            {this.remoteSettings && this.remoteSettings.shoeBrands.map((item, index) => {
-              return (
-                <TouchableOpacity
-                  onPress={() => {
-                    if (this.state.brand.indexOf(item) === -1) {
-                      this._addBrand(item)
-                    } else {
-                      this._removeBrand(item)
-                    }
-                  }}
-                  key={index} style={{ paddingTop: 35, flexDirection: 'row', alignItems: 'center' }}>
-                  <Text.Body style={{ color: 'white', flex: 1 }}>{item}</Text.Body>
-                  {this.state.brand.indexOf(item) !== -1 &&
-                    <Image source={Assets.Icons.CheckMark} style={{ tintColor: 'white', width: 16, height: 12, resizeMode: 'contain' }} />
-                  }
-                </TouchableOpacity>
-              )
-            })}
+            {this.remoteSettings &&
+              this.remoteSettings.shoeBrands.map((item, index) => {
+                return (
+                  <TouchableOpacity
+                    onPress={() => {
+                      if (this.state.brand.indexOf(item) === -1) {
+                        this._addBrand(item);
+                      } else {
+                        this._removeBrand(item);
+                      }
+                    }}
+                    key={index}
+                    style={{ paddingTop: 35, flexDirection: "row", alignItems: "center" }}
+                  >
+                    <Text.Body style={{ color: "white", flex: 1 }}>{item}</Text.Body>
+                    {this.state.brand.indexOf(item) !== -1 && (
+                      <Image
+                        source={Assets.Icons.CheckMark}
+                        style={{ tintColor: "white", width: 16, height: 12, resizeMode: "contain" }}
+                      />
+                    )}
+                  </TouchableOpacity>
+                );
+              })}
           </View>
         </View>
       </View>
-    )
+    );
   }
 }
 
@@ -557,21 +542,20 @@ const styles = StyleSheet.create({
   },
 
   buttonSelected: {
-    width: (Assets.Device.WIDTH) / 2,
+    width: Assets.Device.WIDTH / 2,
     backgroundColor: "white",
     borderRadius: 2,
     height: 48,
     alignItems: "center",
     justifyContent: "center",
-    marginRight: 15,
-
+    marginRight: 15
   },
   titleSelected: {
     color: "black",
     fontSize: 14
   },
   button: {
-    width: (Assets.Device.WIDTH) / 2,
+    width: Assets.Device.WIDTH / 2,
     backgroundColor: "transparent",
     borderWidth: 1,
     borderColor: "white",
@@ -579,7 +563,7 @@ const styles = StyleSheet.create({
     height: 48,
     alignItems: "center",
     justifyContent: "center",
-    marginRight: 15,
+    marginRight: 15
   },
   title: {
     color: "white",
