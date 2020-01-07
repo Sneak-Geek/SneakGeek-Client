@@ -54,7 +54,9 @@ export class ShoeSellOrderSummaryComponent extends React.PureComponent<Props, St
     return (
       <View style={styles.sectionContainer}>
         <Text.Subhead>Giá bán</Text.Subhead>
-        <Text.Body style={styles.detail}>VND {StringUtil.toCurrencyString(price)}</Text.Body>
+        <Text.Body style={styles.detail}>
+          VND {StringUtil.toCurrencyString(price)}
+        </Text.Body>
       </View>
     );
   }
@@ -65,7 +67,8 @@ export class ShoeSellOrderSummaryComponent extends React.PureComponent<Props, St
       <View style={styles.sectionContainer}>
         <Text.Subhead>Miêu tả</Text.Subhead>
         <Text.Body style={styles.detail}>
-          Cỡ {orderSummary.shoeSize}, {orderSummary.shoeCondition}, {orderSummary.boxCondition}
+          Cỡ {orderSummary.shoeSize}, {orderSummary.shoeCondition},{" "}
+          {orderSummary.boxCondition}
         </Text.Body>
       </View>
     );
@@ -125,18 +128,20 @@ export class ShoeSellOrderSummaryComponent extends React.PureComponent<Props, St
   }
 
   private _launchSystemImagePicker(): void {
-    ImagePicker.launchImageLibrary(this.imagePickerOptions, (response: ImagePickerResponse) => {
-      if (!response.didCancel && !response.error) {
-        console.log(`Image picked: ${response.uri}`);
-        this.setState(prevState => {
-          this.props.onShoePictureAdded(response.uri);
+    ImagePicker.launchImageLibrary(
+      this.imagePickerOptions,
+      (response: ImagePickerResponse) => {
+        if (!response.didCancel && !response.error) {
+          this.setState(prevState => {
+            this.props.onShoePictureAdded(response.uri);
 
-          return {
-            pictures: [...prevState.pictures, response.uri]
-          };
-        });
+            return {
+              pictures: [...prevState.pictures, response.uri]
+            };
+          });
+        }
       }
-    });
+    );
   }
 
   private _renderPicture(pictureUri: string | null, index: number) {

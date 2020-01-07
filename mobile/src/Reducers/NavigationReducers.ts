@@ -58,7 +58,8 @@ export const NavigationReducers = (
     case Actions.NavigationActions.NAVIGATE_TO_EMAIL_SIGNUP:
       nextState = AppNavigator.router.getStateForAction(
         StackActions.push({
-          routeName: RouteNames.EmailSignUp
+          routeName: RouteNames.EmailSignUp,
+          params: { email: action.payload }
         }),
         state
       );

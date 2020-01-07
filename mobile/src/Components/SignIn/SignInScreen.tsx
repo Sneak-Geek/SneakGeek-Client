@@ -47,8 +47,8 @@ export class SignInScreen extends React.Component<ISignInScreenProps, ISignInScr
         onPress={() => transitionProp.navigation.dispatch(StackActions.popToTop())}
       />
     ),
-    headerTitleStyle: Text.TextStyle.title2,
-    title: "Đăng nhập"
+    title: "Đăng nhập",
+    headerTitleStyle: Text.TextStyle.title2
   });
 
   public constructor(props: ISignInScreenProps) {

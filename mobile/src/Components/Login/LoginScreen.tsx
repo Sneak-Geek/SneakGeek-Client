@@ -8,7 +8,8 @@ import {
   TouchableOpacity,
   Image,
   SafeAreaView,
-  ActivityIndicator
+  ActivityIndicator,
+  Alert
 } from "react-native";
 import styles from "./styles";
 import { Input, Button, Icon } from "react-native-elements";
@@ -88,6 +89,17 @@ export default class LoginScreen extends React.Component<ILoginScreenProps, Stat
     );
   }
 
+  public componentDidUpdate(prevProps: ILoginScreenProps) {
+    if (
+      this.props.checkAccountWithEmailState &&
+      this.props.checkAccountWithEmailState.state === NetworkRequestState.FAILED &&
+      this.props.checkAccountWithEmailState.error !==
+        prevProps.checkAccountWithEmailState.error
+    ) {
+      Alert.alert("Đã xảy ra lỗi khi đăng nhập, xin vui lòng thử lại sau");
+    }
+  }
+
   private _renderSocialContainer() {
     return (
       <View style={styles.socialContainer}>
@@ -148,11 +160,6 @@ export default class LoginScreen extends React.Component<ILoginScreenProps, Stat
             inputStyle={styles.emailInputStyle}
             autoCapitalize="none"
           />
-          {this.props.checkAccountWithEmailState.error && (
-            <Text.Body style={{ color: "red" }}>
-              Đăng nhập không hợp lệ {this.props.checkAccountWithEmailState.error}
-            </Text.Body>
-          )}
         </View>
       </View>
     );

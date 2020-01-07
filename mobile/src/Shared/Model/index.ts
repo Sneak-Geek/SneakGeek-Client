@@ -20,6 +20,7 @@ export interface Profile {
   userProvidedShoeSize?: string;
   userProvidedEmail?: string;
   userProvidedPhoneNumber?: string;
+  userProvidedProfilePic?: string;
 }
 
 export interface Account {
