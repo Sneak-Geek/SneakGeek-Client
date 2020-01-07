@@ -76,6 +76,7 @@ export default StyleSheet.create({
   buyerContainerFull: {
     width: Dimensions.get("window").width,
     height: Dimensions.get("window").height,
+    zIndex: 1000,
     flexDirection: "column",
     alignItems: "center",
     backgroundColor: Assets.Styles.AppSecondaryColorBlurred

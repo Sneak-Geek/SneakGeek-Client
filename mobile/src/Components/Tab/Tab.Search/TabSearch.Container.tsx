@@ -30,13 +30,10 @@ const mapDispatchToProps = (dispatch: Function) => ({
   },
   navigateToShoeRequire: () => {
     const navConfig = {
-      routeName: RouteNames.ShoeRequire,
+      routeName: RouteNames.ShoeRequire
     };
     dispatch(NavigationActions.navigate(navConfig));
   }
 });
 
-export const TabSearchContainer = connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(TabSearch);
+export const TabSearchContainer = connect(mapStateToProps, mapDispatchToProps)(TabSearch);

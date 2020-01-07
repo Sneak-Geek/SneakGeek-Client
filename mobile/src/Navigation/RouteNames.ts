@@ -13,6 +13,7 @@ export const RouteNames = {
   ForgotPassword: "ForgotPassword",
   SellDetail: "SellDetail",
   ShoeDetail: "ShoeDetail",
+  BuySelection: "BuySelection",
   AddCard: "AddCard",
   ShoeRequire: "ShoeRequire",
   RequireSuccess: "RequireSuccess",

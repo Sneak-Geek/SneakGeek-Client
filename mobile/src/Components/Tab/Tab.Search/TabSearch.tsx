@@ -3,13 +3,7 @@
 //!
 
 import * as React from "react";
-import {
-  NavigationScreenOptions,
-  ScrollView,
-  FlatList,
-  NavigationScreenProp,
-  NavigationRoute
-} from "react-navigation";
+import { NavigationScreenOptions, ScrollView, FlatList, NavigationScreenProp, NavigationRoute } from "react-navigation";
 import {
   View,
   SafeAreaView,
@@ -50,11 +44,8 @@ interface ISearchScreenState {
   isSelectingShoeSize: boolean;
 }
 
-export default class TabSearch extends React.Component<
-  ISearchScreenProps,
-  ISearchScreenState
-> {
-  static navigationOptions: NavigationScreenOptions = {
+export default class TabSearch extends React.Component<ISearchScreenProps, ISearchScreenState> {
+  public static navigationOptions: NavigationScreenOptions = {
     tabBarIcon: ({ tintColor }) => {
       tintColor = tintColor as string;
       return <Icon type={"ionicon"} name="md-search" size={28} color={tintColor} />;
@@ -66,9 +57,7 @@ export default class TabSearch extends React.Component<
 
   public constructor /** override */(props: any) {
     super(props);
-    this.isForSell = this.props.navigation
-      ? this.props.navigation.getParam("isForSell") === true
-      : false;
+    this.isForSell = this.props.navigation ? this.props.navigation.getParam("isForSell") === true : false;
     this.state = {
       placeholder: "Tìm kiếm",
       searchKey: "",
@@ -109,9 +98,7 @@ export default class TabSearch extends React.Component<
   }
 
   public componentDidUpdate(prevProps: ISearchScreenProps) {
-    const isForSell = prevProps.navigation
-      ? prevProps.navigation.getParam("isForSell")
-      : false;
+    const isForSell = prevProps.navigation ? prevProps.navigation.getParam("isForSell") : false;
     if (typeof isForSell === "boolean" && isForSell !== this.state.shouldOpenSell) {
       this.setState({
         shouldOpenSell: isForSell
@@ -129,12 +116,7 @@ export default class TabSearch extends React.Component<
         leftIconContainerStyle={{ marginRight: 20 }}
         rightIcon={
           this.state.searchFocus && (
-            <Icon
-              type={"ionicon"}
-              name={"md-close"}
-              size={25}
-              onPress={this._toggleSearchFocus.bind(this)}
-            />
+            <Icon type={"ionicon"} name={"md-close"} size={25} onPress={this._toggleSearchFocus.bind(this)} />
           )
         }
         labelStyle={{ fontSize: 16 }}
@@ -155,9 +137,7 @@ export default class TabSearch extends React.Component<
             data={searchResult.shoes}
             keyExtractor={(shoe, _index) => shoe.title}
             renderItem={({ item }) => (
-              <TouchableOpacity
-                onPress={() => this.props.onShoeClick(this.state.shouldOpenSell, item)}
-              >
+              <TouchableOpacity onPress={() => this.props.onShoeClick(this.state.shouldOpenSell, item)}>
                 <Text.Callout style={styles.searchResult}>{item.title}</Text.Callout>
               </TouchableOpacity>
             )}
@@ -192,26 +172,15 @@ export default class TabSearch extends React.Component<
     return (
       <View style={styles.keywordContainer}>
         <Text.Subhead>Từ khoá hot</Text.Subhead>
-        <TouchableOpacity
-          onPress={() => this.setState({ showModal: !this.state.showModal })}
-        >
-          <Image
-            source={Assets.Icons.Hamburger}
-            style={{ width: 20, height: 20, resizeMode: "contain" }}
-          />
+        <TouchableOpacity onPress={() => this.setState({ showModal: !this.state.showModal })}>
+          <Image source={Assets.Icons.Hamburger} style={{ width: 20, height: 20, resizeMode: "contain" }} />
         </TouchableOpacity>
       </View>
     );
   }
 
   private _renderHotKeywords(): React.ReactNode {
-    const keywords = [
-      "Air Jordan",
-      "Nike Air",
-      "Adidas X",
-      "Nike Air Max",
-      "Yeezy Boost White"
-    ];
+    const keywords = ["Air Jordan", "Nike Air", "Adidas X", "Nike Air Max", "Yeezy Boost White"];
 
     const buttons = keywords.map((k, idx) => (
       <View style={styles.keywordWrapper} key={idx}>
@@ -266,12 +235,7 @@ export default class TabSearch extends React.Component<
       <FlatList
         data={topShoes}
         keyExtractor={(_data, index) => index.toString()}
-        renderItem={({ item }) => (
-          <ShoeCard
-            shoe={item}
-            onPress={() => onShoeClick(this.state.shouldOpenSell, item)}
-          />
-        )}
+        renderItem={({ item }) => <ShoeCard shoe={item} onPress={() => onShoeClick(this.state.shouldOpenSell, item)} />}
         numColumns={2}
         style={{ marginTop: 30 }}
       />
@@ -286,10 +250,7 @@ export default class TabSearch extends React.Component<
         data={shoes}
         keyExtractor={(_data, index) => index.toString()}
         renderItem={({ item }) => (
-          <ShoeCard
-            shoe={item}
-            onPress={() => this.props.onShoeClick(this.state.shouldOpenSell, item)}
-          />
+          <ShoeCard shoe={item} onPress={() => this.props.onShoeClick(this.state.shouldOpenSell, item)} />
         )}
         numColumns={2}
         style={{ marginTop: 30 }}
@@ -325,13 +286,8 @@ export default class TabSearch extends React.Component<
                   justifyContent: "space-between"
                 }}
               >
-                <Text.Title1 style={{ color: "white", fontSize: 14 }}>
-                  LOẠI GIÀY
-                </Text.Title1>
-                <Image
-                  source={Assets.Icons.RightArrow}
-                  style={{ width: 12, height: 20, resizeMode: "contain" }}
-                />
+                <Text.Title1 style={{ color: "white", fontSize: 14 }}>LOẠI GIÀY</Text.Title1>
+                <Image source={Assets.Icons.RightArrow} style={{ width: 12, height: 20, resizeMode: "contain" }} />
               </View>
               <View
                 style={{
@@ -343,15 +299,11 @@ export default class TabSearch extends React.Component<
               >
                 <Text.Title1 style={{ color: "white", fontSize: 14 }}>MÀU SẮC</Text.Title1>
                 <View>
-                  <Text.Body style={{ color: Assets.Styles.AppPrimaryColor }}>
-                    Xanh lá, đen, trắng
-                  </Text.Body>
+                  <Text.Body style={{ color: Assets.Styles.AppPrimaryColor }}>Xanh lá, đen, trắng</Text.Body>
                 </View>
               </View>
               <TouchableOpacity
-                onPress={() =>
-                  this.setState({ showModal: false, isSelectingShoeSize: true })
-                }
+                onPress={() => this.setState({ showModal: false, isSelectingShoeSize: true })}
                 style={{
                   paddingTop: 30,
                   flexDirection: "row",
@@ -361,9 +313,7 @@ export default class TabSearch extends React.Component<
               >
                 <Text.Title1 style={{ color: "white", fontSize: 14 }}>CỠ GIÀY</Text.Title1>
                 <View>
-                  <Text.Body style={{ color: Assets.Styles.AppPrimaryColor }}>
-                    8.0, 8.5, 9, 9.5
-                  </Text.Body>
+                  <Text.Body style={{ color: Assets.Styles.AppPrimaryColor }}>8.0, 8.5, 9, 9.5</Text.Body>
                 </View>
               </TouchableOpacity>
               <View
@@ -374,13 +324,9 @@ export default class TabSearch extends React.Component<
                   justifyContent: "space-between"
                 }}
               >
-                <Text.Title1 style={{ color: "white", fontSize: 14 }}>
-                  THƯƠNG HIỆU
-                </Text.Title1>
+                <Text.Title1 style={{ color: "white", fontSize: 14 }}>THƯƠNG HIỆU</Text.Title1>
                 <View>
-                  <Text.Body style={{ color: Assets.Styles.AppPrimaryColor }}>
-                    Nike, Adidas, Puma
-                  </Text.Body>
+                  <Text.Body style={{ color: Assets.Styles.AppPrimaryColor }}>Nike, Adidas, Puma</Text.Body>
                 </View>
               </View>
             </View>
@@ -406,10 +352,7 @@ export default class TabSearch extends React.Component<
         shouldRenderCounter={false}
         pickerTitle={"Chọn cỡ giày của bạn"}
         visible={this.state.isSelectingShoeSize}
-        onTogglePicker={(
-          exiting: boolean,
-          owned: string | Array<{ shoeSize: string; number: number }>
-        ) => {
+        onTogglePicker={(exiting: boolean, owned: string | Array<{ shoeSize: string; number: number }>) => {
           typeof owned === "string" &&
             this.setState(
               {
@@ -431,36 +374,22 @@ export default class TabSearch extends React.Component<
         <Text.Title1 style={{ color: "white", fontSize: 14 }}>SẮP XẾP THEO</Text.Title1>
         <View style={{ flexDirection: "row", paddingTop: 20, paddingBottom: 37 }}>
           <TouchableOpacity
-            style={[
-              fillPrice === "lowToHigh" ? styles.buttonSelected : styles.button,
-              { marginRight: 7.5 }
-            ]}
+            style={[fillPrice === "lowToHigh" ? styles.buttonSelected : styles.button, { marginRight: 7.5 }]}
             onPress={() => this.setState({ fillPrice: "lowToHigh" })}
           >
-            <Text.Body
-              style={fillPrice === "lowToHigh" ? styles.titleSelected : styles.title}
-            >
+            <Text.Body style={fillPrice === "lowToHigh" ? styles.titleSelected : styles.title}>
               Giá (Thấp - Cao)
             </Text.Body>
-            {fillPrice === "lowToHigh" && (
-              <Image source={Assets.Icons.CheckMark} style={styles.icon} />
-            )}
+            {fillPrice === "lowToHigh" && <Image source={Assets.Icons.CheckMark} style={styles.icon} />}
           </TouchableOpacity>
           <TouchableOpacity
-            style={[
-              fillPrice === "highToLow" ? styles.buttonSelected : styles.button,
-              { marginLeft: 7.5 }
-            ]}
+            style={[fillPrice === "highToLow" ? styles.buttonSelected : styles.button, { marginLeft: 7.5 }]}
             onPress={() => this.setState({ fillPrice: "highToLow" })}
           >
-            <Text.Body
-              style={fillPrice === "highToLow" ? styles.titleSelected : styles.title}
-            >
+            <Text.Body style={fillPrice === "highToLow" ? styles.titleSelected : styles.title}>
               Giá (Cao - Thấp)
             </Text.Body>
-            {fillPrice === "highToLow" && (
-              <Image source={Assets.Icons.CheckMark} style={styles.icon} />
-            )}
+            {fillPrice === "highToLow" && <Image source={Assets.Icons.CheckMark} style={styles.icon} />}
           </TouchableOpacity>
         </View>
       </View>
@@ -474,34 +403,18 @@ export default class TabSearch extends React.Component<
         <Text.Title1 style={{ color: "white", fontSize: 14 }}>GIỚI TÍNH</Text.Title1>
         <View style={{ flexDirection: "row", paddingTop: 20, paddingBottom: 37 }}>
           <TouchableOpacity
-            style={[
-              fillGender === "male" ? styles.buttonSelected : styles.button,
-              { marginRight: 7.5 }
-            ]}
+            style={[fillGender === "male" ? styles.buttonSelected : styles.button, { marginRight: 7.5 }]}
             onPress={() => this.setState({ fillGender: "male" })}
           >
-            <Text.Body style={fillGender === "male" ? styles.titleSelected : styles.title}>
-              Nam
-            </Text.Body>
-            {fillGender === "male" && (
-              <Image source={Assets.Icons.CheckMark} style={styles.icon} />
-            )}
+            <Text.Body style={fillGender === "male" ? styles.titleSelected : styles.title}>Nam</Text.Body>
+            {fillGender === "male" && <Image source={Assets.Icons.CheckMark} style={styles.icon} />}
           </TouchableOpacity>
           <TouchableOpacity
-            style={[
-              fillGender === "female" ? styles.buttonSelected : styles.button,
-              { marginLeft: 7.5 }
-            ]}
+            style={[fillGender === "female" ? styles.buttonSelected : styles.button, { marginLeft: 7.5 }]}
             onPress={() => this.setState({ fillGender: "female" })}
           >
-            <Text.Body
-              style={fillGender === "female" ? styles.titleSelected : styles.title}
-            >
-              Nữ
-            </Text.Body>
-            {fillGender === "female" && (
-              <Image source={Assets.Icons.CheckMark} style={styles.icon} />
-            )}
+            <Text.Body style={fillGender === "female" ? styles.titleSelected : styles.title}>Nữ</Text.Body>
+            {fillGender === "female" && <Image source={Assets.Icons.CheckMark} style={styles.icon} />}
           </TouchableOpacity>
         </View>
       </View>
@@ -515,36 +428,18 @@ export default class TabSearch extends React.Component<
         <Text.Title1 style={{ color: "white", fontSize: 14 }}>TÌNH TRẠNG</Text.Title1>
         <View style={{ flexDirection: "row", paddingTop: 20 }}>
           <TouchableOpacity
-            style={[
-              fillCondition === "new" ? styles.buttonSelected : styles.button,
-              { marginRight: 7.5 }
-            ]}
+            style={[fillCondition === "new" ? styles.buttonSelected : styles.button, { marginRight: 7.5 }]}
             onPress={() => this.setState({ fillCondition: "new" })}
           >
-            <Text.Body
-              style={fillCondition === "new" ? styles.titleSelected : styles.title}
-            >
-              Mới
-            </Text.Body>
-            {fillCondition === "new" && (
-              <Image source={Assets.Icons.CheckMark} style={styles.icon} />
-            )}
+            <Text.Body style={fillCondition === "new" ? styles.titleSelected : styles.title}>Mới</Text.Body>
+            {fillCondition === "new" && <Image source={Assets.Icons.CheckMark} style={styles.icon} />}
           </TouchableOpacity>
           <TouchableOpacity
-            style={[
-              fillCondition === "old" ? styles.buttonSelected : styles.button,
-              { marginLeft: 7.5 }
-            ]}
+            style={[fillCondition === "old" ? styles.buttonSelected : styles.button, { marginLeft: 7.5 }]}
             onPress={() => this.setState({ fillCondition: "old" })}
           >
-            <Text.Body
-              style={fillCondition === "old" ? styles.titleSelected : styles.title}
-            >
-              VSNKRS xác nhận
-            </Text.Body>
-            {fillCondition === "old" && (
-              <Image source={Assets.Icons.CheckMark} style={styles.icon} />
-            )}
+            <Text.Body style={fillCondition === "old" ? styles.titleSelected : styles.title}>VSNKRS xác nhận</Text.Body>
+            {fillCondition === "old" && <Image source={Assets.Icons.CheckMark} style={styles.icon} />}
           </TouchableOpacity>
         </View>
       </View>

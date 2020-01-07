@@ -1,18 +1,24 @@
-//!
-//! Copyright (c) 2019 - SneakGeek. All rights reserved
-//!
+// !
+// ! Copyright (c) 2019 - SneakGeek. All rights reserved
+// !
 
 import { NetworkRequestState } from "../State";
-import { Transaction, Shoe, Profile } from "../Model";
+import { Profile, SellOrder, Shoe, BuyOrder } from "../Model";
 
-type NetworkPayload = {
+export type NetworkPayload = {
   state: NetworkRequestState;
   error?: any;
 };
 
 export type SellOrderHistoryPayload = {
-  sellHistory?: Transaction[];
-  shoes?: Shoe[];
+  sellHistory?: SellOrder[];
+} & NetworkPayload;
+export type BuyOrderHistoryPayload = {
+  buyHistory?: BuyOrder[];
+} & NetworkPayload;
+
+export type AvailableSellOrdersPayload = {
+  sellOrders?: SellOrder[];
 } & NetworkPayload;
 
 export type SearchShoePayload = {
@@ -36,3 +42,8 @@ export type SetPasswordPayload = NetworkPayload;
 export type UpdateUserProfilePayload = {
   profile?: Profile;
 } & NetworkPayload;
+
+export type SellShoePayload = {
+  isUploadingPictures?: boolean;
+} & NetworkPayload;
+export type BuyShoePayload = NetworkPayload;

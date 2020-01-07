@@ -1,26 +1,22 @@
-//!
-//! Copyright (c) 2019 - SneakGeek. All rights reserved
-//!
+// !
+// ! Copyright (c) 2019 - SneakGeek. All rights reserved
+// !
 
 import * as React from "react";
 import { NavigationScreenOptions } from "react-navigation";
-import {
-  View,
-  StyleSheet,
-  SafeAreaView,
-  TouchableOpacity,
-  ScrollView,
-  ActionSheetIOS
-} from "react-native";
+import { ActionSheetIOS, SafeAreaView, ScrollView, StyleSheet, TouchableOpacity, View, Alert } from "react-native";
 import { Image } from "react-native-elements";
 import ImagePicker, { ImagePickerResponse } from "react-native-image-picker";
 import { Text } from "../../../Shared/UI";
 import * as Assets from "../../../Assets";
 import { Account, Profile } from "../../../Shared/Model";
+import { NetworkRequestState } from "../../../Shared/State";
 
 export interface IUserTabMainProps {
   account: Account;
   profile: Profile;
+  updateUserProfileState: NetworkRequestState;
+
   navigateToUserEdit: () => void;
   navigateToPayments: () => void;
   navigateToShoeSize: () => void;
@@ -33,18 +29,18 @@ export interface IUserTabMainProps {
   updateProfilePic: (imageUri: string) => void;
 }
 
-type UserListOption = {
+interface IUserListOption {
   title: string;
   hasMarginBottom: boolean;
   onClick: () => void;
-};
+}
 
 export default class TabUserMainScreen extends React.Component<IUserTabMainProps> {
-  static navigationOptions: NavigationScreenOptions = {
+  public static navigationOptions: NavigationScreenOptions = {
     header: null
   };
 
-  private optionsList: Array<UserListOption> = [
+  private optionsList: IUserListOption[] = [
     {
       title: "Thông tin cá nhân",
       hasMarginBottom: true,
@@ -120,6 +116,13 @@ export default class TabUserMainScreen extends React.Component<IUserTabMainProps
     );
   }
 
+  public /** override */ componentDidUpdate(prevProps: IUserTabMainProps) {
+    const updateProfileState = this.props.updateUserProfileState;
+    if (updateProfileState !== prevProps.updateUserProfileState && updateProfileState === NetworkRequestState.FAILED) {
+      Alert.alert("Đã xảy ra lỗi khi chỉnh sửa ảnh đại diện");
+    }
+  }
+
   private _renderPageTitle(): JSX.Element {
     return <Text.Title1 style={{ textAlign: "center" }}>Cá nhân</Text.Title1>;
   }
@@ -131,14 +134,8 @@ export default class TabUserMainScreen extends React.Component<IUserTabMainProps
     return (
       <View style={styles.headerContainer}>
         <View style={{ position: "relative" }}>
-          <Image
-            source={{ uri: profile.userProvidedProfilePic }}
-            style={styles.avatarContainer}
-          />
-          <TouchableOpacity
-            style={styles.cameraButtonContainer}
-            onPress={() => this._uploadProfilePicture()}
-          >
+          <Image source={{ uri: profile.userProvidedProfilePic }} style={styles.avatarContainer} />
+          <TouchableOpacity style={styles.cameraButtonContainer} onPress={() => this._uploadProfilePicture()}>
             <Image source={Assets.Icons.ProfileCamera} style={{ width: 22, height: 18 }} />
           </TouchableOpacity>
         </View>
@@ -156,14 +153,11 @@ export default class TabUserMainScreen extends React.Component<IUserTabMainProps
     return <View>{this.optionsList.map(this._renderOptionItem.bind(this))}</View>;
   }
 
-  private _renderOptionItem(item: UserListOption) {
+  private _renderOptionItem(item: IUserListOption) {
     return (
       <View
         key={item.title}
-        style={[
-          item.hasMarginBottom ? styles.listItemStyleWithMarginBottom : null,
-          styles.settingsContainer
-        ]}
+        style={[item.hasMarginBottom ? styles.listItemStyleWithMarginBottom : null, styles.settingsContainer]}
       >
         <Text.Callout style={{ fontWeight: "bold", fontSize: 16, opacity: 0.6 }}>
           {item.title.toUpperCase()}
@@ -191,7 +185,13 @@ export default class TabUserMainScreen extends React.Component<IUserTabMainProps
         isCancel: false
       },
       { title: "Chụp ảnh mới", onPress: this._onTakePhoto.bind(this), isCancel: false },
-      { title: "Huỷ", onPress: () => {}, isCancel: true }
+      {
+        title: "Huỷ",
+        onPress: () => {
+          return;
+        },
+        isCancel: true
+      }
     ];
 
     ActionSheetIOS.showActionSheetWithOptions(
@@ -204,14 +204,11 @@ export default class TabUserMainScreen extends React.Component<IUserTabMainProps
   }
 
   private _onSelectPhoto() {
-    ImagePicker.launchImageLibrary(
-      this.imagePickerOptions,
-      (response: ImagePickerResponse) => {
-        if (!response.didCancel && !response.error) {
-          this.props.updateProfilePic(response.uri);
-        }
+    ImagePicker.launchImageLibrary(this.imagePickerOptions, (response: ImagePickerResponse) => {
+      if (!response.didCancel && !response.error) {
+        this.props.updateProfilePic(response.uri);
       }
-    );
+    });
   }
 
   private _onTakePhoto() {

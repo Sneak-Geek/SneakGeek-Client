@@ -1,6 +1,5 @@
-//!
-//! Copyright (c) 2019 - SneakGeek. All rights reserved
-//!
+// !
+// ! Copyright (c) 2019 - SneakGeek. All rights reserved
+// !
 
 export * from "./AppContentState";
-export * from "./TransactionState";

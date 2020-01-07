@@ -9,10 +9,7 @@ import { injectable } from "inversify";
 
 @injectable()
 export class CdnService implements ICdnService {
-  public async /** override **/ getImageUploadUrls(
-    token: string,
-    count: number
-  ): Promise<string[]> {
+  public async /** override **/ getImageUploadUrls(token: string, count: number): Promise<string[]> {
     const headers = { authorization: token };
     const response = await ApiClient.get(`/transaction/sell/get-img-url?count=${count}`, {
       headers
@@ -25,15 +22,20 @@ export class CdnService implements ICdnService {
     return [];
   }
 
-  public uploadImage(localImgUrl: string, presignedCdnUrl: string): Promise<any> {
+  public /** override */ uploadImage(localImgUrl: string, presignedCdnUrl: string): Promise<any> {
     return new Promise<any>((resolve, reject) => {
       const xhr = new XMLHttpRequest();
+
       xhr.open("PUT", presignedCdnUrl);
+
+      xhr.setRequestHeader("x-ms-blob-type", "BlockBlob");
+      xhr.setRequestHeader("x-ms-blob-content-type", "file.type");
+
       xhr.onreadystatechange = () => {
         if (xhr.readyState === 4) {
           if (xhr.status === HttpStatus.OK) resolve();
           else {
-            reject();
+            reject(xhr.statusText);
           }
         }
       };
