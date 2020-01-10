@@ -180,6 +180,8 @@ PODS:
     - React-fishhook (= 0.60.4)
   - RNCAsyncStorage (1.6.1):
     - React
+  - RNDeviceInfo (5.4.0):
+    - React
   - RNGestureHandler (1.3.0):
     - React
   - RNGoogleSignin (2.0.0):
@@ -224,6 +226,7 @@ DEPENDENCIES:
   - React-RCTVibration (from `../node_modules/react-native/Libraries/Vibration`)
   - React-RCTWebSocket (from `../node_modules/react-native/Libraries/WebSocket`)
   - "RNCAsyncStorage (from `../node_modules/@react-native-community/async-storage`)"
+  - RNDeviceInfo (from `../node_modules/react-native-device-info`)
   - RNGestureHandler (from `../node_modules/react-native-gesture-handler`)
   - RNGoogleSignin (from `../node_modules/react-native-google-signin`)
   - RNSVG (from `../node_modules/react-native-svg`)
@@ -304,6 +307,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native/Libraries/WebSocket"
   RNCAsyncStorage:
     :path: "../node_modules/@react-native-community/async-storage"
+  RNDeviceInfo:
+    :path: "../node_modules/react-native-device-info"
   RNGestureHandler:
     :path: "../node_modules/react-native-gesture-handler"
   RNGoogleSignin:
@@ -359,6 +364,7 @@ SPEC CHECKSUMS:
   React-RCTVibration: 0bea40cd51bd089bd591a8f74c86e91fdf2666c5
   React-RCTWebSocket: 163873f4cdd5f1058a9483443404fc3801581cb6
   RNCAsyncStorage: 2e2e3feb9bdadc752a026703d8c4065ca912e75a
+  RNDeviceInfo: c7b1dc457611b9231bb780a882102e2c93edc7af
   RNGestureHandler: 5329a942fce3d41c68b84c2c2276ce06a696d8b0
   RNGoogleSignin: d030c6c6591db24c3cee649f64c7babf0a1699a0
   RNSVG: ff9b094e39dd4a437ebe17d1c7ceed286e75f426
@@ -369,4 +375,4 @@ SPEC CHECKSUMS:
 
 PODFILE CHECKSUM: 86e6e76152db1673c74f29a38ac3ca139a20a968
 
-COCOAPODS: 1.8.3
+COCOAPODS: 1.8.4
