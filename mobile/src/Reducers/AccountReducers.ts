@@ -1,18 +1,19 @@
-//!
-//! Copyright (c) 2019 - SneakGeek. All rights reserved
-//!
+// !
+// ! Copyright (c) 2019 - SneakGeek. All rights reserved
+// !
 
-import { handleActions, Action } from "redux-actions";
+import { Action, handleActions } from "redux-actions";
 import * as Actions from "../Actions";
 import { Account } from "../Shared/Model";
 import {
-  GetUserProfilePayload,
-  UpdateUserProfilePayload,
-  CheckAccountWithEmailPayload,
+  AuthenticationPayload,
   ChangePasswordPayload,
+  CheckAccountWithEmailPayload,
+  GetUserProfilePayload,
   RequestTokenPayload,
-  VerifyTokenPayload,
-  SetPasswordPayload
+  SetPasswordPayload,
+  UpdateUserProfilePayload,
+  VerifyTokenPayload
 } from "../Shared/Payload";
 import { NetworkRequestState } from "../Shared/State";
 
@@ -31,7 +32,7 @@ export interface IAccountState {
   isAuthenticationCancelled: boolean;
 }
 
-let initialState: IAccountState = {
+const initialState: IAccountState = {
   currentAccount: null,
   userProfileState: {
     state: NetworkRequestState.NOT_STARTED
@@ -62,6 +63,12 @@ let initialState: IAccountState = {
 
 export const AccountReducers = handleActions<IAccountState, any>(
   {
+    [`${Actions.updateSnkgAuthState}`]: (state: IAccountState, action: Action<AuthenticationPayload>) => ({
+      ...state,
+      currentAccount: action.payload.account || null,
+      isAuthenticating: action.payload.state === NetworkRequestState.REQUESTING,
+      authenticationError: action.payload.error
+    }),
     [`${Actions.onPremAuthenticate}`]: (state: IAccountState, _action: Action<any>) => {
       return {
         ...state,

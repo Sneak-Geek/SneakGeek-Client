@@ -3,12 +3,16 @@
 // !
 
 import { NetworkRequestState } from "../State";
-import { Profile, SellOrder, Shoe, BuyOrder } from "../Model";
+import { Profile, SellOrder, Shoe, BuyOrder, Account } from "../Model";
 
 export type NetworkPayload = {
   state: NetworkRequestState;
   error?: any;
 };
+
+export type AuthenticationPayload = {
+  account?: Account;
+} & NetworkPayload;
 
 export type SellOrderHistoryPayload = {
   sellHistory?: SellOrder[];

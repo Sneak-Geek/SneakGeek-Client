@@ -1,19 +1,7 @@
 import * as React from "react";
-import {
-  View,
-  StyleSheet,
-  TouchableOpacity,
-  SafeAreaView,
-  TextInput,
-  Alert
-} from "react-native";
-import {
-  StackActions,
-  NavigationScreenProps,
-  NavigationScreenProp,
-  NavigationRoute
-} from "react-navigation";
-import { Icon, Button } from "react-native-elements";
+import { Alert, SafeAreaView, StyleSheet, TextInput, TouchableOpacity, View } from "react-native";
+import { NavigationRoute, NavigationScreenProp, NavigationScreenProps, StackActions } from "react-navigation";
+import { Button, Icon } from "react-native-elements";
 import * as Assets from "../../Assets";
 import * as StringUtil from "../../Utilities/StringUtil";
 import KeyboardSpacer from "react-native-keyboard-spacer";
@@ -34,7 +22,7 @@ interface ISignInScreenProps {
 }
 
 export class SignInScreen extends React.Component<ISignInScreenProps, ISignInScreenState> {
-  static navigationOptions = (transitionProp: NavigationScreenProps) => ({
+  public static navigationOptions = (transitionProp: NavigationScreenProps) => ({
     headerStyle: {
       borderBottomWidth: 0
     },
@@ -60,33 +48,15 @@ export class SignInScreen extends React.Component<ISignInScreenProps, ISignInScr
     };
   }
 
-  private login() {
-    let { email, password, isEmailValid: active } = this.state;
-    if (active) {
-      this.props.emailLogin(email, password);
-    }
-  }
-
-  private validateButton() {
-    let { email, password } = this.state;
-    let res = StringUtil.isValidEmail(email);
-    if (res === true && password.length > 0) {
-      this.setState({ isEmailValid: true });
-    } else {
-      this.setState({ isEmailValid: false });
-    }
-  }
-
   public componentDidUpdate(prevProps: ISignInScreenProps) {
-    if (
-      this.props.authenticationError &&
-      prevProps.authenticationError !== this.props.authenticationError
-    ) {
+    if (this.props.authenticationError && prevProps.authenticationError !== this.props.authenticationError) {
       Alert.alert("Mật khẩu không đúng, vui lòng thử lại");
     }
   }
 
   public render() {
+    console.log("Auth error and authenticating", this.props.authenticationError, this.props.isAuthenticating);
+
     return (
       <SafeAreaView style={{ flex: 1, backgroundColor: "white" }}>
         <View style={styles.container}>
@@ -99,16 +69,31 @@ export class SignInScreen extends React.Component<ISignInScreenProps, ISignInScr
             </View>
           </View>
           {this.renderButton()}
-          <KeyboardSpacer
-            topSpacing={Assets.Device.isIphoneX ? -Assets.Device.bottomSpace : 0}
-          />
+          <KeyboardSpacer topSpacing={Assets.Device.isIphoneX ? -Assets.Device.bottomSpace : 0} />
         </View>
       </SafeAreaView>
     );
   }
 
+  private login() {
+    const { email, password, isEmailValid: active } = this.state;
+    if (active) {
+      this.props.emailLogin(email, password);
+    }
+  }
+
+  private validateButton() {
+    const { email, password } = this.state;
+    const res = StringUtil.isValidEmail(email);
+    if (res === true && password.length > 0) {
+      this.setState({ isEmailValid: true });
+    } else {
+      this.setState({ isEmailValid: false });
+    }
+  }
+
   private renderEmail() {
-    let { email } = this.state;
+    const { email } = this.state;
     return (
       <View style={styles.inputContainer}>
         <View style={styles.absolute}>
@@ -128,18 +113,16 @@ export class SignInScreen extends React.Component<ISignInScreenProps, ISignInScr
   }
 
   private renderPassword() {
-    let { password } = this.state;
+    const { password } = this.state;
     return (
       <View style={styles.inputContainer}>
         <TextInput
-          autoFocus
+          autoFocus={true}
           style={styles.input}
           placeholder="Mật khẩu"
           value={password}
           placeholderTextColor={"rgba(0, 0, 0, 0.4)"}
-          onChangeText={password =>
-            this.setState({ password }, () => this.validateButton())
-          }
+          onChangeText={password => this.setState({ password }, () => this.validateButton())}
           selectionColor={Assets.Styles.AppPrimaryColor}
           secureTextEntry={true}
           autoCapitalize="none"
@@ -167,9 +150,7 @@ export class SignInScreen extends React.Component<ISignInScreenProps, ISignInScr
         buttonStyle={[
           styles.authButtonContainer,
           {
-            backgroundColor: isEmailValid
-              ? Assets.Styles.AppPrimaryColor
-              : Assets.Styles.ButtonDisabledColor
+            backgroundColor: isEmailValid ? Assets.Styles.AppPrimaryColor : Assets.Styles.ButtonDisabledColor
           }
         ]}
         titleStyle={Text.TextStyle.body}

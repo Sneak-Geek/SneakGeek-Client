@@ -26,6 +26,7 @@ import { ActionSheetCustom as ActionSheet } from "react-native-actionsheet";
 import { StringUtils } from "../../Utilities";
 import { AvailableSellOrdersPayload } from "../../Shared/Payload";
 import { NetworkRequestState } from "../../Shared/State";
+import { FeatureGates } from "../../Config/FeatureGates";
 
 export interface IProps {
   navigation: NavigationScreenProp<NavigationRoute>;
@@ -102,7 +103,7 @@ export class ShoeDetailScreen extends React.Component<IProps, IState> {
             <View style={{ flex: 1, ...bottomHeightStyle }}>
               {this._renderOwnedModal()}
               {this._renderShoeImages()}
-              {this._renderUserBehaviorButtons()}
+              {FeatureGates.EnableDaCo && this._renderUserBehaviorButtons()}
               {this._renderShoeTitle()}
               {this._renderShoeDescription()}
               {this._renderPriceGraph()}

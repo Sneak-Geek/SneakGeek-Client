@@ -1,6 +1,6 @@
-//!
-//! Copyright (c) 2019 - SneakGeek. All rights reserved
-//!
+// !
+// ! Copyright (c) 2019 - SneakGeek. All rights reserved
+// !
 
 import { connect } from "react-redux";
 import { SignInScreen } from "./SignInScreen";
@@ -16,7 +16,7 @@ const mapStateToProps = (state: IAppState) => ({
 
 const mapDispatchToProps = (dispatch: Function) => ({
   emailLogin: (email: string, password: string) => {
-    dispatch(Actions.emailLogin(email, password));
+    dispatch(Actions.authenticateWithEmail(email, password));
   },
 
   navigateToFotgotPassword: (email: string) => {
@@ -29,7 +29,4 @@ const mapDispatchToProps = (dispatch: Function) => ({
   }
 });
 
-export const SignInScreenContainer = connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(SignInScreen);
+export const SignInScreenContainer = connect(mapStateToProps, mapDispatchToProps)(SignInScreen);

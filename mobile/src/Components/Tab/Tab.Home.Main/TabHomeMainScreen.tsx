@@ -4,16 +4,16 @@
 
 import * as React from "react";
 import {
-  StyleSheet,
-  View,
+  ActivityIndicator,
+  Dimensions,
   FlatList,
-  ListRenderItemInfo,
   Image,
+  ListRenderItemInfo,
   SafeAreaView,
   ScrollView,
-  Dimensions,
-  ActivityIndicator,
-  TouchableOpacity
+  StyleSheet,
+  TouchableOpacity,
+  View
 } from "react-native";
 import { Shoe } from "../../../Shared/Model";
 import { ShoeCard, Text } from "../../../Shared/UI";
@@ -84,9 +84,7 @@ export class TabHomeMainScreen extends React.Component<ITabHomeMainScreenProps> 
           horizontal={true}
           data={shoesData}
           keyExtractor={(shoe: Shoe, _idx: number) => shoe.title}
-          renderItem={({ item }) => (
-            <ShoeCard shoe={item} onPress={() => this.props.navigateToShoeDetail(item)} />
-          )}
+          renderItem={({ item }) => <ShoeCard shoe={item} onPress={() => this.props.navigateToShoeDetail(item)} />}
           showsHorizontalScrollIndicator={false}
         />
         {this._renderDivider()}
@@ -97,9 +95,7 @@ export class TabHomeMainScreen extends React.Component<ITabHomeMainScreenProps> 
   private _renderByBrand(brandName: string, shouldRenderDivider: boolean = true) {
     const shoesData =
       this.props.shoes.length > 0
-        ? this.props.shoes
-            .filter(s => s.brand.toLowerCase() === brandName.toLowerCase())
-            .splice(0, 5)
+        ? this.props.shoes.filter(s => s.brand.toLowerCase() === brandName.toLowerCase()).splice(0, 5)
         : [];
 
     return (
@@ -111,9 +107,7 @@ export class TabHomeMainScreen extends React.Component<ITabHomeMainScreenProps> 
           horizontal={true}
           data={shoesData}
           keyExtractor={(shoe: Shoe, _idx: number) => shoe.title}
-          renderItem={({ item }) => (
-            <ShoeCard shoe={item} onPress={() => this.props.navigateToShoeDetail(item)} />
-          )}
+          renderItem={({ item }) => <ShoeCard shoe={item} onPress={() => this.props.navigateToShoeDetail(item)} />}
           showsHorizontalScrollIndicator={false}
         />
         {shouldRenderDivider && this._renderDivider()}
@@ -127,11 +121,7 @@ export class TabHomeMainScreen extends React.Component<ITabHomeMainScreenProps> 
     return (
       <View style={styles.shoeCardListItem}>
         <View style={styles.shoeCardContainer}>
-          <Image
-            source={{ uri: shoe.imageUrl, cache: "default" }}
-            style={styles.shoeCard}
-            resizeMode={"center"}
-          />
+          <Image source={{ uri: shoe.imageUrl, cache: "default" }} style={styles.shoeCard} resizeMode={"center"} />
           <TouchableOpacity
             onPress={() => {
               this.props.navigateToShoeDetail(shoe);
@@ -159,7 +149,7 @@ const styles = StyleSheet.create({
     height: 0.5,
     backgroundColor: "#BCBBC1",
     marginVertical: 20,
-    marginHorizontal: 17
+    marginHorizontal: 10
   },
   sectionTitle: {
     fontSize: 28,
@@ -184,9 +174,9 @@ const styles = StyleSheet.create({
 
   shoeCard: {
     flex: 1,
-    width: 200,
-    height: 100,
-    marginVertical: 25
+    width: 300,
+    aspectRatio: 2,
+    marginVertical: 15
   },
   shoeTitle: {
     fontSize: 20,
@@ -197,6 +187,6 @@ const styles = StyleSheet.create({
   subtitle: {
     fontSize: 20,
     marginLeft: 20,
-    marginVertical: 25
+    marginVertical: 10
   }
 });

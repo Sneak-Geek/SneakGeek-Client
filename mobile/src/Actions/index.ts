@@ -9,3 +9,4 @@ export * from "./BootstrapActions";
 export * from "./TransactionActions";
 export * from "./NotificationActions";
 export * from "./NavigationActions";
+export * from "./AuthenticationActions";

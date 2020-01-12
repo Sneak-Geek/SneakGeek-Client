@@ -418,7 +418,7 @@
 				);
 				INFOPLIST_FILE = client/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				MARKETING_VERSION = 0.2001.1;
+				MARKETING_VERSION = 0.2001.2;
 				OTHER_LDFLAGS = (
 					"$(inherited)",
 					"-ObjC",
@@ -443,7 +443,7 @@
 				);
 				INFOPLIST_FILE = client/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				MARKETING_VERSION = 0.2001.1;
+				MARKETING_VERSION = 0.2001.2;
 				OTHER_LDFLAGS = (
 					"$(inherited)",
 					"-ObjC",
