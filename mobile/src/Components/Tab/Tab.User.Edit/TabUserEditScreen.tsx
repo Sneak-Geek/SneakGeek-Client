@@ -24,7 +24,7 @@ const optionsList = [
     placeholder: "Họ",
     value: (profile: Profile) =>
       profile.userProvidedName ? profile.userProvidedName.lastName : "",
-      // "trung",
+    // "trung",
     onUpdate: (value: string, profile: Profile) => {
       return Object.assign(profile, {
         userProvidedName: {
@@ -153,7 +153,7 @@ export class TabUserEditScreen extends React.Component<IUserEditScreenProps, IUs
   private _renderSettings() {
     const { updatedInfo } = this.state;
     return (
-      <View style={{paddingTop: 34}}>
+      <View style={{ paddingTop: 34 }}>
         {optionsList.map((item, i) => (
           <View
             key={i}
@@ -164,6 +164,7 @@ export class TabUserEditScreen extends React.Component<IUserEditScreenProps, IUs
           >
             <Text.Headline style={{ flex: 1, fontSize: 14, fontFamily: 'RobotoCondensed-Bold' }}>{item.title.toUpperCase()}</Text.Headline>
             <TextInput
+              placeholderTextColor={"rgba(0, 0, 0, 0.4)"}
               value={
                 updatedInfo && item.value(updatedInfo)
                   ? (item.value(updatedInfo) as any).toString()

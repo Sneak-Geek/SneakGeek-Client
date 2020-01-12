@@ -89,6 +89,14 @@ const mapDispatchToProps = (dispatch: Function) => {
       );
     },
 
+    navigateToLogin: () => {
+      dispatch(
+        NavigationActions.navigate({
+          routeName: RouteNames.Login
+        })
+      );
+    },
+
     updateProfilePic: (imageUri: string) => {
       dispatch(updateUserProfile({ userProvidedProfilePic: imageUri }));
     }

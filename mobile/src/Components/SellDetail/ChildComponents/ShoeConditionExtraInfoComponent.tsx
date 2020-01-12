@@ -33,26 +33,26 @@ interface ISetting {
 export class ShoeConditionExtraInfoComponent extends React.PureComponent<
   IShoeConditionExtraInfoProps,
   IShoeConditionExtraInfoState
-> {
+  > {
   private settingsAndOptions: ISetting[] = [
     {
       stateName: "tainted",
-      title: "Ố vàng",
+      title: "Ố VÀNG",
       onValueChange: this.props.onSetShoeTainted
     },
     {
       stateName: "outsoleWorn",
-      title: "Đế mòn",
+      title: "ĐẾ MÒN",
       onValueChange: this.props.onSetShoeOutsoleWorn
     },
     {
       stateName: "insoleWorn",
-      title: "Lót giày có vấn đề",
+      title: "LÓT GIÀY CÓ VẤN ĐỀ",
       onValueChange: this.props.onSetShoeInsoleWorn
     },
     {
       stateName: "heavilyTorn",
-      title: "Vết rách",
+      title: "VẾT RÁCH",
       onValueChange: this.props.onSetShoeHeavilyTorn
     }
   ];
@@ -83,7 +83,7 @@ export class ShoeConditionExtraInfoComponent extends React.PureComponent<
   private _renderSettingAndOptions(setting: ISetting): JSX.Element {
     return (
       <View key={setting.stateName} style={styles.settingContainer}>
-        <Text style={{ fontSize: 16 }}>{setting.title}</Text>
+        <Text style={styles.title}>{setting.title}</Text>
         <Switch
           trackColor={{ true: "#1ABC9C", false: "gainsboro" }}
           value={this.state[setting.stateName]}
@@ -105,11 +105,17 @@ export class ShoeConditionExtraInfoComponent extends React.PureComponent<
     // TODO: Research on underline for iOS
     return (
       <View style={styles.otherDetailContainer}>
-        <Text style={{ fontSize: 16 }}>Các vấn đề khác</Text>
-        <TextInput
-          placeholder={"Các chi tiết khác của sản phẩm"}
-          onChangeText={value => this.props.onSetShoeOtherDetail(value)}
-        />
+        <Text style={styles.title}>CHI TIẾT KHÁC</Text>
+        <View style={{ paddingTop: 20, paddingBottom: 6, borderBottomWidth: 1, borderColor: "#C4C4C4" }}>
+          <TextInput
+            multiline={true}
+            style={styles.input}
+            placeholderTextColor="rgba(0, 0, 0, 0.4)"
+            underlineColorAndroid="transparent"
+            placeholder={"Các chi tiết khác của sản phẩm"}
+            onChangeText={value => this.props.onSetShoeOtherDetail(value)}
+          />
+        </View>
       </View>
     );
   }
@@ -128,5 +134,16 @@ const styles = StyleSheet.create({
     flexDirection: "column",
     marginHorizontal: 20,
     marginVertical: 15
+  },
+
+  title: {
+    fontSize: 14,
+    fontFamily: "RobotoCondensed-Bold",
+    opacity: 0.6
+  },
+
+  input: {
+    fontFamily: "RobotoCondensed-Regular",
+    fontSize: 14
   }
 });

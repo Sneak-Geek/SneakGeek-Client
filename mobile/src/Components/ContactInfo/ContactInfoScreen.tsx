@@ -94,7 +94,7 @@ export class ContactInfoScreen extends React.Component<
   private _renderInput() {
     return (
       <View style={styles.inputContainer}>
-        <TextInput style={styles.input} placeholder="Giới hạn 200 ký tự" multiline />
+        <TextInput placeholderTextColor={"rgba(0, 0, 0, 0.4)"} style={styles.input} placeholder="Giới hạn 200 ký tự" multiline />
       </View>
     );
   }

@@ -98,13 +98,13 @@ export class TabHomeMainScreen extends React.Component<ITabHomeMainScreenProps> 
     const shoesData =
       this.props.shoes.length > 0
         ? this.props.shoes
-            .filter(s => s.brand.toLowerCase() === brandName.toLowerCase())
-            .splice(0, 5)
+          .filter(s => s.brand.toLowerCase() === brandName.toLowerCase())
+          .splice(0, 5)
         : [];
 
     return (
       <View style={{ flex: 1 }}>
-        <TouchableOpacity onPress={() => {}}>
+        <TouchableOpacity onPress={() => { }}>
           <Text.Title2 style={styles.subtitle}>{brandName} - Nổi bật</Text.Title2>
         </TouchableOpacity>
         <FlatList
@@ -126,22 +126,19 @@ export class TabHomeMainScreen extends React.Component<ITabHomeMainScreenProps> 
 
     return (
       <View style={styles.shoeCardListItem}>
-        <View style={styles.shoeCardContainer}>
-          <Image
-            source={{ uri: shoe.imageUrl, cache: "default" }}
-            style={styles.shoeCard}
-            resizeMode={"center"}
-          />
-          <TouchableOpacity
-            onPress={() => {
-              this.props.navigateToShoeDetail(shoe);
-            }}
-          >
+        <TouchableOpacity
+          onPress={() => {
+            this.props.navigateToShoeDetail(shoe);
+          }}
+          style={styles.shoeCardContainer}
+        >
+          <Image source={{ uri: shoe.imageUrl, cache: "default" }} style={styles.shoeCard} resizeMode={"center"} />
+          <View>
             <Text.Headline numberOfLines={2} style={styles.shoeTitle} ellipsizeMode={"tail"}>
               {shoe.title}
             </Text.Headline>
-          </TouchableOpacity>
-        </View>
+          </View>
+        </TouchableOpacity>
       </View>
     );
   }

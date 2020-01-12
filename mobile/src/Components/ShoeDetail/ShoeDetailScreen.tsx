@@ -9,10 +9,8 @@ import {
   Image,
   SafeAreaView,
   ScrollView,
-  TextStyle,
   TouchableOpacity,
-  View,
-  ViewStyle
+  View
 } from "react-native";
 import { Account, getLatestPrice, Profile, Shoe } from "../../Shared/Model";
 import { NavigationRoute, NavigationScreenProp, NavigationScreenProps, StackActions } from "react-navigation";
@@ -177,7 +175,7 @@ export class ShoeDetailScreen extends React.Component<IProps, IState> {
   }
 
   private _renderUserBehaviorButtons(): JSX.Element {
-    const [containerStyle, textStyle] = this._isShoeOwned()
+    const [] = this._isShoeOwned()
       ? [{ backgroundColor: "black" }, { color: "white" }]
       : [{}, {}];
     return (
@@ -188,35 +186,16 @@ export class ShoeDetailScreen extends React.Component<IProps, IState> {
           size={28}
           onPress={() => this.setState(s => ({ ...s, favorited: !s.favorited }))}
         />
-        <View style={{ flexDirection: "row" }}>
-          {this._renderSideButton("Đã có".toUpperCase(), { marginRight: 10, ...containerStyle }, textStyle, () =>
-            this._addOwnedShoe()
-          )}
-          {this._renderSideButton("Bán".toUpperCase(), {}, {}, () => this.props.navigateToSellScreen(this.shoe))}
-        </View>
       </View>
     );
   }
 
-  private _addOwnedShoe() {
-    this.setState({ ownedShoeModal: true });
-  }
 
   private _renderShoeTitle(): JSX.Element {
     return (
       <Text.Title2 style={styles.shoeTitle} numberOfLines={2}>
         {this.shoe.title}
       </Text.Title2>
-    );
-  }
-
-  private _renderSideButton(title: string, containerStyle: ViewStyle, textStyle: TextStyle, onPress: () => void) {
-    return (
-      <TouchableOpacity onPress={onPress}>
-        <View style={[containerStyle, styles.smallButtonBorder]}>
-          <Text.Subhead style={textStyle}>{title}</Text.Subhead>
-        </View>
-      </TouchableOpacity>
     );
   }
 
@@ -403,13 +382,13 @@ export class ShoeDetailScreen extends React.Component<IProps, IState> {
     if (oldOrderPrice || newOrderPrice) {
       options.push({
         title: "Đặt giá",
-        onPress: () => {},
+        onPress: () => { },
         isCancel: false
       });
     }
 
     if (options.length !== 0) {
-      options.push({ title: "Huỷ", onPress: () => {}, isCancel: true });
+      options.push({ title: "Huỷ", onPress: () => { }, isCancel: true });
     }
 
     return (

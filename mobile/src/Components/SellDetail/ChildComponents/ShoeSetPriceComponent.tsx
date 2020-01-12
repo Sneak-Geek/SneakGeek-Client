@@ -57,6 +57,7 @@ export class ShoeSetPriceComponent extends React.Component<Props, State> {
         <Text.Headline style={{ textAlignVertical: "center" }}>Đặt giá bán</Text.Headline>
         <View style={styles.rowSeparatedContainer}>
           <TextInput
+            placeholderTextColor={"rgba(0, 0, 0, 0.4)"}
             keyboardType={"numeric"}
             onChangeText={text =>
               this.setState({

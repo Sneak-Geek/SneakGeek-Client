@@ -90,6 +90,7 @@ export class ChangePasswordScreen extends React.Component<IChangePasswordScreenP
               </TouchableOpacity>
             </View>
             <TextInput
+              placeholderTextColor={"rgba(0, 0, 0, 0.4)"}
               style={styles.input}
               value={this.state.currentPassword}
               onChangeText={currentPassword => this.setState({ currentPassword })}
@@ -109,6 +110,7 @@ export class ChangePasswordScreen extends React.Component<IChangePasswordScreenP
               </TouchableOpacity>
             </View>
             <TextInput
+              placeholderTextColor={"rgba(0, 0, 0, 0.4)"}
               style={styles.input}
               value={this.state.newPassword}
               onChangeText={newPassword => this.setState({ newPassword })}
@@ -119,6 +121,7 @@ export class ChangePasswordScreen extends React.Component<IChangePasswordScreenP
             />
             <View style={{ paddingTop: 20 }}>
               <TextInput
+                placeholderTextColor={"rgba(0, 0, 0, 0.4)"}
                 style={styles.input}
                 value={this.state.newPasswordConfirm}
                 onChangeText={newPasswordConfirm => this.setState({ newPasswordConfirm })}

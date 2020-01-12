@@ -202,6 +202,7 @@ export class ShoeRequireScreen extends React.Component<IShoeRequireScreenProps, 
         </TouchableOpacity>
         <View>
           <TextInput
+            placeholderTextColor={"rgba(0, 0, 0, 0.4)"}
             autoFocus
             placeholder="Tên giầy yêu cầu"
             style={[styles.name]}
@@ -209,7 +210,7 @@ export class ShoeRequireScreen extends React.Component<IShoeRequireScreenProps, 
             underlineColorAndroid="transparent"
             onChangeText={(text) => { this.setState({ title: text }) }}
           />
-          <Text style={[styles.descrip, {fontSize: 12, paddingTop: 10}]}>Bạn nên nêu rõ phối màu trong tên giày</Text>
+          <Text style={[styles.descrip, { fontSize: 12, paddingTop: 10 }]}>Bạn nên nêu rõ phối màu trong tên giày</Text>
         </View>
       </View>
     )

@@ -4,13 +4,15 @@
 
 import * as React from "react";
 import { NavigationScreenOptions } from "react-navigation";
-import { ActionSheetIOS, SafeAreaView, ScrollView, StyleSheet, TouchableOpacity, View, Alert } from "react-native";
+import { ActionSheetIOS, Alert, SafeAreaView, ScrollView, StyleSheet, TouchableOpacity, View } from "react-native";
 import { Image } from "react-native-elements";
 import ImagePicker, { ImagePickerResponse } from "react-native-image-picker";
 import { Text } from "../../../Shared/UI";
 import * as Assets from "../../../Assets";
 import { Account, Profile } from "../../../Shared/Model";
 import { NetworkRequestState } from "../../../Shared/State";
+import { container, Types } from "../../../Config/Inversify";
+import { IAppSettingsService, SettingsKeys } from "../../../Service/AppSettingsService";
 
 export interface IUserTabMainProps {
   account: Account;
@@ -26,6 +28,7 @@ export interface IUserTabMainProps {
   navigateToUserKind: () => void;
   navigateToNotiSetting: () => void;
   navigateToShare: () => void;
+  navigateToLogin: () => void;
   updateProfilePic: (imageUri: string) => void;
 }
 
@@ -101,6 +104,8 @@ export default class TabUserMainScreen extends React.Component<IUserTabMainProps
     this.state = {};
   }
 
+
+
   public /** override */ render(): React.ReactNode {
     return (
       <SafeAreaView>
@@ -112,8 +117,14 @@ export default class TabUserMainScreen extends React.Component<IUserTabMainProps
             {this._renderLogoutButton()}
           </View>
         </ScrollView>
-      </SafeAreaView>
+      </SafeAreaView >
     );
+  }
+
+  public async _logout() {
+    const settings = container.get<IAppSettingsService>(Types.IAppSettingsService);
+    await settings.setValue(SettingsKeys.CurrentAccessToken, "");
+    this.props.navigateToLogin();
   }
 
   public /** override */ componentDidUpdate(prevProps: IUserTabMainProps) {
@@ -155,23 +166,24 @@ export default class TabUserMainScreen extends React.Component<IUserTabMainProps
 
   private _renderOptionItem(item: IUserListOption) {
     return (
-      <View
+      <TouchableOpacity
+        onPress={item.onClick.bind(this)}
         key={item.title}
         style={[item.hasMarginBottom ? styles.listItemStyleWithMarginBottom : null, styles.settingsContainer]}
       >
         <Text.Callout style={{ fontWeight: "bold", fontSize: 16, opacity: 0.6 }}>
           {item.title.toUpperCase()}
         </Text.Callout>
-        <TouchableOpacity onPress={item.onClick.bind(this)}>
+        <View>
           <Image source={Assets.Icons.ChevronLeft} />
-        </TouchableOpacity>
-      </View>
+        </View>
+      </TouchableOpacity>
     );
   }
 
   private _renderLogoutButton(): React.ReactNode {
     return (
-      <TouchableOpacity style={[styles.settingsContainer, styles.signOutContainer]}>
+      <TouchableOpacity onPress={this._logout.bind(this)} style={[styles.settingsContainer, styles.signOutContainer]}>
         <Text.Body style={{ color: "white" }}>Đăng xuất</Text.Body>
       </TouchableOpacity>
     );
