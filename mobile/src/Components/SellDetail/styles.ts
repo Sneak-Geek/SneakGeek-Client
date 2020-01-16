@@ -14,7 +14,7 @@ export default StyleSheet.create({
     flexWrap: "wrap",
     flex: 1,
     paddingHorizontal: 8,
-    maxHeight: 120
+    maxHeight: 100
   },
 
   shoeDetailTextContainer: {

@@ -8,7 +8,7 @@ import { IAppState } from "../../Store";
 import { RouteNames } from "../../Navigation";
 import { StackActions } from "react-navigation";
 import { Shoe } from "../../Shared/Model";
-import { addOwnedShoe, getAvailableSellOrders, navigateToSellScreen } from "../../Actions";
+import { addOwnedShoe, getAvailableSellOrders, navigateToSellScreen, showDialogWithMessage } from "../../Actions";
 
 const mapStateToProps = (state: IAppState) => {
   return {
@@ -56,6 +56,10 @@ const mapDispatchToProps = (dispatch: (param: any) => void) => {
           params: { isOldCondition }
         })
       );
+    },
+
+    alert: (message: string) => {
+      dispatch(showDialogWithMessage(message));
     }
   };
 };

@@ -80,7 +80,7 @@ export class BuySelectionScreen extends React.Component<IBuySelectionScreenProps
   }
 
   private _renderDivider() {
-    return <View style={{ width: "100%", height: 2, backgroundColor: Styles.AppShadowColor }} />;
+    return <View style={{ width: "100%", height: 1, backgroundColor: Styles.AppShadowColor }} />;
   }
 
   private _renderAvailableSellOrders() {
@@ -100,15 +100,15 @@ export class BuySelectionScreen extends React.Component<IBuySelectionScreenProps
 
   private _renderPricePerSize(size: number) {
     const order = this.props.availableSellOrders?.find(t => t.shoeSize === size.toString());
-    const price = order ? getLatestPrice(order) / (1000000 * 1.0) : -1;
+    const price = order ? getLatestPrice(order) / 1000000.0 : -1;
     const backgroundColor = size === this.state.selectedSize ? Styles.AppModalBackground : "white";
     return (
       <TouchableOpacity onPress={() => this._onSelectSize(size, price)}>
         <View style={[styles.priceContainer, { backgroundColor }]}>
-          <Text.Callout style={{ color: Styles.AppPrimaryColor, marginHorizontal: 10 }}>
-            {price !== -1 ? `${price}M` : "-"}
+          <Text.Callout numberOfLines={1} style={{ color: Styles.AppAccentColor, marginHorizontal: 10 }}>
+            {price !== -1 ? `${price} triệu` : "-"}
           </Text.Callout>
-          <Text.Footnote>Cỡ: {size}</Text.Footnote>
+          <Text.Footnote style={{ color: Styles.AppSecondaryColorBlurred }}>Cỡ: {size}</Text.Footnote>
         </View>
       </TouchableOpacity>
     );
@@ -128,22 +128,10 @@ export class BuySelectionScreen extends React.Component<IBuySelectionScreenProps
 
   private _renderConfirmButton() {
     const order = this.props.availableSellOrders?.find(t => t.shoeSize === this.state.selectedSize.toString());
-    const backgroundColor = this.state.selectedSize !== -1 ? Styles.AppPrimaryColor : Styles.AppSecondaryColorBlurred;
+    const backgroundColor = this.state.selectedSize !== -1 ? Styles.ButtonPrimaryColor : Styles.ButtonDisabledColor;
 
     return (
-      <View
-        style={{
-          position: "absolute",
-          bottom: 0,
-          left: 0,
-          flex: 1,
-          right: 0,
-          height: 52,
-          backgroundColor,
-          alignItems: "center",
-          justifyContent: "center"
-        }}
-      >
+      <View style={{ ...styles.confirmButton, backgroundColor }}>
         <TouchableOpacity
           style={{ alignSelf: "stretch", alignItems: "center", justifyContent: "center", flex: 1 }}
           disabled={this.state.selectedSize === -1}
@@ -158,13 +146,24 @@ export class BuySelectionScreen extends React.Component<IBuySelectionScreenProps
 
 const styles = StyleSheet.create({
   priceContainer: {
-    minWidth: 80,
+    minWidth: 90,
     aspectRatio: 1,
-    borderWidth: 2,
-    borderColor: Styles.AppPrimaryColor,
+    borderWidth: 1,
+    borderColor: Styles.AppAccentColor,
     alignItems: "center",
     justifyContent: "center",
     flexDirection: "column",
     margin: 5
+  },
+
+  confirmButton: {
+    position: "absolute",
+    bottom: 0,
+    left: 0,
+    flex: 1,
+    right: 0,
+    height: 52,
+    alignItems: "center",
+    justifyContent: "center"
   }
 });

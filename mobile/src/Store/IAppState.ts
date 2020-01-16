@@ -1,13 +1,14 @@
-//!
-//! Copyright (c) 2019 - SneakGeek. All rights reserved
-//!
+// !
+// ! Copyright (c) 2019 - SneakGeek. All rights reserved
+// !
 
 import {
   IAccountState,
   IAppContentState,
+  IDialogState,
   IModalState,
-  ITransactionState,
-  INotificationState
+  INotificationState,
+  ITransactionState
 } from "../Reducers";
 import { NavigationState } from "react-navigation";
 
@@ -18,6 +19,7 @@ export interface IAppState {
   ModalState: IModalState;
   TransactionState: ITransactionState;
   NotificationState: INotificationState;
+  DialogState: IDialogState;
 }
 
 export type IStateProvider = () => IAppState;

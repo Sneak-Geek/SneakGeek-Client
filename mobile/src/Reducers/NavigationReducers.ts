@@ -16,6 +16,7 @@ export const NavigationReducers = (state: NavigationState = initialState, action
     case Actions.NavigationActions.NAVIGATE_TO_PREVIOUS_SCREEN:
       nextState = AppNavigator.router.getStateForAction(StackActions.pop({ n: 1 }), state);
       break;
+    case Actions.NavigationActions.NAVIGATE_REPLACE_HOME:
     case Actions.AccountActions.AUTHENTICATION_COMPLETE:
       nextState = AppNavigator.router.getStateForAction(
         StackActions.reset({

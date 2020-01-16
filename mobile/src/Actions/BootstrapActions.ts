@@ -1,6 +1,6 @@
-//!
-//! Copyright (c) 2019 - SneakGeek. All rights reserved
-//!
+// !
+// ! Copyright (c) 2019 - SneakGeek. All rights reserved
+// !
 
 import { container, Types } from "../Config/Inversify";
 import { IAppSettingsService } from "../Service/AppSettingsService";

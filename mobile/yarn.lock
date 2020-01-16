@@ -961,6 +961,11 @@
     eslint-plugin-react-native "3.6.0"
     prettier "1.16.4"
 
+"@react-native-community/viewpager@^3.3.0":
+  version "3.3.0"
+  resolved "https://registry.yarnpkg.com/@react-native-community/viewpager/-/viewpager-3.3.0.tgz#e613747a43a31a6f3278f817ba96fdaaa7941f23"
+  integrity sha512-tyzh79l4t/hxiyS9QD3LRmWMs8KVkZzjrkQ8U8+8To1wmvVCBtp8BenvNsDLTBO7CpO/YmiThpmIdEZMr1WuVw==
+
 "@react-navigation/core@~3.4.1":
   version "3.4.2"
   resolved "https://registry.yarnpkg.com/@react-navigation/core/-/core-3.4.2.tgz#bec563e94fde40fbab3730cdc97f22afbb2a1498"
@@ -7457,11 +7462,6 @@ time-stamp@^1.0.0:
   version "1.1.0"
   resolved "https://registry.yarnpkg.com/time-stamp/-/time-stamp-1.1.0.tgz#764a5a11af50561921b133f3b44e618687e0f5c3"
   integrity sha1-dkpaEa9QVhkhsTPztE5hhofg9cM=
-
-tipsi-stripe@7.5.1:
-  version "7.5.1"
-  resolved "https://registry.yarnpkg.com/tipsi-stripe/-/tipsi-stripe-7.5.1.tgz#529434e0bbd0510eef68f6b1ff46c6d30f5a672f"
-  integrity sha512-dSdyY/1GR5JmmddS9K8nBR3bAkNhBsMpUGKjAuyXvyHOXJIwkdzuWDa86yMLPAC+JLBP4HzB2cIuEYH4A6KI4g==
 
 tmp@^0.0.33:
   version "0.0.33"

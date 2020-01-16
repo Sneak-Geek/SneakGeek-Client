@@ -27,6 +27,7 @@ export class TransactionBuyTabScreen extends React.Component<ITransactionBuyTabS
     tabBarLabel: "Mua"
   };
   private getCurrentTimeTimeout: NodeJS.Timeout;
+
   public constructor(props: ITransactionBuyTabScreenProps) {
     super(props);
     this.state = {

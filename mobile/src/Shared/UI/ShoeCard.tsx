@@ -21,11 +21,7 @@ export class ShoeCard extends React.Component<IShoeCardProps> {
     return (
       <TouchableWithoutFeedback onPress={onPress} style={[styles.smallShoeContainer, style]}>
         <View style={{ flex: 1 }}>
-          <Image
-            source={{ uri: shoe.imageUrl, cache: "default" }}
-            resizeMode={"center"}
-            style={styles.smallShoeCard}
-          />
+          <Image source={{ uri: shoe.imageUrl, cache: "default" }} resizeMode={"center"} style={styles.smallShoeCard} />
           <TouchableOpacity>
             <Text.Subhead
               style={{ marginTop: 30, alignSelf: "flex-start" }}
@@ -36,9 +32,7 @@ export class ShoeCard extends React.Component<IShoeCardProps> {
               {shoe.title}
             </Text.Subhead>
           </TouchableOpacity>
-          <Text.Body style={styles.priceTag}>
-            {StringsUtil.toCurrencyString("3150000")}
-          </Text.Body>
+          <Text.Body style={styles.priceTag}>{StringsUtil.toCurrencyString("3150000")}</Text.Body>
         </View>
       </TouchableWithoutFeedback>
     );
@@ -51,7 +45,7 @@ const styles = StyleSheet.create({
     flexDirection: "column",
     maxWidth: 150,
     marginLeft: 30,
-    marginBottom: 8,
+    // marginBottom: 8,
     alignItems: "flex-start",
     justifyContent: "flex-start"
   },

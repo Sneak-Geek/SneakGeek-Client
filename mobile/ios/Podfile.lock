@@ -154,6 +154,8 @@ PODS:
     - React
   - react-native-splash-screen (3.2.0):
     - React
+  - react-native-viewpager (3.3.0):
+    - React
   - React-RCTActionSheet (0.60.4):
     - React-Core (= 0.60.4)
   - React-RCTAnimation (0.60.4):
@@ -191,10 +193,6 @@ PODS:
     - React
   - RNVectorIcons (6.6.0):
     - React
-  - Stripe (14.0.0)
-  - tipsi-stripe (7.5.1):
-    - React
-    - Stripe (~> 14.0.0)
   - yoga (0.60.4.React)
 
 DEPENDENCIES:
@@ -215,6 +213,7 @@ DEPENDENCIES:
   - react-native-image-picker (from `../node_modules/react-native-image-picker`)
   - react-native-safari-view (from `../node_modules/react-native-safari-view`)
   - react-native-splash-screen (from `../node_modules/react-native-splash-screen`)
+  - "react-native-viewpager (from `../node_modules/@react-native-community/viewpager`)"
   - React-RCTActionSheet (from `../node_modules/react-native/Libraries/ActionSheetIOS`)
   - React-RCTAnimation (from `../node_modules/react-native/Libraries/NativeAnimation`)
   - React-RCTBlob (from `../node_modules/react-native/Libraries/Blob`)
@@ -231,7 +230,6 @@ DEPENDENCIES:
   - RNGoogleSignin (from `../node_modules/react-native-google-signin`)
   - RNSVG (from `../node_modules/react-native-svg`)
   - RNVectorIcons (from `../node_modules/react-native-vector-icons`)
-  - tipsi-stripe (from `../node_modules/tipsi-stripe`)
   - yoga (from `../node_modules/react-native/ReactCommon/yoga`)
 
 SPEC REPOS:
@@ -250,7 +248,6 @@ SPEC REPOS:
     - GoogleUtilities
     - GTMSessionFetcher
     - nanopb
-    - Stripe
 
 EXTERNAL SOURCES:
   DoubleConversion:
@@ -285,6 +282,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native-safari-view"
   react-native-splash-screen:
     :path: "../node_modules/react-native-splash-screen"
+  react-native-viewpager:
+    :path: "../node_modules/@react-native-community/viewpager"
   React-RCTActionSheet:
     :path: "../node_modules/react-native/Libraries/ActionSheetIOS"
   React-RCTAnimation:
@@ -317,8 +316,6 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native-svg"
   RNVectorIcons:
     :path: "../node_modules/react-native-vector-icons"
-  tipsi-stripe:
-    :path: "../node_modules/tipsi-stripe"
   yoga:
     :path: "../node_modules/react-native/ReactCommon/yoga"
 
@@ -353,6 +350,7 @@ SPEC CHECKSUMS:
   react-native-image-picker: 5c15ac0251475ae0b9f21e17d08d7c28db847abc
   react-native-safari-view: 955d7160d159241b8e9395d12d10ea0ef863dcdd
   react-native-splash-screen: 200d11d188e2e78cea3ad319964f6142b6384865
+  react-native-viewpager: a7b438ca32c57b2614ece2a123e7fe116f743131
   React-RCTActionSheet: 9f71d7ae3e8fb10e08d162cbf14c621349dbfab3
   React-RCTAnimation: 981d8c95b0e30918a9832ccac32af83562a27fae
   React-RCTBlob: 21e73d1020a302a75fed30dbaee9f15287b80baa
@@ -369,8 +367,6 @@ SPEC CHECKSUMS:
   RNGoogleSignin: d030c6c6591db24c3cee649f64c7babf0a1699a0
   RNSVG: ff9b094e39dd4a437ebe17d1c7ceed286e75f426
   RNVectorIcons: 0bb4def82230be1333ddaeee9fcba45f0b288ed4
-  Stripe: db29ad197c74aca6fb981e4e8355cf7ebd0fca5a
-  tipsi-stripe: 61c247493a58d7e8e0bf6ee6b014271f473d2b11
   yoga: c2c050f6ae6e222534760cc82f559b89214b67e2
 
 PODFILE CHECKSUM: 86e6e76152db1673c74f29a38ac3ca139a20a968

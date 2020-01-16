@@ -6,6 +6,7 @@ import * as Assets from "../../Assets";
 import * as StringUtil from "../../Utilities/StringUtil";
 import KeyboardSpacer from "react-native-keyboard-spacer";
 import { Text } from "../../Shared/UI";
+import { Account } from "../../Shared/Model";
 
 interface ISignInScreenState {
   email: string;
@@ -16,8 +17,10 @@ interface ISignInScreenState {
 interface ISignInScreenProps {
   isAuthenticating: boolean;
   authenticationError: any;
+  currentAccount: Account | null;
   navigateToFotgotPassword: (email: string) => void;
   emailLogin: (email: string, password: string) => void;
+  navigateToHome: () => void;
   navigation?: NavigationScreenProp<NavigationRoute>;
 }
 
@@ -52,11 +55,13 @@ export class SignInScreen extends React.Component<ISignInScreenProps, ISignInScr
     if (this.props.authenticationError && prevProps.authenticationError !== this.props.authenticationError) {
       Alert.alert("Mật khẩu không đúng, vui lòng thử lại");
     }
+
+    if (this.props.currentAccount) {
+      this.props.navigateToHome();
+    }
   }
 
   public render() {
-    console.log("Auth error and authenticating", this.props.authenticationError, this.props.isAuthenticating);
-
     return (
       <SafeAreaView style={{ flex: 1, backgroundColor: "white" }}>
         <View style={styles.container}>

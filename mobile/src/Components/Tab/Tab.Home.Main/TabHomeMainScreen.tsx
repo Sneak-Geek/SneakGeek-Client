@@ -8,7 +8,6 @@ import {
   Dimensions,
   FlatList,
   Image,
-  ListRenderItemInfo,
   SafeAreaView,
   ScrollView,
   StyleSheet,
@@ -18,6 +17,7 @@ import {
 import { Shoe } from "../../../Shared/Model";
 import { ShoeCard, Text } from "../../../Shared/UI";
 import * as Assets from "../../../Assets";
+import ViewPager from "@react-native-community/viewpager";
 
 export interface ITabHomeMainScreenProps {
   shoes: Shoe[];
@@ -27,7 +27,9 @@ export interface ITabHomeMainScreenProps {
 
 export class TabHomeMainScreen extends React.Component<ITabHomeMainScreenProps> {
   public /** override */ componentDidMount() {
-    this.props.shoes.length === 0 && this.props.fetchShoes();
+    if (this.props.shoes.length === 0) {
+      this.props.fetchShoes();
+    }
   }
 
   public /** override */ render() {
@@ -56,14 +58,17 @@ export class TabHomeMainScreen extends React.Component<ITabHomeMainScreenProps> 
     return (
       <View style={{ flex: 1 }}>
         <Text.LargeTitle style={styles.sectionTitle}>Đang hot</Text.LargeTitle>
-        <FlatList
-          horizontal={true}
-          data={shoesData}
-          keyExtractor={(shoe: Shoe, _idx: number) => shoe.title}
-          renderItem={this._renderTrendingShoe.bind(this)}
-          pagingEnabled={true}
-          showsHorizontalScrollIndicator={false}
-        />
+        <ViewPager
+          initialPage={0}
+          scrollEnabled={true}
+          showPageIndicator={true}
+          style={{ flex: 1, width: "100%", minHeight: 300 }}
+          pageMargin={10}
+          orientation={"horizontal"}
+          transitionStyle={"scroll"}
+        >
+          {shoesData.map((t, i) => this._renderTrendingShoe(t, i))}
+        </ViewPager>
         {this._renderDivider()}
       </View>
     );
@@ -106,7 +111,7 @@ export class TabHomeMainScreen extends React.Component<ITabHomeMainScreenProps> 
         <FlatList
           horizontal={true}
           data={shoesData}
-          keyExtractor={(shoe: Shoe, _idx: number) => shoe.title}
+          keyExtractor={(shoe: Shoe, _: number) => shoe.title}
           renderItem={({ item }) => <ShoeCard shoe={item} onPress={() => this.props.navigateToShoeDetail(item)} />}
           showsHorizontalScrollIndicator={false}
         />
@@ -115,24 +120,20 @@ export class TabHomeMainScreen extends React.Component<ITabHomeMainScreenProps> 
     );
   }
 
-  private _renderTrendingShoe(listData: ListRenderItemInfo<Shoe>) {
-    const shoe = listData.item;
-
+  private _renderTrendingShoe(shoe: Shoe, index: number) {
     return (
-      <View style={styles.shoeCardListItem}>
-        <View style={styles.shoeCardContainer}>
-          <Image source={{ uri: shoe.imageUrl, cache: "default" }} style={styles.shoeCard} resizeMode={"center"} />
-          <TouchableOpacity
-            onPress={() => {
-              this.props.navigateToShoeDetail(shoe);
-            }}
-          >
-            <Text.Headline numberOfLines={2} style={styles.shoeTitle} ellipsizeMode={"tail"}>
-              {shoe.title}
-            </Text.Headline>
-          </TouchableOpacity>
-        </View>
-      </View>
+      <TouchableOpacity
+        onPress={() => {
+          this.props.navigateToShoeDetail(shoe);
+        }}
+        style={styles.shoeCardListItem}
+        key={index + 1}
+      >
+        <Image source={{ uri: shoe.imageUrl, cache: "default" }} style={styles.shoeCard} resizeMode={"center"} />
+        <Text.Headline numberOfLines={2} style={styles.shoeTitle} ellipsizeMode={"tail"}>
+          {shoe.title}
+        </Text.Headline>
+      </TouchableOpacity>
     );
   }
 }
@@ -149,44 +150,38 @@ const styles = StyleSheet.create({
     height: 0.5,
     backgroundColor: "#BCBBC1",
     marginVertical: 20,
-    marginHorizontal: 10
+    marginHorizontal: 5
   },
   sectionTitle: {
     fontSize: 28,
     marginLeft: 15,
-    marginVertical: 25
+    marginVertical: 15
   },
 
   shoeCardListItem: {
-    width: Dimensions.get("window").width
-  },
-
-  shoeCardContainer: {
-    marginHorizontal: 20,
+    width: Dimensions.get("window").width,
     marginTop: 20,
-    marginBottom: 10,
     flexDirection: "column",
     alignItems: "center",
     justifyContent: "center",
-    borderRadius: Assets.Styles.ButtonBorderRadius,
-    paddingBottom: 10
+    borderRadius: Assets.Styles.ButtonBorderRadius
   },
 
   shoeCard: {
     flex: 1,
     width: 300,
-    aspectRatio: 2,
-    marginVertical: 15
+    height: 150,
+    marginVertical: 5
   },
   shoeTitle: {
     fontSize: 20,
     textAlign: "center",
-    marginHorizontal: 25
+    marginHorizontal: 25,
+    marginTop: 15
   },
 
   subtitle: {
     fontSize: 20,
-    marginLeft: 20,
-    marginVertical: 10
+    marginLeft: 20
   }
 });

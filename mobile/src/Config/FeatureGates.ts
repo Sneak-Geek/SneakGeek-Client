@@ -3,5 +3,6 @@
 // !
 
 export const FeatureGates = {
-  EnableDaCo: false
+  EnableDaCo: false,
+  EnablePriceChart: false
 };

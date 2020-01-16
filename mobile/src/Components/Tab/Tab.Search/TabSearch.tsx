@@ -105,16 +105,12 @@ export default class TabSearch extends React.Component<ISearchScreenProps, ISear
     return (
       <SafeAreaView style={{ flex: 1 }}>
         {this._renderSearchBar()}
+        {this._renderKeywordHeaderAndFilter()}
+        {this._renderHotKeywords()}
+        {isSearchReady ? this._renderSearchResult() : this._renderTopShoes()}
         <View style={styles.contentContainer}>
           {this.state.searchFocus && searchResult.shoes && searchResult.shoes.length > 0 && this._renderSearchContent()}
-          <ScrollView>
-            {this._renderKeywordHeaderAndFilter()}
-            <View>
-              {this._renderHotKeywords()}
-              {isSearchReady ? this._renderSearchResult() : this._renderTopShoes()}
-              {this.state.showModal && this._renderModal()}
-            </View>
-          </ScrollView>
+          {this.state.showModal && this._renderModal()}
         </View>
       </SafeAreaView>
     );
@@ -128,23 +124,23 @@ export default class TabSearch extends React.Component<ISearchScreenProps, ISear
       });
     }
   }
-  private _addBrand = (item: string) => {
-    let newArr = this.state.brand;
+  private _addBrand(item: string) {
+    const newArr = this.state.brand;
     newArr.push(item);
     this.setState({ brand: newArr });
-  };
+  }
 
-  private _removeBrand = (item: string) => {
-    let newArr = this.state.brand;
-    let arr = newArr.filter(value => value !== item);
+  private _removeBrand(item: string) {
+    const newArr = this.state.brand;
+    const arr = newArr.filter(value => value !== item);
     this.setState({ brand: arr });
-  };
+  }
 
   private _renderSearchBar(): React.ReactNode {
     return (
       <Input
         ref={refInput => (this._searchInputComponent = refInput)}
-        onFocus={_event => this.setState({ searchFocus: true })}
+        onFocus={_ => this.setState({ searchFocus: true })}
         placeholder={this.state.placeholder}
         leftIcon={<Icon type={"ionicon"} name={"md-search"} size={25} />}
         leftIconContainerStyle={{ marginRight: 20 }}
@@ -166,10 +162,10 @@ export default class TabSearch extends React.Component<ISearchScreenProps, ISear
       <BlurView blurType={"light"} blurAmount={20} style={styles.searchContainer}>
         {searchResult.shoes && (
           <FlatList
-            onScroll={_evt => Keyboard.dismiss()}
+            onScroll={_ => Keyboard.dismiss()}
             keyboardShouldPersistTaps={"always"}
             data={searchResult.shoes}
-            keyExtractor={(shoe, _index) => shoe.title}
+            keyExtractor={(shoe, _) => shoe.title}
             renderItem={({ item }) => (
               <TouchableOpacity onPress={() => this.props.onShoeClick(this.state.shouldOpenSell, item)}>
                 <Text.Callout style={styles.searchResult}>{item.title}</Text.Callout>

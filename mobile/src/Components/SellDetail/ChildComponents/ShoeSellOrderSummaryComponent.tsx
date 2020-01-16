@@ -91,7 +91,7 @@ export class ShoeSellOrderSummaryComponent extends React.PureComponent<Props, St
     return (
       <View style={{ flex: 1, flexDirection: "column" }}>
         <Text.Subhead>Ảnh sản phẩm</Text.Subhead>
-        <ScrollView style={{ flex: 1 }} horizontal={true} showsHorizontalScrollIndicator={false}>
+        <ScrollView style={{ flex: 1, marginTop: 12 }} horizontal={true} showsHorizontalScrollIndicator={false}>
           <View style={{ flexDirection: "row" }}>
             {this.state.pictures.map((item, index) => {
               if (!item) {

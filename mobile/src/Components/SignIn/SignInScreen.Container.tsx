@@ -8,10 +8,12 @@ import { IAppState } from "../../Store";
 import { RouteNames } from "../../Navigation";
 import { NavigationActions } from "react-navigation";
 import * as Actions from "../../Actions";
+import { navigateReplaceToHome } from "../../Actions";
 
 const mapStateToProps = (state: IAppState) => ({
   isAuthenticating: state.AccountState.isAuthenticating,
-  authenticationError: state.AccountState.authenticationError
+  authenticationError: state.AccountState.authenticationError,
+  currentAccount: state.AccountState.currentAccount
 });
 
 const mapDispatchToProps = (dispatch: Function) => ({
@@ -26,6 +28,10 @@ const mapDispatchToProps = (dispatch: Function) => ({
         params: { email }
       })
     );
+  },
+
+  navigateToHome: () => {
+    dispatch(navigateReplaceToHome());
   }
 });
 

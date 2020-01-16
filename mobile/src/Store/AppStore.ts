@@ -1,16 +1,17 @@
-//!
-//! Copyright (c) 2019 - SneakGeek. All rights reserved
-//!
+// !
+// ! Copyright (c) 2019 - SneakGeek. All rights reserved
+// !
 
-import { compose, createStore, applyMiddleware, Store, combineReducers } from "redux";
+import { applyMiddleware, combineReducers, compose, createStore, Store } from "redux";
 import thunkMiddleware from "redux-thunk";
 import {
   AccountReducers,
   AppContentReducers,
-  NavigationReducers,
+  DialogReducers,
   ModalReducers,
-  TransactionReducers,
-  NotificationReducers
+  NavigationReducers,
+  NotificationReducers,
+  TransactionReducers
 } from "../Reducers";
 import { navigationMiddleware } from "../Navigation/AppNavigator";
 
@@ -26,7 +27,8 @@ const configureStore = (): Store<any> => {
       AppContentState: AppContentReducers,
       ModalState: ModalReducers,
       TransactionState: TransactionReducers,
-      NotificationState: NotificationReducers
+      NotificationState: NotificationReducers,
+      DialogState: DialogReducers
     }),
     composeEnhancers(applyMiddleware(navigationMiddleware, thunkMiddleware))
   );

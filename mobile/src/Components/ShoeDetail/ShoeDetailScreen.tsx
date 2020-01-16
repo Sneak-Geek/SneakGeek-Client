@@ -4,11 +4,12 @@
 
 import * as React from "react";
 import {
-  Alert,
+  ActivityIndicator,
   FlatList,
   Image,
   SafeAreaView,
   ScrollView,
+  StyleSheet,
   TextStyle,
   TouchableOpacity,
   View,
@@ -27,6 +28,7 @@ import { StringUtils } from "../../Utilities";
 import { AvailableSellOrdersPayload } from "../../Shared/Payload";
 import { NetworkRequestState } from "../../Shared/State";
 import { FeatureGates } from "../../Config/FeatureGates";
+import { Styles } from "../../Assets";
 
 export interface IProps {
   navigation: NavigationScreenProp<NavigationRoute>;
@@ -43,6 +45,7 @@ export interface IProps {
   navigateToAuctionOrder: () => void;
   navigateToSellScreen: (shoe: Shoe) => void;
   navigateToBuySelection: (isOldCondition: boolean) => void;
+  alert: (message: string) => void;
 }
 
 interface IState {
@@ -90,7 +93,7 @@ export class ShoeDetailScreen extends React.Component<IProps, IState> {
   }
 
   public /** override */ render(): JSX.Element {
-    const bottomHeightStyle = this.state.bottomBuyerHeight ? { marginBottom: this.state.bottomBuyerHeight + 20 } : {};
+    const bottomHeightStyle = this.state.bottomBuyerHeight ? { marginBottom: this.state.bottomBuyerHeight + 25 } : {};
     return (
       <SafeAreaView
         style={{
@@ -98,6 +101,22 @@ export class ShoeDetailScreen extends React.Component<IProps, IState> {
           backgroundColor: Assets.Styles.AppSecondaryColorBlurred
         }}
       >
+        {this.props.availableSellOrdersState?.state === NetworkRequestState.REQUESTING && (
+          <View
+            style={[
+              StyleSheet.absoluteFill,
+              {
+                backgroundColor: Styles.AppSecondaryColorBlurred,
+                zIndex: 1000,
+                alignItems: "center",
+                justifyContent: "center"
+              }
+            ]}
+          >
+            <ActivityIndicator size={"large"} />
+          </View>
+        )}
+        <View style={[StyleSheet.absoluteFill, { backgroundColor: Styles.AppAccentColor }]} />
         <View style={{ flex: 1, backgroundColor: "white" }}>
           <ScrollView style={{ flex: 1 }} showsVerticalScrollIndicator={false}>
             <View style={{ flex: 1, ...bottomHeightStyle }}>
@@ -106,7 +125,7 @@ export class ShoeDetailScreen extends React.Component<IProps, IState> {
               {FeatureGates.EnableDaCo && this._renderUserBehaviorButtons()}
               {this._renderShoeTitle()}
               {this._renderShoeDescription()}
-              {this._renderPriceGraph()}
+              {FeatureGates.EnablePriceChart && this._renderPriceGraph()}
               {this._renderShoeDetail()}
               {this._renderShoeRatings()}
               {this._renderRelatedShoes()}
@@ -287,7 +306,7 @@ export class ShoeDetailScreen extends React.Component<IProps, IState> {
     return (
       <View style={{ flex: 1, paddingHorizontal: 20, marginTop: 40 }}>
         <View style={styles.ratingContainer}>
-          <Text.Headline>{"giá sản phẩm".toUpperCase()}</Text.Headline>
+          <Text.Headline>{"Đánh giá sản phẩm".toUpperCase()}</Text.Headline>
           <Text.Headline style={{ color: Assets.Styles.AppPrimaryColor }}>3.5/5</Text.Headline>
         </View>
         <View style={{ flex: 1, flexDirection: "column" }}>
@@ -360,12 +379,14 @@ export class ShoeDetailScreen extends React.Component<IProps, IState> {
   }
 
   private _onGetBuyOptions() {
-    if (this.props.availableSellOrdersState?.state === NetworkRequestState.SUCCESS) {
-      if (this.props.availableSellOrdersState.sellOrders?.length === 0) {
-        Alert.alert("Hiện tại chưa có trên thị trường, xin vui lòng thử lại");
-      } else {
-        this.actionSheet?.show();
-      }
+    if (
+      !this.props.availableSellOrdersState ||
+      !this.props.availableSellOrdersState?.sellOrders ||
+      this.props.availableSellOrdersState?.sellOrders?.length === 0
+    ) {
+      this.props.alert("Hiện tại chưa có trên thị trường, xin vui lòng thử lại");
+    } else {
+      this.actionSheet?.show();
     }
 
     return;

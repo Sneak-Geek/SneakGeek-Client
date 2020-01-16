@@ -6,7 +6,6 @@ import * as React from "react";
 import { SellOrder } from "../../../Shared/Model";
 import { ActivityIndicator, FlatList, Image, StyleSheet, View, RefreshControl } from "react-native";
 import humanize from "humanize-duration";
-import { Icon } from "react-native-elements";
 import { Text } from "../../../Shared/UI";
 import { Styles } from "../../../Assets";
 import { SellOrderHistoryPayload } from "../../../Shared/Payload";
@@ -54,12 +53,7 @@ export class TransactionSellTab extends React.Component<ITransactionSellTabProps
   }
 
   public /** override */ render(): JSX.Element {
-    return (
-      <View style={{ flex: 1, alignItems: "stretch" }}>
-        {this._renderSellTransactions()}
-        {this._renderSellButton()}
-      </View>
-    );
+    return <View style={{ flex: 1, alignItems: "stretch" }}>{this._renderSellTransactions()}</View>;
   }
 
   private _renderSellTransactions(): JSX.Element {
@@ -94,18 +88,6 @@ export class TransactionSellTab extends React.Component<ITransactionSellTabProps
         data={sellHistory}
         keyExtractor={(_, idx) => idx.toString()}
         renderItem={({ item }) => this._renderSellItem(item)}
-      />
-    );
-  }
-
-  private _renderSellButton(): JSX.Element {
-    return (
-      <Icon
-        reverse={true}
-        type={"ionicon"}
-        name={"md-add"}
-        containerStyle={{ position: "absolute", bottom: 20, right: 20 }}
-        onPress={() => this.props.navigateToSearch()}
       />
     );
   }

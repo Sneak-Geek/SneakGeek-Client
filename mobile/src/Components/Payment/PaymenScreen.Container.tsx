@@ -8,7 +8,7 @@ import { IAppState } from "../../Store";
 import { RouteNames } from "../../Navigation";
 import { NavigationActions } from "react-navigation";
 import { SellOrder } from "../../Shared/Model";
-import { buyShoe } from "../../Actions";
+import { buyShoe, navigateReplaceToHome } from "../../Actions";
 
 const mapStateToProps = (state: IAppState) => ({
   buyState: state.TransactionState.buyShoeState.state
@@ -21,8 +21,13 @@ const mapDispatchToProps = (dispatch: Function) => ({
     };
     dispatch(NavigationActions.navigate(navConfig));
   },
+
   buyShoe: (sellOrder: SellOrder) => {
     dispatch(buyShoe(sellOrder));
+  },
+
+  navigateToHome: () => {
+    dispatch(navigateReplaceToHome());
   }
 });
 

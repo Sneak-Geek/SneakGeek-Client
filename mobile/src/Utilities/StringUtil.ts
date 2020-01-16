@@ -1,11 +1,15 @@
-//!
-//! Copyright (c) 2019 - SneakGeek. All rights reserved
-//!
+// !
+// ! Copyright (c) 2019 - SneakGeek. All rights reserved
+// !
 
-export function toCurrencyString(amount: string) {
+export function toCurrencyString(amount: string, maxDigit?: number) {
   const converted = parseInt(amount, 10);
   if (converted) {
-    return converted.toLocaleString("vi", { style: "currency", currency: "VND" });
+    return converted.toLocaleString("vi", {
+      style: "currency",
+      currency: "VND",
+      ...(maxDigit ? { maximumSignificantDigits: maxDigit } : {})
+    });
   }
 
   return "";

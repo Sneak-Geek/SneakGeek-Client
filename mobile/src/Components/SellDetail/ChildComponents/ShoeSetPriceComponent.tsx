@@ -3,19 +3,13 @@
 //!
 
 import * as React from "react";
-import {
-  ScrollView,
-  View,
-  StyleSheet,
-  TextInput,
-  Dimensions,
-  TouchableOpacity
-} from "react-native";
+import { ScrollView, View, StyleSheet, TextInput, Dimensions, TouchableOpacity } from "react-native";
 import { LineChart, Grid, YAxis } from "react-native-svg-charts";
 import { StringUtils } from "../../../Utilities";
 import { CustomPicker, Text } from "../../../Shared/UI";
 import { container, Types } from "../../../Config/Inversify";
 import { IAppSettingsService } from "../../../Service/AppSettingsService";
+import { FeatureGates } from "../../../Config/FeatureGates";
 
 interface State {
   isModalOpen: boolean;
@@ -43,7 +37,7 @@ export class ShoeSetPriceComponent extends React.Component<Props, State> {
         <View style={{ flex: 1, paddingHorizontal: 20 }}>
           {this._renderPickerModal()}
           {this._renderSetPrice()}
-          {this._renderPriceChart()}
+          {FeatureGates.EnablePriceChart && this._renderPriceChart()}
           {this._renderPriceLoHi()}
           {this._renderSellDuration()}
         </View>
@@ -130,17 +124,14 @@ export class ShoeSetPriceComponent extends React.Component<Props, State> {
       <View style={[styles.rowSeparatedContainer, { marginVertical: 15 }]}>
         <Text.Headline>Thời gian đăng</Text.Headline>
         <TouchableOpacity onPress={() => this.setState({ isModalOpen: true })}>
-          <Text.Body style={styles.textPicker}>
-            {this.state.selectedDuration || "Lựa chọn"}
-          </Text.Body>
+          <Text.Body style={styles.textPicker}>{this.state.selectedDuration || "Lựa chọn"}</Text.Body>
         </TouchableOpacity>
       </View>
     );
   }
 
   private _renderPickerModal() {
-    const settings = container.get<IAppSettingsService>(Types.IAppSettingsService).getSettings()
-      .RemoteSettings;
+    const settings = container.get<IAppSettingsService>(Types.IAppSettingsService).getSettings().RemoteSettings;
 
     const options = settings ? settings.sellDuration : [];
 

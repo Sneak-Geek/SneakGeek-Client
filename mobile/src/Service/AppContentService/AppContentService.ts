@@ -20,7 +20,7 @@ export class AppContentService implements IAppContentService {
   }
 
   public async searchShoes(key: string): Promise<Shoe[]> {
-    const response = await ApiClient.get(`/shoe/find?key=${key}`);
+    const response = await ApiClient.get(`/shoe/find?title=${key}`);
     if (response && response.status === HttpStatus.OK) {
       return response.data as Shoe[];
     }

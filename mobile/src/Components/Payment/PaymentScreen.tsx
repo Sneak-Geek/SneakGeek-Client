@@ -25,6 +25,7 @@ export interface IPaymentScreenProps {
   navigation: ScreenProps;
   buyState: NetworkRequestState;
   // dispatch props
+  navigateToHome: () => void;
   buyShoe: (sellOrder: SellOrder) => void;
 }
 
@@ -89,8 +90,12 @@ export class PaymentScreen extends React.Component<IPaymentScreenProps, IPayment
   }
 
   public /** override */ componentDidUpdate(prevProps: IPaymentScreenProps) {
-    if (prevProps.buyState !== this.props.buyState && this.props.buyState === NetworkRequestState.SUCCESS) {
-      Alert.alert("Mua thành công");
+    if (prevProps.buyState !== this.props.buyState) {
+      if (this.props.buyState === NetworkRequestState.SUCCESS) {
+        this.props.navigateToHome();
+      } else if (this.props.buyState === NetworkRequestState.FAILED) {
+        Alert.alert("Đã xảy ra lỗi khi mua, xin vui lòng thử lại");
+      }
     }
   }
 

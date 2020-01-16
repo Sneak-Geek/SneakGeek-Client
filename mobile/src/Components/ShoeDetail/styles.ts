@@ -13,9 +13,9 @@ export default StyleSheet.create({
     backgroundColor: "white",
     alignItems: "center",
     justifyContent: "center",
-    borderWidth: 1,
+    borderWidth: 0.5,
     borderColor: "transparent",
-    borderBottomColor: "black"
+    borderBottomColor: "lightgray"
   } as ViewStyle,
 
   userButtonContainer: {
