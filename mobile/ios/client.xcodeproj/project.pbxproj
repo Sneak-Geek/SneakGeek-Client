@@ -18,6 +18,7 @@
 		20ABD9C6232214F40000D62C /* RobotoCondensed-RegularItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 20ABD9C0232214F30000D62C /* RobotoCondensed-RegularItalic.ttf */; };
 		20ABD9C7232214F40000D62C /* RobotoCondensed-Light.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 20ABD9C1232214F40000D62C /* RobotoCondensed-Light.ttf */; };
 		20ABD9C8232214F40000D62C /* RobotoCondensed-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 20ABD9C2232214F40000D62C /* RobotoCondensed-Bold.ttf */; };
+		20B39ECE23D59FEA00D52EDA /* main.jsbundle in Resources */ = {isa = PBXBuildFile; fileRef = 008F07F21AC5B25A0029DE68 /* main.jsbundle */; };
 		20F064E722F5EBAB002C90EA /* libPods-client.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 20F064E622F5EBAB002C90EA /* libPods-client.a */; };
 /* End PBXBuildFile section */
 
@@ -253,6 +254,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				20B39ECE23D59FEA00D52EDA /* main.jsbundle in Resources */,
 				13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */,
 				20ABD9C8232214F40000D62C /* RobotoCondensed-Bold.ttf in Resources */,
 				204C9E702310F3080032C255 /* GoogleService-Info.plist in Resources */,
@@ -416,7 +418,7 @@
 				);
 				INFOPLIST_FILE = client/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				MARKETING_VERSION = 0.2001.3;
+				MARKETING_VERSION = 0.2001.4;
 				OTHER_LDFLAGS = (
 					"$(inherited)",
 					"-ObjC",
@@ -441,7 +443,7 @@
 				);
 				INFOPLIST_FILE = client/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				MARKETING_VERSION = 0.2001.3;
+				MARKETING_VERSION = 0.2001.4;
 				OTHER_LDFLAGS = (
 					"$(inherited)",
 					"-ObjC",

@@ -11,6 +11,7 @@ import { Text } from "../../../Shared/UI";
 import * as Assets from "../../../Assets";
 import { Account, Profile } from "../../../Shared/Model";
 import { NetworkRequestState } from "../../../Shared/State";
+import { TouchableWithoutFeedback } from "react-native-gesture-handler";
 
 export interface IUserTabMainProps {
   account: Account;
@@ -155,17 +156,17 @@ export default class TabUserMainScreen extends React.Component<IUserTabMainProps
 
   private _renderOptionItem(item: IUserListOption) {
     return (
-      <View
-        key={item.title}
-        style={[item.hasMarginBottom ? styles.listItemStyleWithMarginBottom : null, styles.settingsContainer]}
-      >
-        <Text.Callout style={{ fontWeight: "bold", fontSize: 16, opacity: 0.6 }}>
-          {item.title.toUpperCase()}
-        </Text.Callout>
-        <TouchableOpacity onPress={item.onClick.bind(this)}>
+      <TouchableWithoutFeedback onPress={item.onClick.bind(this)}>
+        <View
+          key={item.title}
+          style={[item.hasMarginBottom ? styles.listItemStyleWithMarginBottom : null, styles.settingsContainer]}
+        >
+          <Text.Callout style={{ fontWeight: "bold", fontSize: 16, opacity: 0.6 }}>
+            {item.title.toUpperCase()}
+          </Text.Callout>
           <Image source={Assets.Icons.ChevronLeft} />
-        </TouchableOpacity>
-      </View>
+        </View>
+      </TouchableWithoutFeedback>
     );
   }
 

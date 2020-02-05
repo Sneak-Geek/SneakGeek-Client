@@ -58,9 +58,7 @@ const HomeTabNavigator = createStackNavigator(
     [`${RouteNames.Tabs.HomeTab.MainScreen}`]: { screen: Tab.Home.Main }
   },
   {
-    headerMode: "none",
     navigationOptions: {
-      header: null,
       tabBarLabel: "Trang chủ",
       tabBarIcon: ({ tintColor }) => {
         tintColor = tintColor as string;

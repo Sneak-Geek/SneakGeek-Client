@@ -12,7 +12,8 @@ import {
   SafeAreaView,
   StyleSheet,
   TouchableOpacity,
-  View
+  View,
+  StatusBar
 } from "react-native";
 import { Icon, Input } from "react-native-elements";
 import { BlurView } from "@react-native-community/blur";
@@ -22,6 +23,8 @@ import { SearchShoePayload } from "../../../Shared/Payload";
 import * as Assets from "../../../Assets";
 import { IAppSettingsService } from "../../../Service/AppSettingsService";
 import { container, Types } from "../../../Config/Inversify";
+import { TextStyle } from "../../../Shared/UI/Text";
+import { TouchableWithoutFeedback } from "react-native-gesture-handler";
 
 export interface ISearchScreenProps {
   shoes: Shoe[];
@@ -34,7 +37,6 @@ export interface ISearchScreenProps {
 }
 
 interface ISearchScreenState {
-  placeholder: string;
   searchKey: string;
   searchFocus: boolean;
   shouldRenderTopShoes: boolean;
@@ -83,7 +85,6 @@ export default class TabSearch extends React.Component<ISearchScreenProps, ISear
     super(props);
     this.isForSell = this.props.navigation ? this.props.navigation.getParam("isForSell") === true : false;
     this.state = {
-      placeholder: "Tìm kiếm",
       searchKey: "",
       searchFocus: false,
       shouldRenderTopShoes: true,
@@ -104,9 +105,12 @@ export default class TabSearch extends React.Component<ISearchScreenProps, ISear
     const isSearchReady = searchResult.shoes && searchResult.shoes.length > 0;
     return (
       <SafeAreaView style={{ flex: 1 }}>
-        {this._renderSearchBar()}
-        {this._renderKeywordHeaderAndFilter()}
-        {this._renderHotKeywords()}
+        <StatusBar hidden={false} barStyle={"default"} />
+        <View>
+          {this._renderSearchBar()}
+          {this._renderKeywordHeaderAndFilter()}
+          {this._renderHotKeywords()}
+        </View>
         {isSearchReady ? this._renderSearchResult() : this._renderTopShoes()}
         <View style={styles.contentContainer}>
           {this.state.searchFocus && searchResult.shoes && searchResult.shoes.length > 0 && this._renderSearchContent()}
@@ -141,7 +145,8 @@ export default class TabSearch extends React.Component<ISearchScreenProps, ISear
       <Input
         ref={refInput => (this._searchInputComponent = refInput)}
         onFocus={_ => this.setState({ searchFocus: true })}
-        placeholder={this.state.placeholder}
+        placeholder={"Tìm kiếm"}
+        value={this.state.searchKey}
         leftIcon={<Icon type={"ionicon"} name={"md-search"} size={25} />}
         leftIconContainerStyle={{ marginRight: 20 }}
         rightIcon={
@@ -149,7 +154,7 @@ export default class TabSearch extends React.Component<ISearchScreenProps, ISear
             <Icon type={"ionicon"} name={"md-close"} size={25} onPress={this._toggleSearchFocus.bind(this)} />
           )
         }
-        labelStyle={{ fontSize: 16 }}
+        labelStyle={TextStyle.body}
         onChangeText={this._search.bind(this)}
         onSubmitEditing={this._onEndEditing.bind(this)}
       />
@@ -203,7 +208,7 @@ export default class TabSearch extends React.Component<ISearchScreenProps, ISear
       <View style={styles.keywordContainer}>
         <Text.Subhead>Từ khoá hot</Text.Subhead>
         <TouchableOpacity onPress={() => this.setState({ showModal: !this.state.showModal })}>
-          <Image source={Assets.Icons.Hamburger} style={{ width: 20, height: 20, resizeMode: "contain" }} />
+          <Image source={Assets.Icons.Hamburger} style={{ width: 15, height: 15, resizeMode: "contain" }} />
         </TouchableOpacity>
       </View>
     );
@@ -213,9 +218,11 @@ export default class TabSearch extends React.Component<ISearchScreenProps, ISear
     const keywords = ["Air Jordan", "Nike Air", "Adidas X", "Nike Air Max", "Yeezy Boost White"];
 
     const buttons = keywords.map((k, idx) => (
-      <View style={styles.keywordWrapper} key={idx}>
-        <Text.Body style={styles.keywordStyle}>{k}</Text.Body>
-      </View>
+      <TouchableWithoutFeedback key={idx} onPress={() => this._search(k)}>
+        <View style={styles.keywordWrapper}>
+          <Text.Body style={styles.keywordStyle}>{k}</Text.Body>
+        </View>
+      </TouchableWithoutFeedback>
     ));
 
     return (
@@ -264,10 +271,10 @@ export default class TabSearch extends React.Component<ISearchScreenProps, ISear
     return (
       <FlatList
         data={topShoes}
-        keyExtractor={(_data, index) => index.toString()}
+        keyExtractor={(_, index) => index.toString()}
         renderItem={({ item }) => <ShoeCard shoe={item} onPress={() => onShoeClick(this.state.shouldOpenSell, item)} />}
         numColumns={2}
-        style={{ marginTop: 30 }}
+        style={{ marginTop: 10 }}
       />
     );
   }
@@ -283,7 +290,7 @@ export default class TabSearch extends React.Component<ISearchScreenProps, ISear
           <ShoeCard shoe={item} onPress={() => this.props.onShoeClick(this.state.shouldOpenSell, item)} />
         )}
         numColumns={2}
-        style={{ marginTop: 30 }}
+        style={{ marginTop: 10 }}
       />
     );
   }
@@ -519,12 +526,11 @@ const styles = StyleSheet.create({
     height: Assets.Styles.ButtonHeight,
     alignItems: "center",
     justifyContent: "center",
-    paddingHorizontal: 18,
+    paddingHorizontal: 15,
     borderWidth: 1,
     borderColor: "black",
     borderRadius: 4,
-    marginLeft: 20,
-    marginBottom: 15
+    marginLeft: 20
   },
 
   keywordStyle: {

@@ -10,6 +10,7 @@ import {
   Image,
   SafeAreaView,
   ScrollView,
+  StatusBar,
   StyleSheet,
   TouchableOpacity,
   View
@@ -18,6 +19,9 @@ import { Shoe } from "../../../Shared/Model";
 import { ShoeCard, Text } from "../../../Shared/UI";
 import * as Assets from "../../../Assets";
 import ViewPager from "@react-native-community/viewpager";
+import { Icons } from "../../../Assets";
+import { TextStyle } from "../../../Shared/UI/Text";
+import { TouchableWithoutFeedback } from "react-native-gesture-handler";
 
 export interface ITabHomeMainScreenProps {
   shoes: Shoe[];
@@ -25,7 +29,40 @@ export interface ITabHomeMainScreenProps {
   navigateToShoeDetail: (shoe: Shoe) => void;
 }
 
-export class TabHomeMainScreen extends React.Component<ITabHomeMainScreenProps> {
+export interface ITabHomeMainScreenState {
+  hotShoesCurrentPage: number;
+  shoesRankingPage: number;
+}
+
+export class TabHomeMainScreen extends React.Component<ITabHomeMainScreenProps, ITabHomeMainScreenState> {
+  public static navigationOptions = {
+    title: "SneakGeek",
+    headerLeft: <Image source={Icons.AppIcon} style={{ width: 40, height: 40 }} />,
+    headerTitleStyle: {
+      color: "white",
+      textAlign: "left",
+      ...TextStyle.title3
+    },
+    headerStyle: {
+      backgroundColor: "black"
+    }
+  };
+
+  private hotShoeViewPager: ViewPager | null = null;
+  private hotShoesPageTimeout: NodeJS.Timeout | null = null;
+  private shoesRankingViewPager: ViewPager | null = null;
+  private shoesRankingPageTimeout: NodeJS.Timeout | null = null;
+  private hotShoeSlidingInterval = 3500;
+  private shoesRankingSlidingInterval = 5000;
+
+  public constructor(props: ITabHomeMainScreenProps) {
+    super(props);
+    this.state = {
+      hotShoesCurrentPage: 0,
+      shoesRankingPage: 0
+    };
+  }
+
   public /** override */ componentDidMount() {
     if (this.props.shoes.length === 0) {
       this.props.fetchShoes();
@@ -36,36 +73,70 @@ export class TabHomeMainScreen extends React.Component<ITabHomeMainScreenProps> 
     if (this.props.shoes.length === 0) {
       return (
         <SafeAreaView style={StyleSheet.absoluteFill}>
+          <StatusBar hidden={false} barStyle={"light-content"} />
           <ActivityIndicator />
         </SafeAreaView>
       );
     }
+
     return (
       <SafeAreaView style={styles.container}>
+        <StatusBar hidden={false} barStyle={"light-content"} />
         <ScrollView showsVerticalScrollIndicator={false}>
           {this._renderTrendingShoes()}
           {this._renderUserCustomizeFeed()}
-          {this._renderByBrand("Nike")}
-          {this._renderByBrand("adidas")}
+          {this._renderBanner(Icons.Banner, "Nike CNY Collections", "white")}
+          {this._renderByBrand("Nike", false)}
+          {this._renderShoeChart()}
+          {this._renderByBrand("adidas", false)}
+          {this._renderBanner(Icons.AdBanner, "Mua ngay tại SneakGeek", "black")}
           {this._renderByBrand("Jordan", false)}
         </ScrollView>
       </SafeAreaView>
     );
   }
 
+  public /** override */ componentWillUnmount() {
+    if (this.hotShoesPageTimeout) {
+      clearInterval(this.hotShoesPageTimeout);
+    }
+
+    if (this.shoesRankingPageTimeout) {
+      clearInterval(this.shoesRankingPageTimeout);
+    }
+  }
+
   private _renderTrendingShoes() {
-    const shoesData = this.props.shoes.length > 8 ? this.props.shoes.slice(0, 8) : [];
+    const shoesData = this.props.shoes.length > 8 ? this.props.shoes.slice(20, 28) : [];
+
+    if (shoesData.length === 0) {
+      return null;
+    }
+
     return (
       <View style={{ flex: 1 }}>
         <Text.LargeTitle style={styles.sectionTitle}>Đang hot</Text.LargeTitle>
         <ViewPager
+          ref={v => (this.hotShoeViewPager = v)}
           initialPage={0}
           scrollEnabled={true}
-          showPageIndicator={true}
+          showPageIndicator={false}
           style={{ flex: 1, width: "100%", minHeight: 300 }}
           pageMargin={10}
           orientation={"horizontal"}
           transitionStyle={"scroll"}
+          onPageSelected={e => this.setState({ hotShoesCurrentPage: e.nativeEvent.position })}
+          onLayout={_ => {
+            this.hotShoesPageTimeout = setInterval(() => {
+              const newPage = (this.state.hotShoesCurrentPage + 1) % shoesData.length;
+              this.setState(
+                {
+                  hotShoesCurrentPage: newPage
+                },
+                () => this.hotShoeViewPager?.setPage(newPage)
+              );
+            }, this.hotShoeSlidingInterval);
+          }}
         >
           {shoesData.map((t, i) => this._renderTrendingShoe(t, i))}
         </ViewPager>
@@ -80,7 +151,7 @@ export class TabHomeMainScreen extends React.Component<ITabHomeMainScreenProps> 
 
   private _renderUserCustomizeFeed() {
     const { shoes } = this.props;
-    const shoesData = shoes.length > 22 ? shoes.slice(15, 22) : [];
+    const shoesData = shoes.length > 22 ? shoes.slice(32, 40) : [];
 
     return (
       <View style={{ flex: 1 }}>
@@ -88,11 +159,11 @@ export class TabHomeMainScreen extends React.Component<ITabHomeMainScreenProps> 
         <FlatList
           horizontal={true}
           data={shoesData}
-          keyExtractor={(shoe: Shoe, _idx: number) => shoe.title}
+          keyExtractor={(shoe: Shoe, _: number) => shoe.title}
           renderItem={({ item }) => <ShoeCard shoe={item} onPress={() => this.props.navigateToShoeDetail(item)} />}
           showsHorizontalScrollIndicator={false}
         />
-        {this._renderDivider()}
+        {/* {this._renderDivider()} */}
       </View>
     );
   }
@@ -100,7 +171,7 @@ export class TabHomeMainScreen extends React.Component<ITabHomeMainScreenProps> 
   private _renderByBrand(brandName: string, shouldRenderDivider: boolean = true) {
     const shoesData =
       this.props.shoes.length > 0
-        ? this.props.shoes.filter(s => s.brand.toLowerCase() === brandName.toLowerCase()).splice(0, 5)
+        ? this.props.shoes.filter(s => s.brand.toLowerCase() === brandName.toLowerCase()).slice(0, 5)
         : [];
 
     return (
@@ -120,20 +191,115 @@ export class TabHomeMainScreen extends React.Component<ITabHomeMainScreenProps> 
     );
   }
 
+  private _renderBanner(imgSource: number, title: string, color: string) {
+    return (
+      <View style={{ marginVertical: 20, position: "relative" }}>
+        <Image source={imgSource} style={{ width: "100%", height: 320 }} resizeMode={"cover"} />
+        <Text.Title2 style={{ position: "absolute", bottom: 10, left: 20, color }}>{title}</Text.Title2>
+      </View>
+    );
+  }
+
+  private _renderShoeChart(): JSX.Element | null {
+    const data = this.props.shoes.length === 0 ? [] : this.props.shoes.slice(0, 5);
+    if (data.length === 0) {
+      return null;
+    }
+
+    return (
+      <View
+        style={{
+          marginVertical: 15,
+          borderBottomWidth: 1,
+          borderTopWidth: 1,
+          borderTopColor: "#BCBBC1",
+          borderBottomColor: "#BCBBC1"
+        }}
+      >
+        <Text.Title2 style={{ marginLeft: 20, marginTop: 20 }}>Bảng xếp hạng giày</Text.Title2>
+        <ViewPager
+          ref={v => (this.shoesRankingViewPager = v)}
+          initialPage={0}
+          scrollEnabled={true}
+          showPageIndicator={false}
+          style={{ flex: 1, width: "100%", marginVertical: 20, minHeight: 300 }}
+          pageMargin={10}
+          orientation={"horizontal"}
+          transitionStyle={"scroll"}
+          onPageSelected={e => this.setState({ shoesRankingPage: e.nativeEvent.position })}
+          onLayout={_ => {
+            this.shoesRankingPageTimeout = setInterval(() => {
+              const newPage = (this.state.shoesRankingPage + 1) % 2;
+              this.setState(
+                {
+                  shoesRankingPage: newPage
+                },
+                () => this.shoesRankingViewPager?.setPage(newPage)
+              );
+            }, this.shoesRankingSlidingInterval);
+          }}
+        >
+          {this._renderRankingPage(data, 0)}
+          {this._renderRankingPage(data, 1)}
+        </ViewPager>
+      </View>
+    );
+  }
+
+  private _renderRankingPage(data: Shoe[], pageNum: number) {
+    return (
+      <View
+        key={pageNum}
+        style={{
+          width: Dimensions.get("window").width,
+          flexDirection: "column",
+          alignItems: "stretch",
+          justifyContent: "center"
+        }}
+      >
+        {data.map((s, i) => (
+          <View
+            key={i}
+            style={{ flexDirection: "row", alignItems: "center", marginVertical: 10, marginHorizontal: 20 }}
+          >
+            <View
+              style={{
+                width: 40,
+                height: 40,
+                borderRadius: 20,
+                backgroundColor: Assets.Styles.AppAccentColor,
+                alignItems: "center",
+                justifyContent: "center"
+              }}
+            >
+              <Text.Title2 style={{ color: "white" }}>{i + pageNum * 5 + 1}</Text.Title2>
+            </View>
+            <Image source={{ uri: s.imageUrl }} style={{ width: 90, aspectRatio: 2 }} resizeMode={"contain"} />
+            <View style={{ flex: 1, flexWrap: "wrap", justifyContent: "flex-start", alignItems: "flex-start" }}>
+              <Text.Subhead numberOfLines={2} ellipsizeMode={"tail"}>
+                {s.title}
+              </Text.Subhead>
+            </View>
+          </View>
+        ))}
+      </View>
+    );
+  }
+
   private _renderTrendingShoe(shoe: Shoe, index: number) {
     return (
-      <TouchableOpacity
-        onPress={() => {
-          this.props.navigateToShoeDetail(shoe);
-        }}
-        style={styles.shoeCardListItem}
-        key={index + 1}
-      >
-        <Image source={{ uri: shoe.imageUrl, cache: "default" }} style={styles.shoeCard} resizeMode={"center"} />
-        <Text.Headline numberOfLines={2} style={styles.shoeTitle} ellipsizeMode={"tail"}>
-          {shoe.title}
-        </Text.Headline>
-      </TouchableOpacity>
+      <View style={styles.shoeCardListItem} key={index + 1}>
+        <TouchableWithoutFeedback
+          onPress={() => {
+            this.props.navigateToShoeDetail(shoe);
+          }}
+        >
+          <Image source={{ uri: shoe.imageUrl, cache: "default" }} style={styles.shoeCard} resizeMode={"center"} />
+          <Text.Headline numberOfLines={2} style={styles.shoeTitle} ellipsizeMode={"tail"}>
+            {shoe.title}
+          </Text.Headline>
+        </TouchableWithoutFeedback>
+      </View>
     );
   }
 }

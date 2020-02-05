@@ -30,5 +30,8 @@ export const Icons = {
   DashContainer: require("../../../Icons/dashContainer.png"),
   QrCode: require("../../../Icons/qrcode.png"),
   BackWhite: require("../../../Icons/backWhite.png"),
-  Close: require("../../../Icons/close.png")
+  Close: require("../../../Icons/close.png"),
+  Banner: require("../../../Icons/banner.jpg"),
+  AppIcon: require("../../../Icons/AppIcon.png"),
+  AdBanner: require("../../../Icons/AdBanner.jpg")
 };
