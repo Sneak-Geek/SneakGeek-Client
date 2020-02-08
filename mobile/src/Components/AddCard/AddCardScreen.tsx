@@ -57,7 +57,7 @@ export class AddCardScreen extends React.Component {
     return (
       <View style={{ marginHorizontal: 20, marginVertical: 10 }}>
         <Text.Callout>Tên chủ thẻ</Text.Callout>
-        <TextInput placeholderTextColor={"rgba(0, 0, 0, 0.4)"} placeholder={"e.g. Nguyễn Văn A"} style={styles.textInput} />
+        <TextInput placeholderTextColor={Assets.Styles.TextPlaceholderColor} placeholder={"e.g. Nguyễn Văn A"} style={styles.textInput} />
       </View>
     );
   }
@@ -67,7 +67,7 @@ export class AddCardScreen extends React.Component {
       <View style={{ marginHorizontal: 20, marginVertical: 10 }}>
         <Text.Callout>Mã bưu điện</Text.Callout>
         <TextInput
-          placeholderTextColor={"rgba(0, 0, 0, 0.4)"}
+          placeholderTextColor={Assets.Styles.TextPlaceholderColor}
           placeholder={"e.g. 10000"}
           keyboardType={"number-pad"}
           style={styles.textInput}

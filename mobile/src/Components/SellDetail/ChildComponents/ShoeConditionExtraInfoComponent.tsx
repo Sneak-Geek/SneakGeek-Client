@@ -4,6 +4,7 @@
 
 import * as React from "react";
 import { Dimensions, StyleSheet, Switch, Text, TextInput, View } from "react-native";
+import * as Assets from "../../../Assets";
 
 interface IShoeConditionExtraInfoState {
   tainted: boolean; // ố vàng
@@ -110,7 +111,7 @@ export class ShoeConditionExtraInfoComponent extends React.PureComponent<
           <TextInput
             multiline={true}
             style={styles.input}
-            placeholderTextColor="rgba(0, 0, 0, 0.4)"
+            placeholderTextColor={Assets.Styles.TextPlaceholderColor}
             underlineColorAndroid="transparent"
             placeholder={"Các chi tiết khác của sản phẩm"}
             onChangeText={value => this.props.onSetShoeOtherDetail(value)}

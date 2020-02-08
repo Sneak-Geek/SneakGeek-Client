@@ -118,7 +118,7 @@ export class SignInScreen extends React.Component<ISignInScreenProps, ISignInScr
           style={styles.input}
           placeholder={"Email của bạn"}
           value={email}
-          placeholderTextColor={"rgba(0, 0, 0, 0.4)"}
+          placeholderTextColor={Assets.Styles.TextPlaceholderColor}
           onChangeText={email => this.setState({ email }, () => this.validateButton())}
           selectionColor={Assets.Styles.AppPrimaryColor}
           autoCapitalize="none"
@@ -136,7 +136,7 @@ export class SignInScreen extends React.Component<ISignInScreenProps, ISignInScr
           style={styles.input}
           placeholder="Mật khẩu"
           value={password}
-          placeholderTextColor={"rgba(0, 0, 0, 0.4)"}
+          placeholderTextColor={Assets.Styles.TextPlaceholderColor}
           onChangeText={password =>
             this.setState({ password }, () => this.validateButton())
           }

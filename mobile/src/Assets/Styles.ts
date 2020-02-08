@@ -18,5 +18,6 @@ export const Styles = {
   TextPrimaryColor: "#000000",
   TextSecondaryColor: "#FFFFFF",
   TextWarningColor: "#CBAB08",
-  ListItemBackgroundColor: "rgba(196,196,196, 0.1)"
+  ListItemBackgroundColor: "rgba(196,196,196, 0.1)",
+  TextPlaceholderColor: "rgba(0, 0, 0, 0.4)"
 };

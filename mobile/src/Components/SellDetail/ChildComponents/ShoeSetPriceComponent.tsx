@@ -16,6 +16,7 @@ import { StringUtils } from "../../../Utilities";
 import { CustomPicker, Text } from "../../../Shared/UI";
 import { container, Types } from "../../../Config/Inversify";
 import { IAppSettingsService } from "../../../Service/AppSettingsService";
+import * as Assets from "../../../Assets";
 
 interface State {
   isModalOpen: boolean;
@@ -57,7 +58,7 @@ export class ShoeSetPriceComponent extends React.Component<Props, State> {
         <Text.Headline style={{ textAlignVertical: "center" }}>Đặt giá bán</Text.Headline>
         <View style={styles.rowSeparatedContainer}>
           <TextInput
-            placeholderTextColor={"rgba(0, 0, 0, 0.4)"}
+            placeholderTextColor={Assets.Styles.TextPlaceholderColor}
             keyboardType={"numeric"}
             onChangeText={text =>
               this.setState({

@@ -158,7 +158,7 @@ export class OrderAuctionScreen extends React.Component<IOrderAuctionScreenProps
         >
           <Text style={styles.curency}>VND </Text>
           <TextInput
-            placeholderTextColor={"rgba(0, 0, 0, 0.4)"}
+            placeholderTextColor={Assets.Styles.TextPlaceholderColor}
             underlineColorAndroid="transparent"
             style={[styles.money, { padding: 0, minWidth: 70 }]}
             placeholder="0"

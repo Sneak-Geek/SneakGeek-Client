@@ -164,7 +164,7 @@ export class TabUserEditScreen extends React.Component<IUserEditScreenProps, IUs
           >
             <Text.Headline style={{ flex: 1, fontSize: 14, fontFamily: 'RobotoCondensed-Bold' }}>{item.title.toUpperCase()}</Text.Headline>
             <TextInput
-              placeholderTextColor={"rgba(0, 0, 0, 0.4)"}
+              placeholderTextColor={Assets.Styles.TextPlaceholderColor}
               value={
                 updatedInfo && item.value(updatedInfo)
                   ? (item.value(updatedInfo) as any).toString()

@@ -202,7 +202,7 @@ export class ShoeRequireScreen extends React.Component<IShoeRequireScreenProps, 
         </TouchableOpacity>
         <View>
           <TextInput
-            placeholderTextColor={"rgba(0, 0, 0, 0.4)"}
+            placeholderTextColor={Assets.Styles.TextPlaceholderColor}
             autoFocus
             placeholder="Tên giầy yêu cầu"
             style={[styles.name]}

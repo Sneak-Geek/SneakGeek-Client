@@ -151,7 +151,7 @@ export class ForgotPasswordScreen extends React.Component<IForgotPasswordScreenP
             style={styles.input}
             placeholder={"Email của bạn"}
             value={email}
-            placeholderTextColor={"rgba(0, 0, 0, 0.4)"}
+            placeholderTextColor={Assets.Styles.TextPlaceholderColor}
             onChangeText={email => this.setState({ email })}
             selectionColor={Assets.Styles.AppPrimaryColor}
             autoCapitalize={"none"}
@@ -185,7 +185,7 @@ export class ForgotPasswordScreen extends React.Component<IForgotPasswordScreenP
             style={styles.input}
             placeholder={"Mã code"}
             value={code}
-            placeholderTextColor={"rgba(0, 0, 0, 0.4)"}
+            placeholderTextColor={Assets.Styles.TextPlaceholderColor}
             onChangeText={code => this.setState({ code })}
             selectionColor={Assets.Styles.AppPrimaryColor}
             autoCapitalize={"none"}
@@ -218,7 +218,7 @@ export class ForgotPasswordScreen extends React.Component<IForgotPasswordScreenP
             style={styles.input}
             placeholder="Mật khẩu của bạn"
             value={password}
-            placeholderTextColor={"rgba(0, 0, 0, 0.4)"}
+            placeholderTextColor={Assets.Styles.TextPlaceholderColor}
             onChangeText={password => this.setState({ password })}
             selectionColor={Assets.Styles.AppPrimaryColor}
             autoCapitalize="none"
@@ -229,7 +229,7 @@ export class ForgotPasswordScreen extends React.Component<IForgotPasswordScreenP
             style={styles.input}
             placeholder="Điền lại mật khẩu"
             value={passwordConfirm}
-            placeholderTextColor={"rgba(0, 0, 0, 0.4)"}
+            placeholderTextColor={Assets.Styles.TextPlaceholderColor}
             onChangeText={passwordConfirm => this.setState({ passwordConfirm })}
             selectionColor={Assets.Styles.AppPrimaryColor}
             autoCapitalize="none"
