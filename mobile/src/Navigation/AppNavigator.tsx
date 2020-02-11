@@ -1,21 +1,16 @@
-//!
-//! Copyright (c) 2019 - SneakGeek. All rights reserved
-//!
+// !
+// ! Copyright (c) 2019 - SneakGeek. All rights reserved
+// !
 
 import * as React from "react";
-import { View, StyleSheet, StatusBar } from "react-native";
-import {
-  createReactNavigationReduxMiddleware,
-  createReduxContainer
-} from "react-navigation-redux-helpers";
+import { StatusBar, StyleSheet, View } from "react-native";
+import { createReactNavigationReduxMiddleware, createReduxContainer } from "react-navigation-redux-helpers";
 import AppNavigator from "./NavigationConfig";
 import { connect } from "react-redux";
 import { IAppState } from "../Store";
 import { NavigationState } from "react-navigation";
 
-export const navigationMiddleware = createReactNavigationReduxMiddleware(
-  state => (state as any).NavigationState
-);
+export const navigationMiddleware = createReactNavigationReduxMiddleware(state => (state as any).NavigationState);
 export const UnconnectedMainAppNavigator = createReduxContainer(AppNavigator);
 
 const mapDispatchToProps = (state: IAppState) => ({ navigation: state.NavigationState });
@@ -26,14 +21,11 @@ interface IMainAppNavigatorProps {
 }
 
 class MainAppNavigator extends React.Component<IMainAppNavigatorProps> {
-  render() {
+  public render() {
     return (
       <View style={StyleSheet.absoluteFill}>
-        <StatusBar barStyle={"dark-content"} />
-        <UnconnectedMainAppNavigator
-          dispatch={this.props.dispatch}
-          state={this.props.navigation}
-        />
+        <StatusBar barStyle={"default"} />
+        <UnconnectedMainAppNavigator dispatch={this.props.dispatch} state={this.props.navigation} />
       </View>
     );
   }

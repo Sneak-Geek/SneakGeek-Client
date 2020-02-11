@@ -1,6 +1,6 @@
-//!
-//! Copyright (c) 2019 - SneakGeek. All rights reserved
-//!
+// !
+// ! Copyright (c) 2019 - SneakGeek. All rights reserved
+// !
 
 import { connect } from "react-redux";
 import TabUserMainScreen from "./TabUserMainScreen";

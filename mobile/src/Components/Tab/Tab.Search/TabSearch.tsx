@@ -10,10 +10,11 @@ import {
   Modal,
   NativeSyntheticEvent,
   SafeAreaView,
+  StatusBar,
   StyleSheet,
   TouchableOpacity,
-  View,
-  StatusBar
+  TouchableWithoutFeedback,
+  View
 } from "react-native";
 import { Icon, Input } from "react-native-elements";
 import { BlurView } from "@react-native-community/blur";
@@ -24,7 +25,7 @@ import * as Assets from "../../../Assets";
 import { IAppSettingsService } from "../../../Service/AppSettingsService";
 import { container, Types } from "../../../Config/Inversify";
 import { TextStyle } from "../../../Shared/UI/Text";
-import { TouchableWithoutFeedback } from "react-native-gesture-handler";
+import { NetworkRequestState } from "../../../Shared/State";
 
 export interface ISearchScreenProps {
   shoes: Shoe[];
@@ -102,20 +103,18 @@ export default class TabSearch extends React.Component<ISearchScreenProps, ISear
 
   public /** override */ render(): React.ReactNode {
     const { searchResult } = this.props;
-    const isSearchReady = searchResult.shoes && searchResult.shoes.length > 0;
+    const isSearchReady = searchResult.shoes?.length! > 0;
+
     return (
       <SafeAreaView style={{ flex: 1 }}>
         <StatusBar hidden={false} barStyle={"default"} />
-        <View>
+        <View style={{ zIndex: 1000 }}>
           {this._renderSearchBar()}
           {this._renderKeywordHeaderAndFilter()}
           {this._renderHotKeywords()}
         </View>
-        {isSearchReady ? this._renderSearchResult() : this._renderTopShoes()}
-        <View style={styles.contentContainer}>
-          {this.state.searchFocus && searchResult.shoes && searchResult.shoes.length > 0 && this._renderSearchContent()}
-          {this.state.showModal && this._renderModal()}
-        </View>
+        {isSearchReady ? this._renderSearchResult() : this._renderEmptyResults()}
+        <View style={styles.contentContainer}>{this.state.showModal && this._renderModal()}</View>
       </SafeAreaView>
     );
   }
@@ -142,43 +141,44 @@ export default class TabSearch extends React.Component<ISearchScreenProps, ISear
 
   private _renderSearchBar(): React.ReactNode {
     return (
-      <Input
-        ref={refInput => (this._searchInputComponent = refInput)}
-        onFocus={_ => this.setState({ searchFocus: true })}
-        placeholder={"Tìm kiếm"}
-        value={this.state.searchKey}
-        leftIcon={<Icon type={"ionicon"} name={"md-search"} size={25} />}
-        leftIconContainerStyle={{ marginRight: 20 }}
-        rightIcon={
-          this.state.searchFocus && (
-            <Icon type={"ionicon"} name={"md-close"} size={25} onPress={this._toggleSearchFocus.bind(this)} />
-          )
-        }
-        labelStyle={TextStyle.body}
-        onChangeText={this._search.bind(this)}
-        onSubmitEditing={this._onEndEditing.bind(this)}
-      />
+      <View style={{ position: "relative", zIndex: 1000 }}>
+        <Input
+          ref={refInput => (this._searchInputComponent = refInput)}
+          onFocus={_ => this.setState({ searchFocus: true })}
+          placeholder={"Tìm kiếm"}
+          value={this.state.searchKey}
+          leftIcon={<Icon type={"ionicon"} name={"md-search"} size={25} />}
+          leftIconContainerStyle={{ marginRight: 20 }}
+          rightIcon={
+            this.state.searchFocus && (
+              <Icon type={"ionicon"} name={"md-close"} size={25} onPress={this._toggleSearchFocus.bind(this)} />
+            )
+          }
+          labelStyle={TextStyle.body}
+          onChangeText={this._search.bind(this)}
+          onSubmitEditing={this._onEndEditing.bind(this)}
+        />
+        {this.state.searchFocus && this._renderSearchContent()}
+      </View>
     );
   }
 
   private _renderSearchContent(): React.ReactNode {
     const { searchResult } = this.props;
     return (
-      <BlurView blurType={"light"} blurAmount={20} style={styles.searchContainer}>
-        {searchResult.shoes && (
-          <FlatList
-            onScroll={_ => Keyboard.dismiss()}
-            keyboardShouldPersistTaps={"always"}
-            data={searchResult.shoes}
-            keyExtractor={(shoe, _) => shoe.title}
-            renderItem={({ item }) => (
-              <TouchableOpacity onPress={() => this.props.onShoeClick(this.state.shouldOpenSell, item)}>
-                <Text.Callout style={styles.searchResult}>{item.title}</Text.Callout>
-              </TouchableOpacity>
-            )}
-            showsVerticalScrollIndicator={false}
-          />
-        )}
+      <BlurView blurType={"light"} blurAmount={80} style={styles.searchContainer}>
+        <FlatList
+          onScroll={_ => Keyboard.dismiss()}
+          keyboardShouldPersistTaps={"always"}
+          data={searchResult.shoes || []}
+          keyExtractor={(shoe, _) => shoe.title}
+          renderItem={({ item }) => (
+            <TouchableOpacity onPress={() => this.props.onShoeClick(this.state.shouldOpenSell, item)}>
+              <Text.Callout style={styles.searchResult}>{item.title}</Text.Callout>
+            </TouchableOpacity>
+          )}
+          showsVerticalScrollIndicator={false}
+        />
         <View
           style={{
             borderBottomWidth: 1,
@@ -264,18 +264,15 @@ export default class TabSearch extends React.Component<ISearchScreenProps, ISear
     this._toggleSearchFocus(false);
   }
 
-  private _renderTopShoes(): React.ReactNode {
-    const { onShoeClick, shoes } = this.props;
-    const topShoes: Shoe[] = shoes.length > 0 ? shoes.slice(0, 10) : [];
-
+  private _renderEmptyResults(): React.ReactNode {
+    const text =
+      this.props.searchResult.state === NetworkRequestState.NOT_STARTED
+        ? "Hãy gõ tên hoặc hãng giày để tìm kiếm"
+        : "Không tìm thấy kết quả nào";
     return (
-      <FlatList
-        data={topShoes}
-        keyExtractor={(_, index) => index.toString()}
-        renderItem={({ item }) => <ShoeCard shoe={item} onPress={() => onShoeClick(this.state.shouldOpenSell, item)} />}
-        numColumns={2}
-        style={{ marginTop: 10 }}
-      />
+      <View style={{ flex: 1, alignItems: "center", justifyContent: "center" }}>
+        <Text.Subhead>{text}</Text.Subhead>
+      </View>
     );
   }
 
@@ -290,7 +287,7 @@ export default class TabSearch extends React.Component<ISearchScreenProps, ISear
           <ShoeCard shoe={item} onPress={() => this.props.onShoeClick(this.state.shouldOpenSell, item)} />
         )}
         numColumns={2}
-        style={{ marginTop: 10 }}
+        style={{ marginTop: 10, marginBottom: 15 }}
       />
     );
   }
@@ -343,7 +340,7 @@ export default class TabSearch extends React.Component<ISearchScreenProps, ISear
         <View key={index}>
           <Text.Title1 style={{ color: "white", fontSize: 14 }}>{item.title}</Text.Title1>
           <View style={{ flexDirection: "row", paddingTop: 20, paddingBottom: 37 }}>
-            <ScrollView style={{ flex: 1 }} horizontal showsHorizontalScrollIndicator={false}>
+            <ScrollView style={{ flex: 1 }} horizontal={true} showsHorizontalScrollIndicator={false}>
               {item.data &&
                 item.data.map((itemC, indexC) => {
                   return (
@@ -426,7 +423,7 @@ export default class TabSearch extends React.Component<ISearchScreenProps, ISear
             }}
           >
             <View style={{ flexDirection: "row", flex: 1 }}>
-              <ScrollView horizontal showsHorizontalScrollIndicator={false}>
+              <ScrollView horizontal={true} showsHorizontalScrollIndicator={false}>
                 {this.state.brand.length > 0 &&
                   this.state.brand.map((item, index) => {
                     return (
@@ -502,7 +499,8 @@ export default class TabSearch extends React.Component<ISearchScreenProps, ISear
 const styles = StyleSheet.create({
   contentContainer: {
     position: "relative",
-    flex: 1
+    flex: 1,
+    zIndex: 1000
   },
 
   keywordContainer: {
@@ -515,10 +513,11 @@ const styles = StyleSheet.create({
 
   searchContainer: {
     position: "absolute",
-    top: 0,
+    top: 50,
     left: 0,
     right: 0,
-    zIndex: 100,
+    zIndex: 1000,
+    backgroundColor: "white",
     paddingTop: 20
   },
 

@@ -83,14 +83,16 @@ export class TabHomeMainScreen extends React.Component<ITabHomeMainScreenProps, 
       <SafeAreaView style={styles.container}>
         <StatusBar hidden={false} barStyle={"light-content"} />
         <ScrollView showsVerticalScrollIndicator={false}>
-          {this._renderTrendingShoes()}
-          {this._renderUserCustomizeFeed()}
-          {this._renderBanner(Icons.Banner, "Nike CNY Collections", "white")}
-          {this._renderByBrand("Nike", false)}
-          {this._renderShoeChart()}
-          {this._renderByBrand("adidas", false)}
-          {this._renderBanner(Icons.AdBanner, "Mua ngay tại SneakGeek", "black")}
-          {this._renderByBrand("Jordan", false)}
+          <View style={{ flex: 1, marginBottom: 15 }}>
+            {this._renderTrendingShoes()}
+            {this._renderUserCustomizeFeed()}
+            {this._renderBanner(Icons.Banner, 320)}
+            {this._renderByBrand("Nike", false)}
+            {this._renderShoeChart()}
+            {this._renderByBrand("adidas", false)}
+            {this._renderBanner(Icons.AdBanner, 600)}
+            {this._renderByBrand("Jordan", false)}
+          </View>
         </ScrollView>
       </SafeAreaView>
     );
@@ -180,6 +182,7 @@ export class TabHomeMainScreen extends React.Component<ITabHomeMainScreenProps, 
           <Text.Title2 style={styles.subtitle}>{brandName} - Nổi bật</Text.Title2>
         </TouchableOpacity>
         <FlatList
+          style={{ marginTop: 10 }}
           horizontal={true}
           data={shoesData}
           keyExtractor={(shoe: Shoe, _: number) => shoe.title}
@@ -191,11 +194,10 @@ export class TabHomeMainScreen extends React.Component<ITabHomeMainScreenProps, 
     );
   }
 
-  private _renderBanner(imgSource: number, title: string, color: string) {
+  private _renderBanner(imgSource: number, height: number) {
     return (
       <View style={{ marginVertical: 20, position: "relative" }}>
-        <Image source={imgSource} style={{ width: "100%", height: 320 }} resizeMode={"cover"} />
-        <Text.Title2 style={{ position: "absolute", bottom: 10, left: 20, color }}>{title}</Text.Title2>
+        <Image source={imgSource} style={{ width: "100%", height }} resizeMode={"contain"} />
       </View>
     );
   }
@@ -222,7 +224,7 @@ export class TabHomeMainScreen extends React.Component<ITabHomeMainScreenProps, 
           initialPage={0}
           scrollEnabled={true}
           showPageIndicator={false}
-          style={{ flex: 1, width: "100%", marginVertical: 20, minHeight: 300 }}
+          style={{ flex: 1, width: "100%", marginVertical: 20, minHeight: 400 }}
           pageMargin={10}
           orientation={"horizontal"}
           transitionStyle={"scroll"}
@@ -258,29 +260,28 @@ export class TabHomeMainScreen extends React.Component<ITabHomeMainScreenProps, 
         }}
       >
         {data.map((s, i) => (
-          <View
-            key={i}
-            style={{ flexDirection: "row", alignItems: "center", marginVertical: 10, marginHorizontal: 20 }}
-          >
-            <View
-              style={{
-                width: 40,
-                height: 40,
-                borderRadius: 20,
-                backgroundColor: Assets.Styles.AppAccentColor,
-                alignItems: "center",
-                justifyContent: "center"
-              }}
-            >
-              <Text.Title2 style={{ color: "white" }}>{i + pageNum * 5 + 1}</Text.Title2>
+          <TouchableWithoutFeedback key={i} onPress={() => this.props.navigateToShoeDetail(s)}>
+            <View style={{ flexDirection: "row", alignItems: "center", marginVertical: 10, marginHorizontal: 20 }}>
+              <View
+                style={{
+                  width: 40,
+                  height: 40,
+                  borderRadius: 20,
+                  backgroundColor: Assets.Styles.AppPrimaryColor,
+                  alignItems: "center",
+                  justifyContent: "center"
+                }}
+              >
+                <Text.Title2 style={{ color: "white" }}>{i + pageNum * 5 + 1}</Text.Title2>
+              </View>
+              <Image source={{ uri: s.imageUrl }} style={{ width: 120, aspectRatio: 2 }} resizeMode={"contain"} />
+              <View style={{ flex: 1, flexWrap: "wrap", justifyContent: "flex-start", alignItems: "flex-start" }}>
+                <Text.Subhead numberOfLines={2} ellipsizeMode={"tail"}>
+                  {s.title}
+                </Text.Subhead>
+              </View>
             </View>
-            <Image source={{ uri: s.imageUrl }} style={{ width: 90, aspectRatio: 2 }} resizeMode={"contain"} />
-            <View style={{ flex: 1, flexWrap: "wrap", justifyContent: "flex-start", alignItems: "flex-start" }}>
-              <Text.Subhead numberOfLines={2} ellipsizeMode={"tail"}>
-                {s.title}
-              </Text.Subhead>
-            </View>
-          </View>
+          </TouchableWithoutFeedback>
         ))}
       </View>
     );

@@ -409,7 +409,7 @@
 			baseConfigurationReference = 5AA1BEC63C3AA991FCE0EE20 /* Pods-client.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				CURRENT_PROJECT_VERSION = 2;
+				CURRENT_PROJECT_VERSION = 1;
 				DEAD_CODE_STRIPPING = NO;
 				DEVELOPMENT_TEAM = VVPX9A83PB;
 				FRAMEWORK_SEARCH_PATHS = (
@@ -418,7 +418,7 @@
 				);
 				INFOPLIST_FILE = client/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				MARKETING_VERSION = 0.2001.4;
+				MARKETING_VERSION = 0.2002.1;
 				OTHER_LDFLAGS = (
 					"$(inherited)",
 					"-ObjC",
@@ -435,7 +435,7 @@
 			baseConfigurationReference = AD423D182378C0F0B0C8128B /* Pods-client.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				CURRENT_PROJECT_VERSION = 2;
+				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = VVPX9A83PB;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
@@ -443,7 +443,7 @@
 				);
 				INFOPLIST_FILE = client/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				MARKETING_VERSION = 0.2001.4;
+				MARKETING_VERSION = 0.2002.1;
 				OTHER_LDFLAGS = (
 					"$(inherited)",
 					"-ObjC",

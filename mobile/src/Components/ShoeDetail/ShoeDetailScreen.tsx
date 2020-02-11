@@ -13,7 +13,8 @@ import {
   TextStyle,
   TouchableOpacity,
   View,
-  ViewStyle
+  ViewStyle,
+  StatusBar
 } from "react-native";
 import { Account, getLatestPrice, Profile, Shoe } from "../../Shared/Model";
 import { NavigationRoute, NavigationScreenProp, NavigationScreenProps, StackActions } from "react-navigation";
@@ -30,6 +31,7 @@ import { NetworkRequestState } from "../../Shared/State";
 import { FeatureGates } from "../../Config/FeatureGates";
 import { Styles } from "../../Assets";
 import { TextStyle as AssetsTextStyle } from "../../Shared/UI/Text";
+import { TouchableWithoutFeedback } from "react-native-gesture-handler";
 
 export interface IProps {
   navigation: NavigationScreenProp<NavigationRoute>;
@@ -63,13 +65,12 @@ export class ShoeDetailScreen extends React.Component<IProps, IState> {
     title: "Chi tiết sản phẩm",
     headerTitleStyle: AssetsTextStyle.body,
     headerLeft: (
-      <Icon
-        type={"ionicon"}
-        name={"ios-arrow-back"}
-        size={28}
-        containerStyle={{ marginLeft: 10 }}
+      <TouchableWithoutFeedback
+        hitSlop={{ top: 20, bottom: 20, left: 20, right: 20 }}
         onPress={() => transitionProp.navigation.dispatch(StackActions.pop({ n: 1 }))}
-      />
+      >
+        <Icon type={"ionicon"} name={"ios-arrow-back"} size={30} containerStyle={{ marginLeft: 10 }} />
+      </TouchableWithoutFeedback>
     ),
     headerRight: <Icon type={"ionicon"} name={"ios-share"} size={28} containerStyle={{ marginRight: 10 }} />
   });
@@ -107,6 +108,7 @@ export class ShoeDetailScreen extends React.Component<IProps, IState> {
           backgroundColor: Assets.Styles.AppSecondaryColorBlurred
         }}
       >
+        <StatusBar hidden={false} barStyle={"default"} />
         <View style={[StyleSheet.absoluteFill, { backgroundColor: Styles.AppAccentColor }]} />
         <View style={{ flex: 1, backgroundColor: "white" }}>
           <ScrollView style={{ flex: 1 }} showsVerticalScrollIndicator={false}>

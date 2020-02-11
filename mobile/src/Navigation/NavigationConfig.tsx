@@ -43,7 +43,6 @@ import { BuySelectionScreenContainer } from "../Components/BuySelection/BuySelec
 const AuthenticationStack = createStackNavigator(
   {
     [`${RouteNames.Login}`]: { screen: LoginScreenContainer },
-    [`${RouteNames.UserKind}`]: { screen: UserKindScreenContainer },
     [`${RouteNames.EmailSignUp}`]: { screen: SignUpScreenContainer },
     [`${RouteNames.EmailSignIn}`]: { screen: SignInScreenContainer },
     [`${RouteNames.ForgotPassword}`]: { screen: ForgotPasswordScreenContainer }
@@ -174,7 +173,8 @@ export const AppNavigator = createStackNavigator(
     [`${RouteNames.OrderAuction}`]: { screen: OrderAuctionScreenContainer },
     [`${RouteNames.Payment}`]: { screen: PaymentScreenContainer },
     [`${RouteNames.NotiSetting}`]: { screen: NotiSettingScreenContainer },
-    [`${RouteNames.Share}`]: { screen: ShareScreenContainer }
+    [`${RouteNames.Share}`]: { screen: ShareScreenContainer },
+    [`${RouteNames.UserKind}`]: { screen: UserKindScreenContainer }
   },
   {
     initialRouteName: RouteNames.Splash,

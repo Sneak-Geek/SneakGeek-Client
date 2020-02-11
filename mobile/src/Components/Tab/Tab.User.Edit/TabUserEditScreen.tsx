@@ -3,13 +3,7 @@
 //!
 
 import * as React from "react";
-import {
-  ScrollView,
-  StackActions,
-  NavigationScreenProp,
-  NavigationRoute,
-  BottomTabBarProps
-} from "react-navigation";
+import { ScrollView, StackActions, NavigationScreenProp, NavigationRoute, BottomTabBarProps } from "react-navigation";
 import { View, StyleSheet, TextInput, SafeAreaView } from "react-native";
 import { Text } from "../../../Shared/UI";
 import { Icon } from "react-native-elements";
@@ -17,14 +11,14 @@ import { Profile } from "../../../Shared/Model";
 import * as Assets from "../../../Assets";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import { NetworkRequestState } from "../../../Shared/State";
+import KeyboardSpacer from "react-native-keyboard-spacer";
 
 const optionsList = [
   {
     title: "Họ",
     placeholder: "Họ",
-    value: (profile: Profile) =>
-      profile.userProvidedName ? profile.userProvidedName.lastName : "",
-      // "trung",
+    value: (profile: Profile) => (profile.userProvidedName ? profile.userProvidedName.lastName : ""),
+    // "trung",
     onUpdate: (value: string, profile: Profile) => {
       return Object.assign(profile, {
         userProvidedName: {
@@ -38,8 +32,7 @@ const optionsList = [
   {
     title: "Tên",
     placeholder: "Tên",
-    value: (profile: Profile) =>
-      profile.userProvidedName ? profile.userProvidedName.firstName : "",
+    value: (profile: Profile) => (profile.userProvidedName ? profile.userProvidedName.firstName : ""),
     onUpdate: (value: string, profile: Profile) => {
       return Object.assign(profile, {
         userProvidedName: {
@@ -109,7 +102,7 @@ export interface IUserEditState {
 }
 
 export class TabUserEditScreen extends React.Component<IUserEditScreenProps, IUserEditState> {
-  static navigationOptions = (navigationConfig: BottomTabBarProps) => ({
+  public static navigationOptions = (navigationConfig: BottomTabBarProps) => ({
     title: "Thông tin cá nhân",
     headerTitleStyle: Text.TextStyle.headline,
     headerLeft: (
@@ -135,6 +128,9 @@ export class TabUserEditScreen extends React.Component<IUserEditScreenProps, IUs
     return (
       <SafeAreaView style={{ flex: 1 }}>
         <ScrollView showsVerticalScrollIndicator={false}>{this._renderSettings()}</ScrollView>
+        {Assets.Device.IS_IOS && (
+          <KeyboardSpacer topSpacing={Assets.Device.isIphoneX ? -Assets.Device.bottomSpace : 0} />
+        )}
         {this._renderUpdateButton()}
       </SafeAreaView>
     );
@@ -153,24 +149,13 @@ export class TabUserEditScreen extends React.Component<IUserEditScreenProps, IUs
   private _renderSettings() {
     const { updatedInfo } = this.state;
     return (
-      <View style={{paddingTop: 34}}>
+      <View style={{ paddingTop: 34 }}>
         {optionsList.map((item, i) => (
-          <View
-            key={i}
-            style={[
-              styles.listItem,
-              item.hasMarginBottom ? styles.listItemStyleWithMarginBottom : {}
-            ]}
-          >
-            <Text.Headline style={{ flex: 1, fontSize: 14, fontFamily: 'RobotoCondensed-Bold' }}>{item.title.toUpperCase()}</Text.Headline>
+          <View key={i} style={[styles.listItem, item.hasMarginBottom ? styles.listItemStyleWithMarginBottom : {}]}>
+            <Text.Headline style={{ flex: 1 }}>{item.title.toUpperCase()}</Text.Headline>
             <TextInput
-              value={
-                updatedInfo && item.value(updatedInfo)
-                  ? (item.value(updatedInfo) as any).toString()
-                  : ""
-              }
+              value={updatedInfo && item.value(updatedInfo) ? (item.value(updatedInfo) as any).toString() : ""}
               placeholder={item.placeholder}
-              // value="Trung"
               onChangeText={value => {
                 if (updatedInfo) {
                   const newProfile = item.onUpdate(value, updatedInfo);
@@ -198,9 +183,7 @@ export class TabUserEditScreen extends React.Component<IUserEditScreenProps, IUs
             this.props.updateProfile(newProfile);
           }}
         >
-          <Text.Body style={{ color: Assets.Styles.TextSecondaryColor }}>
-            Xác nhận
-          </Text.Body>
+          <Text.Body style={{ color: Assets.Styles.TextSecondaryColor }}>Xác nhận</Text.Body>
         </TouchableOpacity>
       </View>
     );
@@ -285,6 +268,6 @@ const styles = StyleSheet.create({
     fontSize: 17,
     color: Assets.Styles.AppPrimaryColor,
     flex: 2,
-    fontFamily: 'RobotoCondensed-Regular',
+    fontFamily: "RobotoCondensed-Regular"
   }
 });

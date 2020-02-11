@@ -33,5 +33,6 @@ export const Icons = {
   Close: require("../../../Icons/close.png"),
   Banner: require("../../../Icons/banner.jpg"),
   AppIcon: require("../../../Icons/AppIcon.png"),
-  AdBanner: require("../../../Icons/AdBanner.jpg")
+  AdBanner: require("../../../Icons/AdBanner.jpg"),
+  DefaultProfile: require("../../../Icons/DefaultProfile.jpg")
 };

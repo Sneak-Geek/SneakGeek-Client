@@ -1,9 +1,5 @@
-import { Platform, Dimensions } from "react-native";
-import {
-  isIphoneX,
-  getStatusBarHeight,
-  getBottomSpace
-} from "react-native-iphone-x-helper";
+import { Dimensions, Platform } from "react-native";
+import { getBottomSpace, getStatusBarHeight, isIphoneX } from "react-native-iphone-x-helper";
 
 export const Device = {
   IS_IOS: Platform.OS === "ios",
