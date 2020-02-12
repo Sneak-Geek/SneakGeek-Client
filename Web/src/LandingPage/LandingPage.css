@@ -1,0 +1,107 @@
+
+/* Header */
+.nav-adjust{
+    margin-top: 20px;
+    display: flex;
+    justify-content: space-between !important;
+    margin-bottom: 30px;
+    padding: 0px !important;
+}
+
+.nav-text{
+    color: whitesmoke !important;
+    font-size: 1.1em !important;
+    width: 29.4%;
+    text-align: center;
+}
+
+.nav-text:hover{
+    color:turquoise !important;
+}
+
+/* Body Component 1  */
+.first-component{
+    margin-bottom: 90px;
+    display: flex;
+    justify-content: space-between;
+}
+
+.sneak-geek-text{
+    padding-top: 90px;
+    font-size: 37px;
+}
+
+.nen-tang-text{
+    margin-top: 14px;
+    text-align: left;
+    padding-right: 30%;
+}
+
+.android{
+    margin-top:25px;
+    text-align: center;
+}
+
+.android img {
+    margin: auto;
+    height: 76px
+}
+
+.tao{
+    margin-top:15px;
+    text-align: center;
+}
+
+.tao img{
+    margin: auto;
+    height: 75px;
+    margin-bottom:30px;
+}
+
+/* Body Component 2  */
+.second-component{
+    margin-bottom: 90px;
+    display: flex;
+    justify-content: space-between;
+}
+
+.tim-kiem-text{
+    font-size: 37px;
+    display: flex;
+    justify-content: flex-end;
+}
+
+.hon-text{
+    margin-top: 14px;
+    text-align: right;
+    padding-left: 30%;
+}
+
+.p2-img{
+    text-align: center;
+}
+
+.p2-img{
+    margin: auto;
+    text-align: center;
+    padding-left: 14%;
+}
+
+/* Body Component 3 */
+.third-component{
+    display: flex;
+    justify-content: space-between;
+    border-bottom: 90px;
+}
+
+.mua-ban-text{
+    font-size: 37px;
+}
+
+.mua-ban-small-text{
+    margin-top: 14px;
+    padding-right: 35%;
+    text-align: left;
+}
+
+

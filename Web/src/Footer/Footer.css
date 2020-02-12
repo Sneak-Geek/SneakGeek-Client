@@ -1,0 +1,31 @@
+.line{
+    display: flex;
+    justify-content: center;
+    border-top: 4px solid whitesmoke;
+    width: 100%;
+    padding:0;
+    margin-top: 90px;
+    margin-bottom: 30px;
+}
+
+.icon-img {
+    margin: 20px;
+}
+ .icon-img img{
+     height: 35px;
+ }
+
+.copy-rights img{
+    height: 10px;
+    margin:0;
+    padding: 0;
+}
+
+.lon{
+    position: relative;
+}
+.copy-rights {
+    position: absolute;
+    right:10px;
+    top: 20px;
+}
