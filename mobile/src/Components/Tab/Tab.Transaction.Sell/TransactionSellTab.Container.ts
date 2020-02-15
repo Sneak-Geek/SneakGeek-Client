@@ -8,6 +8,7 @@ import { TransactionSellTab } from "./TransactionSellTab";
 import { getSellHistory } from "../../../Actions";
 import { RouteNames } from "../../../Navigation";
 import { NavigationActions } from "react-navigation";
+import { SellOrder } from "../../../Shared/Model";
 
 const mapStateToProps = (state: IAppState) => ({
   sellHistoryState: state.TransactionState.sellOrderHistoryState
@@ -22,6 +23,14 @@ const mapDispatchToProps = (dispatch: (param: any) => void) => ({
     const navConfig = {
       routeName: RouteNames.Tabs.SearchTab,
       params: { isForSell: true }
+    };
+    dispatch(NavigationActions.navigate(navConfig));
+  },
+
+  navigateToDetailSell: (sellOrder: SellOrder) => {
+    const navConfig = {
+      routeName: RouteNames.OrderSell,
+      params: { sellOrder }
     };
     dispatch(NavigationActions.navigate(navConfig));
   },

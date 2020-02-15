@@ -1,16 +1,20 @@
 import * as React from "react";
-import { View, StyleSheet, SafeAreaView, Image, Text, ScrollView } from "react-native";
-import { StackActions, NavigationScreenProps } from "react-navigation";
+import { Image, SafeAreaView, ScrollView, StyleSheet, Text, View } from "react-native";
+import { NavigationRoute, NavigationScreenProp, NavigationScreenProps, StackActions } from "react-navigation";
 import { Icon } from "react-native-elements";
 import * as Assets from "../../Assets";
 import Dash from "react-native-dash";
+import { SellOrder } from "../../Shared/Model";
 
+export interface ITrackingSellScreenProps {
+  navigation: NavigationScreenProp<NavigationRoute>;
+}
 interface ITrackingSellScreenState {
   step: number;
 }
 
-export class TrackingSellScreen extends React.Component<{}, ITrackingSellScreenState> {
-  static navigationOptions = (transitionProp: NavigationScreenProps) => ({
+export class TrackingSellScreen extends React.Component<ITrackingSellScreenProps, ITrackingSellScreenState> {
+  public static navigationOptions = (transitionProp: NavigationScreenProps) => ({
     title: "Bán sản phẩm",
     headerLeft: (
       <Icon
@@ -23,11 +27,18 @@ export class TrackingSellScreen extends React.Component<{}, ITrackingSellScreenS
     )
   });
 
+  private sellOrder: SellOrder;
+
   public constructor(props: any) {
     super(props);
+    this.sellOrder = this.props.navigation.getParam("sellOrder");
     this.state = {
       step: 1
     };
+  }
+
+  public componentDidMount() {
+    console.log("55555555", this.props.navigation.getParam("sellOrder")
   }
 
   public render() {
@@ -45,22 +56,22 @@ export class TrackingSellScreen extends React.Component<{}, ITrackingSellScreenS
   }
 
   private renderShoe() {
+    const shoe = this.sellOrder.shoe?.[0];
     return (
       <View style={styles.topContentContainer}>
         <View style={styles.imgContainer}>
           <Image
             style={styles.image}
             source={{
-              uri:
-                "https://images.timberland.com/is/image/timberland/A228P001-HERO?$PDP-FULL-IMAGE$"
+              uri: shoe!.imageUrl
             }}
           />
         </View>
         <View style={styles.titleContainer}>
           <Text style={styles.title} numberOfLines={2} ellipsizeMode="tail">
-            PHARELL X BILLIONAIRE BOYS CLUB X NMD HUMAN RACE TRAIL BLUEE PLAID
+          {shoe!.title}
           </Text>
-          <Text style={[styles.title, { fontSize: 16 }]}>SKU: EF3326</Text>
+          <Text style={[styles.title, { fontSize: 16 }]}>SKU: {this.sellOrder.shoeId}</Text>
         </View>
       </View>
     );
@@ -71,7 +82,7 @@ export class TrackingSellScreen extends React.Component<{}, ITrackingSellScreenS
       <View style={styles.middleContainer}>
         <View style={styles.row}>
           <Text style={styles.subTitle}>Mã đơn hàng</Text>
-          <Text style={styles.descrip}>4Z7L89KJ</Text>
+          <Text style={styles.descrip}>{this.sellOrder._id}</Text>
         </View>
         <View style={styles.row}>
           <Text style={styles.subTitle}>Ngày hoàn tất giao dịch dự kiến:</Text>
@@ -356,7 +367,7 @@ const styles = StyleSheet.create({
   image: {
     width: 78,
     height: 78,
-    resizeMode: "cover"
+    resizeMode: "contain"
   },
   titleContainer: {
     flex: 1,

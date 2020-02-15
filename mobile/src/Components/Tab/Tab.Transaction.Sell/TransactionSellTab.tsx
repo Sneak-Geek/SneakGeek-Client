@@ -4,7 +4,7 @@
 
 import * as React from "react";
 import { SellOrder } from "../../../Shared/Model";
-import { ActivityIndicator, FlatList, Image, StyleSheet, View, RefreshControl } from "react-native";
+import { ActivityIndicator, FlatList, Image, RefreshControl, StyleSheet, TouchableOpacity, View } from "react-native";
 import humanize from "humanize-duration";
 import { Text } from "../../../Shared/UI";
 import { Styles } from "../../../Assets";
@@ -18,6 +18,7 @@ export interface ITransactionSellTabProps {
   // dispatch props
   getSellHistory: () => void;
   navigateToSearch: () => void;
+  navigateToDetailSell: (sellOrder: SellOrder) => void;
   onShoeClick: () => void;
 }
 
@@ -60,7 +61,6 @@ export class TransactionSellTab extends React.Component<ITransactionSellTabProps
     const { sellHistoryState } = this.props;
     const sellHistory = sellHistoryState?.sellHistory || [];
     const state = sellHistoryState?.state;
-
     if (state === NetworkRequestState.REQUESTING) {
       return <ActivityIndicator />;
     } else if (state === NetworkRequestState.FAILED) {
@@ -99,9 +99,8 @@ export class TransactionSellTab extends React.Component<ITransactionSellTabProps
     )[0].price;
     const rawTime = this.state.currentTimeInSeconds - new Date(sellOrder.createdAt!).getTime();
     const timepassed = humanize(rawTime, { language: "vi", largest: 1, round: true });
-
     return (
-      <View>
+      <TouchableOpacity onPress={() => this.props.navigateToDetailSell(sellOrder)}>
         <View style={styles.transactionItemContainer}>
           <Image source={{ uri: shoe!.imageUrl }} style={{ width: 90, height: 90 }} resizeMode={"contain"} />
           <View style={{ flex: 3, marginLeft: 25 }}>
@@ -131,7 +130,7 @@ export class TransactionSellTab extends React.Component<ITransactionSellTabProps
           </View>
         </View>
         <View style={styles.listDivider} />
-      </View>
+      </TouchableOpacity>
     );
   }
 }

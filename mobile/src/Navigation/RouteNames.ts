@@ -25,6 +25,7 @@ export const RouteNames = {
   TrackingSell: "TrackingSell",
   OrderAuction: "OrderAuction",
   OrderSell: "OrderSell",
+  EditOrder: "EditOrder",
   Payment: "Payment",
   NotiSetting: "NotiSetting",
   Share: "Share",
