@@ -3,67 +3,76 @@
 //!
 
 import React from "react";
-import { HashRouter, Route } from "react-router-dom";
-import { Navbar, Nav, NavItem, Row } from "react-bootstrap";
-import "./home.scss";
-import { ProductScreen } from "../ProductScreen/ProductScreen";
+import { Sticky, Menu, Icon, Sidebar, Segment, Header, Image } from "semantic-ui-react";
 
-export class HomeScreen extends React.Component<{}> {
-  render() {
+type State = {
+  isMenuVisible: boolean;
+};
+
+export class HomeScreen extends React.Component<{}, State> {
+  public constructor(props: any) {
+    super(props);
+    this.state = {
+      isMenuVisible: true
+    };
+  }
+
+  public render(): JSX.Element {
     return (
-      <div className="dashboard-container">
-        {this._renderTopNav()}
-        <Row>
-          {this._renderSideNav()}
-          {this._renderMainRouter()}
-        </Row>
+      <div style={{ height: "100vh", display: "flex", flexFlow: "column nowrap" }}>
+        <Sticky>
+          <Menu attached={"top"} tabular={true}>
+            <Menu.Item onClick={() => this.setState({ isMenuVisible: !this.state.isMenuVisible })}>
+              <Icon name={"sidebar"} />
+            </Menu.Item>
+          </Menu>
+        </Sticky>
+        <Sidebar.Pushable as={Segment}>
+          {this._renderSideMenu()}
+          {this._renderMainContent()}
+        </Sidebar.Pushable>
       </div>
     );
   }
 
-  private _renderTopNav(): JSX.Element {
+  private _renderSideMenu(): JSX.Element {
     return (
-      <Navbar collapseOnSelect expand="lg" bg="light">
-        <Navbar.Brand>
-          <img src="/Logo.svg" className="d-inline-block align-top" />
-        </Navbar.Brand>
-      </Navbar>
+      <Sidebar
+        as={Menu}
+        animation={"push"}
+        inverted={false}
+        vertical={true}
+        visible={this.state.isMenuVisible}
+        width={"wide"}>
+        <Menu.Item link>
+          Quản lý catalog
+          <Icon name={"clipboard list"} />
+        </Menu.Item>
+        <Menu.Item>
+          <Menu.Header>Quản lý sản phẩm</Menu.Header>
+          <Menu.Menu>
+            <Menu.Item link>
+              <Icon name="shopping cart" />
+              Sản phẩm từ snkg
+            </Menu.Item>
+            <Menu.Item>
+              <Icon name="tasks" />
+              Yêu cầu từ khách hàng
+            </Menu.Item>
+          </Menu.Menu>
+        </Menu.Item>
+      </Sidebar>
     );
   }
 
-  private _renderSideNav() {
-    const navs = [
-      { name: "Sản phẩm", icon: "glyphicon glyphicon-th-list", href: "#/products" },
-      { name: "Bài viết", icon: "glyphicon glyphicon-file", href: "#/posts" },
-      { name: "Tài khoản", icon: "glyphicon glyphicon-user", href: "#/account" }
-    ];
+  private _renderMainContent(): JSX.Element {
     return (
-      <div className="side-nav">
-        <Nav className="flex-column" defaultActiveKey="#/products">
-          {navs.map((nav, idx) => (
-            <div className={"side-nav-item"} key={idx}>
-              <NavItem className="row jutify-content-center align-self-start">
-                <span className={`${nav.icon} side-nav-icon`}></span>
-                <a href={nav.href}>
-                  <span>{nav.name}</span>
-                </a>
-              </NavItem>
-            </div>
-          ))}
-        </Nav>
-      </div>
-    );
-  }
-
-  private _renderMainRouter() {
-    return (
-      <HashRouter basename="" hashType={"noslash"}>
-        <div className={"container"}>
-          <Route path="/products" component={ProductScreen} />
-          <Route path="/posts" component={ProductScreen} />
-          <Route path="/account" component={ProductScreen} />
-        </div>
-      </HashRouter>
+      <Sidebar.Pusher>
+        <Segment basic>
+          <Header as="h3">Application Content</Header>
+          <Image src="https://react.semantic-ui.com/images/wireframe/paragraph.png" />
+        </Segment>
+      </Sidebar.Pusher>
     );
   }
 }

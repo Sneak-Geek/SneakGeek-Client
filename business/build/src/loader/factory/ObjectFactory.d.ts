@@ -1,7 +1,7 @@
 declare class Factory {
     private static _instance;
     private factory;
-    static readonly instance: Factory;
+    static get instance(): Factory;
     register<T>(name: string, objectInstance: T): void;
     getObjectInstance<T>(name: string): T;
 }

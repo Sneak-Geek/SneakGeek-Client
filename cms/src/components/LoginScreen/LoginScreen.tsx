@@ -4,21 +4,34 @@
 
 import React from "react";
 import "./style.css";
-import Form from "react-bootstrap/Form";
-import { FaFacebookF, FaGoogle } from "react-icons/fa";
+import { Form, Input, Button } from "semantic-ui-react";
+import { History } from "history";
 
 type Props = {
-  facebookAuth: () => void;
+  history: History;
+  emailLogin: (email: string, password: string) => void;
 };
 
-export default class LoginScreen extends React.Component<Props> {
+type State = {
+  email: string;
+  password: string;
+};
+
+export default class LoginScreen extends React.Component<Props, State> {
+  public constructor(props: Props) {
+    super(props);
+
+    this.state = {
+      email: "",
+      password: ""
+    };
+  }
   public /** override */ render(): JSX.Element {
     return (
-      <div className="centered">
+      <div className={"centered"}>
         <p>Đăng nhập qua</p>
         {this._renderFacebookAuth()}
         {this._renderGoogleAuth()}
-        <hr className="horizontal-divider" />
         {this._renderEmailBasedAuth()}
       </div>
     );
@@ -26,19 +39,19 @@ export default class LoginScreen extends React.Component<Props> {
 
   private _renderFacebookAuth(): JSX.Element {
     return (
-      <button className="social-button facebook" onClick={this._facebookAuth.bind(this)}>
-        <FaFacebookF className="social-icon" />
-        <p className="social-button-title">Tài khoản Facebook</p>
-      </button>
+      <Button className={"ui facebook button"} onClick={() => this._facebookAuth()}>
+        <i className={"facebook icon"}></i>
+        Facebook
+      </Button>
     );
   }
 
   private _renderGoogleAuth(): JSX.Element {
     return (
-      <button className="social-button google" onClick={this._googleAuth.bind(this)}>
-        <FaGoogle className="social-icon" />
-        <p className="social-button-title">Tài khoản Google</p>
-      </button>
+      <Button className={"ui google plus button"} onClick={() => this._googleAuth()}>
+        <i className={"google icon"}></i>
+        Google
+      </Button>
     );
   }
 
@@ -46,24 +59,46 @@ export default class LoginScreen extends React.Component<Props> {
     return (
       <div>
         <p>Hoặc sử dụng email</p>
-        <Form.Group className="email-login-form-wrapper">
-          <Form.Control
-            className="email-login-form"
-            type="email"
-            placeholder="taikhoan@email.com"
-          />
-        </Form.Group>
-        <Form.Group className="email-login-form-wrapper">
-          <Form.Control className="email-login-form" type="password" placeholder="mật khẩu" />
-        </Form.Group>
-        <button className="login-button">Đăng nhập</button>
+        <Form>
+          <Form.Field>
+            <label>Email</label>
+            <Input
+              type={"email"}
+              placeholder={"taikhoan@email.com"}
+              defaultValue={this.state.email}
+              onChange={(event, _) => {
+                this.setState({
+                  email: event.target.value
+                });
+              }}
+            />
+          </Form.Field>
+          <Form.Field>
+            <label>Password</label>
+            <Input
+              type={"password"}
+              defaultValue={this.state.password}
+              placeholder={"Password"}
+              onChange={(event, _) => {
+                this.setState({
+                  password: event.target.value
+                });
+              }}
+            />
+          </Form.Field>
+        </Form>
+        <Button
+          onClick={() => {
+            this.props.emailLogin(this.state.email, this.state.password);
+            this.props.history.replace("/home");
+          }}>
+          Đăng nhập
+        </Button>
       </div>
     );
   }
 
   private _googleAuth(): void {}
 
-  private _facebookAuth(): void {
-    this.props.facebookAuth();
-  }
+  private _facebookAuth(): void {}
 }

@@ -2,7 +2,7 @@
 //! Copyright (c) 2019 - SneakGeek. All rights reserved
 //!
 
-import { IAccountState } from "../reducers";
+import { IAccountState } from "business";
 
 export interface IAppState {
   RouterState: {

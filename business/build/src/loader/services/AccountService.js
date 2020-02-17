@@ -11,24 +11,30 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 import { ApiClient } from "./ApiClient";
-import { ObjectFactory, FactoryKey } from "../factory";
+import { ObjectFactory, FactoryKeys } from "../kernel";
 import HttpStatus from "http-status";
 export class AccountService {
     constructor() {
         this.apiClient = new ApiClient.Builder()
-            .registerDevState(ObjectFactory.getObjectInstance(FactoryKey.IEnvVar).__DEV__)
+            .registerDevState(ObjectFactory.getObjectInstance(FactoryKeys.IEnvVar).__DEV__)
             .registerDevUrl("http://localhost:8080/api/v1")
-            .registerProdUrl("")
+            .registerProdUrl("https://sneakgeek-test.azurewebsites.net/api/v1")
             .build();
+    }
+    emailLogin(email, password) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const response = yield this.apiClient.getInstance().post(`/account/email-login`, { email, password });
+            if (response && (response.status === HttpStatus.CREATED || response.status === HttpStatus.OK)) {
+                return response.data;
+            }
+            return undefined;
+        });
     }
     login(token, provider) {
         return __awaiter(this, void 0, void 0, function* () {
             const headers = { access_token: token };
-            const response = yield this.apiClient
-                .getInstance()
-                .post(`/account/${provider}`, {}, { headers });
-            if (response &&
-                (response.status === HttpStatus.CREATED || response.status === HttpStatus.OK)) {
+            const response = yield this.apiClient.getInstance().post(`/account/${provider}`, {}, { headers });
+            if (response && (response.status === HttpStatus.CREATED || response.status === HttpStatus.OK)) {
                 return response.data;
             }
             return undefined;

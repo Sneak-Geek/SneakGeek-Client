@@ -1,6 +1,11 @@
-import { AuthProvider, Profile, Account } from "../../types";
+import { AuthProvider } from "../../types";
+import { Profile, Account } from "../../model";
 export interface IAccountService {
     login(token: string, provider: AuthProvider): Promise<{
+        user: Account;
+        token: string;
+    } | undefined>;
+    emailLogin: (email: string, password: string) => Promise<{
         user: Account;
         token: string;
     } | undefined>;

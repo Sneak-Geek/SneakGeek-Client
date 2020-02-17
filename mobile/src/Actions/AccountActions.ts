@@ -30,6 +30,7 @@ import {
 } from "./NavigationActions";
 import { ICdnService } from "../Service";
 
+// tslint:disable-next-line: no-namespace
 export namespace AccountActions {
   export const AUTHENTICATE_ERROR = "AUTHENTICATION_ERROR";
   export const AUTHENTICATE_ON_PREM = "AUTHENTICATE_ON_PREM";
