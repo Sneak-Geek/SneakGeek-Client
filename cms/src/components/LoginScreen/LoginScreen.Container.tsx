@@ -4,7 +4,8 @@
 
 import { connect } from "react-redux";
 import { authenticateWithEmail } from "business";
-import LoginScreen from "./LoginScreen";
+import UnconnectedLoginScreen from "./LoginScreen";
+import { IAppState } from "../../store/IAppState";
 
 const mapDispatchToProps = (dispatch: Function) => ({
   emailLogin: (email: string, password: string) => {
@@ -12,4 +13,7 @@ const mapDispatchToProps = (dispatch: Function) => ({
   }
 });
 
-export const LoginScreenContainer = connect(null, mapDispatchToProps)(LoginScreen);
+export const LoginScreenContainer = connect(
+  null,
+  mapDispatchToProps
+)(UnconnectedLoginScreen);

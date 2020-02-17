@@ -16,6 +16,34 @@ export const AuthenticationActions = {
     UPDATE_AUTHENTICATION_STATE: "UPDATE_AUTHENTICATION_STATE"
 };
 export const updateAuthenticationState = createAction(AuthenticationActions.UPDATE_AUTHENTICATION_STATE);
+export const getCurrentUser = () => {
+    const accountService = ObjectFactory.getObjectInstance(FactoryKeys.IAccountService);
+    const settings = ObjectFactory.getObjectInstance(FactoryKeys.ISettingsProvider);
+    return (dispatch) => __awaiter(void 0, void 0, void 0, function* () {
+        dispatch(updateAuthenticationState({ state: NetworkRequestState.REQUESTING }));
+        const token = settings.getValue(SettingsKey.CurrentAccessToken);
+        try {
+            const accountPayload = yield accountService.getCurrentUser(token);
+            if (accountPayload) {
+                yield settings.loadServerSettings();
+                dispatch(updateAuthenticationState({
+                    state: NetworkRequestState.SUCCESS,
+                    data: accountPayload
+                }));
+                dispatch(getUserProfile());
+            }
+            else {
+                dispatch(updateAuthenticationState({
+                    state: NetworkRequestState.FAILED,
+                    error: new Error("Empty account")
+                }));
+            }
+        }
+        catch (error) {
+            dispatch(updateAuthenticationState({ state: NetworkRequestState.FAILED, error }));
+        }
+    });
+};
 export const authenticateWithEmail = (email, password) => {
     const accountService = ObjectFactory.getObjectInstance(FactoryKeys.IAccountService);
     const settings = ObjectFactory.getObjectInstance(FactoryKeys.ISettingsProvider);
@@ -27,7 +55,10 @@ export const authenticateWithEmail = (email, password) => {
                 yield settings.setValue(SettingsKey.CurrentAccessToken, accountPayload.token);
                 yield settings.loadServerSettings();
                 yield dispatch(getUserProfile());
-                dispatch(updateAuthenticationState(Object.assign({ state: NetworkRequestState.SUCCESS }, accountPayload)));
+                dispatch(updateAuthenticationState({
+                    state: NetworkRequestState.SUCCESS,
+                    data: accountPayload
+                }));
             }
         }
         catch (error) {

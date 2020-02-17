@@ -1,2 +1,1 @@
-export * from "./AccountReducers";
-export * from "./ProfileReducers";
+export * from "./UserReducers";

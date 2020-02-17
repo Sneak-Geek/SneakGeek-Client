@@ -2,7 +2,7 @@
 //! Copyright (c) 2019 - SneakGeek. All rights reserved
 //!
 
-import { createStore, applyMiddleware, combineReducers } from "redux";
+import { createStore, applyMiddleware, combineReducers, compose } from "redux";
 import thunkMiddleware from "redux-thunk";
 import { AccountReducers } from "../reducers";
 import { connectRouter, routerMiddleware } from "connected-react-router";
@@ -15,8 +15,16 @@ const rootReducers = combineReducers({
   AccountState: AccountReducers
 });
 
+const composeEnhancers =
+  typeof window === "object" && (window as any).__REDUX_DEVTOOLS_EXTENSION_COMPOSE__
+    ? (window as any).__REDUX_DEVTOOLS_EXTENSION_COMPOSE__({})
+    : compose;
+
 const configureStore = (): any => {
-  return createStore(rootReducers, applyMiddleware(routerMiddleware(history), thunkMiddleware));
+  return createStore(
+    rootReducers,
+    composeEnhancers(applyMiddleware(routerMiddleware(history), thunkMiddleware))
+  );
 };
 
 export const AppStore = configureStore();

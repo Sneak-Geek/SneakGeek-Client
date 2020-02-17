@@ -23,7 +23,11 @@ export class AccountService {
     }
     emailLogin(email, password) {
         return __awaiter(this, void 0, void 0, function* () {
-            const response = yield this.apiClient.getInstance().post(`/account/email-login`, { email, password });
+            const response = yield this.apiClient.getInstance().post(`/account/email-login`, { email, password }, {
+                headers: {
+                    "Access-Control-Request-Method": "POST"
+                }
+            });
             if (response && (response.status === HttpStatus.CREATED || response.status === HttpStatus.OK)) {
                 return response.data;
             }

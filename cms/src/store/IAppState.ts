@@ -2,12 +2,12 @@
 //! Copyright (c) 2019 - SneakGeek. All rights reserved
 //!
 
-import { IAccountState } from "business";
+import { IUserState } from "business";
 
 export interface IAppState {
-  RouterState: {
+  router: {
     location: Location;
     action: any;
   };
-  AccountState: IAccountState;
+  UserState: IUserState;
 }

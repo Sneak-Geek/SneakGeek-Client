@@ -4,7 +4,7 @@
 
 import React from "react";
 import "./style.css";
-import { Form, Input, Button } from "semantic-ui-react";
+import { Form, Input, Button, Header } from "semantic-ui-react";
 import { History } from "history";
 
 type Props = {
@@ -27,38 +27,12 @@ export default class LoginScreen extends React.Component<Props, State> {
     };
   }
   public /** override */ render(): JSX.Element {
-    return (
-      <div className={"centered"}>
-        <p>Đăng nhập qua</p>
-        {this._renderFacebookAuth()}
-        {this._renderGoogleAuth()}
-        {this._renderEmailBasedAuth()}
-      </div>
-    );
-  }
-
-  private _renderFacebookAuth(): JSX.Element {
-    return (
-      <Button className={"ui facebook button"} onClick={() => this._facebookAuth()}>
-        <i className={"facebook icon"}></i>
-        Facebook
-      </Button>
-    );
-  }
-
-  private _renderGoogleAuth(): JSX.Element {
-    return (
-      <Button className={"ui google plus button"} onClick={() => this._googleAuth()}>
-        <i className={"google icon"}></i>
-        Google
-      </Button>
-    );
+    return <div className={"centered"}>{this._renderEmailBasedAuth()}</div>;
   }
 
   private _renderEmailBasedAuth(): JSX.Element {
     return (
       <div>
-        <p>Hoặc sử dụng email</p>
         <Form>
           <Form.Field>
             <label>Email</label>
@@ -86,19 +60,15 @@ export default class LoginScreen extends React.Component<Props, State> {
               }}
             />
           </Form.Field>
+          <Form.Button
+            onClick={() => {
+              this.props.emailLogin(this.state.email, this.state.password);
+              this.props.history.replace("/");
+            }}>
+            Đăng nhập
+          </Form.Button>
         </Form>
-        <Button
-          onClick={() => {
-            this.props.emailLogin(this.state.email, this.state.password);
-            this.props.history.replace("/home");
-          }}>
-          Đăng nhập
-        </Button>
       </div>
     );
   }
-
-  private _googleAuth(): void {}
-
-  private _facebookAuth(): void {}
 }

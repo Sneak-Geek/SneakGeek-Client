@@ -22,7 +22,10 @@ ObjectFactory.register<IEnvVar>(FactoryKeys.IEnvVar, {
 });
 ObjectFactory.register<IAccountService>(FactoryKeys.IAccountService, new AccountService());
 ObjectFactory.register<IFacebookSDK>(FactoryKeys.IFacebookSDK, new FacebookSdk());
-ObjectFactory.register<ISettingsProvider>(FactoryKeys.ISettingsProvider, new SettingsProvider());
+ObjectFactory.register<ISettingsProvider>(
+  FactoryKeys.ISettingsProvider,
+  new SettingsProvider()
+);
 
 ReactDOM.render(<App />, document.getElementById("root"));
 

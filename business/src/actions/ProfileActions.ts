@@ -15,17 +15,27 @@ export const updateStateGetUserProfile = createAction<GetUserProfilePayload>(
 
 export const getUserProfile = () => {
   return async (dispatch: Dispatch<AnyAction>) => {
-    const accountService = ObjectFactory.getObjectInstance<IAccountService>(FactoryKeys.IAccountService);
-    const settings = ObjectFactory.getObjectInstance<ISettingsProvider>(FactoryKeys.ISettingsProvider);
+    const accountService = ObjectFactory.getObjectInstance<IAccountService>(
+      FactoryKeys.IAccountService
+    );
+    const settings = ObjectFactory.getObjectInstance<ISettingsProvider>(
+      FactoryKeys.ISettingsProvider
+    );
 
     dispatch(updateStateGetUserProfile({ state: NetworkRequestState.REQUESTING }));
     const token = settings.getValue(SettingsKey.CurrentAccessToken);
     try {
       const profile: Profile | undefined = await accountService.getUserProfile(token);
       if (profile) {
-        updateStateGetUserProfile({ state: NetworkRequestState.SUCCESS, data: { profile } });
+        updateStateGetUserProfile({
+          state: NetworkRequestState.SUCCESS,
+          data: { profile }
+        });
       } else {
-        updateStateGetUserProfile({ state: NetworkRequestState.FAILED, error: new Error("Empty profile ") });
+        updateStateGetUserProfile({
+          state: NetworkRequestState.FAILED,
+          error: new Error("Empty profile ")
+        });
       }
     } catch (error) {
       updateStateGetUserProfile({ state: NetworkRequestState.FAILED, error });

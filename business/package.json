@@ -1,6 +1,6 @@
 {
   "name": "business",
-  "version": "1.0.0",
+  "version": "0.0.2",
   "description": "",
   "main": "build/src/index.js",
   "types": "build/src/index.d.ts",
@@ -17,9 +17,13 @@
     "reflect-metadata": "^0.1.13",
     "typescript": "3.7.2"
   },
+  "files": [
+    "build"
+  ],
   "peerDependencies": {
     "redux": "*",
-    "redux-actions": "*"
+    "redux-actions": "*",
+    "redux-thunk": "*"
   },
   "devDependencies": {
     "@types/redux-actions": "2.6.1",
