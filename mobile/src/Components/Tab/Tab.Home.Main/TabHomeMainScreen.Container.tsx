@@ -23,11 +23,18 @@ const mapDispatchToProps = (dispatch: Function) => {
         params: { shoe }
       };
       dispatch(NavigationActions.navigate(navConfig));
+    },
+    navigateToSeeMore: (title: string, shoeData: Shoe[]) => {
+      const navConfig = {
+        routeName: RouteNames.SeeMore,
+        params: {
+          title,
+          shoes: shoeData
+        }
+      };
+      dispatch(NavigationActions.navigate(navConfig));
     }
   };
 };
 
-export const TabHomeMainScreenContainer = connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(TabHomeMainScreen);
+export const TabHomeMainScreenContainer = connect(mapStateToProps, mapDispatchToProps)(TabHomeMainScreen);

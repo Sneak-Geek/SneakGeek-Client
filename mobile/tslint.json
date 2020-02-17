@@ -3,6 +3,7 @@
   "extends": ["tslint:recommended", "tslint-config-prettier", "tslint-react"],
   "jsRules": {},
   "rules": {
+    "quotemark": [true, "double"],
     "jsx-no-bind": false,
     "jsx-no-lambda": false,
     "jsx-no-multiline-js": false,

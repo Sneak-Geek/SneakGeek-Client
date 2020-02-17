@@ -78,7 +78,7 @@ export default class TabUserMainScreen extends React.Component<IUserTabMainProps
       onClick: () => this.props.navigateToShare()
     },
     {
-      title: "Thông tin phiên bản",
+      title: "Thông tin về SneakGeek",
       hasMarginBottom: false,
       onClick: () => this.props.navigateToSearch()
     },

@@ -44,6 +44,17 @@ const optionsList = [
     hasMarginBottom: true
   },
   {
+    title: "Địa chỉ",
+    placeholder: "Địa chỉ",
+    value: (profile: Profile) => profile.userProvidedAddress ?? "",
+    onUpdate: (value: string, profile: Profile) => {
+      return Object.assign(profile, {
+        userProvidedAddress: value
+      });
+    },
+    hasMarginBottom: true
+  },
+  {
     title: "Giới tính",
     placeholder: "Giới tính",
     value: (profile: Profile) => profile.userProvidedGender,

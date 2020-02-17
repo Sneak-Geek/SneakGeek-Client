@@ -39,6 +39,7 @@ import { PaymentScreenContainer } from "../Components/Payment/PaymenScreen.Conta
 import { NotiSettingScreenContainer } from "../Components/NotiSetting/NotiSettingScreen.Container";
 import { ShareScreenContainer } from "../Components/Share/ShareScreen.Container";
 import { BuySelectionScreenContainer } from "../Components/BuySelection/BuySelectionScreen.Container";
+import { SeeMoreScreen } from "../Components/SeeMore";
 
 const AuthenticationStack = createStackNavigator(
   {
@@ -174,7 +175,8 @@ export const AppNavigator = createStackNavigator(
     [`${RouteNames.Payment}`]: { screen: PaymentScreenContainer },
     [`${RouteNames.NotiSetting}`]: { screen: NotiSettingScreenContainer },
     [`${RouteNames.Share}`]: { screen: ShareScreenContainer },
-    [`${RouteNames.UserKind}`]: { screen: UserKindScreenContainer }
+    [`${RouteNames.UserKind}`]: { screen: UserKindScreenContainer },
+    [`${RouteNames.SeeMore}`]: { screen: SeeMoreScreen }
   },
   {
     initialRouteName: RouteNames.Splash,

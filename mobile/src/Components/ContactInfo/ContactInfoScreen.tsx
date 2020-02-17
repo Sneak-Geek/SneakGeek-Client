@@ -1,19 +1,11 @@
-//!
-//! Copyright (c) 2019 - SneakGeek. All rights reserved
-//!
+// !
+// ! Copyright (c) 2019 - SneakGeek. All rights reserved
+// !
 
 import * as React from "react";
-import {
-  View,
-  StyleSheet,
-  SafeAreaView,
-  Text,
-  TouchableOpacity,
-  Image,
-  ScrollView
-} from "react-native";
+import { Image, SafeAreaView, ScrollView, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { Icon } from "react-native-elements";
-import { StackActions, NavigationScreenProps } from "react-navigation";
+import { NavigationScreenProps, StackActions } from "react-navigation";
 import * as Assets from "../../Assets";
 import { TextInput } from "react-native-gesture-handler";
 // import ImagePicker, { ImagePickerResponse } from "react-native-image-picker";
@@ -24,26 +16,11 @@ interface IContactInfoScreenProps {
 }
 
 interface IContactInfoScreenState {
-  pictures: (string | null)[];
+  pictures: string[];
 }
 
-export class ContactInfoScreen extends React.Component<
-  IContactInfoScreenProps,
-  IContactInfoScreenState
-> {
-  state = {
-    pictures: [null]
-  };
-
-  //   private readonly imagePickerOptions = {
-  //     title: "Upload images",
-  //     storageOptions: {
-  //       skipBackup: true,
-  //       path: "images"
-  //     }
-  //   };
-
-  static navigationOptions = (transitionProp: NavigationScreenProps) => ({
+export class ContactInfoScreen extends React.Component<IContactInfoScreenProps, IContactInfoScreenState> {
+  public static navigationOptions = (transitionProp: NavigationScreenProps) => ({
     headerStyle: {
       borderBottomWidth: 0
     },
@@ -58,6 +35,13 @@ export class ContactInfoScreen extends React.Component<
       />
     )
   });
+
+  public constructor(props: IContactInfoScreenProps) {
+    super(props);
+    this.state = {
+      pictures: []
+    };
+  }
 
   public render() {
     return (
@@ -103,11 +87,7 @@ export class ContactInfoScreen extends React.Component<
     return (
       <View style={styles.upImageContainer}>
         <Text style={styles.titleUpImage}>Ảnh đính kèm</Text>
-        <ScrollView
-          style={{ flex: 1 }}
-          horizontal={true}
-          showsHorizontalScrollIndicator={false}
-        >
+        <ScrollView style={{ flex: 1 }} horizontal={true} showsHorizontalScrollIndicator={false}>
           <View style={{ flexDirection: "row" }}>
             {this._renderImagePicker()}
             {this.state.pictures.map((item, index) => {
@@ -167,14 +147,7 @@ export class ContactInfoScreen extends React.Component<
   private _renderPicture(pictureUri: string | null, index: number) {
     pictureUri = pictureUri as string;
 
-    return (
-      <Image
-        key={index}
-        source={{ uri: pictureUri }}
-        style={styles.imageContainer}
-        resizeMode={"cover"}
-      />
-    );
+    return <Image key={index} source={{ uri: pictureUri }} style={styles.imageContainer} resizeMode={"cover"} />;
   }
 
   private _renderInfo() {
@@ -187,10 +160,7 @@ export class ContactInfoScreen extends React.Component<
 
   private _renderButton() {
     return (
-      <TouchableOpacity
-        style={styles.buttonContainer}
-        onPress={this.props.navigateToSendRequireSuccess}
-      >
+      <TouchableOpacity style={styles.buttonContainer} onPress={this.props.navigateToSendRequireSuccess}>
         <Text style={styles.titleButton}>Xác nhận</Text>
       </TouchableOpacity>
     );

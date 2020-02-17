@@ -27,6 +27,7 @@ export interface ITabHomeMainScreenProps {
   shoes: Shoe[];
   fetchShoes: () => void;
   navigateToShoeDetail: (shoe: Shoe) => void;
+  navigateToSeeMore: (title: string, shoes: Shoe[]) => void;
 }
 
 export interface ITabHomeMainScreenState {
@@ -178,7 +179,7 @@ export class TabHomeMainScreen extends React.Component<ITabHomeMainScreenProps, 
 
     return (
       <View style={{ flex: 1 }}>
-        <TouchableOpacity onPress={() => {}}>
+        <TouchableOpacity onPress={() => this.props.navigateToSeeMore(brandName, shoesData)}>
           <Text.Title2 style={styles.subtitle}>{brandName} - Nổi bật</Text.Title2>
         </TouchableOpacity>
         <FlatList

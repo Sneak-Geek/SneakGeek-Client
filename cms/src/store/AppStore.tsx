@@ -2,23 +2,23 @@
 //! Copyright (c) 2019 - SneakGeek. All rights reserved
 //!
 
-import { createStore, applyMiddleware, Store, combineReducers } from "redux";
+import { createStore, applyMiddleware, Store, combineReducers, CombinedState } from "redux";
 import thunkMiddleware from "redux-thunk";
+import { Dispatch, Action } from "redux";
 import { AccountReducers } from "../reducers";
-import { connectRouter, routerMiddleware } from "connected-react-router";
+import { connectRouter, routerMiddleware, LocationChangeAction } from "connected-react-router";
 import { createBrowserHistory, History } from "history";
+import { IAppState } from "./IAppState";
 
 export const history: History = createBrowserHistory();
 
-const configureStore = (): Store<any> => {
-  return createStore(
+const configureStore = (): Store<CombinedState<IAppState>, LocationChangeAction | Action<any>> =>
+  createStore(
     combineReducers({
-      router: connectRouter(history),
+      RouterState: connectRouter(history),
       AccountState: AccountReducers
     }),
     applyMiddleware(routerMiddleware(history), thunkMiddleware)
   );
-};
 
-const store = configureStore();
-export const AppStore = store;
+export const AppStore = configureStore();
