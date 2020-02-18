@@ -10,7 +10,7 @@ export const initialUserState = {
         state: NetworkRequestState.NOT_STARTED
     }
 };
-export const AccountReducers = handleActions({
+export const UserReducers = handleActions({
     [`${updateAuthenticationState}`]: (state, action) => {
         var _a;
         return (Object.assign(Object.assign({}, state), { accountState: {
