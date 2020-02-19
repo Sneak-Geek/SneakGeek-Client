@@ -2,7 +2,7 @@
 // ! Copyright (c) 2019 - SneakGeek. All rights reserved
 // !
 
-import { Action, handleActions } from "redux-actions";
+import { Action } from "redux-actions";
 import * as Actions from "../Actions";
 import { Account } from "../Shared/Model";
 import {
@@ -16,6 +16,7 @@ import {
   VerifyTokenPayload
 } from "../Shared/Payload";
 import { NetworkRequestState } from "../Shared/State";
+import { handleActionsWithReset } from "../Utilities/ReduxUtilities";
 
 export interface IAccountState {
   currentAccount: Account | null;
@@ -61,7 +62,7 @@ const initialState: IAccountState = {
   isAuthenticationCancelled: false
 };
 
-export const AccountReducers = handleActions<IAccountState, any>(
+export const AccountReducers = handleActionsWithReset<IAccountState, any>(
   {
     [`${Actions.updateSnkgAuthState}`]: (state: IAccountState, action: Action<AuthenticationPayload>) => ({
       ...state,

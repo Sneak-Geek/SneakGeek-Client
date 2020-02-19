@@ -1,12 +1,13 @@
-//!
-//! Copyright (c) 2019 - SneakGeek. All rights reserved
-//!
+// !
+// ! Copyright (c) 2019 - SneakGeek. All rights reserved
+// !
 
-import { handleActions, Action } from "redux-actions";
-import { updateShoesData, updateSearchShoesState, updateGetShoesState, updateStateRequestProduct } from "../Actions";
+import { Action } from "redux-actions";
+import { updateGetShoesState, updateSearchShoesState, updateShoesData, updateStateRequestProduct } from "../Actions";
 import { Shoe } from "../Shared/Model";
-import { SearchShoePayload, GetShoesPayload, RequestProductPayload } from "../Shared/Payload";
+import { GetShoesPayload, RequestProductPayload, SearchShoePayload } from "../Shared/Payload";
 import { NetworkRequestState } from "../Shared/State";
+import { handleActionsWithReset } from "../Utilities/ReduxUtilities";
 
 export interface IAppContentState {
   shoes: Shoe[];
@@ -41,7 +42,7 @@ const initialAppContentState: IAppContentState = {
   }
 };
 
-export const AppContentReducers = handleActions<IAppContentState, any>(
+export const AppContentReducers = handleActionsWithReset<IAppContentState, any>(
   {
     [`${updateShoesData}`]: (state: IAppContentState, action: Action<Shoe[]>) => {
       return Object.assign({}, state, { shoes: action.payload });

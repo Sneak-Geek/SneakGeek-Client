@@ -28,6 +28,7 @@ export interface IUserTabMainProps {
   navigateToNotiSetting: () => void;
   navigateToShare: () => void;
   updateProfilePic: (imageUri: string) => void;
+  logout: () => void;
 }
 
 interface IUserListOption {
@@ -176,7 +177,7 @@ export default class TabUserMainScreen extends React.Component<IUserTabMainProps
 
   private _renderLogoutButton(): React.ReactNode {
     return (
-      <TouchableOpacity style={[styles.settingsContainer, styles.signOutContainer]}>
+      <TouchableOpacity onPress={() => this.props.logout()} style={[styles.settingsContainer, styles.signOutContainer]}>
         <Text.Body style={{ color: "white" }}>Đăng xuất</Text.Body>
       </TouchableOpacity>
     );
