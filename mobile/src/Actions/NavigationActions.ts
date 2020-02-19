@@ -12,7 +12,8 @@ export const NavigationActions = {
   NAVIGATE_TO_EMAIL_SIGNUP: "NAVIGATE_TO_EMAIL_SIGNUP",
   NAVIGATE_TO_SELL_SCREEN: "NAVIGATE_TO_SELL_SCREEN",
   NAVIGATE_TO_REQUIRE_SUCCESS: "NAVIGATE_TO_REQUIRE_SUCCESS",
-  NAVIGATE_TO_PREVIOUS_SCREEN: "NAVIGATE_TO_PREVIOUS_SCREEN"
+  NAVIGATE_TO_PREVIOUS_SCREEN: "NAVIGATE_TO_PREVIOUS_SCREEN",
+  NAVIGATE_TO_LOGIN_BY_LOGOUT: "NAVIGATE_TO_LOGIN_BY_LOGOUT"
 };
 
 export const navigateReplaceToHome = createAction(NavigationActions.NAVIGATE_REPLACE_HOME);
@@ -21,3 +22,4 @@ export const navigateToEmailSignIn = createAction<string>(NavigationActions.NAVI
 export const navigateToEmailSignUp = createAction<string>(NavigationActions.NAVIGATE_TO_EMAIL_SIGNUP);
 export const navigateToSellScreen = createAction<Shoe>(NavigationActions.NAVIGATE_TO_SELL_SCREEN);
 export const navigateToPreviousScreen = createAction(NavigationActions.NAVIGATE_TO_PREVIOUS_SCREEN);
+export const navigateToLoginByLogout = createAction(NavigationActions.NAVIGATE_TO_LOGIN_BY_LOGOUT);

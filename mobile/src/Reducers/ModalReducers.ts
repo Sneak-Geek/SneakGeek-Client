@@ -1,10 +1,11 @@
-//!
-//! Copyright (c) 2019 - SneakGeek. All rights reserved
-//!
+// !
+// ! Copyright (c) 2019 - SneakGeek. All rights reserved
+// !
 
-import { handleActions, Action } from "redux-actions";
+import { Action } from "redux-actions";
 import { ModalTypes } from "../Components/Modal/ModalTypes";
-import { displayModal, dismissModal, ModalPayload } from "../Actions";
+import { dismissModal, displayModal, ModalPayload } from "../Actions";
+import { handleActionsWithReset } from "../Utilities/ReduxUtilities";
 
 export interface IModalState {
   modalType: ModalTypes;
@@ -16,7 +17,7 @@ const initialState: IModalState = {
   modalData: null
 };
 
-export const ModalReducers = handleActions<IModalState, any>(
+export const ModalReducers = handleActionsWithReset<IModalState, any>(
   {
     [`${displayModal}`]: (state: IModalState, action: Action<ModalPayload>) => {
       return {
@@ -25,7 +26,7 @@ export const ModalReducers = handleActions<IModalState, any>(
         modalData: action.payload.data
       };
     },
-    [`${dismissModal}`]: (state: IModalState, _action: Action<string>) => {
+    [`${dismissModal}`]: (state: IModalState, _: Action<string>) => {
       return { ...state, modalType: ModalTypes.None, modalData: null };
     }
   },
