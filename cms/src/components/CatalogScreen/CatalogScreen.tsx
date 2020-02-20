@@ -63,6 +63,9 @@ export class CatalogScreen extends React.Component<Props, State> {
             )
     }
 
+    popUpEditHandler = () => {
+        console.log('Accessed');
+    }
 
     render() {
         const { error, isLoaded, items } = this.state;
@@ -74,7 +77,7 @@ export class CatalogScreen extends React.Component<Props, State> {
                         <Table.Row>
                             <Table.HeaderCell>Name</Table.HeaderCell>
                             <Table.HeaderCell>Description
-                            <Button floated='right' size='small' compact
+                            <Button onClick={this.popUpEditHandler} floated='right' size='small' compact
                                     icon='small pencil alternate icon'
                                 ></Button>
                             </Table.HeaderCell>
