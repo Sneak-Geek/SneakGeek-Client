@@ -4,7 +4,7 @@
 
 import * as React from "react";
 import { SellOrder } from "../../../Shared/Model";
-import { ActivityIndicator, FlatList, Image, StyleSheet, View, RefreshControl } from "react-native";
+import { ActivityIndicator, FlatList, Image, StyleSheet, View, RefreshControl, StatusBar } from "react-native";
 import humanize from "humanize-duration";
 import { Text } from "../../../Shared/UI";
 import { Styles } from "../../../Assets";
@@ -53,7 +53,12 @@ export class TransactionSellTab extends React.Component<ITransactionSellTabProps
   }
 
   public /** override */ render(): JSX.Element {
-    return <View style={{ flex: 1, alignItems: "stretch" }}>{this._renderSellTransactions()}</View>;
+    return (
+      <View style={{ flex: 1, alignItems: "stretch" }}>
+        <StatusBar barStyle={"dark-content"} />
+        {this._renderSellTransactions()}
+      </View>
+    );
   }
 
   private _renderSellTransactions(): JSX.Element {

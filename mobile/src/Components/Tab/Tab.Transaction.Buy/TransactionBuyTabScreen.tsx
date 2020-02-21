@@ -3,7 +3,7 @@
 // !
 
 import * as React from "react";
-import { Image, SafeAreaView, StyleSheet, View } from "react-native";
+import { Image, SafeAreaView, StyleSheet, View, StatusBar } from "react-native";
 import { BuyOrder } from "../../../Shared/Model";
 import { BuyOrderHistoryPayload } from "../../../Shared/Payload";
 import { FlatList } from "react-native-gesture-handler";
@@ -51,6 +51,7 @@ export class TransactionBuyTabScreen extends React.Component<ITransactionBuyTabS
   public /** override */ render(): JSX.Element {
     return (
       <SafeAreaView style={styles.container}>
+        <StatusBar barStyle={"dark-content"} />
         <FlatList
           data={this.props.buyOrderHistoryState!.buyHistory!}
           keyExtractor={(_, idx) => idx.toString()}

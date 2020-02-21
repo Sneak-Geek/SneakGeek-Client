@@ -61,7 +61,7 @@ export const sellShoes = (sellOrder: Transaction) => {
         const imgUploadPromise = [];
 
         for (let i = 0; i < pictures.length; i++) {
-          imgUploadPromise.push(cdnService.uploadImage(pictures[i], presignedUrls[i]));
+          imgUploadPromise.push(cdnService.uploadImage(pictures[i], presignedUrls[i], "image/jpeg"));
         }
 
         await Promise.all(imgUploadPromise);
