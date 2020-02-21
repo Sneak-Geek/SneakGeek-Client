@@ -2,6 +2,8 @@
 // ! Copyright (c) 2019 - SneakGeek. All rights reserved
 // !
 
+import { ImagePickerResponse } from "react-native-image-picker";
+
 export interface Profile {
   _id: string;
   accountId: string;
@@ -20,7 +22,7 @@ export interface Profile {
   userProvidedShoeSize?: string;
   userProvidedEmail?: string;
   userProvidedPhoneNumber?: string;
-  userProvidedProfilePic?: string;
+  userProvidedProfilePic?: ImagePickerResponse | string;
 }
 
 export interface Account {

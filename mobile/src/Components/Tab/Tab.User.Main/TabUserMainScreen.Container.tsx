@@ -10,6 +10,7 @@ import { RouteNames } from "../../../Navigation";
 import { navigateToLoginByLogout, reset, updateUserProfile } from "../../../Actions";
 import { container, Types } from "../../../Config/Inversify";
 import { IAppSettingsService } from "../../../Service/AppSettingsService";
+import { ImagePickerResponse } from "react-native-image-picker";
 
 const mapStateToProps = (state: IAppState) => ({
   account: state.AccountState.currentAccount,
@@ -91,8 +92,8 @@ const mapDispatchToProps = (dispatch: Function) => {
       );
     },
 
-    updateProfilePic: (imageUri: string) => {
-      dispatch(updateUserProfile({ userProvidedProfilePic: imageUri }));
+    updateProfilePic: (imageUri: ImagePickerResponse) => {
+      dispatch(updateUserProfile({ newProfilePic: imageUri.uri, profilePicType: imageUri.type }));
     },
 
     logout: () => {

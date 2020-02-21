@@ -6,6 +6,8 @@ import { ICdnService } from "./ICdnService";
 import ApiClient from "../ApiClient";
 import * as HttpStatus from "http-status";
 import { injectable } from "inversify";
+import { Platform } from "react-native";
+import RNFetchBlob, { FetchBlobResponse } from "rn-fetch-blob";
 
 @injectable()
 export class CdnService implements ICdnService {
@@ -22,28 +24,18 @@ export class CdnService implements ICdnService {
     return [];
   }
 
-  public /** override */ uploadImage(localImgUrl: string, presignedCdnUrl: string): Promise<any> {
-    return new Promise<any>((resolve, reject) => {
-      const xhr = new XMLHttpRequest();
+  public async uploadImage(localUri: string, remoteUri: string, filetype: string): Promise<FetchBlobResponse> {
+    localUri = Platform.OS === "ios" ? localUri.replace("file://", "") : localUri;
 
-      xhr.open("PUT", presignedCdnUrl);
-
-      xhr.setRequestHeader("x-ms-blob-type", "BlockBlob");
-      xhr.setRequestHeader("x-ms-blob-content-type", "file.type");
-
-      xhr.onreadystatechange = () => {
-        if (xhr.readyState === 4) {
-          if (xhr.status === HttpStatus.OK) resolve();
-          else {
-            reject(xhr.statusText);
-          }
-        }
-      };
-
-      xhr.send({
-        uri: localImgUrl,
-        type: "image/jpeg"
-      });
-    });
+    return RNFetchBlob.fetch(
+      "PUT",
+      remoteUri,
+      {
+        "x-ms-blob-type": "BlockBlob",
+        "content-type": "application/octet-stream",
+        "x-ms-blob-content": filetype
+      },
+      RNFetchBlob.wrap(localUri)
+    );
   }
 }
