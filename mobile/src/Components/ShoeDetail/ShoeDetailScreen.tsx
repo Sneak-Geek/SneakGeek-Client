@@ -13,7 +13,8 @@ import {
   TextStyle,
   TouchableOpacity,
   View,
-  ViewStyle
+  ViewStyle,
+  StatusBar
 } from "react-native";
 import { Account, getLatestPrice, Profile, Shoe } from "../../Shared/Model";
 import { NavigationRoute, NavigationScreenProp, NavigationScreenProps, StackActions } from "react-navigation";
@@ -29,6 +30,8 @@ import { AvailableSellOrdersPayload } from "../../Shared/Payload";
 import { NetworkRequestState } from "../../Shared/State";
 import { FeatureGates } from "../../Config/FeatureGates";
 import { Styles } from "../../Assets";
+import { TextStyle as AssetsTextStyle } from "../../Shared/UI/Text";
+import { TouchableWithoutFeedback } from "react-native-gesture-handler";
 
 export interface IProps {
   navigation: NavigationScreenProp<NavigationRoute>;
@@ -60,14 +63,14 @@ interface IState {
 export class ShoeDetailScreen extends React.Component<IProps, IState> {
   public static navigationOptions = (transitionProp: NavigationScreenProps) => ({
     title: "Chi tiết sản phẩm",
+    headerTitleStyle: AssetsTextStyle.body,
     headerLeft: (
-      <Icon
-        type={"ionicon"}
-        name={"ios-arrow-back"}
-        size={28}
-        containerStyle={{ marginLeft: 10 }}
+      <TouchableWithoutFeedback
+        hitSlop={{ top: 20, bottom: 20, left: 20, right: 20 }}
         onPress={() => transitionProp.navigation.dispatch(StackActions.pop({ n: 1 }))}
-      />
+      >
+        <Icon type={"ionicon"} name={"ios-arrow-back"} size={30} containerStyle={{ marginLeft: 10 }} />
+      </TouchableWithoutFeedback>
     ),
     headerRight: <Icon type={"ionicon"} name={"ios-share"} size={28} containerStyle={{ marginRight: 10 }} />
   });
@@ -94,6 +97,10 @@ export class ShoeDetailScreen extends React.Component<IProps, IState> {
 
   public /** override */ render(): JSX.Element {
     const bottomHeightStyle = this.state.bottomBuyerHeight ? { marginBottom: this.state.bottomBuyerHeight + 25 } : {};
+    if (this.props.availableSellOrdersState?.state === NetworkRequestState.REQUESTING) {
+      return <ActivityIndicator size={"large"} />;
+    }
+
     return (
       <SafeAreaView
         style={{
@@ -101,21 +108,7 @@ export class ShoeDetailScreen extends React.Component<IProps, IState> {
           backgroundColor: Assets.Styles.AppSecondaryColorBlurred
         }}
       >
-        {this.props.availableSellOrdersState?.state === NetworkRequestState.REQUESTING && (
-          <View
-            style={[
-              StyleSheet.absoluteFill,
-              {
-                backgroundColor: Styles.AppSecondaryColorBlurred,
-                zIndex: 1000,
-                alignItems: "center",
-                justifyContent: "center"
-              }
-            ]}
-          >
-            <ActivityIndicator size={"large"} />
-          </View>
-        )}
+        <StatusBar hidden={false} barStyle={"default"} />
         <View style={[StyleSheet.absoluteFill, { backgroundColor: Styles.AppAccentColor }]} />
         <View style={{ flex: 1, backgroundColor: "white" }}>
           <ScrollView style={{ flex: 1 }} showsVerticalScrollIndicator={false}>

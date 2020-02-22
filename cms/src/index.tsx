@@ -5,22 +5,27 @@ import * as serviceWorker from "./serviceWorker";
 import {
   ObjectFactory,
   IEnvVar,
-  FactoryKey,
+  FactoryKeys,
   IAccountService,
   AccountService,
-  IFacebookSDK
+  IFacebookSDK,
+  ISettingsProvider
 } from "business";
-import { FacebookSDK } from "./services/FacebookSDK";
+import { FacebookSdk } from "./services";
 
 import "bootstrap/dist/css/bootstrap.min.css";
 import "./index.scss";
+import { SettingsProvider } from "./services/SettingsProvider";
 
-ObjectFactory.register<IEnvVar>(FactoryKey.IEnvVar, {
+ObjectFactory.register<IEnvVar>(FactoryKeys.IEnvVar, {
   __DEV__: process.env.NODE_ENV !== "production"
 });
-
-ObjectFactory.register<IAccountService>(FactoryKey.IAccountService, new AccountService());
-ObjectFactory.register<IFacebookSDK>(FactoryKey.IFacebookSDK, new FacebookSDK());
+ObjectFactory.register<IAccountService>(FactoryKeys.IAccountService, new AccountService());
+ObjectFactory.register<IFacebookSDK>(FactoryKeys.IFacebookSDK, new FacebookSdk());
+ObjectFactory.register<ISettingsProvider>(
+  FactoryKeys.ISettingsProvider,
+  new SettingsProvider()
+);
 
 ReactDOM.render(<App />, document.getElementById("root"));
 

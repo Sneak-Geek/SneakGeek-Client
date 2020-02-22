@@ -3,7 +3,7 @@
 //!
 
 import * as React from "react";
-import { SafeAreaView, ScrollView, Text, View, StyleSheet, Image } from "react-native";
+import { SafeAreaView, ScrollView, Text, View, StyleSheet, Image, StatusBar } from "react-native";
 import { TransactionShoeCard } from "../../../Shared/UI";
 import * as Assets from "../../../Assets";
 
@@ -15,10 +15,11 @@ export class TransactionHistoryScreen extends React.Component<{}> {
   public /** override */ render(): JSX.Element {
     return (
       <SafeAreaView style={styles.container}>
+        <StatusBar barStyle={"dark-content"} />
         <ScrollView>
           <View style={styles.topContainer}>
             <Text style={styles.title}>Lịch sử giao dịch</Text>
-            <Image source={Assets.Icons.Hamburger} style={{ width: 20, height: 20, resizeMode: 'contain' }} />
+            <Image source={Assets.Icons.Hamburger} style={{ width: 20, height: 20, resizeMode: "contain" }} />
           </View>
           <TransactionShoeCard
             mode="history"
@@ -41,24 +42,23 @@ export class TransactionHistoryScreen extends React.Component<{}> {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: 'white',
+    backgroundColor: "white"
   },
   title: {
     fontSize: 22,
-    fontFamily: 'RobotoCondensed-Regular',
-
+    fontFamily: "RobotoCondensed-Regular"
   },
   line: {
     height: 0.3,
-    backgroundColor: '#BCBBC1',
-    marginHorizontal: 20,
+    backgroundColor: "#BCBBC1",
+    marginHorizontal: 20
   },
   topContainer: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
     paddingTop: 30,
     paddingLeft: 14,
-    paddingRight: 20,
+    paddingRight: 20
   }
-})
+});

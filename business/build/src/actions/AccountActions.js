@@ -12,7 +12,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 import { ApiRequestState } from "../types";
 import { createAction } from "redux-actions";
-import { ObjectFactory, FactoryKey } from "../loader/factory";
+import { ObjectFactory, FactoryKeys } from "../loader/kernel";
 import { SettingsKey } from "../loader/interfaces";
 export var AccountActions;
 (function (AccountActions) {
@@ -30,8 +30,8 @@ export var AccountActions;
                     authType: "OnPrem"
                 }
             }));
-            const accountService = ObjectFactory.getObjectInstance("IAccountService");
-            const settings = ObjectFactory.getObjectInstance(FactoryKey.ISettingsProvider);
+            const accountService = ObjectFactory.getObjectInstance(FactoryKeys.IAccountService);
+            const settings = ObjectFactory.getObjectInstance(FactoryKeys.ISettingsProvider);
             try {
                 const accountPayload = yield accountService.login(accessToken, provider);
                 if (accountPayload) {
@@ -72,7 +72,7 @@ export var AccountActions;
     AccountActions.facebookClientAuth = () => {
         return (dispatch) => __awaiter(this, void 0, void 0, function* () {
             const permissions = ["public_profile", "email"];
-            const fbSdk = ObjectFactory.getObjectInstance(FactoryKey.IFacebookSDK);
+            const fbSdk = ObjectFactory.getObjectInstance(FactoryKeys.IFacebookSDK);
             try {
                 const loginResult = yield fbSdk.loginWithPermission(permissions);
                 if (loginResult.isCancelled) {

@@ -40,11 +40,11 @@ import { NotiSettingScreenContainer } from "../Components/NotiSetting/NotiSettin
 import { ShareScreenContainer } from "../Components/Share/ShareScreen.Container";
 import { BuySelectionScreenContainer } from "../Components/BuySelection/BuySelectionScreen.Container";
 import { EditOrderScreenContainer } from "../Components/EditOrder/EditOrderScreen.Container";
+import { SeeMoreScreen } from "../Components/SeeMore";
 
 const AuthenticationStack = createStackNavigator(
   {
     [`${RouteNames.Login}`]: { screen: LoginScreenContainer },
-    [`${RouteNames.UserKind}`]: { screen: UserKindScreenContainer },
     [`${RouteNames.EmailSignUp}`]: { screen: SignUpScreenContainer },
     [`${RouteNames.EmailSignIn}`]: { screen: SignInScreenContainer },
     [`${RouteNames.ForgotPassword}`]: { screen: ForgotPasswordScreenContainer }
@@ -59,9 +59,7 @@ const HomeTabNavigator = createStackNavigator(
     [`${RouteNames.Tabs.HomeTab.MainScreen}`]: { screen: Tab.Home.Main }
   },
   {
-    headerMode: "none",
     navigationOptions: {
-      header: null,
       tabBarLabel: "Trang chủ",
       tabBarIcon: ({ tintColor }) => {
         tintColor = tintColor as string;
@@ -178,7 +176,9 @@ export const AppNavigator = createStackNavigator(
     [`${RouteNames.Payment}`]: { screen: PaymentScreenContainer },
     [`${RouteNames.NotiSetting}`]: { screen: NotiSettingScreenContainer },
     [`${RouteNames.Share}`]: { screen: ShareScreenContainer },
-    [`${RouteNames.EditOrder}`]: { screen: EditOrderScreenContainer }
+    [`${RouteNames.EditOrder}`]: { screen: EditOrderScreenContainer },
+    [`${RouteNames.UserKind}`]: { screen: UserKindScreenContainer },
+    [`${RouteNames.SeeMore}`]: { screen: SeeMoreScreen }
   },
   {
     initialRouteName: RouteNames.Splash,

@@ -1,8 +1,13 @@
 import { IAccountService } from "../interfaces";
-import { Account, Profile, AuthProvider } from "../../types";
+import { AuthProvider } from "../../types";
+import { Account, Profile } from "../../model";
 export declare class AccountService implements IAccountService {
     private apiClient;
     constructor();
+    emailLogin(email: string, password: string): Promise<{
+        user: Account;
+        token: string;
+    } | undefined>;
     login(token: string, provider: AuthProvider): Promise<{
         user: Account;
         token: string;

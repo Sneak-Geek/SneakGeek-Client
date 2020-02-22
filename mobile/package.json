@@ -9,7 +9,8 @@
     "lint": "eslint .",
     "watch": "tsc --watch",
     "build": "tsc --build",
-    "prettier": "prettier --write ./src/**/*.ts"
+    "prettier": "prettier --write ./src/**/*.ts",
+    "bundle-ios-release": "react-native bundle --dev false --entry-file index.js --bundle-output ios/main.jsbundle --platform ios"
   },
   "husky": {
     "hooks": {

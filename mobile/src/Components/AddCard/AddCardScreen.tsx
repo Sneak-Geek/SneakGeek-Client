@@ -12,7 +12,7 @@ import { StackActions, ScreenProps } from "react-navigation";
 import { Icon } from "react-native-elements";
 
 export class AddCardScreen extends React.Component {
-  static navigationOptions = (navigationConfig: ScreenProps) => ({
+  public static navigationOptions = (navigationConfig: ScreenProps) => ({
     title: "Thêm thẻ",
     headerLeft: (
       <Icon
@@ -66,11 +66,7 @@ export class AddCardScreen extends React.Component {
     return (
       <View style={{ marginHorizontal: 20, marginVertical: 10 }}>
         <Text.Callout>Mã bưu điện</Text.Callout>
-        <TextInput
-          placeholder={"e.g. 10000"}
-          keyboardType={"number-pad"}
-          style={styles.textInput}
-        />
+        <TextInput placeholder={"e.g. 10000"} keyboardType={"number-pad"} style={styles.textInput} />
       </View>
     );
   }
@@ -79,9 +75,7 @@ export class AddCardScreen extends React.Component {
     return (
       <View style={styles.confirmButton}>
         <TouchableOpacity style={{ alignItems: "center", justifyContent: "center" }}>
-          <Text.Body style={{ color: Assets.Styles.TextSecondaryColor, textAlign: "center" }}>
-            Xác nhận
-          </Text.Body>
+          <Text.Body style={{ color: Assets.Styles.TextSecondaryColor, textAlign: "center" }}>Xác nhận</Text.Body>
         </TouchableOpacity>
       </View>
     );

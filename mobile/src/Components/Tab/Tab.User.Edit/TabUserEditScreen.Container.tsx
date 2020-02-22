@@ -1,6 +1,6 @@
-//!
-//! Copyright (c) 2019 - SneakGeek. All rights reserved
-//!
+// !
+// ! Copyright (c) 2019 - SneakGeek. All rights reserved
+// !
 
 import { connect } from "react-redux";
 import { TabUserEditScreen } from "./TabUserEditScreen";
@@ -17,7 +17,4 @@ const mapDispatchToProps = (dispatch: Function) => ({
   updateProfile: (data: Partial<Profile>) => dispatch(updateUserProfile(data))
 });
 
-export const TabUserEditScreenContainer = connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(TabUserEditScreen);
+export const TabUserEditScreenContainer = connect(mapStateToProps, mapDispatchToProps)(TabUserEditScreen);

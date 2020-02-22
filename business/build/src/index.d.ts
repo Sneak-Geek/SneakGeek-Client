@@ -1,5 +1,8 @@
+import "reflect-metadata";
 export * from "./actions";
-export * from "./loader/factory";
+export * from "./loader/kernel";
 export * from "./loader/interfaces";
 export * from "./loader/services";
-export * from "./types";
+export * from "./model";
+export * from "./payload";
+export * from "./reducers";

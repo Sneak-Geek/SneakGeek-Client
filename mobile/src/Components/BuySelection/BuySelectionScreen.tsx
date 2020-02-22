@@ -99,7 +99,10 @@ export class BuySelectionScreen extends React.Component<IBuySelectionScreenProps
   }
 
   private _renderPricePerSize(size: number) {
-    const order = this.props.availableSellOrders?.find(t => t.shoeSize === size.toString());
+    const condition = this.isOldCondition ? "Cũ" : "Mới";
+    const order = this.props.availableSellOrders?.find(
+      t => t.shoeCondition === condition && t.shoeSize === size.toString()
+    );
     const price = order ? getLatestPrice(order) / 1000000.0 : -1;
     const backgroundColor = size === this.state.selectedSize ? Styles.AppModalBackground : "white";
     return (

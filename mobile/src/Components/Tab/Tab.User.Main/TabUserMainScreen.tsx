@@ -11,6 +11,7 @@ import { Text } from "../../../Shared/UI";
 import * as Assets from "../../../Assets";
 import { Account, Profile } from "../../../Shared/Model";
 import { NetworkRequestState } from "../../../Shared/State";
+import { TouchableWithoutFeedback } from "react-native-gesture-handler";
 
 export interface IUserTabMainProps {
   account: Account;
@@ -52,12 +53,12 @@ export default class TabUserMainScreen extends React.Component<IUserTabMainProps
       onClick: () => this.props.navigateToChangePassword()
     },
     {
-      title: "Thông tin thanh toán",
+      title: "Số dư tài khoản",
       hasMarginBottom: false,
       onClick: () => this.props.navigateToPayments()
     },
     {
-      title: "Địa chỉ",
+      title: "Tuỳ chỉnh thông tin giày",
       hasMarginBottom: true,
       onClick: () => this.props.navigateToUserKind()
     },
@@ -77,7 +78,7 @@ export default class TabUserMainScreen extends React.Component<IUserTabMainProps
       onClick: () => this.props.navigateToShare()
     },
     {
-      title: "Thông tin phiên bản",
+      title: "Thông tin về SneakGeek",
       hasMarginBottom: false,
       onClick: () => this.props.navigateToSearch()
     },
@@ -128,22 +129,26 @@ export default class TabUserMainScreen extends React.Component<IUserTabMainProps
   }
 
   private _renderBasicUserData(): JSX.Element {
-    const { profile } = this.props;
-    const name = profile.userProvidedName;
+    const { profile, account } = this.props;
+
+    const firstName = account.accountNameByProvider?.givenName || profile.userProvidedName?.firstName;
+    const lastName = account.accountNameByProvider?.familyName || profile.userProvidedName?.lastName;
+    const emptyName = typeof firstName === "undefined" || typeof lastName === "undefined";
+
+    const imgSrcUrl = account.accountProfilePicByProvider || profile.userProvidedProfilePic;
+    const imgSrc = imgSrcUrl ? { uri: imgSrcUrl } : Assets.Icons.DefaultProfile;
 
     return (
       <View style={styles.headerContainer}>
         <View style={{ position: "relative" }}>
-          <Image source={{ uri: profile.userProvidedProfilePic }} style={styles.avatarContainer} />
+          <Image source={imgSrc} style={styles.avatarContainer} />
           <TouchableOpacity style={styles.cameraButtonContainer} onPress={() => this._uploadProfilePicture()}>
             <Image source={Assets.Icons.ProfileCamera} style={{ width: 22, height: 18 }} />
           </TouchableOpacity>
         </View>
         <View>
-          <Text.Headline style={styles.name}>
-            {name ? `${name.firstName} ${name.lastName}` : "Chỉnh sửa tên"}
-          </Text.Headline>
-          <Text.Callout style={styles.address}>Hà Nội, VN</Text.Callout>
+          {!emptyName && <Text.Headline style={styles.name}>{`${firstName} ${lastName}`}</Text.Headline>}
+          {/* <Text.Callout style={styles.address}>Hà Nội, VN</Text.Callout> */}
         </View>
       </View>
     );
@@ -155,17 +160,17 @@ export default class TabUserMainScreen extends React.Component<IUserTabMainProps
 
   private _renderOptionItem(item: IUserListOption) {
     return (
-      <View
-        key={item.title}
-        style={[item.hasMarginBottom ? styles.listItemStyleWithMarginBottom : null, styles.settingsContainer]}
-      >
-        <Text.Callout style={{ fontWeight: "bold", fontSize: 16, opacity: 0.6 }}>
-          {item.title.toUpperCase()}
-        </Text.Callout>
-        <TouchableOpacity onPress={item.onClick.bind(this)}>
+      <TouchableWithoutFeedback onPress={item.onClick.bind(this)}>
+        <View
+          key={item.title}
+          style={[item.hasMarginBottom ? styles.listItemStyleWithMarginBottom : null, styles.settingsContainer]}
+        >
+          <Text.Callout style={{ fontWeight: "bold", fontSize: 16, opacity: 0.6 }}>
+            {item.title.toUpperCase()}
+          </Text.Callout>
           <Image source={Assets.Icons.ChevronLeft} />
-        </TouchableOpacity>
-      </View>
+        </View>
+      </TouchableWithoutFeedback>
     );
   }
 

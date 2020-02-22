@@ -1,15 +1,12 @@
 import * as React from "react";
-import {
-  View,
-  StyleSheet,
-  SafeAreaView,
-  Text,
-  ScrollView,
-  TouchableOpacity
-} from "react-native";
-// @ts-ignore *
+import { SafeAreaView, ScrollView, StyleSheet, TouchableOpacity, View } from "react-native";
+// @ts-ignore
 import SmoothPicker from "react-native-smooth-picker";
 import * as Assets from "../../Assets";
+import { Icon } from "react-native-elements";
+import { ScreenProps, StackActions } from "react-navigation";
+import { Text } from "../../Shared/UI";
+import { TextStyle } from "../../Shared/UI/Text";
 
 interface IUserKindScreenProps {
   navigateToHome: () => void;
@@ -23,31 +20,25 @@ interface IUserKindScreenState {
   selectedCountry: { id: number; title: string };
   selectedSize: { id: number; title: string };
 }
-export class UserKindScreen extends React.Component<
-  IUserKindScreenProps,
-  IUserKindScreenState
-> {
-  static navigationOptions = () => ({
-    header: null
+export class UserKindScreen extends React.Component<IUserKindScreenProps, IUserKindScreenState> {
+  public static navigationOptions = (navigationConfig: ScreenProps) => ({
+    title: "Tuỳ chỉnh",
+    headerLeft: (
+      <Icon
+        type={"ionicon"}
+        name={"ios-arrow-back"}
+        size={28}
+        containerStyle={{ marginLeft: 10 }}
+        onPress={() => navigationConfig.navigation.dispatch(StackActions.pop({ n: 1 }))}
+      />
+    ),
+    headerTitleStyle: TextStyle.title2
   });
 
-  constructor(props: any) {
-    super(props);
-    this.state = {
-      selectedGender: { id: 0, title: "" },
-      selectedBrand: { id: 0, title: "" },
-      selectedCountry: { id: 0, title: "" },
-      selectedSize: { id: 0, title: "" }
-    };
-  }
-
-  gender = ["NAM", "NỮ", "TRẺ EM"];
-
-  brand = ["nike", "adidas", "puma", "onisugatiger"];
-
-  country = ["US", "UK", "EU"];
-
-  size = [
+  private gender = ["NAM", "NỮ", "TRẺ EM"];
+  private brand = ["nike", "adidas", "puma", "onisugatiger"];
+  private country = ["US", "UK", "EU"];
+  private size = [
     "6",
     "6.5",
     "7",
@@ -55,7 +46,7 @@ export class UserKindScreen extends React.Component<
     "8",
     "8.5",
     "9",
-    "9.5",
+    `9.5`,
     "10",
     "10.5",
     "11",
@@ -67,8 +58,35 @@ export class UserKindScreen extends React.Component<
     "16"
   ];
 
+  constructor(props: any) {
+    super(props);
+    this.state = {
+      selectedGender: { id: 0, title: "" },
+      selectedBrand: { id: 0, title: "" },
+      selectedCountry: { id: 0, title: "" },
+      selectedSize: { id: 0, title: "" }
+    };
+  }
+
+  public render() {
+    const { selectedGender, selectedBrand, selectedCountry, selectedSize } = this.state;
+    return (
+      <SafeAreaView style={styles.container}>
+        <View style={{ flex: 1, marginBottom: 15 }}>
+          <ScrollView>
+            {this._renderPicker(this.gender, "GIỚI TÍNH", selectedGender)}
+            {this._renderPicker(this.brand, "THƯƠNG HIỆU", selectedBrand)}
+            {this._renderPicker(this.country, "TIÊU CHUẨN SIZE", selectedCountry)}
+            {this._renderPicker(this.size, "CỠ GIÀY", selectedSize)}
+          </ScrollView>
+        </View>
+        {this._renderButton()}
+      </SafeAreaView>
+    );
+  }
+
   private handleChange(index: any, item: any, title: any) {
-    let newObj = { id: index, title: item };
+    const newObj = { id: index, title: item };
     switch (title) {
       case "GIỚI TÍNH":
         this.setState({ selectedGender: newObj });
@@ -87,40 +105,18 @@ export class UserKindScreen extends React.Component<
     }
   }
 
-  public render() {
-    let { selectedGender, selectedBrand, selectedCountry, selectedSize } = this.state;
-    return (
-      <SafeAreaView style={styles.container}>
-        <View style={{ flex: 1, paddingTop: 60 }}>
-          <ScrollView>
-            <Text style={styles.title}>Loại giày ưa thích của bạn:</Text>
-            {this._renderPicker(this.gender, "GIỚI TÍNH", selectedGender)}
-            {this._renderPicker(this.brand, "THƯƠNG HIỆU", selectedBrand)}
-            {this._renderPicker(this.country, "TIÊU CHUẨN SIZE", selectedCountry)}
-            {this._renderPicker(this.size, "CỠ GIÀY", selectedSize)}
-          </ScrollView>
-        </View>
-        {this._renderButton()}
-      </SafeAreaView>
-    );
-  }
-
-  private _renderPicker(
-    data: any,
-    title: string,
-    selectedType: { id: number; title: string }
-  ) {
+  private _renderPicker(data: any, title: string, selectedType: { id: number; title: string }) {
     return (
       <View style={{ paddingTop: 14 }}>
-        <Text style={styles.subTitle}>{title}</Text>
+        <Text.Subhead style={{ margin: 15 }}>{title}</Text.Subhead>
         <View style={{ height: 80, backgroundColor: "#EEEEEE" }}>
           <SmoothPicker
             showsHorizontalScrollIndicator={false}
             style={{ height: 50 }}
-            horizontal
-            magnet
+            horizontal={true}
+            magnet={true}
             offsetSelection={0}
-            scrollAnimation
+            scrollAnimation={true}
             data={data}
             startMargin={Assets.Device.WIDTH / 2}
             // @ts-ignore
@@ -128,20 +124,11 @@ export class UserKindScreen extends React.Component<
               return this.handleChange(index, item, title);
             }}
             // @ts-ignore
-            renderItem={({ item, index }) => {
-              return (
-                <View style={styles.containerItem}>
-                  <Text
-                    style={[
-                      styles.titleItem,
-                      { opacity: selectedType.id === index ? 1 : 0.3 }
-                    ]}
-                  >
-                    {item}
-                  </Text>
-                </View>
-              );
-            }}
+            renderItem={({ item, index }) => (
+              <View style={styles.containerItem}>
+                <Text.Body style={[{ opacity: selectedType.id === index ? 1 : 0.3 }]}>{item}</Text.Body>
+              </View>
+            )}
           />
         </View>
       </View>
@@ -154,7 +141,7 @@ export class UserKindScreen extends React.Component<
         style={[styles.buttonContainer, { backgroundColor: "black" }]}
         onPress={this.props.navigateToHome}
       >
-        <Text style={[styles.titleButton, { color: "white" }]}>Xác nhận</Text>
+        <Text.Body style={[styles.titleButton, { color: "white" }]}>Xác nhận</Text.Body>
       </TouchableOpacity>
     );
   }
@@ -178,10 +165,6 @@ const styles = StyleSheet.create({
     paddingBottom: 9,
     paddingLeft: 20,
     opacity: 0.6
-  },
-  titleItem: {
-    fontSize: 18,
-    fontFamily: "RobotoCondensed-Regular"
   },
   containerItem: {
     height: 80,

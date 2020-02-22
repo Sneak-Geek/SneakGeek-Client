@@ -4,14 +4,12 @@
 
 import { IFacebookSDK, LoginResult, Permissions } from "business";
 
-export class FacebookSDK implements IFacebookSDK {
+export class FacebookSdk implements IFacebookSDK {
   public async loginWithPermission(permissions: Permissions[]): Promise<LoginResult> {
     return new Promise<LoginResult>((resolve, reject) => {
       FB.login(
         response => {
-          response.status === "connected"
-            ? resolve({ isCancelled: false, error: undefined })
-            : reject();
+          response.status === "connected" ? resolve({ isCancelled: false, error: undefined }) : reject();
         },
         { scope: permissions.join(",") }
       );

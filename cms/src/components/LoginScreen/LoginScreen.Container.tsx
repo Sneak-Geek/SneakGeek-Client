@@ -3,16 +3,17 @@
 //!
 
 import { connect } from "react-redux";
-import { AccountActions } from "business";
-import LoginScreen from "./LoginScreen";
+import { authenticateWithEmail } from "business";
+import UnconnectedLoginScreen from "./LoginScreen";
+import { IAppState } from "../../store/IAppState";
 
 const mapDispatchToProps = (dispatch: Function) => ({
-  facebookAuth: () => {
-    dispatch(AccountActions.facebookClientAuth());
+  emailLogin: (email: string, password: string) => {
+    dispatch(authenticateWithEmail(email, password));
   }
 });
 
 export const LoginScreenContainer = connect(
   null,
   mapDispatchToProps
-)(LoginScreen);
+)(UnconnectedLoginScreen);

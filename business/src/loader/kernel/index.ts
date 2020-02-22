@@ -3,4 +3,4 @@
 //!
 
 export * from "./ObjectFactory";
-export * from "./FactoryKey";
+export * from "./FactoryKeys";

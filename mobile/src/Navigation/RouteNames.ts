@@ -29,6 +29,7 @@ export const RouteNames = {
   Payment: "Payment",
   NotiSetting: "NotiSetting",
   Share: "Share",
+  SeeMore: "SeeMore",
   Tabs: {
     TabRoot: "TabRoot",
     HomeTab: {

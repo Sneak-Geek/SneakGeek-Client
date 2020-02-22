@@ -4,13 +4,8 @@
 
 import { AuthProvider, AuthPayload, ApiRequestPayload, ApiRequestState } from "../types";
 import { createAction } from "redux-actions";
-import { ObjectFactory, FactoryKey } from "../loader/factory";
-import {
-  IAccountService,
-  ISettingsProvider,
-  SettingsKey,
-  IFacebookSDK
-} from "../loader/interfaces";
+import { ObjectFactory, FactoryKeys } from "../loader/kernel";
+import { IAccountService, ISettingsProvider, SettingsKey, IFacebookSDK } from "../loader/interfaces";
 
 export namespace AccountActions {
   export const Names = {
@@ -19,9 +14,7 @@ export namespace AccountActions {
     UPDATE_UPDATE_USER_PROFILE_STATE: "UPDATE_UPDATE_USER_PROFILE_STATE"
   };
 
-  export const updateAuthState = createAction<ApiRequestPayload<AuthPayload>>(
-    Names.UPDATE_AUTH_STATE
-  );
+  export const updateAuthState = createAction<ApiRequestPayload<AuthPayload>>(Names.UPDATE_AUTH_STATE);
 
   export const onPremAuth = (accessToken: string, provider: AuthProvider) => {
     return async (dispatch: Function) => {
@@ -34,12 +27,8 @@ export namespace AccountActions {
         })
       );
 
-      const accountService = ObjectFactory.getObjectInstance<IAccountService>(
-        "IAccountService"
-      );
-      const settings = ObjectFactory.getObjectInstance<ISettingsProvider>(
-        FactoryKey.ISettingsProvider
-      );
+      const accountService = ObjectFactory.getObjectInstance<IAccountService>(FactoryKeys.IAccountService);
+      const settings = ObjectFactory.getObjectInstance<ISettingsProvider>(FactoryKeys.ISettingsProvider);
 
       try {
         const accountPayload = await accountService.login(accessToken, provider);
@@ -87,7 +76,7 @@ export namespace AccountActions {
   export const facebookClientAuth = () => {
     return async (dispatch: Function) => {
       const permissions = ["public_profile", "email"];
-      const fbSdk = ObjectFactory.getObjectInstance<IFacebookSDK>(FactoryKey.IFacebookSDK);
+      const fbSdk = ObjectFactory.getObjectInstance<IFacebookSDK>(FactoryKeys.IFacebookSDK);
       try {
         const loginResult = await fbSdk.loginWithPermission(permissions);
 
