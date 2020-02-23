@@ -1,4 +1,4 @@
-import { Account, Profile } from "../model";
+import { Account, Profile, Catalog } from "../model";
 export declare enum NetworkRequestState {
     NOT_STARTED = 0,
     REQUESTING = 1,
@@ -17,3 +17,4 @@ export declare type AuthenticationPayload = NetworkPayload<{
 export declare type GetUserProfilePayload = NetworkPayload<{
     profile: Profile;
 }>;
+export declare type CatalogPayload = NetworkPayload<Catalog[]>;
