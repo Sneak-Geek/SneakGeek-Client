@@ -71,6 +71,15 @@ export const NavigationReducers = (state: NavigationState = initialState, action
         state
       );
       break;
+    case Actions.NavigationActions.NAVIGATE_TO_LOGIN_BY_LOGOUT:
+      nextState = AppNavigator.router.getStateForAction(
+        StackActions.reset({
+          index: 0,
+          actions: [NavigationActions.navigate({ routeName: RouteNames.Authentication })]
+        }),
+        state
+      );
+      break;
     default:
       nextState = AppNavigator.router.getStateForAction(action as any, state);
   }

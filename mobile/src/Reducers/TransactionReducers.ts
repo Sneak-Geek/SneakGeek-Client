@@ -2,13 +2,13 @@
 // ! Copyright (c) 2019 - SneakGeek. All rights reserved
 // !
 
-import { Action, handleActions } from "redux-actions";
+import { Action } from "redux-actions";
 import {
-  updateGetAvailableSellOrders,
-  updateGetSellHistory,
-  updateSellState,
   updateBuyState,
-  updateGetBuyHistory
+  updateGetAvailableSellOrders,
+  updateGetBuyHistory,
+  updateGetSellHistory,
+  updateSellState
 } from "../Actions";
 import {
   AvailableSellOrdersPayload,
@@ -18,6 +18,7 @@ import {
   SellShoePayload
 } from "../Shared/Payload";
 import { NetworkRequestState } from "../Shared/State";
+import { handleActionsWithReset } from "../Utilities/ReduxUtilities";
 
 export interface ITransactionState {
   sellShoeState: SellShoePayload;
@@ -49,7 +50,7 @@ const initialState: ITransactionState = {
   }
 };
 
-export const TransactionReducers = handleActions<ITransactionState, any>(
+export const TransactionReducers = handleActionsWithReset<ITransactionState, any>(
   {
     [`${updateBuyState}`]: (state: ITransactionState, action: Action<BuyShoePayload>) => ({
       ...state,

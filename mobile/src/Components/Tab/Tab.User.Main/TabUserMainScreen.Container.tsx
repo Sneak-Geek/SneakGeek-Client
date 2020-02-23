@@ -7,7 +7,10 @@ import TabUserMainScreen from "./TabUserMainScreen";
 import { IAppState } from "../../../Store";
 import { NavigationActions } from "react-navigation";
 import { RouteNames } from "../../../Navigation";
-import { updateUserProfile } from "../../../Actions";
+import { navigateToLoginByLogout, reset, updateUserProfile } from "../../../Actions";
+import { container, Types } from "../../../Config/Inversify";
+import { IAppSettingsService } from "../../../Service/AppSettingsService";
+import { ImagePickerResponse } from "react-native-image-picker";
 
 const mapStateToProps = (state: IAppState) => ({
   account: state.AccountState.currentAccount,
@@ -89,8 +92,16 @@ const mapDispatchToProps = (dispatch: Function) => {
       );
     },
 
-    updateProfilePic: (imageUri: string) => {
-      dispatch(updateUserProfile({ userProvidedProfilePic: imageUri }));
+    updateProfilePic: (imageUri: ImagePickerResponse) => {
+      dispatch(updateUserProfile({ newProfilePic: imageUri.uri, profilePicType: imageUri.type }));
+    },
+
+    logout: () => {
+      const appSettingsService = container.get<IAppSettingsService>(Types.IAppSettingsService);
+      appSettingsService.clear();
+
+      dispatch(reset());
+      dispatch(navigateToLoginByLogout());
     }
   };
 };

@@ -2,8 +2,9 @@
 // ! Copyright (c) 2019 - SneakGeek. All rights reserved
 // !
 
-import { Action, handleActions } from "redux-actions";
+import { Action } from "redux-actions";
 import { dismissDialog, showDialogWithMessage } from "../Actions";
+import { handleActionsWithReset } from "../Utilities/ReduxUtilities";
 
 export interface IDialogState {
   isDialogOpen: boolean;
@@ -15,7 +16,7 @@ const initialState: IDialogState = {
   dialogMessage: ""
 };
 
-export const DialogReducers = handleActions<IDialogState, any>(
+export const DialogReducers = handleActionsWithReset<IDialogState, any>(
   {
     [`${showDialogWithMessage}`]: (state: IDialogState, action: Action<string>) => ({
       ...state,

@@ -4,14 +4,24 @@
 
 import * as React from "react";
 import { NavigationScreenOptions } from "react-navigation";
-import { ActionSheetIOS, SafeAreaView, ScrollView, StyleSheet, TouchableOpacity, View, Alert } from "react-native";
+import {
+  ActionSheetIOS,
+  SafeAreaView,
+  ScrollView,
+  StatusBar,
+  StyleSheet,
+  TouchableOpacity,
+  View,
+  ActivityIndicator
+} from "react-native";
 import { Image } from "react-native-elements";
-import ImagePicker, { ImagePickerResponse } from "react-native-image-picker";
+import ImagePicker, { ImagePickerResponse, ImagePickerOptions } from "react-native-image-picker";
 import { Text } from "../../../Shared/UI";
 import * as Assets from "../../../Assets";
 import { Account, Profile } from "../../../Shared/Model";
 import { NetworkRequestState } from "../../../Shared/State";
 import { TouchableWithoutFeedback } from "react-native-gesture-handler";
+import { TextStyle } from "../../../Shared/UI/Text";
 
 export interface IUserTabMainProps {
   account: Account;
@@ -27,7 +37,8 @@ export interface IUserTabMainProps {
   navigateToUserKind: () => void;
   navigateToNotiSetting: () => void;
   navigateToShare: () => void;
-  updateProfilePic: (imageUri: string) => void;
+  updateProfilePic: (image: ImagePickerResponse) => void;
+  logout: () => void;
 }
 
 interface IUserListOption {
@@ -38,7 +49,8 @@ interface IUserListOption {
 
 export default class TabUserMainScreen extends React.Component<IUserTabMainProps> {
   public static navigationOptions: NavigationScreenOptions = {
-    header: null
+    title: "Trang cá nhân",
+    headerTitleStyle: TextStyle.title3
   };
 
   private optionsList: IUserListOption[] = [
@@ -89,12 +101,13 @@ export default class TabUserMainScreen extends React.Component<IUserTabMainProps
     }
   ];
 
-  private readonly imagePickerOptions = {
+  private readonly imagePickerOptions: ImagePickerOptions = {
     title: "Upload profile picture",
     storageOptions: {
       skipBackup: true,
       path: "images"
-    }
+    },
+    quality: 0.5
   };
 
   public constructor /** override */(props: any) {
@@ -105,9 +118,10 @@ export default class TabUserMainScreen extends React.Component<IUserTabMainProps
   public /** override */ render(): React.ReactNode {
     return (
       <SafeAreaView>
+        {this._renderUpdateStatus()}
+        <StatusBar barStyle={"dark-content"} />
         <ScrollView showsVerticalScrollIndicator={false}>
           <View>
-            {this._renderPageTitle()}
             {this._renderBasicUserData()}
             {this._renderSettingsList()}
             {this._renderLogoutButton()}
@@ -117,15 +131,28 @@ export default class TabUserMainScreen extends React.Component<IUserTabMainProps
     );
   }
 
-  public /** override */ componentDidUpdate(prevProps: IUserTabMainProps) {
-    const updateProfileState = this.props.updateUserProfileState;
-    if (updateProfileState !== prevProps.updateUserProfileState && updateProfileState === NetworkRequestState.FAILED) {
-      Alert.alert("Đã xảy ra lỗi khi chỉnh sửa ảnh đại diện");
+  private _renderUpdateStatus() {
+    if (this.props.updateUserProfileState === NetworkRequestState.REQUESTING) {
+      return (
+        <View
+          style={{
+            position: "absolute",
+            top: 0,
+            bottom: 0,
+            left: 0,
+            right: 0,
+            backgroundColor: "rgba(0, 0,0, 0.4)",
+            zIndex: 1000,
+            alignItems: "center",
+            justifyContent: "center"
+          }}
+        >
+          <ActivityIndicator size={"large"} color={"white"} />
+        </View>
+      );
     }
-  }
 
-  private _renderPageTitle(): JSX.Element {
-    return <Text.Title1 style={{ textAlign: "center" }}>Cá nhân</Text.Title1>;
+    return null;
   }
 
   private _renderBasicUserData(): JSX.Element {
@@ -176,7 +203,7 @@ export default class TabUserMainScreen extends React.Component<IUserTabMainProps
 
   private _renderLogoutButton(): React.ReactNode {
     return (
-      <TouchableOpacity style={[styles.settingsContainer, styles.signOutContainer]}>
+      <TouchableOpacity onPress={() => this.props.logout()} style={[styles.settingsContainer, styles.signOutContainer]}>
         <Text.Body style={{ color: "white" }}>Đăng xuất</Text.Body>
       </TouchableOpacity>
     );
@@ -211,7 +238,7 @@ export default class TabUserMainScreen extends React.Component<IUserTabMainProps
   private _onSelectPhoto() {
     ImagePicker.launchImageLibrary(this.imagePickerOptions, (response: ImagePickerResponse) => {
       if (!response.didCancel && !response.error) {
-        this.props.updateProfilePic(response.uri);
+        this.props.updateProfilePic(response);
       }
     });
   }
@@ -219,7 +246,7 @@ export default class TabUserMainScreen extends React.Component<IUserTabMainProps
   private _onTakePhoto() {
     ImagePicker.launchCamera(this.imagePickerOptions, response => {
       if (!response.didCancel && !response.error) {
-        this.props.updateProfilePic(response.uri);
+        this.props.updateProfilePic(response);
       }
     });
   }

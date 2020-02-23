@@ -11,3 +11,4 @@ export * from "./NotificationActions";
 export * from "./NavigationActions";
 export * from "./AuthenticationActions";
 export * from "./DialogActions";
+export * from "./BaseActions";

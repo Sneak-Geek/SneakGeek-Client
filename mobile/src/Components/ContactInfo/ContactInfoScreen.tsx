@@ -12,7 +12,6 @@ import { TextInput } from "react-native-gesture-handler";
 
 interface IContactInfoScreenProps {
   navigateToSendRequireSuccess: () => void;
-  onShoePictureAdded: (picUrl: string) => void;
 }
 
 interface IContactInfoScreenState {
@@ -128,21 +127,6 @@ export class ContactInfoScreen extends React.Component<IContactInfoScreenProps, 
       </View>
     );
   }
-
-  // private _launchSystemImagePicker(): void {
-  //     ImagePicker.launchImageLibrary(this.imagePickerOptions, (response: ImagePickerResponse) => {
-  //         if (!response.didCancel && !response.error) {
-  //             console.log(`Image picked: ${response.uri}`);
-  //             this.setState(prevState => {
-  //                 this.props.onShoePictureAdded(response.uri);
-
-  //                 return {
-  //                     pictures: [...prevState.pictures, response.uri]
-  //                 };
-  //             });
-  //         }
-  //     });
-  // }
 
   private _renderPicture(pictureUri: string | null, index: number) {
     pictureUri = pictureUri as string;

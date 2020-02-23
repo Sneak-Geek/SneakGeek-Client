@@ -56,9 +56,9 @@ export const authenticationComplete = createAction<Account>(AccountActions.AUTHE
 export const updateStateGetUserProfile = createAction<GetUserProfilePayload>(
   AccountActions.UPDATE_STATE_GET_USER_PROFILE
 );
-export const updateStateUpdateUserProfile = createAction<UpdateUserProfilePayload>(
-  AccountActions.UPDATE_STATE_UPDATE_USER_PROFILE
-);
+export const updateStateUpdateUserProfile = createAction<
+  UpdateUserProfilePayload & { newProfilePic?: string; profilePicType?: string }
+>(AccountActions.UPDATE_STATE_UPDATE_USER_PROFILE);
 export const updateStateCheckAccountWithEmail = createAction<CheckAccountWithEmailPayload>(
   AccountActions.UPDATE_STATE_CHECK_ACCOUNT_WITH_EMAIL
 );
@@ -364,7 +364,7 @@ export const getUserProfile = (accessToken: string) => {
   };
 };
 
-export const updateUserProfile = (data: Partial<Profile>) => {
+export const updateUserProfile = (data: Partial<Profile & { newProfilePic?: string; profilePicType?: string }>) => {
   return async (dispatch: Function) => {
     dispatch(updateStateUpdateUserProfile({ state: NetworkRequestState.REQUESTING }));
 
@@ -372,13 +372,19 @@ export const updateUserProfile = (data: Partial<Profile>) => {
     const accountService = container.get<IAccountService>(Types.IAccountService);
     const cdnService = container.get<ICdnService>(Types.ICdnService);
     const accessToken = appSettings.getSettings().CurrentAccessToken as string;
+    const providedPic = data.newProfilePic;
 
     try {
-      if (data.userProvidedProfilePic) {
+      if (providedPic) {
+        const fileType = data.profilePicType || "";
         const urls = await cdnService.getImageUploadUrls(accessToken, 1);
+        await cdnService.uploadImage(providedPic, urls[0], fileType);
         data.userProvidedProfilePic = urls[0];
-        cdnService.uploadImage(data.userProvidedProfilePic, urls[0]);
       }
+
+      // avoid polutting mongo server
+      delete data.newProfilePic;
+      delete data.profilePicType;
 
       const result: boolean = await accountService.updateUserProfile(accessToken, data);
 

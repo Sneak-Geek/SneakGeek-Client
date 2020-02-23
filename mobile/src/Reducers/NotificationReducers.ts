@@ -1,31 +1,29 @@
-//!
-//! Copyright (c) 2019 - SneakGeek. All rights reserved
-//!
+// !
+// ! Copyright (c) 2019 - SneakGeek. All rights reserved
+// !
 
-import { handleActions, Action } from "redux-actions";
-import { showNotification, dismissNotification } from "../Actions";
+import { Action } from "redux-actions";
+import { dismissNotification, showNotification } from "../Actions";
 import uuid from "uuid";
+import { handleActionsWithReset } from "../Utilities/ReduxUtilities";
 
 export interface INotificationState {
-  notifications: {
+  notifications: Array<{
     id: string;
     message: string;
     timeout: number;
-  }[];
+  }>;
 }
 
 const initialState: INotificationState = {
   notifications: []
 };
 
-export const NotificationReducers = handleActions<INotificationState, any>(
+export const NotificationReducers = handleActionsWithReset<INotificationState, any>(
   {
     [`${showNotification}`]: (state: INotificationState, action: Action<string>) => ({
       ...state,
-      notifications: [
-        ...state.notifications,
-        { id: uuid.v1(), message: action.payload, timeout: 5 }
-      ]
+      notifications: [...state.notifications, { id: uuid.v1(), message: action.payload, timeout: 5 }]
     }),
     [`${dismissNotification}`]: (state: INotificationState, action: Action<string>) => ({
       ...state,
