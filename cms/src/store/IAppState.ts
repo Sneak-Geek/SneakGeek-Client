@@ -2,7 +2,7 @@
 //! Copyright (c) 2019 - SneakGeek. All rights reserved
 //!
 
-import { IUserState } from "business";
+import { IUserState, ICatalogState } from "business";
 
 export interface IAppState {
   router: {
@@ -10,4 +10,5 @@ export interface IAppState {
     action: any;
   };
   UserState: IUserState;
+  CatalogState: ICatalogState;
 }

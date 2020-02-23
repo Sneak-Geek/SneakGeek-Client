@@ -13,62 +13,100 @@ type State = {
 export class CatalogListOfSneakersScreen extends React.Component<Props, State> {
     array = [
         {
-            "name": "Balenciaga",
-            "description": "Ola Hola",
-            "action": "delete"
+            "_id": "5e1fcf7c211ec4001b26cf82",
+            "brand": "Nike",
+            "category": "Air Max 1",
+            "colorway": [
+                "Bordeaux",
+                "Desert Sand-Deep Burgundy-Bordeaux"
+            ],
+            "description": "",
+            "gender": "men",
+            "releaseDate": "2019-12-09T07:59:59.000Z",
+            "name": "Bordeaux Desert Sand",
+            "title": "Air Max 1 Bordeaux Desert Sand",
+            "styleId": "875844-602",
+            "imageUrl": "https://stockx.imgix.net/Nike-Air-Max-1-Bordeaux-Desert-Sand.png?fit=fill&bg=FFFFFF&w=700&h=500&auto=format,compress&trim=color&q=90&dpr=2&updated_at=1557802469"
+        },
+        {
+            "_id": "5e1fcf7c211ec4001b26eb25",
+            "brand": "Jordan",
+            "category": "Air Jordan One",
+            "colorway": [
+                "Black",
+                "White-University Red"
+            ],
+            "description": "",
+            "gender": "women",
+            "releaseDate": "2019-09-01T06:59:59.000Z",
+            "name": "Satin Black Toe (W)",
+            "title": "Jordan 1 Retro High Satin Black Toe (W)",
+            "styleId": "CD0461-016",
+            "imageUrl": "https://stockx.imgix.net/Air-Jordan-1-Retro-High-Satin-Black-Toe-W.png?fit=fill&bg=FFFFFF&w=700&h=500&auto=format,compress&trim=color&q=90&dpr=2&updated_at=1557337703"
         }
     ]
     render() {
         return (
             <div className="resize">
                 <Header as='h2'>
-                    <Image circular src='./blcg.png' /> Catalog Name
+                    <img src={"/blcg.png"} />
+                    Catalog Name
                 </Header>
 
                 <Table celled selectable>
                     <Table.Header>
                         <Table.Row>
                             <Table.HeaderCell>Image</Table.HeaderCell>
-                            <Table.HeaderCell>Sneaker</Table.HeaderCell>
+                            <Table.HeaderCell>Name</Table.HeaderCell>
+                            <Table.HeaderCell>Category</Table.HeaderCell>
+                            <Table.HeaderCell>Brand</Table.HeaderCell>
+                            <Table.HeaderCell>Gender</Table.HeaderCell>
                             <Table.HeaderCell>Description</Table.HeaderCell>
-                            <Table.HeaderCell>Action</Table.HeaderCell>
+                            <Table.HeaderCell>StyleId</Table.HeaderCell>
+                            <Table.HeaderCell>ReleaseDate</Table.HeaderCell>
+                            <Table.HeaderCell>ID</Table.HeaderCell>
+
+
                         </Table.Row>
                     </Table.Header>
 
                     <Table.Body>
                         <Table.Row>
-                            <Table.Cell>{this.array[0].name}</Table.Cell>
+                            <Table.Cell>
+                                <img className="image" src={"/blcg.png"} />
+                            </Table.Cell>
                             <Table.Cell>No Action</Table.Cell>
                             <Table.Cell>None</Table.Cell>
                             <Table.Cell>None</Table.Cell>
-                        </Table.Row>
-                        <Table.Row>
-                            <Table.Cell>Jamie</Table.Cell>
-                            <Table.Cell>Approved</Table.Cell>
-                            <Table.Cell>Requires call</Table.Cell>
+                            <Table.Cell>None</Table.Cell>
+                            <Table.Cell>None</Table.Cell>
+                            <Table.Cell>None</Table.Cell>
+                            <Table.Cell>None</Table.Cell>
                             <Table.Cell>None</Table.Cell>
                         </Table.Row>
                         <Table.Row>
-                            <Table.Cell>Jill</Table.Cell>
-                            <Table.Cell>Denied</Table.Cell>
-                            <Table.Cell>None</Table.Cell>
-                            <Table.Cell>None</Table.Cell>
-                        </Table.Row>
-                        <Table.Row warning>
-                            <Table.Cell>John</Table.Cell>
+                            <Table.Cell>
+                                <img className="image" src={"/blcg.png"} />
+                            </Table.Cell>
                             <Table.Cell>No Action</Table.Cell>
                             <Table.Cell>None</Table.Cell>
                             <Table.Cell>None</Table.Cell>
-                        </Table.Row>
-                        <Table.Row>
-                            <Table.Cell>Jamie</Table.Cell>
-                            <Table.Cell positive>Approved</Table.Cell>
-                            <Table.Cell warning>Requires call</Table.Cell>
+                            <Table.Cell>None</Table.Cell>
+                            <Table.Cell>None</Table.Cell>
+                            <Table.Cell>None</Table.Cell>
+                            <Table.Cell>None</Table.Cell>
                             <Table.Cell>None</Table.Cell>
                         </Table.Row>
                         <Table.Row>
-                            <Table.Cell>Jill</Table.Cell>
-                            <Table.Cell negative>Denied</Table.Cell>
+                            <Table.Cell>
+                                <img className="image" src={"/blcg.png"} />
+                            </Table.Cell>
+                            <Table.Cell>No Action</Table.Cell>
+                            <Table.Cell>None</Table.Cell>
+                            <Table.Cell>None</Table.Cell>
+                            <Table.Cell>None</Table.Cell>
+                            <Table.Cell>None</Table.Cell>
+                            <Table.Cell>None</Table.Cell>
                             <Table.Cell>None</Table.Cell>
                             <Table.Cell>None</Table.Cell>
                         </Table.Row>

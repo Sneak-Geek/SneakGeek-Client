@@ -9,7 +9,9 @@ import {
   IAccountService,
   AccountService,
   IFacebookSDK,
-  ISettingsProvider
+  ISettingsProvider,
+  ICatalogService,
+  CatalogService
 } from "business";
 import { FacebookSdk } from "./services";
 
@@ -21,6 +23,7 @@ ObjectFactory.register<IEnvVar>(FactoryKeys.IEnvVar, {
   __DEV__: process.env.NODE_ENV !== "production"
 });
 ObjectFactory.register<IAccountService>(FactoryKeys.IAccountService, new AccountService());
+ObjectFactory.register<ICatalogService>(FactoryKeys.ICatalogService, new CatalogService());
 ObjectFactory.register<IFacebookSDK>(FactoryKeys.IFacebookSDK, new FacebookSdk());
 ObjectFactory.register<ISettingsProvider>(
   FactoryKeys.ISettingsProvider,
