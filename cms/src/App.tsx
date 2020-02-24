@@ -22,7 +22,6 @@ export default class App extends React.Component<{}> {
             <Switch>
               <Route path="/login" component={LoginScreenContainer} />
               <Route path="/" render={() => <HomeScreen />} /> */}
-
             </Switch>
           </>
         </ConnectedRouter>

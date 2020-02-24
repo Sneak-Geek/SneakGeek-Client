@@ -20,7 +20,6 @@ import { connect } from "react-redux";
 import { IAppState } from "../../store/IAppState";
 import { IUserState, NetworkRequestState, getCurrentUser } from "business";
 import { CatalogScreen } from "../CatalogScreen/CatalogScreen";
-import { CatalogListOfSneakersScreen } from "../CatalogListOfSneakersScreen/CatalogListOfSneakersScreen";
 
 type Props = {
   currentPath: string;
@@ -36,7 +35,7 @@ export class UnconnectedHomeScreen extends React.Component<Props, State> {
   public constructor(props: any) {
     super(props);
     this.state = {
-      isMenuVisible: true
+      isMenuVisible: false
     };
   }
 
@@ -75,7 +74,8 @@ export class UnconnectedHomeScreen extends React.Component<Props, State> {
                   isMenuVisible: !this.state.isMenuVisible
                 })
               }
-              position={"left"}>
+              position={"left"}
+            >
               <Icon name={this.state.isMenuVisible ? "sidebar" : "ellipsis vertical"} />
             </Menu.Item>
             <Menu.Item position={"right"}>
@@ -108,11 +108,12 @@ export class UnconnectedHomeScreen extends React.Component<Props, State> {
     return (
       <Sidebar
         as={Menu}
-        animation={"push"}
+        animation={"overlay"}
         inverted={false}
         vertical={true}
         visible={this.state.isMenuVisible}
-        width={"wide"}>
+        width={"wide"}
+      >
         <Menu.Item link active={currentPath === "/dashboard"}>
           <Link to={"/dashboard"}>Tổng quan</Link>
           <Icon name={"grid layout"} />
@@ -147,6 +148,7 @@ export class UnconnectedHomeScreen extends React.Component<Props, State> {
       <Sidebar.Pusher>
         <Segment basic>
           <Switch>
+            <Route path={"/"} exact render={() => <Redirect to={"/dashboard"} />} />
             <Route path={"/dashboard"} render={() => <h3>Tổng quan</h3>} />
             <Route path={"/catalogs"} render={() => <CatalogScreen />} />
             <Route
@@ -154,7 +156,7 @@ export class UnconnectedHomeScreen extends React.Component<Props, State> {
               path={"/products"}
               render={() => <Redirect to={"/products/snkg"} />}
             />
-            <Route path={"/products/snkg"} render={() => <CatalogListOfSneakersScreen />} />
+            <Route path={"/products/snkg"} render={() => <h3>Hi</h3>} />
             <Route
               path={"/products/request"}
               render={() => <h3>Yêu cầu từ người dùng</h3>}
