@@ -10,17 +10,9 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
-import { ApiClient } from "./ApiClient";
-import { ObjectFactory, FactoryKeys } from "../kernel";
+import { BaseService } from "./BaseService";
 import HttpStatus from "http-status";
-export class AccountService {
-    constructor() {
-        this.apiClient = new ApiClient.Builder()
-            .registerDevState(ObjectFactory.getObjectInstance(FactoryKeys.IEnvVar).__DEV__)
-            .registerDevUrl("http://localhost:8080/api/v1")
-            .registerProdUrl("https://sneakgeek-test.azurewebsites.net/api/v1")
-            .build();
-    }
+export class AccountService extends BaseService {
     emailLogin(email, password) {
         return __awaiter(this, void 0, void 0, function* () {
             const response = yield this.apiClient.getInstance().post(`/account/email-login`, { email, password }, {
@@ -28,7 +20,8 @@ export class AccountService {
                     "Access-Control-Request-Method": "POST"
                 }
             });
-            if (response && (response.status === HttpStatus.CREATED || response.status === HttpStatus.OK)) {
+            if (response &&
+                (response.status === HttpStatus.CREATED || response.status === HttpStatus.OK)) {
                 return response.data;
             }
             return undefined;
@@ -37,8 +30,13 @@ export class AccountService {
     login(token, provider) {
         return __awaiter(this, void 0, void 0, function* () {
             const headers = { access_token: token };
-            const response = yield this.apiClient.getInstance().post(`/account/${provider}`, {}, { headers });
-            if (response && (response.status === HttpStatus.CREATED || response.status === HttpStatus.OK)) {
+            const response = yield this.apiClient
+                .getInstance()
+                .post(`/account/${provider}`, {}, { headers });
+            {
+            }
+            if (response &&
+                (response.status === HttpStatus.CREATED || response.status === HttpStatus.OK)) {
                 return response.data;
             }
             return undefined;

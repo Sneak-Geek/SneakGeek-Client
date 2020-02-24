@@ -5,23 +5,14 @@
 import { IAccountService } from "../interfaces";
 import { AuthProvider } from "../../types";
 import { Account, Profile } from "../../model";
-import { ApiClient } from "./ApiClient";
-import { ObjectFactory, FactoryKeys } from "../kernel";
-import { IEnvVar } from "../interfaces";
+import { BaseService } from "./BaseService";
 import HttpStatus from "http-status";
 
-export class AccountService implements IAccountService {
-  private apiClient: ApiClient.Instance;
-
-  public constructor() {
-    this.apiClient = new ApiClient.Builder()
-      .registerDevState(ObjectFactory.getObjectInstance<IEnvVar>(FactoryKeys.IEnvVar).__DEV__)
-      .registerDevUrl("http://localhost:8080/api/v1")
-      .registerProdUrl("https://sneakgeek-test.azurewebsites.net/api/v1")
-      .build();
-  }
-
-  public async emailLogin(email: string, password: string): Promise<{ user: Account; token: string } | undefined> {
+export class AccountService extends BaseService implements IAccountService {
+  public async emailLogin(
+    email: string,
+    password: string
+  ): Promise<{ user: Account; token: string } | undefined> {
     const response = await this.apiClient.getInstance().post(
       `/account/email-login`,
       { email, password },
@@ -32,24 +23,38 @@ export class AccountService implements IAccountService {
       }
     );
 
-    if (response && (response.status === HttpStatus.CREATED || response.status === HttpStatus.OK)) {
+    if (
+      response &&
+      (response.status === HttpStatus.CREATED || response.status === HttpStatus.OK)
+    ) {
       return response.data;
     }
 
     return undefined;
   }
 
-  public async login(token: string, provider: AuthProvider): Promise<{ user: Account; token: string } | undefined> {
+  public async login(
+    token: string,
+    provider: AuthProvider
+  ): Promise<{ user: Account; token: string } | undefined> {
     const headers = { access_token: token };
-    const response = await this.apiClient.getInstance().post(`/account/${provider}`, {}, { headers });
-
-    if (response && (response.status === HttpStatus.CREATED || response.status === HttpStatus.OK)) {
+    const response = await this.apiClient
+      .getInstance()
+      .post(`/account/${provider}`, {}, { headers });
+    {
+    }
+    if (
+      response &&
+      (response.status === HttpStatus.CREATED || response.status === HttpStatus.OK)
+    ) {
       return response.data;
     }
 
     return undefined;
   }
-  public async getCurrentUser(accessToken: string): Promise<{ user: Account; token: string } | undefined> {
+  public async getCurrentUser(
+    accessToken: string
+  ): Promise<{ user: Account; token: string } | undefined> {
     const headers = { authorization: accessToken };
     const response = await this.apiClient.getInstance().get(`/account/get`, { headers });
 
