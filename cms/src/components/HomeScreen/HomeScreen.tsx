@@ -19,7 +19,7 @@ import { styles } from "./style";
 import { connect } from "react-redux";
 import { IAppState } from "../../store/IAppState";
 import { IUserState, NetworkRequestState, getCurrentUser } from "business";
-import { CatalogScreen } from "../CatalogScreen/CatalogScreen";
+import { CatalogScreen } from "../CatalogScreen";
 
 type Props = {
   currentPath: string;
