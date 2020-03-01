@@ -45,7 +45,7 @@ export class AccountService extends BaseService {
     getCurrentUser(accessToken) {
         return __awaiter(this, void 0, void 0, function* () {
             const headers = { authorization: accessToken };
-            const response = yield this.apiClient.getInstance().get(`/account/get`, { headers });
+            const response = yield this.apiClient.getInstance().get(`/account`, { headers });
             if (response && response.status === HttpStatus.OK) {
                 return response.data;
             }

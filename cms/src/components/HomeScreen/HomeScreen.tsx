@@ -20,6 +20,7 @@ import { connect } from "react-redux";
 import { IAppState } from "../../store/IAppState";
 import { IUserState, NetworkRequestState, getCurrentUser } from "business";
 import { CatalogScreen } from "../CatalogScreen";
+import { CatalogManagementScreen } from "../CatalogManagementScreen";
 
 type Props = {
   currentPath: string;
@@ -150,7 +151,8 @@ export class UnconnectedHomeScreen extends React.Component<Props, State> {
           <Switch>
             <Route path={"/"} exact render={() => <Redirect to={"/dashboard"} />} />
             <Route path={"/dashboard"} render={() => <h3>Tổng quan</h3>} />
-            <Route path={"/catalogs"} render={() => <CatalogScreen />} />
+            <Route exact path={"/catalogs"} render={() => <CatalogScreen />} />
+            <Route path={"/catalogs/:id"} render={(props) => <CatalogManagementScreen {...props} />} />
             <Route
               exact
               path={"/products"}

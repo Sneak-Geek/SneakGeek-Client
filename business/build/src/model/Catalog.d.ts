@@ -1,3 +1,4 @@
+import { Shoe } from "./Shoe";
 export declare type Catalog = {
     showOnHomepagePriority: number;
     _id: string;
@@ -5,5 +6,5 @@ export declare type Catalog = {
     updatedAt: string;
     title: string;
     description?: string;
-    products: string[];
+    shoes: Shoe[];
 };

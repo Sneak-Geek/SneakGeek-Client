@@ -5,11 +5,14 @@
 import React from "react";
 import { Table, Button, Icon, Segment, Dimmer, Loader, Header } from "semantic-ui-react";
 import "./style.css";
-import { getAllCatalogs, ICatalogState, Catalog, NetworkRequestState } from "business";
+import { getAllCatalogs, Catalog, NetworkRequestState } from "business";
 import { connect } from "react-redux";
 import { IAppState } from "../../store/IAppState";
+import { History } from "history";
+import { Link } from "react-router-dom";
 
 type Props = {
+  history?: History;
   getAllCatalogs: () => void;
   catalogState: {
     state: NetworkRequestState;
@@ -27,12 +30,6 @@ type State = {
 export class UnconnectedCatalogScreen extends React.Component<Props, State> {
   constructor(props: Props) {
     super(props);
-    function isEmpty(obj: any) {
-      for (var key in obj) {
-        if (obj.hasOwnProperty(key)) return false;
-      }
-      return true;
-    }
     this.state = {
       error: null,
       isLoaded: false,
@@ -84,7 +81,6 @@ export class UnconnectedCatalogScreen extends React.Component<Props, State> {
           <Table.HeaderCell>Name</Table.HeaderCell>
           <Table.HeaderCell>Description</Table.HeaderCell>
           <Table.HeaderCell></Table.HeaderCell>
-          <Table.HeaderCell></Table.HeaderCell>
         </Table.Row>
       </Table.Header>
     );
@@ -99,22 +95,20 @@ export class UnconnectedCatalogScreen extends React.Component<Props, State> {
               <Table.Cell collapsing>{element.title}</Table.Cell>
               <Table.Cell>{element.description}</Table.Cell>
               <Table.Cell collapsing>
-                <Button
-                  onClick={() => {}}
-                  floated={"right"}
-                  size={"small"}
-                  compact
-                  icon={"eye"}
-                />
-              </Table.Cell>
-              <Table.Cell collapsing>
-                <Button
-                  onClick={() => {}}
-                  floated={"right"}
-                  size={"small"}
-                  compact
-                  icon={"small pencil alternate icon"}
-                />
+                <Link
+                  to={{
+                    pathname: `/catalogs/${element._id}`,
+                    state: { catalog: element }
+                  }}
+                >
+                  <Button
+                    onClick={() => {}}
+                    floated={"right"}
+                    size={"small"}
+                    compact
+                    icon={"small pencil alternate icon"}
+                  />
+                </Link>
               </Table.Cell>
             </Table.Row>
           );
@@ -127,7 +121,7 @@ export class UnconnectedCatalogScreen extends React.Component<Props, State> {
     return (
       <Table.Footer fullWidth>
         <Table.Row>
-          <Table.HeaderCell colSpan="4">
+          <Table.HeaderCell colSpan="3">
             <Button floated="right" icon labelPosition="left" primary size="small">
               <Icon name="plus" /> Add new catalog
             </Button>

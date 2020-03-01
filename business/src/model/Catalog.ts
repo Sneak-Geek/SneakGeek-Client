@@ -1,3 +1,5 @@
+import { Shoe } from "./Shoe";
+
 export type Catalog = {
   showOnHomepagePriority: number;
   _id: string;
@@ -5,5 +7,5 @@ export type Catalog = {
   updatedAt: string;
   title: string;
   description?: string;
-  products: string[];
+  shoes: Shoe[];
 };
