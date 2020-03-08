@@ -1,5 +1,15 @@
 import React from "react";
-import { Header, Input, Table, Icon, Button, Modal, Search, Grid } from "semantic-ui-react";
+import {
+  Header,
+  Input,
+  Table,
+  Icon,
+  Button,
+  Modal,
+  Search,
+  Grid,
+  Popup
+} from "semantic-ui-react";
 import "./CatalogManagementScreen.css";
 import axios from "axios";
 import {
@@ -45,7 +55,7 @@ export class CatalogManagementScreen extends React.Component<Props, State> {
   render() {
     return (
       <div>
-        <Header as="h2">Catalog</Header>
+        {this._renderCatalogInfo()}
         <Table celled selectable>
           {this._renderTableHeader()}
           {this._renderTableBody(this.state.catalog)}
@@ -56,6 +66,38 @@ export class CatalogManagementScreen extends React.Component<Props, State> {
     );
   }
 
+  private _renderCatalogInfo() {
+    return (
+      <Popup
+        content="Thay đổi tên Catalog"
+        position="bottom left"
+        trigger={
+          <Input
+            className="input-catalog-style"
+            icon="pencil"
+            iconPosition="left"
+            compact
+            size="massive"
+            transparent
+            placeholder={this.state.catalog.title}
+            onChange={this._handleInputCatalogTitleChange.bind(this)}
+          />
+        }
+      />
+    );
+  }
+
+  private _handleInputCatalogTitleChange(e: any, data: any) {
+    const { value } = data;
+    this.setState({
+      catalog: {
+        ...this.state.catalog,
+        title: value
+      }
+    });
+    console.log(data);
+  }
+
   private _renderTableHeader(): JSX.Element {
     return (
       <Table.Header>
@@ -64,7 +106,7 @@ export class CatalogManagementScreen extends React.Component<Props, State> {
           <Table.HeaderCell>Tên giày</Table.HeaderCell>
           <Table.HeaderCell>Thương hiệu</Table.HeaderCell>
           <Table.HeaderCell>Mô tả</Table.HeaderCell>
-          <Table.HeaderCell>Xoá</Table.HeaderCell>
+          <Table.HeaderCell>Xoá giày</Table.HeaderCell>
         </Table.Row>
       </Table.Header>
     );
@@ -117,12 +159,11 @@ export class CatalogManagementScreen extends React.Component<Props, State> {
     this.setState({ isLoading: true, searchTextInput: value });
     const response = await axios.get(`${this.FIND_SHOE_URL}?title=${value}`);
     const searchResults = response.data.slice(0, 5);
-    const formattedSearchResults = searchResults.map((e: any) => {
+    const formattedSearchResults = searchResults.map((e: Shoe) => {
       return {
         image: e.imageUrl,
         ...e,
-        price: "$10,000",
-        description: "Dep vkl"
+        price: "$10,000"
       };
     });
     this.setState({ isLoading: false, searchResults: formattedSearchResults });
@@ -192,25 +233,25 @@ export class CatalogManagementScreen extends React.Component<Props, State> {
         authorization_token: token
       }
     });
+
+    this.props.history.goBack();
   }
 
   private _renderSaveAndCancelButtons(): JSX.Element {
     return (
       <div>
-        <Link to={"/catalogs"}>
-          <Button
-            onClick={() => {
-              this._saveProducts();
-            }}
-            floated="right"
-            icon
-            labelPosition="left"
-            size="small"
-            color="blue"
-          >
-            <Icon name="save outline" /> Lưu
-          </Button>
-        </Link>
+        <Button
+          onClick={() => {
+            this._saveProducts();
+          }}
+          floated="right"
+          icon
+          labelPosition="left"
+          size="small"
+          color="blue"
+        >
+          <Icon name="save outline" /> Lưu
+        </Button>
         <Button
           onClick={() => this.props.history.goBack()}
           floated="right"

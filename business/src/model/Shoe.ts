@@ -1,4 +1,3 @@
-
 export interface Shoe {
   _id: string;
   brand: string;

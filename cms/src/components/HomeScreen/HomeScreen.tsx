@@ -151,8 +151,15 @@ export class UnconnectedHomeScreen extends React.Component<Props, State> {
           <Switch>
             <Route path={"/"} exact render={() => <Redirect to={"/dashboard"} />} />
             <Route path={"/dashboard"} render={() => <h3>Tổng quan</h3>} />
-            <Route exact path={"/catalogs"} render={() => <CatalogScreen />} />
-            <Route path={"/catalogs/:id"} render={(props) => <CatalogManagementScreen {...props} />} />
+            <Route
+              exact
+              path={"/catalogs"}
+              render={props => <CatalogScreen {...props} />}
+            />
+            <Route
+              path={"/catalogs/:id"}
+              render={props => <CatalogManagementScreen {...props} />}
+            />
             <Route
               exact
               path={"/products"}

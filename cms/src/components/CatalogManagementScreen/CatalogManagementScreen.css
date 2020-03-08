@@ -2,7 +2,9 @@
   width: 80px;
 }
 
-.dimmed.dimmable > .ui.animating.dimmer, .dimmed.dimmable > .ui.visible.dimmer, .ui.active.dimmer {
+.dimmed.dimmable > .ui.animating.dimmer,
+.dimmed.dimmable > .ui.visible.dimmer,
+.ui.active.dimmer {
   display: flex;
   align-items: center;
   justify-content: center;
@@ -10,13 +12,25 @@
 .ui.modal,
 .ui.active.modal {
   height: 600px;
-  margin: 0 auto!important;
+  margin: 0 auto !important;
   top: auto !important;
   left: auto !important;
   transform-origin: center !important;
-  transition: all ease .5s;
+  transition: all ease 0.5s;
 }
 
-.input{
+.input {
   width: 100%;
+}
+
+.input-catalog-style .ui.input input {
+  color: black !important;
+  font-weight: bold;
+  opacity: 1 !important;
+}
+
+.input-catalog-style ::placeholder {
+  color: black !important;
+  font-weight: bold !important;
+  opacity: 1 !important;
 }
