@@ -21,7 +21,7 @@ import {
   SettingsKey
 } from "business";
 import { History } from "history";
-import { Link } from "react-router-dom";
+import { privateEncrypt } from "crypto";
 
 type Props = {
   history: History;
@@ -162,8 +162,7 @@ export class CatalogManagementScreen extends React.Component<Props, State> {
     const formattedSearchResults = searchResults.map((e: Shoe) => {
       return {
         image: e.imageUrl,
-        ...e,
-        price: "$10,000"
+        ...e
       };
     });
     this.setState({ isLoading: false, searchResults: formattedSearchResults });
