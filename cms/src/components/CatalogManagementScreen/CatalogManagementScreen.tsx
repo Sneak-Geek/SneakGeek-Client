@@ -162,8 +162,7 @@ export class CatalogManagementScreen extends React.Component<Props, State> {
     const formattedSearchResults = searchResults.map((e: Shoe) => {
       return {
         image: e.imageUrl,
-        ...e,
-        price: "$10,000"
+        ...e
       };
     });
     this.setState({ isLoading: false, searchResults: formattedSearchResults });
