@@ -1,7 +1,7 @@
 import { createAction } from "redux-actions";
 import { AuthenticationPayload, NetworkRequestState } from "../payload";
 import { ObjectFactory, FactoryKeys } from "../loader/kernel";
-import { IAccountService, ISettingsProvider } from "../loader/interfaces";
+import { IAccountService, ISettingsProvider, IFacebookSDK } from "../loader/interfaces";
 import { SettingsKey } from "../loader/interfaces";
 import { getUserProfile } from "./ProfileActions";
 import { Dispatch } from "redux";
@@ -80,3 +80,38 @@ export const authenticateWithEmail = (email: string, password: string) => {
     }
   };
 };
+
+export const authenticateWithFb = () => {
+  return async (dispatch: Function) => {
+    const permissions = ["public_profile", "email"];
+    const fbSdk = ObjectFactory.getObjectInstance<IFacebookSDK>(FactoryKeys.IFacebookSDK);
+    const accountService = ObjectFactory.getObjectInstance<IAccountService>(
+      FactoryKeys.IAccountService
+    );
+    const settings = ObjectFactory.getObjectInstance<ISettingsProvider>(
+      FactoryKeys.ISettingsProvider
+    );
+
+    try {
+      const loginResult = await fbSdk.loginWithPermission(permissions);
+
+      if (loginResult.isCancelled) {
+        dispatch(updateAuthenticationState({
+          state: NetworkRequestState.FAILED
+        }));
+      } else {
+        const accessToken = await fbSdk.getCurrentAccessToken();
+        const accountPayload = await accountService.login(accessToken, "facebook");
+        await settings.setValue(SettingsKey.CurrentAccessToken, accountPayload!.token);
+
+        dispatch(updateAuthenticationState({
+          state: NetworkRequestState.SUCCESS,
+          data: accountPayload
+        }));
+      }
+    } catch (error) {
+      dispatch(updateAuthenticationState({ state: NetworkRequestState.FAILED, error }));
+    }
+  };
+}
+

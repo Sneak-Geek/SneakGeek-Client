@@ -11,6 +11,8 @@ import { SellOrder } from "../../Shared/Model";
 import { buyShoe, navigateReplaceToHome } from "../../Actions";
 
 const mapStateToProps = (state: IAppState) => ({
+  account: state.AccountState.currentAccount,
+  profile: state.AccountState.userProfileState.profile,
   buyState: state.TransactionState.buyShoeState.state
 });
 
@@ -28,6 +30,15 @@ const mapDispatchToProps = (dispatch: Function) => ({
 
   navigateToHome: () => {
     dispatch(navigateReplaceToHome());
+  },
+
+  navigateToWebViewHostedPayment: (url: string) => {
+    dispatch(
+      NavigationActions.navigate({
+        routeName: RouteNames.WebViewPayment,
+        params: { url }
+      })
+    );
   }
 });
 

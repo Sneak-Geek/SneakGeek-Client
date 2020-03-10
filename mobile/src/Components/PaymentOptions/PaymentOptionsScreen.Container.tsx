@@ -8,7 +8,11 @@ import { PaymentOptionsScreen } from "./PaymentOptionsScreen";
 import { NavigationActions } from "react-navigation";
 import { RouteNames } from "../../Navigation";
 
-const mapStateToProps = (_state: IAppState) => ({});
+const mapStateToProps = (state: IAppState) => ({
+  account: state.AccountState.currentAccount,
+  profile: state.AccountState.userProfileState.profile
+});
+
 const mapDispatchToProps = (dispatch: Function) => ({
   navigateToAddCard: () => {
     dispatch(
@@ -19,7 +23,4 @@ const mapDispatchToProps = (dispatch: Function) => ({
   }
 });
 
-export const PaymentOptionsScreenContainer = connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(PaymentOptionsScreen);
+export const PaymentOptionsScreenContainer = connect(mapStateToProps, mapDispatchToProps)(PaymentOptionsScreen);

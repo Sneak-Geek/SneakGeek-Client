@@ -156,6 +156,8 @@ PODS:
     - React
   - react-native-viewpager (3.3.0):
     - React
+  - react-native-webview (8.1.2):
+    - React
   - React-RCTActionSheet (0.60.4):
     - React-Core (= 0.60.4)
   - React-RCTAnimation (0.60.4):
@@ -216,6 +218,7 @@ DEPENDENCIES:
   - react-native-safari-view (from `../node_modules/react-native-safari-view`)
   - react-native-splash-screen (from `../node_modules/react-native-splash-screen`)
   - "react-native-viewpager (from `../node_modules/@react-native-community/viewpager`)"
+  - react-native-webview (from `../node_modules/react-native-webview`)
   - React-RCTActionSheet (from `../node_modules/react-native/Libraries/ActionSheetIOS`)
   - React-RCTAnimation (from `../node_modules/react-native/Libraries/NativeAnimation`)
   - React-RCTBlob (from `../node_modules/react-native/Libraries/Blob`)
@@ -287,6 +290,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native-splash-screen"
   react-native-viewpager:
     :path: "../node_modules/@react-native-community/viewpager"
+  react-native-webview:
+    :path: "../node_modules/react-native-webview"
   React-RCTActionSheet:
     :path: "../node_modules/react-native/Libraries/ActionSheetIOS"
   React-RCTAnimation:
@@ -356,6 +361,7 @@ SPEC CHECKSUMS:
   react-native-safari-view: 955d7160d159241b8e9395d12d10ea0ef863dcdd
   react-native-splash-screen: 200d11d188e2e78cea3ad319964f6142b6384865
   react-native-viewpager: a7b438ca32c57b2614ece2a123e7fe116f743131
+  react-native-webview: fcb5f377aadc216273300f452ee0d321fb85809b
   React-RCTActionSheet: 9f71d7ae3e8fb10e08d162cbf14c621349dbfab3
   React-RCTAnimation: 981d8c95b0e30918a9832ccac32af83562a27fae
   React-RCTBlob: 21e73d1020a302a75fed30dbaee9f15287b80baa

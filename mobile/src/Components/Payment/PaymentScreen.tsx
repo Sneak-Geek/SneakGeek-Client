@@ -5,27 +5,32 @@
 import * as React from "react";
 import {
   ActionSheetIOS,
+  Alert,
   Image,
   SafeAreaView,
   ScrollView,
   StyleSheet,
   TouchableOpacity,
-  View,
-  Alert
+  View
 } from "react-native";
 import { NavigationScreenProps, ScreenProps, StackActions } from "react-navigation";
 import { Icon } from "react-native-elements";
 import * as Assets from "../../Assets";
 import { RowCard, Text } from "../../Shared/UI";
-import { getLatestPrice, SellOrder } from "../../Shared/Model";
+import { getLatestPrice, SellOrder, Account, Profile } from "../../Shared/Model";
 import { toCurrencyString } from "../../Utilities/StringUtil";
 import { NetworkRequestState } from "../../Shared/State";
+import { container, Types } from "../../Config/Inversify";
+import { ITransactionService } from "../../Service";
 
 export interface IPaymentScreenProps {
+  account?: Account;
+  profile?: Profile;
   navigation: ScreenProps;
   buyState: NetworkRequestState;
   // dispatch props
   navigateToHome: () => void;
+  navigateToWebViewHostedPayment: (url: string) => void;
   buyShoe: (sellOrder: SellOrder) => void;
 }
 
@@ -54,6 +59,7 @@ export class PaymentScreen extends React.Component<IPaymentScreenProps, IPayment
   });
 
   private order: SellOrder | null = null;
+  private transactionService: ITransactionService = container.get<ITransactionService>(Types.ITransactionService);
 
   public constructor(props: any) {
     super(props);
@@ -124,7 +130,7 @@ export class PaymentScreen extends React.Component<IPaymentScreenProps, IPayment
       <View style={{ paddingHorizontal: 20, paddingTop: 15 }}>
         <RowCard title="CỠ GIÀY" description={this.order?.shoeSize} />
         <RowCard title="TÌNH TRẠNG" description={this.order?.shoeCondition} border={true} />
-        <RowCard title="ĐỊA CHỈ GIAO HÀNG" description="Số 20 phố huế, quận hai bà trưng, hà nội" green={true} />
+        <RowCard title="ĐỊA CHỈ GIAO HÀNG" description={this.props.profile?.userProvidedAddress} green={true} />
         <RowCard title="HÌNH THỨC GIAO HÀNG" description="Chuyển phát nhanh" green={true} />
         <RowCard title="GIÁ MUA" description={toCurrencyString(getLatestPrice(order).toString())} green={true} />
         <RowCard title="PHÍ GIAO HÀNG" description="VND 1,800,000" />
@@ -146,11 +152,11 @@ export class PaymentScreen extends React.Component<IPaymentScreenProps, IPayment
             },
             buttonIndex => {
               if (options[buttonIndex] === "Thanh toán quốc tế") {
-                // this.transactionService.launchIntlPaymentPage(order);
-                this.props.buyShoe(this.order!);
+                const url = this.transactionService.processPaymentIntl(this.order!, this.props.account!._id);
+                this.props.navigateToWebViewHostedPayment(url);
               } else if (options[buttonIndex] === "Thanh toán nội địa") {
-                // this.transactionService.launchDomesticPaymentPage(order);
-                this.props.buyShoe(this.order!);
+                const url = this.transactionService.processPaymentDomestic(this.order!, this.props.account!._id);
+                this.props.navigateToWebViewHostedPayment(url);
               }
             }
           );

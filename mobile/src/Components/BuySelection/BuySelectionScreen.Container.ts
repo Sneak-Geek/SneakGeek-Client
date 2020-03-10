@@ -12,6 +12,7 @@ import { SellOrder } from "../../Shared/Model";
 const mapStateToProps = (state: IAppState) => ({
   availableSellOrders: state.TransactionState.availableSellOrdersState?.sellOrders
 });
+
 const mapDispatchToProps = (dispatch: Function) => ({
   navigateToPayment: (order?: SellOrder) => {
     dispatch(

@@ -66,3 +66,31 @@ export const authenticateWithEmail = (email, password) => {
         }
     });
 };
+export const authenticateWithFb = () => {
+    return (dispatch) => __awaiter(void 0, void 0, void 0, function* () {
+        const permissions = ["public_profile", "email"];
+        const fbSdk = ObjectFactory.getObjectInstance(FactoryKeys.IFacebookSDK);
+        const accountService = ObjectFactory.getObjectInstance(FactoryKeys.IAccountService);
+        const settings = ObjectFactory.getObjectInstance(FactoryKeys.ISettingsProvider);
+        try {
+            const loginResult = yield fbSdk.loginWithPermission(permissions);
+            if (loginResult.isCancelled) {
+                dispatch(updateAuthenticationState({
+                    state: NetworkRequestState.FAILED
+                }));
+            }
+            else {
+                const accessToken = yield fbSdk.getCurrentAccessToken();
+                const accountPayload = yield accountService.login(accessToken, "facebook");
+                yield settings.setValue(SettingsKey.CurrentAccessToken, accountPayload.token);
+                dispatch(updateAuthenticationState({
+                    state: NetworkRequestState.SUCCESS,
+                    data: accountPayload
+                }));
+            }
+        }
+        catch (error) {
+            dispatch(updateAuthenticationState({ state: NetworkRequestState.FAILED, error }));
+        }
+    });
+};

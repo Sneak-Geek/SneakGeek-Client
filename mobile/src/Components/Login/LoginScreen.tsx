@@ -2,24 +2,17 @@
 //! Copyright (c) 2019 - SneakGeek. All rights reserved
 //!
 
-import * as React from "react";
-import {
-  View,
-  TouchableOpacity,
-  Image,
-  SafeAreaView,
-  ActivityIndicator,
-  Alert
-} from "react-native";
-import styles from "./styles";
-import { Input, Button, Icon } from "react-native-elements";
-import { Account } from "../../Shared/Model";
-import { Text } from "../../Shared/UI";
-import * as Assets from "../../Assets";
-import * as StringUtil from "../../Utilities/StringUtil";
-import KeyboardSpacer from "react-native-keyboard-spacer";
-import { ScrollView } from "react-native-gesture-handler";
-import { NetworkRequestState } from "../../Shared/State";
+import * as React from 'react';
+import { View, TouchableOpacity, Image, SafeAreaView, ActivityIndicator, Alert } from 'react-native';
+import styles from './styles';
+import { Input, Button, Icon } from 'react-native-elements';
+import { Account } from '../../Shared/Model';
+import { Text } from '../../Shared/UI';
+import * as Assets from '../../Assets';
+import * as StringUtil from '../../Utilities/StringUtil';
+import KeyboardSpacer from 'react-native-keyboard-spacer';
+import { ScrollView } from 'react-native-gesture-handler';
+import { NetworkRequestState } from '../../Shared/State';
 
 export interface ILoginScreenProps {
   currentAccount: Account | null;
@@ -48,14 +41,14 @@ interface State {
 
 export default class LoginScreen extends React.Component<ILoginScreenProps, State> {
   static navigationOptions = {
-    header: null
+    header: null,
   };
 
   public constructor /** override */(props: ILoginScreenProps) {
     super(props);
     this.state = {
-      currentEmail: "",
-      shouldEmailActive: false
+      currentEmail: '',
+      shouldEmailActive: false,
     };
   }
 
@@ -82,9 +75,7 @@ export default class LoginScreen extends React.Component<ILoginScreenProps, Stat
           </ScrollView>
         </View>
         {this._renderButton()}
-        <KeyboardSpacer
-          topSpacing={Assets.Device.isIphoneX ? -Assets.Device.bottomSpace : 0}
-        />
+        <KeyboardSpacer topSpacing={Assets.Device.isIphoneX ? -Assets.Device.bottomSpace : 0} />
       </SafeAreaView>
     );
   }
@@ -93,10 +84,9 @@ export default class LoginScreen extends React.Component<ILoginScreenProps, Stat
     if (
       this.props.checkAccountWithEmailState &&
       this.props.checkAccountWithEmailState.state === NetworkRequestState.FAILED &&
-      this.props.checkAccountWithEmailState.error !==
-        prevProps.checkAccountWithEmailState.error
+      this.props.checkAccountWithEmailState.error !== prevProps.checkAccountWithEmailState.error
     ) {
-      Alert.alert("Đã xảy ra lỗi khi đăng nhập, xin vui lòng thử lại sau");
+      Alert.alert('Đã xảy ra lỗi khi đăng nhập, xin vui lòng thử lại sau');
     }
   }
 
@@ -104,16 +94,8 @@ export default class LoginScreen extends React.Component<ILoginScreenProps, Stat
     return (
       <View style={styles.socialContainer}>
         <Text.Body style={styles.label}>Đăng nhập qua</Text.Body>
-        {this._renderSocialButton(
-          "Tài khoản Google",
-          Assets.Icons.Google,
-          this.props.googleLogin
-        )}
-        {this._renderSocialButton(
-          "Tài khoản Facebook",
-          Assets.Icons.Facebook,
-          this.props.facebookLogin
-        )}
+        {this._renderSocialButton('Tài khoản Google', Assets.Icons.Google, this.props.googleLogin)}
+        {this._renderSocialButton('Tài khoản Facebook', Assets.Icons.Facebook, this.props.facebookLogin)}
       </View>
     );
   }
@@ -132,31 +114,21 @@ export default class LoginScreen extends React.Component<ILoginScreenProps, Stat
   private _renderEmailBasedContainer() {
     return (
       <View style={styles.emailBasedContainer}>
-        <View style={{ flex: 1, width: "100%" }}>
+        <View style={{ flex: 1, width: '100%' }}>
           <Text.Body style={styles.socialLabel}>Hoặc sử dụng email</Text.Body>
           <Input
             value={this.state.currentEmail}
-            onChangeText={currentEmail =>
-              this.setState({ currentEmail }, () => this._validateEmail())
-            }
-            containerStyle={{ width: "100%", paddingHorizontal: 0 }}
+            onChangeText={currentEmail => this.setState({ currentEmail }, () => this._validateEmail())}
+            containerStyle={{ width: '100%', paddingHorizontal: 0 }}
             inputContainerStyle={styles.emailContainerStyle}
-            placeholder={"taikhoan@email.com"}
-            leftIcon={
-              <Icon
-                type={"ionicon"}
-                name={"md-mail"}
-                size={24}
-                color={Assets.Styles.ButtonDisabledColor}
-              />
-            }
+            placeholder={'taikhoan@email.com'}
+            leftIcon={<Icon type={'ionicon'} name={'md-mail'} size={24} color={Assets.Styles.ButtonDisabledColor} />}
             rightIcon={
-              this.props.checkAccountWithEmailState.state ===
-                NetworkRequestState.REQUESTING && (
+              this.props.checkAccountWithEmailState.state === NetworkRequestState.REQUESTING && (
                 <ActivityIndicator style={{ marginRight: 10 }} />
               )
             }
-            underlineColorAndroid={"transparent"}
+            underlineColorAndroid={'transparent'}
             inputStyle={styles.emailInputStyle}
             autoCapitalize="none"
           />
@@ -170,20 +142,20 @@ export default class LoginScreen extends React.Component<ILoginScreenProps, Stat
       <Button
         title={
           this.props.checkAccountWithEmailState.state === NetworkRequestState.REQUESTING
-            ? "Kiểm tra tài khoản..."
-            : "Đăng nhập"
+            ? 'Kiểm tra tài khoản...'
+            : 'Đăng nhập'
         }
         buttonStyle={[
           styles.authButtonContainer,
           {
             backgroundColor: this.state.shouldEmailActive
               ? Assets.Styles.AppPrimaryColor
-              : Assets.Styles.ButtonDisabledColor
-          }
+              : Assets.Styles.ButtonDisabledColor,
+          },
         ]}
         titleStyle={{
           fontSize: 18,
-          fontFamily: "RobotoCondensed-Regular"
+          fontFamily: 'RobotoCondensed-Regular'
         }}
         onPress={() => this._checkEmailExistsAndLogin()}
       />

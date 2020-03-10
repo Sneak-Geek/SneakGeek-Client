@@ -6,10 +6,6 @@ import { getLatestPrice, SellOrder, Transaction, BuyOrder } from "../../Shared/M
 import ApiClient, { baseUrl } from "../ApiClient";
 import * as HttpStatus from "http-status";
 import { injectable } from "inversify";
-import SafariView from "react-native-safari-view";
-import URI from "urijs";
-import { container, Types } from "../../Config/Inversify";
-import { IStoreProvider } from "../../Store";
 
 @injectable()
 export class TransactionService implements ITransactionService {
@@ -50,74 +46,18 @@ export class TransactionService implements ITransactionService {
     return { buyHistory: [] };
   }
 
-  public /** override */ launchIntlPaymentPage(sellOrder: SellOrder) {
-    const buyerId = container
-      .get<IStoreProvider>(Types.IStoreProvider)
-      .getStore()
-      .getState().AccountState.currentAccount?._id;
+  public /** override */ processPaymentIntl(sellOrder: SellOrder, buyerId: string): string {
+    const soldPrice = getLatestPrice(sellOrder);
+    const url = `${baseUrl}/transaction/buy?type=intl&orderId=${sellOrder._id}&buyerId=${buyerId}&soldPrice=${soldPrice}`;
 
-    const onePayIntlBaseUrl: string = "https://mtf.onepay.vn/vpcpay/vpcpay.op";
-    let paymentUrl = new URI(onePayIntlBaseUrl);
-    const params = {
-      vpc_Version: "2",
-      vpc_Command: "pay",
-      vpc_AccessCode: "6BEB2546",
-      vpc_Merchant: "TESTONEPAY",
-      vpc_Currency: "VND",
-      vpc_Locale: "vn",
-      vpc_ReturnURL: `${baseUrl}/transaction/buy/new?buyerId=${buyerId}&sellOrderId=${
-        sellOrder._id
-      }&soldPrice=${getLatestPrice(sellOrder)}`,
-      vpc_MerchTxnRef: `${sellOrder._id}|${buyerId}`,
-      vpc_OrderInfo: sellOrder.shoe?.[0].title,
-      vpc_Amount: getLatestPrice(sellOrder),
-      vpc_TicketNo: "97.115.137.252",
-      AgainLink: "https://google.com",
-      Title: "Thanh toán",
-      vpc_SecureHash: "6D0870CDE5F24F34F3915FB0045120DB"
-    };
-
-    Object.keys(params).forEach(key => {
-      // @ts-ignore
-      paymentUrl = paymentUrl.addQuery(key, params[key]);
-    });
-
-    SafariView.show({ url: paymentUrl.toString() });
+    return url;
   }
 
-  public /** override */ launchDomesticPaymentPage(sellOrder: SellOrder) {
-    const buyerId = container
-      .get<IStoreProvider>(Types.IStoreProvider)
-      .getStore()
-      .getState().AccountState.currentAccount?._id;
+  public /** override */ processPaymentDomestic(sellOrder: SellOrder, buyerId: string): string {
+    const soldPrice = getLatestPrice(sellOrder);
+    const url = `${baseUrl}/transaction/buy?type=domestic&orderId=${sellOrder._id}&buyerId=${buyerId}&soldPrice=${soldPrice}`;
 
-    const onePayIntlBaseUrl: string = "https://mtf.onepay.vn/onecomm-pay/vpc.op";
-    let paymentUrl = new URI(onePayIntlBaseUrl);
-    const params = {
-      vpc_Version: "2",
-      vpc_Command: "pay",
-      vpc_Currency: "VND",
-      vpc_AccessCode: "D67342C2",
-      vpc_Merchant: "ONEPAY",
-      vpc_Locale: "vn",
-      vpc_ReturnURL: `${baseUrl}/transaction/buy/new?buyerId=${buyerId}&sellOrderId=${
-        sellOrder._id
-      }&soldPrice=${getLatestPrice(sellOrder)}`,
-      vpc_MerchTxnRef: sellOrder._id,
-      vpc_OrderInfo: sellOrder.shoe?.[0].title,
-      vpc_Amount: `${getLatestPrice(sellOrder)}00`,
-      vpc_TicketNo: "97.115.137.252",
-      AgainLink: "https://google.com",
-      Title: "Thanh toán",
-      vpc_SecureHash: "A3EFDFABA8653DF2342E8DAC29B51AF0"
-    };
-
-    Object.keys(params).forEach(key => {
-      // @ts-ignore
-      paymentUrl = paymentUrl.addQuery(key, params[key]);
-    });
-
-    SafariView.show({ url: paymentUrl.toString() });
+    return url;
   }
 
   public async /** override */ getAvailableOrders(token: string, shoeId: string): Promise<SellOrder[]> {

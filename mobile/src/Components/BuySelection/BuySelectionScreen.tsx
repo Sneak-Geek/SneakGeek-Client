@@ -3,7 +3,7 @@
 // !
 
 import * as React from "react";
-import { Image, SafeAreaView, StyleSheet, View } from "react-native";
+import { Image, SafeAreaView, StyleSheet, View, LayoutChangeEvent, ActivityIndicator } from "react-native";
 import { getLatestPrice, SellOrder, Shoe } from "../../Shared/Model";
 import { Icon } from "react-native-elements";
 import { NavigationRoute, NavigationScreenProp, ScreenProps, StackActions } from "react-navigation";
@@ -23,6 +23,8 @@ export interface IBuySelectionScreenProps {
 
 export interface IBuySelectionScreenState {
   selectedSize: number;
+  imageHeight: number;
+  safeAreaHeight: number;
 }
 
 export class BuySelectionScreen extends React.Component<IBuySelectionScreenProps, IBuySelectionScreenState> {
@@ -52,16 +54,24 @@ export class BuySelectionScreen extends React.Component<IBuySelectionScreenProps
     }
 
     this.state = {
-      selectedSize: -1
+      selectedSize: -1,
+      imageHeight: 0,
+      safeAreaHeight: 0
     };
   }
 
   public /** override */ render(): JSX.Element {
     return (
       <SafeAreaView style={{ flex: 1 }}>
-        <View style={{ flex: 1 }}>
-          {this._renderShoeImage()}
-          {this._renderDivider()}
+        <View
+          style={{ flex: 1 }}
+          onLayout={event => this.setState({ safeAreaHeight: event.nativeEvent.layout.height })}
+        >
+          <View onLayout={this._onHeightLayout.bind(this)}>
+            {this._renderShoeImage()}
+            {/* {this._renderNote()} */}
+            {this._renderDivider()}
+          </View>
           {this._renderAvailableSellOrders()}
           {this._renderConfirmButton()}
         </View>
@@ -84,12 +94,16 @@ export class BuySelectionScreen extends React.Component<IBuySelectionScreenProps
   }
 
   private _renderAvailableSellOrders() {
+    if (this.state.safeAreaHeight === 0) {
+      return <ActivityIndicator />;
+    }
+
     const settings = container.get<IAppSettings>(Types.IAppSettingsService);
     const shoeSizes: string[] = settings.getSettings().RemoteSettings.shoeSizes.Adult || [];
 
     return (
       <FlatList
-        style={{ alignSelf: "center", marginHorizontal: 5, marginTop: 15 }}
+        style={{ alignSelf: "center", marginHorizontal: 5, marginTop: 15, marginBottom: 45 }}
         numColumns={4}
         data={shoeSizes.map(t => parseFloat(t))}
         keyExtractor={(_, idx) => idx.toString()}
@@ -104,14 +118,17 @@ export class BuySelectionScreen extends React.Component<IBuySelectionScreenProps
       t => t.shoeCondition === condition && t.shoeSize === size.toString()
     );
     const price = order ? getLatestPrice(order) / 1000000.0 : -1;
-    const backgroundColor = size === this.state.selectedSize ? Styles.AppModalBackground : "white";
+    const backgroundColor = size === this.state.selectedSize ? Styles.AppPrimaryColor : "white";
+    const height = (this.state.safeAreaHeight - this.state.imageHeight) / 5 - 5;
+    const textColor = size === this.state.selectedSize ? Styles.TextSecondaryColor : Styles.TextPrimaryColor;
+
     return (
       <TouchableOpacity onPress={() => this._onSelectSize(size, price)}>
-        <View style={[styles.priceContainer, { backgroundColor }]}>
-          <Text.Callout numberOfLines={1} style={{ color: Styles.AppAccentColor, marginHorizontal: 10 }}>
-            {price !== -1 ? `${price} triệu` : "-"}
+        <View style={[styles.priceContainer, { backgroundColor, height }]}>
+          <Text.Callout numberOfLines={1} style={{ color: textColor, marginHorizontal: 10 }}>
+            {price !== -1 ? `${price}M` : "-"}
           </Text.Callout>
-          <Text.Footnote style={{ color: Styles.AppSecondaryColorBlurred }}>Cỡ: {size}</Text.Footnote>
+          <Text.Footnote style={{ color: textColor }}>S: {size}</Text.Footnote>
         </View>
       </TouchableOpacity>
     );
@@ -134,7 +151,7 @@ export class BuySelectionScreen extends React.Component<IBuySelectionScreenProps
     const backgroundColor = this.state.selectedSize !== -1 ? Styles.ButtonPrimaryColor : Styles.ButtonDisabledColor;
 
     return (
-      <View style={{ ...styles.confirmButton, backgroundColor }}>
+      <View style={{ ...styles.confirmButton, backgroundColor }} onLayout={this._onHeightLayout.bind(this)}>
         <TouchableOpacity
           style={{ alignSelf: "stretch", alignItems: "center", justifyContent: "center", flex: 1 }}
           disabled={this.state.selectedSize === -1}
@@ -145,11 +162,17 @@ export class BuySelectionScreen extends React.Component<IBuySelectionScreenProps
       </View>
     );
   }
+
+  private _onHeightLayout(event: LayoutChangeEvent) {
+    const oldHeight = this.state.imageHeight;
+    const newHeight = oldHeight + event.nativeEvent.layout.height;
+
+    this.setState({ imageHeight: newHeight });
+  }
 }
 
 const styles = StyleSheet.create({
   priceContainer: {
-    minWidth: 90,
     aspectRatio: 1,
     borderWidth: 1,
     borderColor: Styles.AppAccentColor,

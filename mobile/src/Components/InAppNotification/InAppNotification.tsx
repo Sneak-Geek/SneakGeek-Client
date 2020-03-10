@@ -33,9 +33,7 @@ export class InAppNotification extends React.Component<InAppNotificationProps> {
 
               return (
                 <View style={styles.toastContainer}>
-                  <Text.Footnote style={{ color: Assets.Styles.AppPrimaryColor }}>
-                    {item.message}
-                  </Text.Footnote>
+                  <Text.Footnote style={{ color: Assets.Styles.AppPrimaryColor }}>{item.message}</Text.Footnote>
                   <TouchableOpacity onPress={() => this.props.dismissNotification(item.id)}>
                     <Text.Footnote style={{ color: "white" }}>Đóng</Text.Footnote>
                   </TouchableOpacity>

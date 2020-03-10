@@ -94,7 +94,7 @@ export class AccountService implements IAccountService {
 
   public async /** override */ getCurrentUser(accessToken: string): Promise<AccountPayload | undefined> {
     const headers = { authorization: accessToken };
-    const response = await ApiClient.get(`/account/get`, { headers });
+    const response = await ApiClient.get(`/account/`, { headers });
     if (response && response.status === HttpStatus.OK) {
       return response.data as AccountPayload;
     }
