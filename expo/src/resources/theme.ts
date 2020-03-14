@@ -11,6 +11,8 @@ export const themes = {
   AppAccentColor: "#FFF",
   AppErrorColor: "#FF2D55",
   AppModalBackground: 'rgba(0.0, 0.0, 0.0, 0.5)',
+  DisabledTheme: 'rgba(0, 0, 0, 0.05)',
+  AppDisabledColor: '#DADADA',
   TextStyle: StyleSheet.create({
     largeTitle: {
       fontFamily: 'RobotoBold',
@@ -75,5 +77,6 @@ export const themes = {
       fontSize: 20,
       fontFamily: 'RobotoBold',
     }
-  }
+  },
+  avatarSize: 100
 }

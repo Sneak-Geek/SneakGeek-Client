@@ -7,10 +7,10 @@ import { View, StyleSheet, SafeAreaView } from 'react-native';
 import { FlatList, TouchableWithoutFeedback } from 'react-native-gesture-handler';
 import { AppText } from '@screens/Shared';
 import { themes } from '@resources';
-import { connect } from 'react-redux';
 import { IAppState } from '@store/AppStore';
 import { Notifcation } from 'reducers/NotificationReducers';
 import { dismissNotification } from 'actions';
+import { connect } from 'utilities/ReduxUtilities';
 
 type Props = {
   notifications: Notifcation[];
@@ -98,6 +98,8 @@ const styles = StyleSheet.create({
     width: '100%',
     height: themes.ButtonHeight,
     justifyContent: 'center',
+    borderWidth: 1,
+    borderColor: themes.AppAccentColor
   },
   toastRegular: {
     backgroundColor: themes.AppSecondaryColor,

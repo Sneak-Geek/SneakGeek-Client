@@ -2,7 +2,7 @@ import { Modal, View, StyleSheet, ActivityIndicator } from 'react-native';
 import React from 'react';
 import { themes } from '@resources';
 import { AppText } from './Shared';
-import { connect } from 'react-redux';
+import { connect } from 'utilities/ReduxUtilities';
 import { IAppState } from '@store/AppStore';
 
 type Props = {
@@ -26,10 +26,13 @@ const styles = StyleSheet.create({
   },
 });
 
-@connect((state: IAppState) => ({
-  isLoading: state.LoadingIndicatorState.isLoading,
-  message: state.LoadingIndicatorState.message
-}))
+@connect(
+  (state: IAppState) => ({
+    isLoading: state.LoadingIndicatorState.isLoading,
+    message: state.LoadingIndicatorState.message,
+  }),
+  null,
+)
 export class AppLoadingIndicator extends React.Component<Props> {
   public render(): JSX.Element {
     return (

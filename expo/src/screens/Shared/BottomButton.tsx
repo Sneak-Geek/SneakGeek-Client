@@ -1,15 +1,25 @@
 import React from 'react';
-import { StyleSheet, StyleProp, ViewStyle, TextStyle } from 'react-native';
-import { Button } from 'react-native-elements';
+import { StyleSheet, StyleProp, ViewStyle, TextStyle, View } from 'react-native';
 import { themes } from '@resources';
+import { TouchableOpacity } from 'react-native-gesture-handler';
+import { AppText } from './Text';
 
 const styles = StyleSheet.create({
-  bottomButton: {
+  containerStyle: {
+    flex: 1,
     position: 'absolute',
     bottom: 0,
     right: 0,
     left: 0,
+  },
+  buttonStyle: {
     height: themes.ButtonHeight,
+    alignItems: 'stretch',
+    justifyContent: 'center',
+  },
+  titleStyle: {
+    color: themes.AppAccentColor,
+    textAlign: 'center',
   },
 });
 
@@ -21,10 +31,11 @@ type Props = {
 };
 
 export const BottomButton = (props: Props) => (
-  <Button
-    title={props.title}
-    buttonStyle={[styles.bottomButton, props.style]}
-    titleStyle={[themes.TextStyle.body, props.titleStyle]}
-    onPress={props.onPress}
-  />
+  <View style={[styles.containerStyle, props.style]}>
+    <TouchableOpacity style={styles.buttonStyle}>
+      <AppText.Headline style={[props.titleStyle, styles.titleStyle]}>
+        {props.title}
+      </AppText.Headline>
+    </TouchableOpacity>
+  </View>
 );

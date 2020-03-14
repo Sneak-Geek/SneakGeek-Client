@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import { NavigationContainer } from '@react-navigation/native';
 import RootStack from './src/navigations/RootStack';
 import * as Font from 'expo-font';
 import { ActivityIndicator } from 'react-native';
@@ -10,26 +9,34 @@ import {
   FactoryKeys as Keys,
   IFacebookSDK,
   IEnvVar,
+  ISettingsProvider,
   IAccountService,
   AccountService,
-  ISettingsProvider,
+  ICatalogService,
+  CatalogService,
+  IShoeService,
+  ShoeService,
 } from 'business';
 import { Provider } from 'react-redux';
 import { SettingsProvider, FacebookSdk } from 'common';
 import { AppStore } from 'store/AppStore';
 import { InAppNotification } from '@screens/InAppNotification';
 import { AppLoadingIndicator } from '@screens/AppLoadingIndicator';
+import { ActionSheetProvider } from '@expo/react-native-action-sheet';
 
-const initializeBusinessDep = (): void => {
+const initializeBusinessDep = async (): Promise<void> => {
+  const settingsProvider = new SettingsProvider();
+  await settingsProvider.load();
+
   ObjectFactory.register<IEnvVar>(Keys.IEnvVar, {
     __DEV__: __DEV__,
+    devUrl: 'http://10.0.0.159:8080/api/v1',
   });
-  ObjectFactory.register<IAccountService>(Keys.IAccountService, new AccountService());
-  ObjectFactory.register<ISettingsProvider>(
-    Keys.ISettingsProvider,
-    new SettingsProvider(),
-  );
+  ObjectFactory.register<ISettingsProvider>(Keys.ISettingsProvider, settingsProvider);
   ObjectFactory.register<IFacebookSDK>(Keys.IFacebookSDK, FacebookSdk);
+  ObjectFactory.register<IAccountService>(Keys.IAccountService, new AccountService());
+  ObjectFactory.register<ICatalogService>(Keys.ICatalogService, new CatalogService());
+  ObjectFactory.register<IShoeService>(Keys.IShoeService, new ShoeService());
 };
 
 const initializeFbSdk = (): Promise<void> => {
@@ -65,9 +72,9 @@ export default function App(): JSX.Element {
       <Provider store={AppStore}>
         <InAppNotification />
         <AppLoadingIndicator />
-        <NavigationContainer>
+        <ActionSheetProvider>
           <RootStack />
-        </NavigationContainer>
+        </ActionSheetProvider>
       </Provider>
     );
   }

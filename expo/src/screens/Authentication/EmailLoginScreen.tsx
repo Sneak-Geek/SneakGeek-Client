@@ -4,7 +4,7 @@ import { StackNavigationProp } from '@react-navigation/stack';
 import { themes, strings } from '@resources';
 import { BottomButton, AppText, DismissKeyboardView } from '@screens/Shared';
 import RouteNames from 'navigations/RouteNames';
-import { connect } from 'react-redux';
+import { connect } from 'utilities/ReduxUtilities';
 import { authenticateWithEmail, NetworkRequestState, Account } from 'business';
 import { IAppState } from '@store/AppStore';
 import { showErrorNotification, toggleIndicator } from 'actions';
@@ -14,59 +14,70 @@ type State = {
   password: string;
 };
 
-type Props = {
+type StateProps = {
   accountState: {
     state: NetworkRequestState;
     error?: any;
     account?: Account;
   };
-  navigation: StackNavigationProp<any>;
+};
 
+type DispatchProps = {
   toggleLoadingIndicator: (isLoading: boolean, message?: string) => void;
   showErrorNotification: (message: string) => void;
   emailLogin: (email: string, password: string) => void;
 };
 
-@connect(
-  (state: IAppState) => ({
-    accountState: state.UserState.accountState,
-  }),
-  (dispatch: Function) => ({
-    toggleLoadingIndicator: (isLoading: boolean, message?: string) => {
-      dispatch(toggleIndicator({ isLoading, message }));
-    },
-    showErrorNotification: (message: string) => {
-      dispatch(showErrorNotification(message));
-    },
-    emailLogin: (email: string, password: string) => {
-      dispatch(authenticateWithEmail(email, password));
-    },
-  }),
+type Props = StateProps &
+  DispatchProps & {
+    navigation?: StackNavigationProp<any>;
+  };
+
+@connect<StateProps, DispatchProps>(
+  (state: IAppState) => {
+    return {
+      accountState: state.UserState.accountState,
+    };
+  },
+  (dispatch: Function) => {
+    return {
+      toggleLoadingIndicator: (isLoading: boolean, message?: string) => {
+        dispatch(toggleIndicator({ isLoading, message }));
+      },
+      showErrorNotification: (message: string) => {
+        dispatch(showErrorNotification(message));
+      },
+      emailLogin: (email: string, password: string) => {
+        dispatch(authenticateWithEmail(email, password));
+      },
+    };
+  },
 )
 export class EmailLoginScreen extends React.Component<Props, State> {
-  public constructor(props: Props) {
-    super(props);
-    this.state = {
-      email: '',
-      password: '',
-    };
-  }
+  state = {
+    email: '',
+    password: '',
+  };
 
   public componentDidUpdate(prevProps: Props) {
-    const { accountState, showErrorNotification, toggleLoadingIndicator } = this.props;
+    const {
+      navigation,
+      accountState,
+      showErrorNotification,
+      toggleLoadingIndicator,
+    } = this.props;
     const { state } = accountState;
-    if (state === prevProps.accountState.state ) 
-      return;
-    
+    if (state === prevProps.accountState.state) return;
+
     toggleLoadingIndicator(state === NetworkRequestState.REQUESTING);
 
     switch (state) {
       case NetworkRequestState.FAILED:
+        console.log(accountState.error);
         showErrorNotification(strings.InvalidLogin);
         break;
-      case NetworkRequestState.REQUESTING:
-        break;
       case NetworkRequestState.SUCCESS:
+        navigation.push(RouteNames.Tab.Name);
         break;
       default:
         break;
@@ -96,6 +107,7 @@ export class EmailLoginScreen extends React.Component<Props, State> {
     return (
       <View style={styles.inputContainer}>
         <TextInput
+          autoFocus={true}
           style={styles.input}
           placeholder={strings.Email}
           value={email}
@@ -112,7 +124,6 @@ export class EmailLoginScreen extends React.Component<Props, State> {
     return (
       <View style={styles.inputContainer}>
         <TextInput
-          autoFocus={true}
           style={styles.input}
           placeholder={strings.Password}
           value={password}

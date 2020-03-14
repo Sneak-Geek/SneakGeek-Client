@@ -3,19 +3,110 @@ import {
   StyleSheet,
   SafeAreaView,
   View,
-  Text,
   Image,
   ImageBackground,
   StatusBar,
 } from 'react-native';
 import { Button } from 'react-native-elements';
-import { strings, themes, Images } from '@resources';
+import { strings, themes, images } from '@resources';
 import { StackNavigationProp } from '@react-navigation/stack';
 import RouteNames from 'navigations/RouteNames';
-import { connect } from 'react-redux';
-import { authenticateWithFb, Account } from 'business';
+import { connect } from 'utilities/ReduxUtilities';
+import { authenticateWithFb, Account, getCurrentUser } from 'business';
 import { IAppState } from 'store/AppStore';
 import { AppText } from '@screens/Shared';
+
+type Props = {
+  account: Account;
+  navigation: StackNavigationProp<any>;
+
+  getCurrentUser: () => void;
+  facebookLogin: () => void;
+};
+
+@connect(
+  (state: IAppState) => ({
+    account: state.UserState.accountState.account,
+  }),
+  (dispatch: Function) => ({
+    getCurrentUser: () => {
+      dispatch(getCurrentUser());
+    },
+    facebookLogin: () => {
+      dispatch(authenticateWithFb());
+    },
+  }),
+)
+export class LoginScreen extends React.Component<Props> {
+  public componentDidMount() {
+    this.props.getCurrentUser();
+  }
+
+  public componentDidUpdate(prev: Props) {
+    const { account, navigation } = this.props;
+    if (account === prev.account) return;
+
+    if (account && account !== prev.account) {
+      navigation.push(RouteNames.Tab.Name);
+    }
+  }
+
+  public render(): JSX.Element {
+    return (
+      <ImageBackground source={images.Home} style={{ flex: 1 }}>
+        <SafeAreaView style={{ flex: 1 }}>
+          <StatusBar barStyle={'light-content'} />
+          {!this.props.account && (
+            <View style={{ flex: 1, alignItems: 'center' }}>
+              <View style={styles.buttonContainer}>
+                <Button
+                  type={'solid'}
+                  title={strings.ContinueFacebook}
+                  icon={<Image source={images.Facebook} style={styles.iconStyle} />}
+                  titleStyle={styles.titleStyle}
+                  buttonStyle={{
+                    backgroundColor: themes.FacebookThemeColor,
+                    ...styles.button,
+                  }}
+                  onPress={(): void => this.props.facebookLogin()}
+                />
+                <Button
+                  type={'outline'}
+                  buttonStyle={{ backgroundColor: 'white', ...styles.button }}
+                  title={strings.ContinueGoogle}
+                  icon={<Image source={images.Google} style={styles.iconStyle} />}
+                  titleStyle={{ ...styles.titleStyle, color: 'black' }}
+                />
+                <Button
+                  type={'outline'}
+                  buttonStyle={{
+                    backgroundColor: themes.AppPrimaryColor,
+                    ...styles.button,
+                  }}
+                  title={strings.SignUpEmail}
+                  icon={<Image source={images.Email} style={styles.emailIconStyle} />}
+                  titleStyle={styles.titleStyle}
+                  onPress={() =>
+                    this.props.navigation.push(RouteNames.Auth.EmailSignUp)
+                  }
+                />
+                <AppText.Subhead
+                  style={styles.emailLoginStyle}
+                  onPress={(): void => {
+                    this.props.navigation.push(RouteNames.Auth.EmailLogin);
+                  }}
+                >
+                  {strings.MemberAlready}{' '}
+                  <AppText.Callout>{strings.SignIn}</AppText.Callout>
+                </AppText.Subhead>
+              </View>
+            </View>
+          )}
+        </SafeAreaView>
+      </ImageBackground>
+    );
+  }
+}
 
 const styles = StyleSheet.create({
   rootContainer: {
@@ -67,81 +158,3 @@ const styles = StyleSheet.create({
     color: 'black',
   },
 });
-
-type Props = {
-  account?: Account;
-  navigation: StackNavigationProp<any>;
-  facebookLogin: () => void;
-};
-
-@connect(
-  (state: IAppState) => ({
-    account: state.UserState.accountState.account,
-  }),
-  (dispatch: Function) => ({
-    facebookLogin: () => {
-      dispatch(authenticateWithFb());
-    },
-  }),
-)
-export class LoginScreen extends React.Component<Props> {
-  public componentDidUpdate(prev: Props) {
-    const { props } = this;
-    if (props.account && props.account !== prev.account) {
-      this.props.navigation.navigate(RouteNames.Auth.EmailSignUp);
-    }
-  }
-
-  public render(): JSX.Element {
-    return (
-      <ImageBackground source={Images.Home} style={{ flex: 1 }}>
-        <SafeAreaView style={{ flex: 1 }}>
-          <StatusBar barStyle={'light-content'} />
-          <View style={{ flex: 1, alignItems: 'center' }}>
-            <View style={styles.buttonContainer}>
-              <Button
-                type={'solid'}
-                title={strings.ContinueFacebook}
-                icon={<Image source={Images.Facebook} style={styles.iconStyle} />}
-                titleStyle={styles.titleStyle}
-                buttonStyle={{
-                  backgroundColor: themes.FacebookThemeColor,
-                  ...styles.button,
-                }}
-                onPress={(): void => this.props.facebookLogin()}
-              />
-              <Button
-                type={'outline'}
-                buttonStyle={{ backgroundColor: 'white', ...styles.button }}
-                title={strings.ContinueGoogle}
-                icon={<Image source={Images.Google} style={styles.iconStyle} />}
-                titleStyle={{ ...styles.titleStyle, color: 'black' }}
-              />
-              <Button
-                type={'outline'}
-                buttonStyle={{
-                  backgroundColor: themes.AppPrimaryColor,
-                  ...styles.button,
-                }}
-                title={strings.SignUpEmail}
-                icon={<Image source={Images.Email} style={styles.emailIconStyle} />}
-                titleStyle={styles.titleStyle}
-              />
-              <AppText.Subhead
-                style={styles.emailLoginStyle}
-                onPress={(): void => {
-                  this.props.navigation.navigate(RouteNames.Auth.EmailLogin);
-                }}
-              >
-                {strings.MemberAlready}{' '}
-                <AppText.Callout>
-                  {strings.SignIn}
-                </AppText.Callout>
-              </AppText.Subhead>
-            </View>
-          </View>
-        </SafeAreaView>
-      </ImageBackground>
-    );
-  }
-}
