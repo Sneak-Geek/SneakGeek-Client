@@ -1,17 +1,16 @@
 import React from "react";
-import { Header, Input, Table, Icon, Button, Modal, Search, Grid } from "semantic-ui-react";
+import { Input, Table, Icon, Button, Modal, Search, Grid, Popup } from "semantic-ui-react";
 import "./CatalogManagementScreen.css";
-import axios from "axios";
 import {
   Catalog,
   Shoe,
   ObjectFactory,
   FactoryKeys,
   ISettingsProvider,
-  SettingsKey
+  SettingsKey,
+  ICatalogService
 } from "business";
 import { History } from "history";
-import { Link } from "react-router-dom";
 
 type Props = {
   history: History;
@@ -23,12 +22,17 @@ type State = {
   isLoading: boolean;
   searchResults: object[];
   searchTextInput: string;
+  searchShoeError?: any;
   catalog: Catalog;
 };
 
 export class CatalogManagementScreen extends React.Component<Props, State> {
-  readonly FIND_SHOE_URL = "http://localhost:8080/api/v1/shoe/find";
-  readonly UPDATE_CATALOG_URL = "http://localhost:8080/api/v1/catalogue";
+  private readonly _catalogService = ObjectFactory.getObjectInstance<ICatalogService>(
+    FactoryKeys.ICatalogService
+  );
+  private readonly _settingsProvider = ObjectFactory.getObjectInstance<ISettingsProvider>(
+    FactoryKeys.ISettingsProvider
+  );
 
   constructor(props: Props) {
     super(props);
@@ -45,7 +49,7 @@ export class CatalogManagementScreen extends React.Component<Props, State> {
   render() {
     return (
       <div>
-        <Header as="h2">Catalog</Header>
+        {this._renderCatalogInfo()}
         <Table celled selectable>
           {this._renderTableHeader()}
           {this._renderTableBody(this.state.catalog)}
@@ -56,6 +60,38 @@ export class CatalogManagementScreen extends React.Component<Props, State> {
     );
   }
 
+  private _renderCatalogInfo() {
+    return (
+      <Popup
+        content="Thay đổi tên Catalog"
+        position="bottom left"
+        trigger={
+          <Input
+            className="input-catalog-style"
+            icon="pencil"
+            iconPosition="left"
+            compact
+            size="massive"
+            transparent
+            placeholder={this.state.catalog.title}
+            onChange={this._handleInputCatalogTitleChange.bind(this)}
+          />
+        }
+      />
+    );
+  }
+
+  private _handleInputCatalogTitleChange(e: any, data: any) {
+    const { value } = data;
+    this.setState({
+      catalog: {
+        ...this.state.catalog,
+        title: value
+      }
+    });
+    console.log(data);
+  }
+
   private _renderTableHeader(): JSX.Element {
     return (
       <Table.Header>
@@ -64,7 +100,7 @@ export class CatalogManagementScreen extends React.Component<Props, State> {
           <Table.HeaderCell>Tên giày</Table.HeaderCell>
           <Table.HeaderCell>Thương hiệu</Table.HeaderCell>
           <Table.HeaderCell>Mô tả</Table.HeaderCell>
-          <Table.HeaderCell>Xoá</Table.HeaderCell>
+          <Table.HeaderCell>Xoá giày</Table.HeaderCell>
         </Table.Row>
       </Table.Header>
     );
@@ -115,17 +151,22 @@ export class CatalogManagementScreen extends React.Component<Props, State> {
   private async _handleSearchChange(error: any, data: any) {
     const { value } = data;
     this.setState({ isLoading: true, searchTextInput: value });
-    const response = await axios.get(`${this.FIND_SHOE_URL}?title=${value}`);
-    const searchResults = response.data.slice(0, 5);
-    const formattedSearchResults = searchResults.map((e: any) => {
-      return {
-        image: e.imageUrl,
-        ...e,
-        price: "$10,000",
-        description: "Dep vkl"
-      };
-    });
-    this.setState({ isLoading: false, searchResults: formattedSearchResults });
+
+    const token = this._settingsProvider.getValue(SettingsKey.CurrentAccessToken);
+
+    try {
+      const response = await this._catalogService.getShoes(token, value);
+      const searchResults = response!.slice(0, 5);
+      const formattedSearchResults = searchResults.map((e: Shoe) => {
+        return {
+          image: e.imageUrl,
+          ...e
+        };
+      });
+      this.setState({ isLoading: false, searchResults: formattedSearchResults });
+    } catch (error) {
+      this.setState({ isLoading: false, searchShoeError: error });
+    }
   }
 
   private async _onSearchSelect(e: any, data: any) {
@@ -177,9 +218,7 @@ export class CatalogManagementScreen extends React.Component<Props, State> {
   }
 
   private async _saveProducts() {
-    const token = ObjectFactory.getObjectInstance<ISettingsProvider>(
-      FactoryKeys.ISettingsProvider
-    ).getValue(SettingsKey.CurrentAccessToken);
+    const token = this._settingsProvider.getValue(SettingsKey.CurrentAccessToken);
 
     const catalog = {
       ...this.state.catalog,
@@ -187,30 +226,30 @@ export class CatalogManagementScreen extends React.Component<Props, State> {
     };
     delete catalog.shoes;
 
-    await axios.put(`${this.UPDATE_CATALOG_URL}/${this.state.catalog._id}`, catalog, {
-      headers: {
-        authorization_token: token
-      }
-    });
+    try {
+      await this._catalogService.saveCatalog(token, catalog, this.state.catalog._id);
+    } catch (error) {
+      alert("Error in Saving Products");
+    }
+
+    this.props.history.goBack();
   }
 
   private _renderSaveAndCancelButtons(): JSX.Element {
     return (
       <div>
-        <Link to={"/catalogs"}>
-          <Button
-            onClick={() => {
-              this._saveProducts();
-            }}
-            floated="right"
-            icon
-            labelPosition="left"
-            size="small"
-            color="blue"
-          >
-            <Icon name="save outline" /> Lưu
-          </Button>
-        </Link>
+        <Button
+          onClick={() => {
+            this._saveProducts();
+          }}
+          floated="right"
+          icon
+          labelPosition="left"
+          size="small"
+          color="blue"
+        >
+          <Icon name="save outline" /> Lưu
+        </Button>
         <Button
           onClick={() => this.props.history.goBack()}
           floated="right"

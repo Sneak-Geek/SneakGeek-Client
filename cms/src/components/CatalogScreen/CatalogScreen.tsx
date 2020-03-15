@@ -3,16 +3,38 @@
 //!
 
 import React from "react";
-import { Table, Button, Icon, Segment, Dimmer, Loader, Header } from "semantic-ui-react";
+import {
+  Table,
+  Button,
+  Icon,
+  Segment,
+  Dimmer,
+  Loader,
+  Header,
+  Popup,
+  Modal,
+  Grid,
+  Form,
+  Input
+} from "semantic-ui-react";
 import "./style.css";
-import { getAllCatalogs, Catalog, NetworkRequestState } from "business";
+import { History } from "history";
+import {
+  getAllCatalogs,
+  Catalog,
+  NetworkRequestState,
+  ObjectFactory,
+  ISettingsProvider,
+  FactoryKeys,
+  SettingsKey,
+  ICatalogService
+} from "business";
 import { connect } from "react-redux";
 import { IAppState } from "../../store/IAppState";
-import { History } from "history";
 import { Link } from "react-router-dom";
 
 type Props = {
-  history?: History;
+  history: History;
   getAllCatalogs: () => void;
   catalogState: {
     state: NetworkRequestState;
@@ -25,15 +47,23 @@ type State = {
   error: any;
   isLoaded: boolean;
   items: object[];
+  catalogTitle: string;
+  catalogDescription: string;
+  showModal: boolean;
 };
 
 export class UnconnectedCatalogScreen extends React.Component<Props, State> {
+  readonly CREATE_NEW_CATALOG = "http://localhost:8080/api/v1/catalogue";
+
   constructor(props: Props) {
     super(props);
     this.state = {
       error: null,
       isLoaded: false,
-      items: []
+      items: [],
+      catalogTitle: "",
+      catalogDescription: "",
+      showModal: false
     };
   }
 
@@ -101,12 +131,18 @@ export class UnconnectedCatalogScreen extends React.Component<Props, State> {
                     state: { catalog: element }
                   }}
                 >
-                  <Button
-                    onClick={() => {}}
-                    floated={"right"}
-                    size={"small"}
-                    compact
-                    icon={"small pencil alternate icon"}
+                  <Popup
+                    content="Chỉnh sửa catalog"
+                    position="right center"
+                    trigger={
+                      <Button
+                        onClick={() => {}}
+                        floated={"right"}
+                        size={"small"}
+                        compact
+                        icon={"small pencil alternate icon"}
+                      />
+                    }
                   />
                 </Link>
               </Table.Cell>
@@ -117,15 +153,114 @@ export class UnconnectedCatalogScreen extends React.Component<Props, State> {
     );
   }
 
+  private _renderAddCatalogModal = () => {
+    return (
+      <Modal
+        open={this.state.showModal}
+        onClose={() => {
+          this.setState({ showModal: false });
+        }}
+        trigger={
+          <Button
+            onClick={() => {
+              this.setState({ showModal: true });
+            }}
+            floated="right"
+            icon
+            labelPosition="left"
+            primary
+            size="small"
+          >
+            <Icon name="plus" /> Tạo catalog
+          </Button>
+        }
+      >
+        <Modal.Header>Tạo catalog</Modal.Header>
+        <Modal.Content>
+          <Grid>
+            <Grid.Column width={15}>
+              <Form>
+                <Form.Field>
+                  <label>Tên catalog</label>
+                  <Input
+                    onChange={this._updateCatalogTitle.bind(this)}
+                    placeholder="Tên catalog"
+                  />
+                </Form.Field>
+                <Form.TextArea
+                  onChange={this._updateCatalogDescription.bind(this)}
+                  label="Mô tả catalog"
+                  placeholder="Mô tả catalog"
+                />
+                <Button
+                  onClick={() => {
+                    this._createNewCatalog();
+                    this.setState({ showModal: false });
+                  }}
+                  type="submit"
+                  color="blue"
+                  floated="right"
+                  labelPosition="left"
+                  icon
+                >
+                  <Icon name="save outline" />
+                  Lưu
+                </Button>
+                <Button
+                  onClick={() => {
+                    this.setState({ showModal: false });
+                  }}
+                  type="submit"
+                  floated="right"
+                  labelPosition="left"
+                  icon
+                >
+                  <Icon name="cancel" />
+                  Huỷ
+                </Button>
+              </Form>
+            </Grid.Column>
+          </Grid>
+        </Modal.Content>
+      </Modal>
+    );
+  };
+
+  private _updateCatalogDescription(e: any, data: any) {
+    const { value } = data;
+    this.setState({
+      catalogDescription: value
+    });
+  }
+
+  private _updateCatalogTitle(e: any, data: any) {
+    const { value } = data;
+    this.setState({
+      catalogTitle: value
+    });
+  }
+
+  private async _createNewCatalog() {
+    const token = ObjectFactory.getObjectInstance<ISettingsProvider>(
+      FactoryKeys.ISettingsProvider
+    ).getValue(SettingsKey.CurrentAccessToken);
+
+    const catalogService = ObjectFactory.getObjectInstance<ICatalogService>(
+      FactoryKeys.ICatalogService
+    );
+
+    const catalogTitle = this.state.catalogTitle;
+    const catalogDescription = this.state.catalogDescription;
+    const products = ["5e1fcf7c211ec4001b26cf82"];
+
+    catalogService.createNewCatalog(token, catalogTitle, catalogDescription, products);
+  }
+
   private _renderTableFooter(): JSX.Element {
     return (
       <Table.Footer fullWidth>
         <Table.Row>
-          <Table.HeaderCell colSpan="3">
-            <Button floated="right" icon labelPosition="left" primary size="small">
-              <Icon name="plus" /> Add new catalog
-            </Button>
-          </Table.HeaderCell>
+          <Table.HeaderCell colSpan="3">{this._renderAddCatalogModal()}</Table.HeaderCell>
         </Table.Row>
       </Table.Footer>
     );
