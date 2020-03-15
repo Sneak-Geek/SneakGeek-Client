@@ -1,27 +1,16 @@
 import React from "react";
-import {
-  Header,
-  Input,
-  Table,
-  Icon,
-  Button,
-  Modal,
-  Search,
-  Grid,
-  Popup
-} from "semantic-ui-react";
+import { Input, Table, Icon, Button, Modal, Search, Grid, Popup } from "semantic-ui-react";
 import "./CatalogManagementScreen.css";
-import axios from "axios";
 import {
   Catalog,
   Shoe,
   ObjectFactory,
   FactoryKeys,
   ISettingsProvider,
-  SettingsKey
+  SettingsKey,
+  ICatalogService
 } from "business";
 import { History } from "history";
-import { privateEncrypt } from "crypto";
 
 type Props = {
   history: History;
@@ -33,12 +22,17 @@ type State = {
   isLoading: boolean;
   searchResults: object[];
   searchTextInput: string;
+  searchShoeError?: any;
   catalog: Catalog;
 };
 
 export class CatalogManagementScreen extends React.Component<Props, State> {
-  readonly FIND_SHOE_URL = "http://localhost:8080/api/v1/shoe/find";
-  readonly UPDATE_CATALOG_URL = "http://localhost:8080/api/v1/catalogue";
+  private readonly _catalogService = ObjectFactory.getObjectInstance<ICatalogService>(
+    FactoryKeys.ICatalogService
+  );
+  private readonly _settingsProvider = ObjectFactory.getObjectInstance<ISettingsProvider>(
+    FactoryKeys.ISettingsProvider
+  );
 
   constructor(props: Props) {
     super(props);
@@ -157,15 +151,22 @@ export class CatalogManagementScreen extends React.Component<Props, State> {
   private async _handleSearchChange(error: any, data: any) {
     const { value } = data;
     this.setState({ isLoading: true, searchTextInput: value });
-    const response = await axios.get(`${this.FIND_SHOE_URL}?title=${value}`);
-    const searchResults = response.data.slice(0, 5);
-    const formattedSearchResults = searchResults.map((e: Shoe) => {
-      return {
-        image: e.imageUrl,
-        ...e
-      };
-    });
-    this.setState({ isLoading: false, searchResults: formattedSearchResults });
+
+    const token = this._settingsProvider.getValue(SettingsKey.CurrentAccessToken);
+
+    try {
+      const response = await this._catalogService.getShoes(token, value);
+      const searchResults = response!.slice(0, 5);
+      const formattedSearchResults = searchResults.map((e: Shoe) => {
+        return {
+          image: e.imageUrl,
+          ...e
+        };
+      });
+      this.setState({ isLoading: false, searchResults: formattedSearchResults });
+    } catch (error) {
+      this.setState({ isLoading: false, searchShoeError: error });
+    }
   }
 
   private async _onSearchSelect(e: any, data: any) {
@@ -217,9 +218,7 @@ export class CatalogManagementScreen extends React.Component<Props, State> {
   }
 
   private async _saveProducts() {
-    const token = ObjectFactory.getObjectInstance<ISettingsProvider>(
-      FactoryKeys.ISettingsProvider
-    ).getValue(SettingsKey.CurrentAccessToken);
+    const token = this._settingsProvider.getValue(SettingsKey.CurrentAccessToken);
 
     const catalog = {
       ...this.state.catalog,
@@ -227,11 +226,11 @@ export class CatalogManagementScreen extends React.Component<Props, State> {
     };
     delete catalog.shoes;
 
-    await axios.put(`${this.UPDATE_CATALOG_URL}/${this.state.catalog._id}`, catalog, {
-      headers: {
-        authorization_token: token
-      }
-    });
+    try {
+      await this._catalogService.saveCatalog(token, catalog, this.state.catalog._id);
+    } catch (error) {
+      alert("Error in Saving Products");
+    }
 
     this.props.history.goBack();
   }

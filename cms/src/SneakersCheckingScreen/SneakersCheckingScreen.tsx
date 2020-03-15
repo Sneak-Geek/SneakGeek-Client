@@ -1,6 +1,6 @@
 import React from "react";
 import { Table, Header, Grid, Search, Segment } from "semantic-ui-react";
-import { ShoeAuthentication, createShoeAuthentication } from "./ShoeAuthentication";
+import { ShoeAuthentication } from "business";
 
 type Props = {};
 
@@ -135,7 +135,7 @@ export class SneakersCheckingScreen extends React.Component<Props, State> {
     }
     return (
       <div>
-        <Header as="h2">Quản lý đơn hàng</Header>
+        <Header as="h2">Check giày</Header>
         {this._renderSearchReviewProducts()}
         <Table celled selectable>
           {this._renderTableHeader()}

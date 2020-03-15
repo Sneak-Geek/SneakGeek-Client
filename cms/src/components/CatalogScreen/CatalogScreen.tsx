@@ -26,12 +26,12 @@ import {
   ObjectFactory,
   ISettingsProvider,
   FactoryKeys,
-  SettingsKey
+  SettingsKey,
+  ICatalogService
 } from "business";
 import { connect } from "react-redux";
 import { IAppState } from "../../store/IAppState";
 import { Link } from "react-router-dom";
-import axios from "axios";
 
 type Props = {
   history: History;
@@ -245,22 +245,15 @@ export class UnconnectedCatalogScreen extends React.Component<Props, State> {
       FactoryKeys.ISettingsProvider
     ).getValue(SettingsKey.CurrentAccessToken);
 
+    const catalogService = ObjectFactory.getObjectInstance<ICatalogService>(
+      FactoryKeys.ICatalogService
+    );
+
     const catalogTitle = this.state.catalogTitle;
     const catalogDescription = this.state.catalogDescription;
+    const products = ["5e1fcf7c211ec4001b26cf82"];
 
-    await axios.post(
-      `${this.CREATE_NEW_CATALOG}`,
-      {
-        title: catalogTitle,
-        products: ["5e1fcf7c211ec4001b26cf82"],
-        description: catalogDescription
-      },
-      {
-        headers: {
-          authorization_token: token
-        }
-      }
-    );
+    catalogService.createNewCatalog(token, catalogTitle, catalogDescription, products);
   }
 
   private _renderTableFooter(): JSX.Element {

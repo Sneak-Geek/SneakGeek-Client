@@ -10,7 +10,3 @@ export interface ShoeAuthentication {
   status: string;
   uploadDate: string;
 }
-
-export declare function createShoeAuthentication(
-  shoeAuthentication: ShoeAuthentication
-): void;
