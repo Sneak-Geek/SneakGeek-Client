@@ -1,6 +1,12 @@
 {
   "name": "business",
+<<<<<<< HEAD
   "version": "0.0.24",
+||||||| merged common ancestors
+  "version": "0.0.13",
+=======
+  "version": "0.0.14",
+>>>>>>> master
   "description": "",
   "main": "build/src/index.js",
   "types": "build/src/index.d.ts",

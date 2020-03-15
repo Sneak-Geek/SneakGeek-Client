@@ -3,15 +3,7 @@
 //!
 
 import * as React from "react";
-import {
-  Modal,
-  SafeAreaView,
-  View,
-  StyleSheet,
-  Dimensions,
-  Image,
-  TouchableOpacity
-} from "react-native";
+import { Modal, SafeAreaView, View, StyleSheet, Dimensions, Image, TouchableOpacity } from "react-native";
 import { Button, Icon } from "react-native-elements";
 import { Text } from "./";
 import * as Assets from "../../Assets";
@@ -23,10 +15,7 @@ export interface ShoeSizePickerProps {
   visible: boolean;
   pickerTitle: string;
   owned?: Array<{ shoeSize: string; number: number }>;
-  onTogglePicker: (
-    exiting: boolean,
-    owned: string | Array<{ shoeSize: string; number: number }>
-  ) => void;
+  onTogglePicker: (exiting: boolean, owned: string | Array<{ shoeSize: string; number: number }>) => void;
   shouldRenderCounter: boolean;
 }
 
@@ -79,10 +68,7 @@ export class ShoeSizePicker extends React.Component<ShoeSizePickerProps, ShoeSiz
         animationType={"fade"}
         animated={true}
       >
-        <SafeAreaView
-          style={styles.shoeSizesContainer}
-          onLayout={_event => this._onShoeSizeButtonLayout()}
-        >
+        <SafeAreaView style={styles.shoeSizesContainer} onLayout={_event => this._onShoeSizeButtonLayout()}>
           <Text.Title2 style={{ color: Assets.Styles.AppSecondaryColor, margin: 20 }}>
             {this.props.pickerTitle}
           </Text.Title2>
@@ -100,7 +86,7 @@ export class ShoeSizePicker extends React.Component<ShoeSizePickerProps, ShoeSiz
     });
   }
 
-  _renderTriangleForCounter() {
+  private _renderTriangleForCounter() {
     const currentlyPicked = this.state.buttonsLayout.get(this.state.pickedSize);
 
     if (this.state.isShowingCounter && currentlyPicked) {
@@ -139,10 +125,7 @@ export class ShoeSizePicker extends React.Component<ShoeSizePickerProps, ShoeSiz
             <Button
               title={this.shoeSizes[currentIdx]}
               type={"clear"}
-              style={[
-                styles.buttonContainer,
-                this._isSizeSelected(currentShoeSize) ? styles.buttonSelected : {}
-              ]}
+              style={[styles.buttonContainer, this._isSizeSelected(currentShoeSize) ? styles.buttonSelected : {}]}
               onPress={() => this._onShoeSizeSelected(currentShoeSize)}
               titleStyle={[
                 Text.TextStyle.body,
@@ -153,9 +136,7 @@ export class ShoeSizePicker extends React.Component<ShoeSizePickerProps, ShoeSiz
             />
             {this._getSizeCount(currentShoeSize) > 0 && (
               <View style={styles.shoeBadgeCounter}>
-                <Text.Footnote style={{ color: "white" }}>
-                  {this._getSizeCount(currentShoeSize)}
-                </Text.Footnote>
+                <Text.Footnote style={{ color: "white" }}>{this._getSizeCount(currentShoeSize)}</Text.Footnote>
               </View>
             )}
           </View>
@@ -167,9 +148,7 @@ export class ShoeSizePicker extends React.Component<ShoeSizePickerProps, ShoeSiz
           <View style={styles.rowContainer}>{row}</View>
           {this.props.shouldRenderCounter &&
             this.state.isShowingCounter &&
-            Math.floor(
-              (this.indexMap.get(this.state.pickedSize) as number) / this.numColumns
-            ) === rowIdx &&
+            Math.floor((this.indexMap.get(this.state.pickedSize) as number) / this.numColumns) === rowIdx &&
             this._renderCounter()}
         </View>
       );
@@ -231,9 +210,7 @@ export class ShoeSizePicker extends React.Component<ShoeSizePickerProps, ShoeSiz
     const ownedIdx = this.state.owned.findIndex(t => t.shoeSize === this.state.pickedSize);
 
     const currentPickedSizeCount = this._getSizeCount(this.state.pickedSize);
-    const newCount = increase
-      ? currentPickedSizeCount + 1
-      : Math.max(0, currentPickedSizeCount - 1);
+    const newCount = increase ? currentPickedSizeCount + 1 : Math.max(0, currentPickedSizeCount - 1);
 
     if (ownedIdx >= 0) {
       owned[ownedIdx] = { shoeSize: this.state.pickedSize, number: newCount };
@@ -288,7 +265,6 @@ export class ShoeSizePicker extends React.Component<ShoeSizePickerProps, ShoeSiz
       const button = this.buttons.get(item);
       if (button) {
         button.measure((_fx, _fy, _width, _height, px: number, py: number) => {
-          console.log(item, px, py);
           this.setState(prevState => ({
             ...prevState,
             buttonsLayout: prevState.buttonsLayout.set(item, { x: px, y: py })

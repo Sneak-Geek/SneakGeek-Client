@@ -10,6 +10,6 @@ export interface ITransactionService {
   getSellingHistory(token: string): Promise<{ sellHistory: SellOrder[] }>;
   getBuyHistory(token: string): Promise<{ buyHistory: BuyOrder[] }>;
   getAvailableOrders(token: string, shoeId: string): Promise<SellOrder[]>;
-  launchIntlPaymentPage(sellOrder: SellOrder): void;
-  launchDomesticPaymentPage(sellOrder: SellOrder): void;
+  processPaymentIntl(sellOrder: SellOrder, buyerId: string): string;
+  processPaymentDomestic(sellOrder: SellOrder, buyerId: string): string;
 }

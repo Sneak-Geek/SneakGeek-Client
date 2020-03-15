@@ -40,6 +40,7 @@ import { NotiSettingScreenContainer } from "../Components/NotiSetting/NotiSettin
 import { ShareScreenContainer } from "../Components/Share/ShareScreen.Container";
 import { BuySelectionScreenContainer } from "../Components/BuySelection/BuySelectionScreen.Container";
 import { SeeMoreScreen } from "../Components/SeeMore";
+import { WebViewHostedPayment } from "../Components/Payment/WebViewHostedPayment";
 
 const AuthenticationStack = createStackNavigator(
   {
@@ -119,6 +120,16 @@ const TransactionTabNavigator = createMaterialTopTabNavigator(
   }
 );
 
+const PaymentStackNavigator = createStackNavigator(
+  {
+    [`${RouteNames.Payment}`]: { screen: PaymentScreenContainer },
+    [`${RouteNames.WebViewPayment}`]: WebViewHostedPayment
+  },
+  {
+    initialRouteName: RouteNames.Payment
+  }
+);
+
 const AppTabRoot = createBottomTabNavigator(
   {
     [`${RouteNames.Tabs.HomeTab.TabName}`]: { screen: HomeTabNavigator },
@@ -172,7 +183,11 @@ export const AppNavigator = createStackNavigator(
     [`${RouteNames.TrackingSell}`]: { screen: TrackingSellScreenContainer },
     [`${RouteNames.OrderSell}`]: { screen: OrderSellScreenContainer },
     [`${RouteNames.OrderAuction}`]: { screen: OrderAuctionScreenContainer },
-    [`${RouteNames.Payment}`]: { screen: PaymentScreenContainer },
+    [`${RouteNames.PaymentContainer}`]: {
+      screen: PaymentStackNavigator,
+      headerMode: "none",
+      navigationOptions: { header: null }
+    },
     [`${RouteNames.NotiSetting}`]: { screen: NotiSettingScreenContainer },
     [`${RouteNames.Share}`]: { screen: ShareScreenContainer },
     [`${RouteNames.UserKind}`]: { screen: UserKindScreenContainer },

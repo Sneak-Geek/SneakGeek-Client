@@ -1,18 +1,18 @@
-//!
-//! Copyright (c) 2019 - SneakGeek. All rights reserved
-//!
+// !
+// ! Copyright (c) 2019 - SneakGeek. All rights reserved
+// !
 
 import { Container } from "inversify";
-import { StoreProvider, IStoreProvider } from "../../Store";
+import { IStoreProvider, StoreProvider } from "../../Store";
 import { Types } from "./Types";
-import { IAppSettingsService, AppSettingsService } from "../../Service/AppSettingsService";
+import { AppSettingsService, IAppSettingsService } from "../../Service/AppSettingsService";
 import {
-  IAccountService,
   AccountService,
   AppContentService,
+  CdnService,
+  IAccountService,
   IAppContentService,
   ICdnService,
-  CdnService,
   ITransactionService,
   TransactionService
 } from "../../Service";
@@ -26,6 +26,4 @@ container.bind<ICdnService>(Types.ICdnService).to(CdnService);
 container.bind<ITransactionService>(Types.ITransactionService).to(TransactionService);
 
 // binding settings
-container
-  .bind<IAppSettingsService>(Types.IAppSettingsService)
-  .toConstantValue(new AppSettingsService());
+container.bind<IAppSettingsService>(Types.IAppSettingsService).toConstantValue(new AppSettingsService());

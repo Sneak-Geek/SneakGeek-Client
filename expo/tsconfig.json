@@ -1,0 +1,21 @@
+{
+  "compilerOptions": {
+    "experimentalDecorators": true,
+    "allowSyntheticDefaultImports": true,
+    "jsx": "react-native",
+    "lib": ["dom", "esnext"],
+    "moduleResolution": "node",
+    "noEmit": true,
+    "skipLibCheck": true,
+    "resolveJsonModule": true,
+    "baseUrl": "./src",
+    "paths": {
+      "@screens/*": ["./screens/*"],
+      "@resources": ["./resources"],
+      "@resources/*": ["./resources/*"],
+      "@store/*": ["./store/*"],
+      "@common/*": ["./common/*"]
+    }
+  },
+  "include": ["./"]
+}
