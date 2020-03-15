@@ -21,12 +21,16 @@ export default class Brand extends React.Component {
     this.brand = this.props.navigation.getParam("brand");
     fetch(`https://stockx.com/api/browse?productCategory=sneakers&brand=${this.brand}`)
       .then(res => res.json())
-      .then(data =>
+      .then(data => {
+        console.log(data)
         this.setState({
           brandTotal: data.Pagination.total,
           yearData: data.Facets.year ? data.Facets.year : {}
         })
-      );
+      }
+      ).catch(e => {
+        console.log(e);
+      });
   }
 
   render() {

@@ -1,4 +1,4 @@
-import { Account, Profile, Catalog } from "../model";
+import { Account, Profile, Catalog, Shoe } from "../model";
 
 export enum NetworkRequestState {
   NOT_STARTED,
@@ -16,3 +16,4 @@ export type NetworkPayload<T> = {
 export type AuthenticationPayload = NetworkPayload<{ user: Account; token: string }>;
 export type GetUserProfilePayload = NetworkPayload<{ profile: Profile }>;
 export type CatalogPayload = NetworkPayload<Catalog[]>;
+export type SearchShoesPayload = NetworkPayload<Shoe[]>;

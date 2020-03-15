@@ -51,7 +51,7 @@ export const getCurrentUser = () => {
   };
 };
 
-export const authenticateWithEmail = (email: string, password: string) => {
+export const authenticateWithEmail = (email: string, password: string, isSignUp: boolean = false) => {
   const accountService = ObjectFactory.getObjectInstance<IAccountService>(
     FactoryKeys.IAccountService
   );
@@ -62,7 +62,7 @@ export const authenticateWithEmail = (email: string, password: string) => {
   return async (dispatch: Function) => {
     dispatch(updateAuthenticationState({ state: NetworkRequestState.REQUESTING }));
     try {
-      const accountPayload = await accountService.emailLogin(email, password);
+      const accountPayload = await accountService.emailAuth(email, password, isSignUp); 
       if (accountPayload) {
         await settings.setValue(SettingsKey.CurrentAccessToken, accountPayload.token);
         await settings.loadServerSettings();

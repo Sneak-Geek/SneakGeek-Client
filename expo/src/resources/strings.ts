@@ -24,5 +24,6 @@ export const strings = {
   HomeTabTitle: 'Trang chủ',
   TakePicture: 'Chụp ảnh',
   Cancel: 'Huỷ',
-  ChoosePictureLocal: 'Chọn ảnh từ thư viện'
+  ChoosePictureLocal: 'Chọn ảnh từ thư viện',
+  ProductDetail: 'Chi tiết sản phẩm'
 }

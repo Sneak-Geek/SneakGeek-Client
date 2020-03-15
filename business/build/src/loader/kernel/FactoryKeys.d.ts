@@ -4,4 +4,5 @@ export declare const FactoryKeys: {
     IFacebookSDK: symbol;
     ISettingsProvider: symbol;
     ICatalogService: symbol;
+    IShoeService: symbol;
 };

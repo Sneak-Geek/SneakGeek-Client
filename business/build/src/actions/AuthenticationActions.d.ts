@@ -10,5 +10,5 @@ export declare const updateAuthenticationState: import("redux-actions").ActionFu
     token: string;
 }>>>;
 export declare const getCurrentUser: () => (dispatch: Dispatch<any>) => Promise<void>;
-export declare const authenticateWithEmail: (email: string, password: string) => (dispatch: Function) => Promise<void>;
+export declare const authenticateWithEmail: (email: string, password: string, isSignUp?: boolean) => (dispatch: Function) => Promise<void>;
 export declare const authenticateWithFb: () => (dispatch: Function) => Promise<void>;

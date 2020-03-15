@@ -3,7 +3,7 @@ import { AuthProvider } from "../../types";
 import { Account, Profile } from "../../model";
 import { BaseService } from "./BaseService";
 export declare class AccountService extends BaseService implements IAccountService {
-    emailLogin(email: string, password: string): Promise<{
+    emailAuth(email: string, password: string, isSignUp?: boolean): Promise<{
         user: Account;
         token: string;
     } | undefined>;

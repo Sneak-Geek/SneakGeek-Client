@@ -24,7 +24,7 @@ export const UserReducers = handleActions({
         return (Object.assign(Object.assign({}, state), { profileState: {
                 state: action.payload.state,
                 error: action.payload.error,
-                account: (_a = action.payload.data) === null || _a === void 0 ? void 0 : _a.profile
+                profile: (_a = action.payload.data) === null || _a === void 0 ? void 0 : _a.profile
             } }));
     }
 }, initialUserState);

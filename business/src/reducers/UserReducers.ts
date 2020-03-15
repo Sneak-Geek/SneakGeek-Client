@@ -51,7 +51,7 @@ export const UserReducers = handleActions<IUserState, any>(
       profileState: {
         state: action.payload.state,
         error: action.payload.error,
-        account: action.payload.data?.profile
+        profile: action.payload.data?.profile
       }
     })
   },

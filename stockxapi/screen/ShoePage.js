@@ -67,8 +67,11 @@ export default class ShoePage extends React.Component {
         },
         () => {
           axios
-            .post("http://10.0.0.7:3000/api/v1/shoe/create", {
-              shoes: this.state.shoes
+            .post("http://192.168.0.12:8080/api/v1/shoe/create", {
+              shoes: this.state.shoes.map(t => ({
+                ...t,
+                gender: t.gender || "none"
+              }))
             })
             .then(response => {
               const data = response.data;
@@ -80,6 +83,7 @@ export default class ShoePage extends React.Component {
                   isPostingShoes: false
                 },
                 () => {
+                  console.log("shoes", this.state.shoes);
                   Alert.alert(`Error: ${JSON.stringify(e, null, 2)}`);
                 }
               );
@@ -98,6 +102,7 @@ export default class ShoePage extends React.Component {
       )
         .then(res => res.json())
         .then(data => {
+          console.log(data);
           let shoesData = data.Products.map(raw => ({
             brand: raw.brand,
             category: raw.category,
@@ -110,7 +115,8 @@ export default class ShoePage extends React.Component {
             retailPrice: raw.retailPrice,
             shoe: raw.shoe,
             title: raw.title,
-            styleId: raw.styleId
+            styleId: raw.styleId,
+            tags: raw._tags ? raw._tags.filter(t => t.indexOf("|") === 0) : []
           }));
           this.setState(s => {
             return {

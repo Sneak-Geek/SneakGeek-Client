@@ -5,7 +5,7 @@ export interface IAccountService {
         user: Account;
         token: string;
     } | undefined>;
-    emailLogin: (email: string, password: string) => Promise<{
+    emailAuth: (email: string, password: string, isSignUp: boolean) => Promise<{
         user: Account;
         token: string;
     } | undefined>;

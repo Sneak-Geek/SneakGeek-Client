@@ -13,9 +13,10 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 import { BaseService } from "./BaseService";
 import HttpStatus from "http-status";
 export class AccountService extends BaseService {
-    emailLogin(email, password) {
+    emailAuth(email, password, isSignUp = false) {
         return __awaiter(this, void 0, void 0, function* () {
-            const response = yield this.apiClient.getInstance().post(`/account/email-login`, { email, password }, {
+            const endpoint = isSignUp ? `/account/email-signup` : `/account/email-login`;
+            const response = yield this.apiClient.getInstance().post(endpoint, { email, password }, {
                 headers: {
                     "Access-Control-Request-Method": "POST"
                 }

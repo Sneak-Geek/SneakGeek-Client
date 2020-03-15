@@ -27,15 +27,15 @@ export const getUserProfile = () => {
     try {
       const profile: Profile | undefined = await accountService.getUserProfile(token);
       if (profile) {
-        updateStateGetUserProfile({
+        dispatch(updateStateGetUserProfile({
           state: NetworkRequestState.SUCCESS,
           data: { profile }
-        });
+        }));
       } else {
-        updateStateGetUserProfile({
+        dispatch(updateStateGetUserProfile({
           state: NetworkRequestState.FAILED,
           error: new Error("Empty profile ")
-        });
+        }));
       }
     } catch (error) {
       updateStateGetUserProfile({ state: NetworkRequestState.FAILED, error });
