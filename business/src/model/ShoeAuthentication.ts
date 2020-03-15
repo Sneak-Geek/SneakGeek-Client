@@ -1,4 +1,4 @@
-export interface ShoeAuthentication {
+export type ShoeAuthentication = {
   title: string;
   imageUrl?: string;
   brand: string;
@@ -8,4 +8,5 @@ export interface ShoeAuthentication {
   condition: object;
   trackingID: string;
   status: string;
-}
+  uploadDate: string;
+};

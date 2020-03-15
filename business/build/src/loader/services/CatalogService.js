@@ -24,4 +24,40 @@ export class CatalogService extends BaseService {
             return undefined;
         });
     }
+    getShoes(token, value) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const response = yield this.apiClient.getInstance().get(`shoe/find?title=${value}`, {
+                headers: {
+                    authorization_token: token
+                }
+            });
+            if (response &&
+                (response.status === HttpStatus.CREATED || response.status === HttpStatus.OK)) {
+                return response.data;
+            }
+            return undefined;
+        });
+    }
+    saveCatalog(token, catalog, catalogID) {
+        return __awaiter(this, void 0, void 0, function* () {
+            yield this.apiClient.getInstance().put(`/catalogue/${catalogID}`, catalog, {
+                headers: {
+                    authorization_token: token
+                }
+            });
+        });
+    }
+    createNewCatalog(token, catalogTitle, catalogDescription, products) {
+        return __awaiter(this, void 0, void 0, function* () {
+            yield this.apiClient.getInstance().post(`/catalogue/`, {
+                title: catalogTitle,
+                products: products,
+                description: catalogDescription
+            }, {
+                headers: {
+                    authorization_token: token
+                }
+            });
+        });
+    }
 }
