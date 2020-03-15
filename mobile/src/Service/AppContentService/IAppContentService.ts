@@ -8,11 +8,5 @@ export interface IAppContentService {
   getShoes(): Promise<Shoe[]>;
   searchShoes(key: string): Promise<Shoe[]>;
   getShoesByIds(token: string, ids: string[]): Promise<Shoe[]>;
-  requestProduct(
-    title: string,
-    brand: string
-  ): //  gender: string, colorways: string[],
-  //  productLink: string,
-  //  imageUrls: string[]
-  Promise<any>;
+  requestProduct(title: string, brand: string): Promise<any>;
 }

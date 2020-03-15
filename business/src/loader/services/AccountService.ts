@@ -9,12 +9,14 @@ import { BaseService } from "./BaseService";
 import HttpStatus from "http-status";
 
 export class AccountService extends BaseService implements IAccountService {
-  public async emailLogin(
+  public async emailAuth(
     email: string,
-    password: string
+    password: string,
+    isSignUp: boolean = false
   ): Promise<{ user: Account; token: string } | undefined> {
+    const endpoint = isSignUp ? `/account/email-signup` : `/account/email-login`;
     const response = await this.apiClient.getInstance().post(
-      `/account/email-login`,
+      endpoint,
       { email, password },
       {
         headers: {

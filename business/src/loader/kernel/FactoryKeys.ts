@@ -7,5 +7,6 @@ export const FactoryKeys = {
   IAccountService: Symbol.for("IAccountService"),
   IFacebookSDK: Symbol.for("IFacebookSDK"),
   ISettingsProvider: Symbol.for("ISettingsProvider"),
-  ICatalogService: Symbol.for("ICatalogService")
+  ICatalogService: Symbol.for("ICatalogService"),
+  IShoeService: Symbol.for("IShoeService"),
 };

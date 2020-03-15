@@ -10,9 +10,10 @@ export interface IAccountService {
     token: string,
     provider: AuthProvider
   ): Promise<{ user: Account; token: string } | undefined>;
-  emailLogin: (
+  emailAuth: (
     email: string,
-    password: string
+    password: string,
+    isSignUp: boolean
   ) => Promise<{ user: Account; token: string } | undefined>;
   getCurrentUser(
     accessToken: string

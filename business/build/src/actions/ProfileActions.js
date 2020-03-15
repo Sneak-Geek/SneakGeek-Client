@@ -24,16 +24,16 @@ export const getUserProfile = () => {
         try {
             const profile = yield accountService.getUserProfile(token);
             if (profile) {
-                updateStateGetUserProfile({
+                dispatch(updateStateGetUserProfile({
                     state: NetworkRequestState.SUCCESS,
                     data: { profile }
-                });
+                }));
             }
             else {
-                updateStateGetUserProfile({
+                dispatch(updateStateGetUserProfile({
                     state: NetworkRequestState.FAILED,
                     error: new Error("Empty profile ")
-                });
+                }));
             }
         }
         catch (error) {

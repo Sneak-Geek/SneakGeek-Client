@@ -6,12 +6,12 @@ export abstract class BaseService {
   protected apiClient: ApiClient.Instance;
 
   public constructor() {
+    const env: IEnvVar = ObjectFactory.getObjectInstance<IEnvVar>(FactoryKeys.IEnvVar);
+
     this.apiClient = new ApiClient.Builder()
-      .registerDevState(
-        ObjectFactory.getObjectInstance<IEnvVar>(FactoryKeys.IEnvVar).__DEV__
-      )
-      .registerDevUrl("http://localhost:8080/api/v1")
-      .registerProdUrl("https://sneakgeek-test.azurewebsites.net/api/v1")
+      .registerDevState(env.__DEV__)
+      .registerDevUrl(env.devUrl || "https://localhost:8080/api/v1")
+      .registerProdUrl(env.prodUrl || "https://sneakgeek-test.azurewebsites.net/api/v1")
       .build();
   }
 }

@@ -1,7 +1,7 @@
 import React from 'react';
 import { Shoe } from 'business';
 import { View, Image, StyleSheet } from 'react-native';
-import { AppText } from '.';
+import { AppText } from './Text';
 import { themes } from '@resources';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 
@@ -35,6 +35,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 5,
     flex: 1,
     paddingVertical: 10,
+    minHeight: 52
   },
 });
 

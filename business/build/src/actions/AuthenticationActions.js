@@ -44,13 +44,13 @@ export const getCurrentUser = () => {
         }
     });
 };
-export const authenticateWithEmail = (email, password) => {
+export const authenticateWithEmail = (email, password, isSignUp = false) => {
     const accountService = ObjectFactory.getObjectInstance(FactoryKeys.IAccountService);
     const settings = ObjectFactory.getObjectInstance(FactoryKeys.ISettingsProvider);
     return (dispatch) => __awaiter(void 0, void 0, void 0, function* () {
         dispatch(updateAuthenticationState({ state: NetworkRequestState.REQUESTING }));
         try {
-            const accountPayload = yield accountService.emailLogin(email, password);
+            const accountPayload = yield accountService.emailAuth(email, password, isSignUp);
             if (accountPayload) {
                 yield settings.setValue(SettingsKey.CurrentAccessToken, accountPayload.token);
                 yield settings.loadServerSettings();

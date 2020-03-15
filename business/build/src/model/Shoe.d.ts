@@ -9,4 +9,6 @@ export interface Shoe {
     shoe: string;
     urlKey: string;
     title: string;
+    retailPrice?: number;
+    releaseDate?: string;
 }

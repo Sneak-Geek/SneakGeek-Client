@@ -8,6 +8,7 @@ import {
   Keyboard,
   EmitterSubscription,
   Dimensions,
+  TouchableOpacity,
 } from 'react-native';
 import { SafeAreaConsumer } from 'react-native-safe-area-context';
 import { SearchBar, Icon, ListItem, Button } from 'react-native-elements';
@@ -201,13 +202,14 @@ export class SearchTabMain extends React.Component<Props, State> {
           </View>
         )}
         {this.state.shoes.length > 0 && (
-          <ScrollView>
+          <ScrollView keyboardShouldPersistTaps={'always'}>
             {this.state.shoes.map((s: Shoe) => (
               <ListItem
                 key={s._id}
                 leftAvatar={renderLeftAvatar(s)}
                 title={s.title}
                 titleStyle={themes.TextStyle.subhead}
+                accessible={true}
                 onPress={() => this._goToProduct(s)}
               />
             ))}
@@ -276,8 +278,9 @@ export class SearchTabMain extends React.Component<Props, State> {
   }
 
   private _goToProduct(shoe: Shoe) {
-    this.props.navigation.navigate(RouteNames.Product.ProductDetail, {
-      shoe,
+    this.props.navigation.push(RouteNames.Product.Name, {
+      screen: RouteNames.Product.ProductDetail,
+      params: { shoe },
     });
   }
 }
