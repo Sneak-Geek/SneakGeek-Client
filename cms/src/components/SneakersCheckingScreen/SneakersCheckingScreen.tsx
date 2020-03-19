@@ -215,7 +215,8 @@ export class SneakersCheckingScreen extends React.Component<Props, State> {
             return (
               <Table.Row warning={shoeAuthentication.status === "Chờ xét duyệt"} positive={shoeAuthentication.status === "Đạt tiêu chuẩn"} negative={shoeAuthentication.status === "Chưa đạt tiêu chuẩn"}
                 onClick={() => {
-                  this._linkToAuthAndRepSneakerScreen(shoeAuthentication);
+                  if (shoeAuthentication.status === "Chờ xét duyệt")
+                    this._linkToAuthAndRepSneakerScreen(shoeAuthentication);
                 }}
               >
                 <Table.Cell>{shoeAuthentication.trackingID}</Table.Cell>
