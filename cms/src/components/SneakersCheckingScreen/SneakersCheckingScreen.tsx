@@ -36,7 +36,7 @@ export class SneakersCheckingScreen extends React.Component<Props, State> {
           images: ["https://stockx.imgix.net/Air-Jordan-1-Retro-High-Satin-Black-Toe-W.png?fit=fill&bg=FFFFFF&w=700&h=500&auto=format,compress&trim=color&q=90&dpr=2&updated_at=1557337703", "https://stockx.imgix.net/Nike-Air-Max-1-Bordeaux-Desert-Sand.png?fit=fill&bg=FFFFFF&w=700&h=500&auto=format,compress&trim=color&q=90&dpr=2&updated_at=1557802469", "https://stockx.imgix.net/Air-Foamposite-Pro-Gucci-Product.jpg?fit=fill&bg=FFFFFF&w=700&h=500&auto=format,compress&trim=color&q=90&dpr=2&updated_at=1559767909", "https://stockx.imgix.net/Air-Foamposite-Pro-White-Gucci-Product.jpg?fit=fill&bg=FFFFFF&w=700&h=500&auto=format,compress&trim=color&q=90&dpr=2&updated_at=1555964877", "https://stockx.imgix.net/Nike-Kobe-4-Protro-Carpe-Diem.png?fit=fill&bg=FFFFFF&w=700&h=500&auto=format,compress&trim=color&q=90&dpr=2&updated_at=1557452514", "https://stockx.imgix.net/Nike-Kobe-4-Protro-Draft-Day-Hornets-Product.jpg?fit=fill&bg=FFFFFF&w=700&h=500&auto=format,compress&trim=color&q=90&dpr=2&updated_at=1552673057"],
           condition: {},
           trackingID: "1e8kdd12jKl",
-          status: "Pending",
+          status: "Chờ xét duyệt",
           uploadDate: "17-01-2020 8PM UTC"
         },
         {
@@ -49,7 +49,7 @@ export class SneakersCheckingScreen extends React.Component<Props, State> {
           images: ["string", "string"],
           condition: {},
           trackingID: "1kd0239dj0",
-          status: "Pending",
+          status: "Chờ xét duyệt",
           uploadDate: "17-01-2020 8PM UTC"
         },
         {
@@ -62,7 +62,7 @@ export class SneakersCheckingScreen extends React.Component<Props, State> {
           images: ["string", "string"],
           condition: {},
           trackingID: "2od09023dd",
-          status: "Pending",
+          status: "Chờ xét duyệt",
           uploadDate: "17-01-2020 8PM UTC"
         },
         {
@@ -75,7 +75,7 @@ export class SneakersCheckingScreen extends React.Component<Props, State> {
           images: ["string", "string"],
           condition: {},
           trackingID: "oopp0011nn",
-          status: "Pending",
+          status: "Đạt tiêu chuẩn",
           uploadDate: "17-01-2020 8PM UTC"
         },
         {
@@ -88,7 +88,7 @@ export class SneakersCheckingScreen extends React.Component<Props, State> {
           images: ["string", "string"],
           condition: {},
           trackingID: "39jxnd12s",
-          status: "Pending",
+          status: "Đạt tiêu chuẩn",
           uploadDate: "17-01-2020 8PM UTC"
         },
         {
@@ -101,7 +101,7 @@ export class SneakersCheckingScreen extends React.Component<Props, State> {
           images: ["string", "string"],
           condition: {},
           trackingID: "oloaf9320jdsd020",
-          status: "Pending",
+          status: "Đạt tiêu chuẩn",
           uploadDate: "17-01-2020 8PM UTC"
         },
         {
@@ -114,7 +114,7 @@ export class SneakersCheckingScreen extends React.Component<Props, State> {
           images: ["string", "string"],
           condition: {},
           trackingID: "Omd03mla021",
-          status: "Pending",
+          status: "Chưa đạt tiêu chuẩn",
           uploadDate: "17-01-2020 8PM UTC"
         },
         {
@@ -127,7 +127,7 @@ export class SneakersCheckingScreen extends React.Component<Props, State> {
           images: ["string", "string"],
           condition: {},
           trackingID: "AA2ncdj918Fl0",
-          status: "Pending",
+          status: "Chưa đạt tiêu chuẩn",
           uploadDate: "17-01-2020 8PM UTC"
         }
       ]
@@ -213,7 +213,7 @@ export class SneakersCheckingScreen extends React.Component<Props, State> {
         <Table.Body>
           {shoeAuthentications.map((shoeAuthentication: ShoeAuthentication) => {
             return (
-              <Table.Row
+              <Table.Row warning={shoeAuthentication.status === "Chờ xét duyệt"} positive={shoeAuthentication.status === "Đạt tiêu chuẩn"} negative={shoeAuthentication.status === "Chưa đạt tiêu chuẩn"}
                 onClick={() => {
                   this._linkToAuthAndRepSneakerScreen(shoeAuthentication);
                 }}
@@ -230,8 +230,9 @@ export class SneakersCheckingScreen extends React.Component<Props, State> {
                 <Table.Cell>{shoeAuthentication.status}</Table.Cell>
               </Table.Row>
             );
-          })}
-        </Table.Body>
+          })
+          }
+        </Table.Body >
       );
     else return <></>;
   }

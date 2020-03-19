@@ -26,11 +26,11 @@ export class AuthAndRepSneakerScreen extends React.Component<Props, State> {
   }
 
   private _renderModalOfImages(image: string) {
-    return (<Modal trigger={<img className="image" src={image} />}>
+    return (<Modal trigger={<Image size='big' src={image} />}>
       <Modal.Content>
         <Image size='huge' src={image} wrapped />
       </Modal.Content>
-    </ Modal>);
+    </ Modal >);
   }
 
   render(): JSX.Element {
