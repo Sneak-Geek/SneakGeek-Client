@@ -21,7 +21,8 @@ import { IAppState } from "../../store/IAppState";
 import { IUserState, NetworkRequestState, getCurrentUser } from "business";
 import { CatalogScreen } from "../CatalogScreen";
 import { CatalogManagementScreen } from "../CatalogManagementScreen";
-import { SneakersCheckingScreen } from "../../SneakersCheckingScreen";
+import { SneakersCheckingScreen } from "../SneakersCheckingScreen";
+import { AuthAndRepSneakerScreen } from "../AuthAndRepSneakerScreen";
 
 type Props = {
   currentPath: string;
@@ -141,8 +142,8 @@ export class UnconnectedHomeScreen extends React.Component<Props, State> {
           <Link to={"/users"}>Quản lý người dùng</Link>
           <Icon name={"user"} />
         </Menu.Item>
-        <Menu.Item link active={currentPath === "/checking"}>
-          <Link to={"/checking"}>Quản lý đơn hàng</Link>
+        <Menu.Item link active={currentPath === "/shoe-authentication"}>
+          <Link to={"/shoe-authentication"}>Quản lý đơn hàng</Link>
           <Icon name={"bolt"} />
         </Menu.Item>
       </Sidebar>
@@ -176,7 +177,8 @@ export class UnconnectedHomeScreen extends React.Component<Props, State> {
               render={() => <h3>Yêu cầu từ người dùng</h3>}
             />
             <Route path={"/users"} render={() => <h3>Quản lý người dùng</h3>} />
-            <Route path={"/checking"} render={() => <SneakersCheckingScreen />} />
+            <Route exact path={"/shoe-authentication"} render={props => <SneakersCheckingScreen {...props} />} />
+            <Route exact path={"/shoe-authentication/:id"} render={props => <AuthAndRepSneakerScreen {...props} />} />
           </Switch>
         </Segment>
       </Sidebar.Pusher>

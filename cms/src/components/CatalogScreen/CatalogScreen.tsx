@@ -121,30 +121,23 @@ export class UnconnectedCatalogScreen extends React.Component<Props, State> {
       <Table.Body>
         {catalogs!.map(element => {
           return (
-            <Table.Row>
+            <Table.Row onClick={() => { this.props.history.push(`/catalogs/${element._id}`, { catalog: element }) }}>
               <Table.Cell collapsing>{element.title}</Table.Cell>
               <Table.Cell>{element.description}</Table.Cell>
               <Table.Cell collapsing>
-                <Link
-                  to={{
-                    pathname: `/catalogs/${element._id}`,
-                    state: { catalog: element }
-                  }}
-                >
-                  <Popup
-                    content="Chỉnh sửa catalog"
-                    position="right center"
-                    trigger={
-                      <Button
-                        onClick={() => {}}
-                        floated={"right"}
-                        size={"small"}
-                        compact
-                        icon={"small pencil alternate icon"}
-                      />
-                    }
-                  />
-                </Link>
+                <Popup
+                  content="Chỉnh sửa catalog"
+                  position="right center"
+                  trigger={
+                    <Button
+                      onClick={() => { }}
+                      floated={"right"}
+                      size={"small"}
+                      compact
+                      icon={"small pencil alternate icon"}
+                    />
+                  }
+                />
               </Table.Cell>
             </Table.Row>
           );

@@ -11,6 +11,7 @@
     "bootstrap": "4.3.1",
     "business": "file:../business",
     "connected-react-router": "^6.5.2",
+    "lodash": "^4.17.15",
     "node-sass": "^4.13.1",
     "react": "16.9.0",
     "react-admin": "^3.2.2",
@@ -21,6 +22,7 @@
     "redux": "^4.0.5",
     "redux-actions": "^2.6.5",
     "redux-thunk": "^2.3.0",
+    "semantic-ui-carousel-react": "^1.1.1",
     "semantic-ui-react": "^0.88.2",
     "typescript": "3.6.2"
   },
@@ -51,6 +53,7 @@
   },
   "devDependencies": {
     "@types/facebook-js-sdk": "^3.3.0",
+    "@types/lodash": "^4.14.149",
     "@types/node-sass": "^4.11.0",
     "@types/react-bootstrap": "0.32.20",
     "@types/react-redux": "7.1.4",

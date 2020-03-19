@@ -1,8 +1,12 @@
 import React from "react";
-import { Table, Header, Grid, Search, Segment } from "semantic-ui-react";
+import { Table, Header, Grid, Search } from "semantic-ui-react";
 import { ShoeAuthentication } from "business";
+import { Link } from "react-router-dom";
+import { History } from "history";
 
-type Props = {};
+type Props = {
+  history: History
+};
 
 type State = {
   shoeAuthentications?: ShoeAuthentication[];
@@ -24,11 +28,12 @@ export class SneakersCheckingScreen extends React.Component<Props, State> {
         {
           title: "Balenciaga",
           imageUrl:
-            "https://stockx.imgix.net/Nike-Air-Max-1-Bordeaux-Desert-Sand.png?fit=fill&bg=FFFFFF&w=700&h=500&auto=format,compress&trim=color&q=90&dpr=2&updated_at=1557802469",
+            "https://stockx.imgix.net/Nike-Kobe-4-Protro-Draft-Day-Hornets-Product.jpg?fit=fill&bg=FFFFFF&w=700&h=500&auto=format,compress&trim=color&q=90&dpr=2&updated_at=1552673057",
           brand: "string",
           size: 102,
           isNew: false,
-          images: ["string", "string"],
+
+          images: ["https://stockx.imgix.net/Air-Jordan-1-Retro-High-Satin-Black-Toe-W.png?fit=fill&bg=FFFFFF&w=700&h=500&auto=format,compress&trim=color&q=90&dpr=2&updated_at=1557337703", "https://stockx.imgix.net/Nike-Air-Max-1-Bordeaux-Desert-Sand.png?fit=fill&bg=FFFFFF&w=700&h=500&auto=format,compress&trim=color&q=90&dpr=2&updated_at=1557802469", "https://stockx.imgix.net/Air-Foamposite-Pro-Gucci-Product.jpg?fit=fill&bg=FFFFFF&w=700&h=500&auto=format,compress&trim=color&q=90&dpr=2&updated_at=1559767909", "https://stockx.imgix.net/Air-Foamposite-Pro-White-Gucci-Product.jpg?fit=fill&bg=FFFFFF&w=700&h=500&auto=format,compress&trim=color&q=90&dpr=2&updated_at=1555964877", "https://stockx.imgix.net/Nike-Kobe-4-Protro-Carpe-Diem.png?fit=fill&bg=FFFFFF&w=700&h=500&auto=format,compress&trim=color&q=90&dpr=2&updated_at=1557452514", "https://stockx.imgix.net/Nike-Kobe-4-Protro-Draft-Day-Hornets-Product.jpg?fit=fill&bg=FFFFFF&w=700&h=500&auto=format,compress&trim=color&q=90&dpr=2&updated_at=1552673057"],
           condition: {},
           trackingID: "1e8kdd12jKl",
           status: "Pending",
@@ -129,10 +134,7 @@ export class SneakersCheckingScreen extends React.Component<Props, State> {
     };
   }
 
-  render() {
-    {
-      console.log(this.state.shoeAuthentications);
-    }
+  render(): JSX.Element {
     return (
       <div>
         <Header as="h2">Check giày</Header>
@@ -159,14 +161,16 @@ export class SneakersCheckingScreen extends React.Component<Props, State> {
     this.setState({ isLoading: false, searchResults: results });
   }
 
-  private _renderAdminAuthenticationModal(data: string) {
-    //TO DO: Create a modal that allow admins to shoe authentication
-    console.log(data);
+  private _linkToAuthAndRepSneakerScreen(data: ShoeAuthentication) {
+    //TO DO: Link to a new screen that allow admins to shoe authentication
+    this.props.history.push(`/shoe-authentication/${data.trackingID}`, {
+      shoeAuthentication: data
+    });
   }
 
   private _onSearchSelect(event: any, data: any) {
     const { result } = data;
-    this._renderAdminAuthenticationModal(data);
+    this._linkToAuthAndRepSneakerScreen(data);
   }
 
   private _renderSearchReviewProducts() {
@@ -175,7 +179,7 @@ export class SneakersCheckingScreen extends React.Component<Props, State> {
         <Grid.Column width={5}>
           <Search
             fluid
-            placeholder="Tìm giày"
+            placeholder="Nhập mã chuyển hàng"
             loading={this.state.isLoading}
             onSearchChange={this._handleSearchChange.bind(this)}
             onResultSelect={this._onSearchSelect.bind(this)}
@@ -191,7 +195,7 @@ export class SneakersCheckingScreen extends React.Component<Props, State> {
     return (
       <Table.Header>
         <Table.Row>
-          <Table.HeaderCell>Mã đơn hàng</Table.HeaderCell>
+          <Table.HeaderCell>Mã chuyển hàng</Table.HeaderCell>
           <Table.HeaderCell>Ảnh giày</Table.HeaderCell>
           <Table.HeaderCell>Tên giày</Table.HeaderCell>
           <Table.HeaderCell>Hãng giày</Table.HeaderCell>
@@ -211,7 +215,7 @@ export class SneakersCheckingScreen extends React.Component<Props, State> {
             return (
               <Table.Row
                 onClick={() => {
-                  this._renderAdminAuthenticationModal(shoeAuthentication.trackingID);
+                  this._linkToAuthAndRepSneakerScreen(shoeAuthentication);
                 }}
               >
                 <Table.Cell>{shoeAuthentication.trackingID}</Table.Cell>
