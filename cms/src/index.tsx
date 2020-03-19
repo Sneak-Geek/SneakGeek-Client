@@ -20,7 +20,8 @@ import "./index.scss";
 import { SettingsProvider } from "./services/SettingsProvider";
 
 ObjectFactory.register<IEnvVar>(FactoryKeys.IEnvVar, {
-  __DEV__: process.env.NODE_ENV !== "production"
+  __DEV__: process.env.NODE_ENV !== "production",
+  devUrl: "http://localhost:8080/api/v1"
 });
 ObjectFactory.register<IAccountService>(FactoryKeys.IAccountService, new AccountService());
 ObjectFactory.register<ICatalogService>(FactoryKeys.ICatalogService, new CatalogService());

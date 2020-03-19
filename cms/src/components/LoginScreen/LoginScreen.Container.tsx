@@ -5,7 +5,6 @@
 import { connect } from "react-redux";
 import { authenticateWithEmail } from "business";
 import UnconnectedLoginScreen from "./LoginScreen";
-import { IAppState } from "../../store/IAppState";
 
 const mapDispatchToProps = (dispatch: Function) => ({
   emailLogin: (email: string, password: string) => {
