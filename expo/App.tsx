@@ -5,7 +5,7 @@ import { ActivityIndicator } from 'react-native';
 import { SplashScreen } from 'expo';
 import * as Facebook from 'expo-facebook';
 import {
-  ObjectFactory,
+  ObjectFactory as Factory,
   FactoryKeys as Keys,
   IFacebookSDK,
   IEnvVar,
@@ -24,37 +24,37 @@ import { InAppNotification } from '@screens/InAppNotification';
 import { AppLoadingIndicator } from '@screens/AppLoadingIndicator';
 import { ActionSheetProvider } from '@expo/react-native-action-sheet';
 
-const initializeBusinessDep = async (): Promise<void> => {
-  const settingsProvider = new SettingsProvider();
-  await settingsProvider.load();
-
-  ObjectFactory.register<IEnvVar>(Keys.IEnvVar, {
-    __DEV__: __DEV__,
-    devUrl: 'http://10.0.0.159:8080/api/v1',
-  });
-  ObjectFactory.register<ISettingsProvider>(Keys.ISettingsProvider, settingsProvider);
-  ObjectFactory.register<IFacebookSDK>(Keys.IFacebookSDK, FacebookSdk);
-  ObjectFactory.register<IAccountService>(Keys.IAccountService, new AccountService());
-  ObjectFactory.register<ICatalogService>(Keys.ICatalogService, new CatalogService());
-  ObjectFactory.register<IShoeService>(Keys.IShoeService, new ShoeService());
-};
-
-const initializeFbSdk = (): Promise<void> => {
-  return Facebook.initializeAsync('1521812747994918', 'sneakgeek');
-};
-
-const initializeFonts = (): Promise<void> => {
-  return Font.loadAsync({
-    Roboto: require('./assets/fonts/Roboto.ttf'),
-    RobotoBold: require('./assets/fonts/Roboto-Bold.ttf'),
-    RobotoItalic: require('./assets/fonts/Roboto-Italic.ttf'),
-    RobotoBoldItalic: require('./assets/fonts/Roboto-Bold-Italic.ttf'),
-    RobotoLight: require('./assets/fonts/Roboto-Light.ttf'),
-  });
-};
-
 export default function App(): JSX.Element {
   const [fontLoaded, setFontLoaded] = useState(false);
+
+  const initializeFonts = (): Promise<void> => {
+    return Font.loadAsync({
+      Roboto: require('./assets/fonts/Roboto.ttf'),
+      RobotoBold: require('./assets/fonts/Roboto-Bold.ttf'),
+      RobotoItalic: require('./assets/fonts/Roboto-Italic.ttf'),
+      RobotoBoldItalic: require('./assets/fonts/Roboto-Bold-Italic.ttf'),
+      RobotoLight: require('./assets/fonts/Roboto-Light.ttf'),
+    });
+  };
+
+  const initializeFbSdk = (): Promise<void> => {
+    return Facebook.initializeAsync('1521812747994918', 'sneakgeek');
+  };
+
+  const initializeBusinessDep = async (): Promise<void> => {
+    const settingsProvider = new SettingsProvider();
+    await settingsProvider.load();
+
+    Factory.register<IEnvVar>(Keys.IEnvVar, {
+      '__DEV__': __DEV__,
+      devUrl: 'http://192.168.0.12:8080/api/v1',
+    });
+    Factory.register<ISettingsProvider>(Keys.ISettingsProvider, settingsProvider);
+    Factory.register<IFacebookSDK>(Keys.IFacebookSDK, new FacebookSdk());
+    Factory.register<IAccountService>(Keys.IAccountService, new AccountService());
+    Factory.register<ICatalogService>(Keys.ICatalogService, new CatalogService());
+    Factory.register<IShoeService>(Keys.IShoeService, new ShoeService());
+  };
 
   useEffect(() => {
     SplashScreen.preventAutoHide();
@@ -70,8 +70,14 @@ export default function App(): JSX.Element {
   if (fontLoaded) {
     return (
       <Provider store={AppStore}>
-        <InAppNotification />
-        <AppLoadingIndicator />
+        {
+          //@ts-ignore
+          <InAppNotification />
+        }
+        {
+          //@ts-ignore
+          <AppLoadingIndicator />
+        }
         <ActionSheetProvider>
           <RootStack />
         </ActionSheetProvider>

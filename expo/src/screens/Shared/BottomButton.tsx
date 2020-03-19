@@ -32,10 +32,10 @@ type Props = {
 
 export const BottomButton = (props: Props) => (
   <View style={[styles.containerStyle, props.style]}>
-    <TouchableOpacity style={styles.buttonStyle}>
-      <AppText.Headline style={[props.titleStyle, styles.titleStyle]}>
+    <TouchableOpacity style={styles.buttonStyle} onPress={props.onPress}>
+      <AppText.Title3 style={[props.titleStyle, styles.titleStyle]}>
         {props.title}
-      </AppText.Headline>
+      </AppText.Title3>
     </TouchableOpacity>
   </View>
 );

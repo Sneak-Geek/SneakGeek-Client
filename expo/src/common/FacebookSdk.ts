@@ -3,8 +3,8 @@ import * as Facebook from "expo-facebook";
 
 let accessToken = '';
 
-export const FacebookSdk: IFacebookSDK = {
-  loginWithPermission: async (permissions: Permissions[]): Promise<LoginResult> => {
+export class FacebookSdk implements IFacebookSDK {
+  public async loginWithPermission(permissions: Permissions[]): Promise<LoginResult> {
     const result: Facebook.FacebookLoginResult = await Facebook.logInWithReadPermissionsAsync({
       permissions: permissions.map(t => t.toString())
     });
@@ -26,9 +26,9 @@ export const FacebookSdk: IFacebookSDK = {
         grantedPermissions: permissions,
         declinedPermissions: []
       };
-  },
+  }
 
-  getCurrentAccessToken: (): Promise<string> => {
+  public getCurrentAccessToken(): Promise<string> {
     return Promise.resolve(accessToken);
   }
 };

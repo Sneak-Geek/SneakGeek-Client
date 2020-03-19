@@ -9,10 +9,12 @@
   "dependencies": {
     "@expo/react-native-action-sheet": "^3.5.0",
     "@react-native-community/masked-view": "0.1.5",
+    "@react-native-community/viewpager": "2.0.2",
     "@react-navigation/bottom-tabs": "^5.1.1",
     "@react-navigation/native": "^5.0.9",
     "@react-navigation/stack": "^5.1.1",
     "axios": "^0.19.2",
+    "business": "file:../business",
     "expo": "~36.0.0",
     "expo-facebook": "^8.0.0",
     "expo-font": "~8.0.0",
@@ -43,13 +45,12 @@
     "@typescript-eslint/parser": "^2.22.0",
     "babel-plugin-module-resolver": "^4.0.0",
     "babel-preset-expo": "~8.0.0",
-    "business": "file:../business",
     "eslint": "^6.8.0",
     "eslint-config-prettier": "^6.10.0",
     "eslint-plugin-react": "^7.18.3",
     "prettier": "^1.19.1",
     "redux-devtools-extension": "^2.13.8",
-    "typescript": "~3.6.3"
+    "typescript": "~3.7.2"
   },
   "private": true
 }

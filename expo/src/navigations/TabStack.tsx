@@ -30,6 +30,10 @@ const AccountTab = (): JSX.Element => (
     <AccountStack.Screen
       name={RouteNames.Tab.AccountTab.EditProfile}
       component={AccountTabEditProfile}
+      options={{
+        headerShown: false,
+        headerTransparent: true,
+      }}
     />
   </AccountStack.Navigator>
 );
@@ -43,6 +47,14 @@ const HomeTab = (): JSX.Element => (
       options={{
         ...themes.headerStyle,
         title: strings.HomeTabTitle,
+        headerRight: () => (
+          <Icon
+            name={'bell-outline'}
+            type={'material-community'}
+            size={themes.IconSize}
+            containerStyle={{ marginRight: 12 }}
+          />
+        ),
       }}
     />
   </HomeStack.Navigator>

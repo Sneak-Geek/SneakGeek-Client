@@ -25,5 +25,20 @@ export const strings = {
   TakePicture: 'Chụp ảnh',
   Cancel: 'Huỷ',
   ChoosePictureLocal: 'Chọn ảnh từ thư viện',
-  ProductDetail: 'Chi tiết sản phẩm'
+  ProductDetail: 'Chi tiết sản phẩm',
+  ProductName: 'Tên sản phẩm',
+  Colorway: 'Màu chủ đạo',
+  Brand: 'Hãng',
+  Category: 'Phân khúc',
+  NoReview: 'Hiện tại chưa có đánh giá nào.',
+  Rating: 'Đánh giá sản phẩm',
+  ReleaseDate: 'Ngày ra mắt',
+  NewReview: 'Đánh giá mới',
+  RatingTitle: 'Đánh giá:',
+  RatingPlaceHolder: 'Giày đi êm chân, dáng đẹp,...',
+  Detail: 'Chi tiết:',
+  PostRating: 'Đăng đánh giá',
+  MissingInfoForReview: 'Bạn cần thêm thông tin cá nhân trước khi đánh giá sản phẩm',
+  AddInfoForReview: 'Thêm thông tin',
+  PleaseWait: 'Xin chờ'
 }

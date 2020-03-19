@@ -102,7 +102,7 @@ const styles = StyleSheet.create({
     borderColor: themes.AppAccentColor
   },
   toastRegular: {
-    backgroundColor: themes.AppSecondaryColor,
+    backgroundColor: themes.AppPrimaryColor,
   },
   toastError: {
     backgroundColor: themes.AppErrorColor,

@@ -47,7 +47,7 @@ export class AppLoadingIndicator extends React.Component<Props> {
           <View style={styles.indicator}>
             <ActivityIndicator size={'large'} color={'white'} />
             {this.props.message && (
-              <AppText.Subhead style={{ color: themes.AppSecondaryColor }}>
+              <AppText.Subhead style={{ color: themes.AppAccentColor }}>
                 {this.props.message}
               </AppText.Subhead>
             )}
