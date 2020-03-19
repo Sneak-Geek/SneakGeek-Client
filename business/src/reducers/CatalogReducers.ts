@@ -1,6 +1,6 @@
-import { NetworkRequestState, CatalogPayload } from "../payload";
+import { NetworkRequestState, CatalogPayload, HomePageCatalogsPayload } from "../payload";
 import { Catalog } from "../model";
-import { updateCatalogState } from "../actions/CatalogActions";
+import { updateCatalogState, updateGetHomeCatalogsState } from "../actions/CatalogActions";
 import { handleActions, Action } from "redux-actions";
 
 export type ICatalogState = {
@@ -9,10 +9,23 @@ export type ICatalogState = {
     error?: any;
     catalogs?: Catalog[];
   };
+  homepageCatalogState: {
+    state: NetworkRequestState,
+    error?: any;
+    catalogs?: {
+      Nike: Catalog,
+      Jordan: Catalog,
+      adidas: Catalog,
+      hot: Catalog
+    }
+  }
 };
 
 export const initialCatalogState: ICatalogState = {
   catalogState: {
+    state: NetworkRequestState.NOT_STARTED
+  },
+  homepageCatalogState: {
     state: NetworkRequestState.NOT_STARTED
   }
 };
@@ -26,7 +39,15 @@ export const CatalogReducers = handleActions<ICatalogState, any>(
         error: action.payload.error,
         catalogs: action.payload.data
       }
-    })
+    }),
+    [`${updateGetHomeCatalogsState}`]: (state: ICatalogState, action: Action<HomePageCatalogsPayload>) => ({
+      ...state,
+      homepageCatalogState: {
+        error: action.payload.error,
+        state: action.payload.state,
+        catalogs: action.payload.data
+      }
+    }),
   },
   initialCatalogState
 );

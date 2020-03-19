@@ -6,5 +6,5 @@ export declare type Catalog = {
     updatedAt: string;
     title: string;
     description?: string;
-    shoes: Shoe[];
+    products: Shoe[];
 };

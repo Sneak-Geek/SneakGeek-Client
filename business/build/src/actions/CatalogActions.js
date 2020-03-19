@@ -13,9 +13,11 @@ import { SettingsKey } from "../loader/interfaces";
 import { ObjectFactory, FactoryKeys } from "../loader/kernel";
 import { updateAuthenticationState } from "./AuthenticationActions";
 export const CatalogActions = {
-    UPDATE_STATE_GET_ALL_CATALOG: "UPDATE_STATE_GET_ALL_CATALOG"
+    UPDATE_STATE_GET_ALL_CATALOG: "UPDATE_STATE_GET_ALL_CATALOG",
+    UPDATE_STATE_GET_HOME_PAGE_CATALOGS: "UPDATE_STATE_GET_HOME_PAGE_CATALOGS"
 };
 export const updateCatalogState = createAction(CatalogActions.UPDATE_STATE_GET_ALL_CATALOG);
+export const updateGetHomeCatalogsState = createAction(CatalogActions.UPDATE_STATE_GET_HOME_PAGE_CATALOGS);
 export const getAllCatalogs = () => {
     const catalogService = ObjectFactory.getObjectInstance(FactoryKeys.ICatalogService);
     const settings = ObjectFactory.getObjectInstance(FactoryKeys.ISettingsProvider);
@@ -40,6 +42,32 @@ export const getAllCatalogs = () => {
         }
         catch (error) {
             dispatch(updateAuthenticationState({ state: NetworkRequestState.FAILED, error }));
+        }
+    });
+};
+export const getHomeCatalogs = () => {
+    const catalogService = ObjectFactory.getObjectInstance(FactoryKeys.ICatalogService);
+    const settings = ObjectFactory.getObjectInstance(FactoryKeys.ISettingsProvider);
+    return (dispatch) => __awaiter(void 0, void 0, void 0, function* () {
+        dispatch(updateGetHomeCatalogsState({ state: NetworkRequestState.REQUESTING }));
+        const token = settings.getValue(SettingsKey.CurrentAccessToken);
+        try {
+            const [Nike, Jordan, adidas, hot] = yield Promise.all([
+                catalogService.getCatalogByTag(token, "nike"),
+                catalogService.getCatalogByTag(token, "jordan"),
+                catalogService.getCatalogByTag(token, "adidas"),
+                catalogService.getCatalogByTag(token, "hot")
+            ]);
+            dispatch(updateGetHomeCatalogsState({
+                state: NetworkRequestState.SUCCESS,
+                data: { Nike, Jordan, adidas, hot }
+            }));
+        }
+        catch (err) {
+            dispatch(updateGetHomeCatalogsState({
+                state: NetworkRequestState.FAILED,
+                error: err
+            }));
         }
     });
 };

@@ -5,7 +5,6 @@ import {
   SafeAreaView,
   ScrollView,
   View,
-  TouchableWithoutFeedback,
   Image,
   StyleSheet,
   Dimensions,
@@ -15,9 +14,7 @@ import { connect } from 'utilities';
 import { IAppState } from '@store/AppStore';
 import { NetworkRequestState, Catalog, getHomeCatalogs, Shoe } from 'business';
 import { toggleIndicator } from 'actions';
-import { strings, themes } from '@resources';
-import ViewPager from '@react-native-community/viewpager';
-
+import { strings } from '@resources';
 type Props = {
   homeCatalogState: {
     state: NetworkRequestState;

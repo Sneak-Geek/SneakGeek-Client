@@ -60,4 +60,14 @@ export class CatalogService extends BaseService {
             });
         });
     }
+    getCatalogByTag(token, tag) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const response = yield this.apiClient.getInstance().get(`/catalogue?tag=${tag}`, {
+                headers: {
+                    authorization: token
+                }
+            });
+            return response.data.catalog;
+        });
+    }
 }

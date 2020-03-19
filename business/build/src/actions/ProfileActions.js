@@ -12,9 +12,11 @@ import { NetworkRequestState } from "../payload";
 import { ObjectFactory, FactoryKeys } from "../loader/kernel";
 import { SettingsKey } from "../loader/interfaces";
 export const ProfileActions = {
-    UPDATE_STATE_GET_USER_PROFILE: "UPDATE_GET_USER_PROFILE"
+    UPDATE_STATE_GET_USER_PROFILE: "UPDATE_GET_USER_PROFILE",
+    SET_PROFILE: "SET_PROFILE"
 };
 export const updateStateGetUserProfile = createAction(ProfileActions.UPDATE_STATE_GET_USER_PROFILE);
+export const updateProfile = createAction(ProfileActions.SET_PROFILE);
 export const getUserProfile = () => {
     return (dispatch) => __awaiter(void 0, void 0, void 0, function* () {
         const accountService = ObjectFactory.getObjectInstance(FactoryKeys.IAccountService);

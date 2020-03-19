@@ -6,12 +6,14 @@ import { IAccountService, ISettingsProvider, SettingsKey } from "../loader/inter
 import { Profile } from "../types";
 
 export const ProfileActions = {
-  UPDATE_STATE_GET_USER_PROFILE: "UPDATE_GET_USER_PROFILE"
+  UPDATE_STATE_GET_USER_PROFILE: "UPDATE_GET_USER_PROFILE",
+  SET_PROFILE: "SET_PROFILE"
 };
 
 export const updateStateGetUserProfile = createAction<GetUserProfilePayload>(
   ProfileActions.UPDATE_STATE_GET_USER_PROFILE
 );
+export const updateProfile = createAction<Profile>(ProfileActions.SET_PROFILE);
 
 export const getUserProfile = () => {
   return async (dispatch: Dispatch<AnyAction>) => {

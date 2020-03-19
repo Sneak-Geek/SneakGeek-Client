@@ -16,4 +16,5 @@ export declare class AccountService extends BaseService implements IAccountServi
         token: string;
     } | undefined>;
     getUserProfile(accessToken: string): Promise<Profile | undefined>;
+    updateProfile(token: string, profile: Partial<Profile>): Promise<Profile>;
 }

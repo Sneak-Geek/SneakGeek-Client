@@ -6,7 +6,7 @@ import {
 import { Account, Profile } from "../model";
 import { handleActions, Action } from "redux-actions";
 import { updateAuthenticationState } from "../actions/AuthenticationActions";
-import { updateStateGetUserProfile } from "../actions";
+import { updateStateGetUserProfile, updateProfile } from "../actions";
 
 export type IUserState = {
   accountState: {
@@ -52,6 +52,14 @@ export const UserReducers = handleActions<IUserState, any>(
         state: action.payload.state,
         error: action.payload.error,
         profile: action.payload.data?.profile
+      }
+    }),
+    [`${updateProfile}`]: (state: IUserState, action: Action<Profile>) => ({
+      ...state,
+      profileState: {
+        ...state.profileState,
+        error: null,
+        profile: action.payload
       }
     })
   },

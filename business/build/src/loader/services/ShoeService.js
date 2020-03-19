@@ -11,13 +11,32 @@ import { BaseService } from "./BaseService";
 export class ShoeService extends BaseService {
     searchShoes(key, page = 0) {
         return __awaiter(this, void 0, void 0, function* () {
-            try {
-                const response = yield this.apiClient.getInstance().get(`/shoe/find?page=${page}&title=${key}`);
-                return response.data;
-            }
-            catch (error) {
-                return [];
-            }
+            const response = yield this.apiClient.getInstance().get(`/shoe/find?page=${page}&title=${key}`);
+            return response.data;
+        });
+    }
+    getShoeReviews(token, shoeId) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const response = yield this.apiClient.getInstance().get(`/review/${shoeId}`, {
+                headers: {
+                    authorization: token
+                }
+            });
+            return response.data.reviews;
+        });
+    }
+    addReview(token, review) {
+        return __awaiter(this, void 0, void 0, function* () {
+            return this.apiClient.getInstance().post(`/review/`, {
+                shoeId: review.shoeId,
+                rating: review.rating,
+                description: review.description,
+                imageUrls: review.imageUrls
+            }, {
+                headers: {
+                    authorization: token
+                }
+            });
         });
     }
 }
