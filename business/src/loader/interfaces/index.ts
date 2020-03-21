@@ -8,3 +8,4 @@ export * from "./IFacebookSDK";
 export * from "./IEnvVar";
 export * from "./ICatalogService";
 export * from "./IShoeService";
+export * from "./IReviewOrdersService";

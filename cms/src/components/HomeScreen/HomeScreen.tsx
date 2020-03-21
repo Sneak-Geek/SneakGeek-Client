@@ -23,6 +23,8 @@ import { CatalogScreen } from "../CatalogScreen";
 import { CatalogManagementScreen } from "../CatalogManagementScreen";
 import { SneakersCheckingScreen } from "../SneakersCheckingScreen";
 import { AuthAndRepSneakerScreen } from "../AuthAndRepSneakerScreen";
+import { NewSneakerBuyOrderReviewScreen } from "../NewSneakerBuyOrderReviewScreen";
+import { NewSneakerSellOrderReviewScreen } from "../NewSneakerSellOrderReviewScreen";
 
 type Props = {
   currentPath: string;
@@ -125,8 +127,10 @@ export class UnconnectedHomeScreen extends React.Component<Props, State> {
           <Link to={"/catalogs"}>Quản lý catalog</Link>
           <Icon name={"clipboard list"} />
         </Menu.Item>
+
         <Menu.Item>
           <Menu.Header>Quản lý sản phẩm</Menu.Header>
+
           <Menu.Menu>
             <Menu.Item link active={currentPath === "/products/snkg"}>
               <Icon name="shopping cart" />
@@ -137,15 +141,32 @@ export class UnconnectedHomeScreen extends React.Component<Props, State> {
               <Link to={"/products/request"}>Yêu cầu từ khách hàng</Link>
             </Menu.Item>
           </Menu.Menu>
+
         </Menu.Item>
+
         <Menu.Item link active={currentPath === "/users"}>
           <Link to={"/users"}>Quản lý người dùng</Link>
           <Icon name={"user"} />
         </Menu.Item>
-        <Menu.Item link active={currentPath === "/shoe-authentication"}>
-          <Link to={"/shoe-authentication"}>Quản lý đơn hàng</Link>
-          <Icon name={"bolt"} />
+
+        <Menu.Item>
+          <Menu.Header>Quản lý đơn hàng</Menu.Header>
+          <Menu.Menu>
+            <Menu.Item link active={currentPath === "/shoe-authentication"}>
+              <Link to={"/shoe-authentication"}>Kiểm tra chất lượng giày</Link>
+              <Icon name={"bolt"} />
+            </Menu.Item>
+            <Menu.Item link active={currentPath === "/buy-order-review"}>
+              <Link to={"/new-buy-order-review"}>Duyệt đơn mua</Link>
+              <Icon name={"bolt"} />
+            </Menu.Item>
+            <Menu.Item link active={currentPath === "/sell-order-review"}>
+              <Link to={"/new-sell-order-review"}>Duyệt đơn bán</Link>
+              <Icon name={"bolt"} />
+            </Menu.Item>
+          </Menu.Menu>
         </Menu.Item>
+
       </Sidebar>
     );
   }
@@ -179,6 +200,8 @@ export class UnconnectedHomeScreen extends React.Component<Props, State> {
             <Route path={"/users"} render={() => <h3>Quản lý người dùng</h3>} />
             <Route exact path={"/shoe-authentication"} render={props => <SneakersCheckingScreen {...props} />} />
             <Route exact path={"/shoe-authentication/:id"} render={props => <AuthAndRepSneakerScreen {...props} />} />
+            <Route path={"/new-buy-order-review"} render={() => <NewSneakerBuyOrderReviewScreen />} />
+            <Route path={"/new-sell-order-review"} render={() => <NewSneakerSellOrderReviewScreen />} />
           </Switch>
         </Segment>
       </Sidebar.Pusher>

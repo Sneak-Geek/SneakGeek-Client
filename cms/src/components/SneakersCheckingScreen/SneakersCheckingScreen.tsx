@@ -1,5 +1,5 @@
 import React from "react";
-import { Table, Header, Grid, Search } from "semantic-ui-react";
+import { Table, Header, Grid, Search, Label } from "semantic-ui-react";
 import { ShoeAuthentication } from "business";
 import { Link } from "react-router-dom";
 import { History } from "history";
@@ -139,7 +139,7 @@ export class SneakersCheckingScreen extends React.Component<Props, State> {
       <div>
         <Header as="h2">Check giày</Header>
         {this._renderSearchReviewProducts()}
-        <Table celled selectable>
+        <Table compact celled selectable>
           {this._renderTableHeader()}
           {this._renderTableBody(this.state.shoeAuthentications)}
         </Table>
@@ -195,16 +195,26 @@ export class SneakersCheckingScreen extends React.Component<Props, State> {
     return (
       <Table.Header>
         <Table.Row>
+          <Table.HeaderCell>Trạng thái</Table.HeaderCell>
           <Table.HeaderCell>Mã chuyển hàng</Table.HeaderCell>
           <Table.HeaderCell>Ảnh giày</Table.HeaderCell>
           <Table.HeaderCell>Tên giày</Table.HeaderCell>
           <Table.HeaderCell>Hãng giày</Table.HeaderCell>
           <Table.HeaderCell>Mới/Cũ</Table.HeaderCell>
           <Table.HeaderCell>Ngày tạo đơn hàng</Table.HeaderCell>
-          <Table.HeaderCell>Trạng thái</Table.HeaderCell>
         </Table.Row>
       </Table.Header>
     );
+  }
+
+  private _renderShoeAuthStatus(shoeAuthentication: ShoeAuthentication) {
+    if (shoeAuthentication.status === "Chờ xét duyệt") {
+      return (<Label color="yellow" circular empty />);
+    } else if (shoeAuthentication.status === "Đạt tiêu chuẩn") {
+      return (<Label color="green" circular empty />);
+    } else {
+      return (<Label color="red" circular empty />);
+    }
   }
 
   private _renderTableBody(shoeAuthentications?: ShoeAuthentication[]) {
@@ -213,13 +223,18 @@ export class SneakersCheckingScreen extends React.Component<Props, State> {
         <Table.Body>
           {shoeAuthentications.map((shoeAuthentication: ShoeAuthentication) => {
             return (
-              <Table.Row warning={shoeAuthentication.status === "Chờ xét duyệt"} positive={shoeAuthentication.status === "Đạt tiêu chuẩn"} negative={shoeAuthentication.status === "Chưa đạt tiêu chuẩn"}
+              <Table.Row
                 onClick={() => {
-                  if (shoeAuthentication.status === "Chờ xét duyệt")
+                  if (shoeAuthentication.status === "Chờ xét duyệt") {
+
                     this._linkToAuthAndRepSneakerScreen(shoeAuthentication);
+                  }
                 }}
               >
-                <Table.Cell>{shoeAuthentication.trackingID}</Table.Cell>
+                <Table.Cell textAlign="center" verticalAlign="middle">{this._renderShoeAuthStatus(shoeAuthentication)}</Table.Cell>
+                <Table.Cell>
+                  {shoeAuthentication.trackingID}
+                </Table.Cell>
                 <Table.Cell>
                   {" "}
                   <img className="image" src={shoeAuthentication.imageUrl} />
@@ -228,7 +243,6 @@ export class SneakersCheckingScreen extends React.Component<Props, State> {
                 <Table.Cell>{shoeAuthentication.brand}</Table.Cell>
                 <Table.Cell>{shoeAuthentication.isNew ? "Mới" : "Cũ"}</Table.Cell>
                 <Table.Cell>{shoeAuthentication.uploadDate}</Table.Cell>
-                <Table.Cell>{shoeAuthentication.status}</Table.Cell>
               </Table.Row>
             );
           })

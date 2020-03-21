@@ -14,7 +14,7 @@ export class CatalogService extends BaseService {
         return __awaiter(this, void 0, void 0, function* () {
             const response = yield this.apiClient.getInstance().get(`/catalogue/`, {
                 headers: {
-                    authorization_token: token
+                    authorization: token
                 }
             });
             if (response &&
@@ -28,7 +28,7 @@ export class CatalogService extends BaseService {
         return __awaiter(this, void 0, void 0, function* () {
             const response = yield this.apiClient.getInstance().get(`shoe/find?title=${value}`, {
                 headers: {
-                    authorization_token: token
+                    authorization: token
                 }
             });
             if (response &&
@@ -42,7 +42,7 @@ export class CatalogService extends BaseService {
         return __awaiter(this, void 0, void 0, function* () {
             yield this.apiClient.getInstance().put(`/catalogue/${catalogID}`, catalog, {
                 headers: {
-                    authorization_token: token
+                    authorization: token
                 }
             });
         });
@@ -55,7 +55,7 @@ export class CatalogService extends BaseService {
                 description: catalogDescription
             }, {
                 headers: {
-                    authorization_token: token
+                    authorization: token
                 }
             });
         });

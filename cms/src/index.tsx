@@ -11,7 +11,9 @@ import {
   IFacebookSDK,
   ISettingsProvider,
   ICatalogService,
-  CatalogService
+  CatalogService,
+  IReviewOrdersService,
+  ReviewOrdersService
 } from "business";
 import { FacebookSdk } from "./services";
 
@@ -26,6 +28,7 @@ ObjectFactory.register<IEnvVar>(FactoryKeys.IEnvVar, {
 ObjectFactory.register<IAccountService>(FactoryKeys.IAccountService, new AccountService());
 ObjectFactory.register<ICatalogService>(FactoryKeys.ICatalogService, new CatalogService());
 ObjectFactory.register<IFacebookSDK>(FactoryKeys.IFacebookSDK, new FacebookSdk());
+ObjectFactory.register<IReviewOrdersService>(FactoryKeys.IReviewOrdersService, new ReviewOrdersService());
 ObjectFactory.register<ISettingsProvider>(
   FactoryKeys.ISettingsProvider,
   new SettingsProvider()
