@@ -31,7 +31,6 @@ import {
 } from "business";
 import { connect } from "react-redux";
 import { IAppState } from "../../store/IAppState";
-import { Link } from "react-router-dom";
 
 type Props = {
   history: History;
