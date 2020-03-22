@@ -8,7 +8,8 @@ import {
   FactoryKeys,
   ISettingsProvider,
   SettingsKey,
-  ICatalogService
+  ICatalogService,
+  IShoeService
 } from "business";
 import { History } from "history";
 
@@ -32,6 +33,9 @@ export class CatalogManagementScreen extends React.Component<Props, State> {
   );
   private readonly _settingsProvider = ObjectFactory.getObjectInstance<ISettingsProvider>(
     FactoryKeys.ISettingsProvider
+  );
+  private readonly _shoeService = ObjectFactory.getObjectInstance<IShoeService>(
+    FactoryKeys.IShoeService
   );
 
   constructor(props: Props) {
@@ -110,16 +114,16 @@ export class CatalogManagementScreen extends React.Component<Props, State> {
     this.setState({
       catalog: {
         ...this.state.catalog,
-        shoes: this.state.catalog.shoes.filter(t => t._id !== id)
+        products: this.state.catalog.products.filter(t => t._id !== id)
       }
     });
   }
 
   private _renderTableBody(catalog?: Catalog): JSX.Element {
-    if (catalog!.shoes)
+    if (catalog!.products)
       return (
         <Table.Body>
-          {catalog!.shoes.map((shoe: Shoe) => {
+          {catalog!.products.map((shoe: Shoe) => {
             return (
               <Table.Row>
                 <Table.Cell>
@@ -155,7 +159,7 @@ export class CatalogManagementScreen extends React.Component<Props, State> {
     const token = this._settingsProvider.getValue(SettingsKey.CurrentAccessToken);
 
     try {
-      const response = await this._catalogService.getShoes(token, value);
+      const response = await this._shoeService.searchShoes(token, value);
       const searchResults = response!.slice(0, 5);
       const formattedSearchResults = searchResults.map((e: Shoe) => {
         return {
@@ -175,7 +179,7 @@ export class CatalogManagementScreen extends React.Component<Props, State> {
     this.setState({
       catalog: {
         ...this.state.catalog,
-        shoes: [...this.state.catalog.shoes, result]
+        products: [...this.state.catalog.products, result]
       }
     });
   }
@@ -220,14 +224,8 @@ export class CatalogManagementScreen extends React.Component<Props, State> {
   private async _saveProducts() {
     const token = this._settingsProvider.getValue(SettingsKey.CurrentAccessToken);
 
-    const catalog = {
-      ...this.state.catalog,
-      products: this.state.catalog.shoes.map(shoe => shoe._id)
-    };
-    delete catalog.shoes;
-
     try {
-      await this._catalogService.saveCatalog(token, catalog, this.state.catalog._id);
+      await this._catalogService.saveCatalog(token, this.state.catalog, this.state.catalog._id);
     } catch (error) {
       alert("Error in Saving Products");
     }

@@ -2,7 +2,7 @@ export type Account = {
   isVerified: boolean;
   accessLevel: number;
   _id: string;
-  profileId: string;
+  profile: string | Partial<Profile>;
   createdAt: string;
   updatedAt: string;
   accountProvider: "facebook" | "google";
