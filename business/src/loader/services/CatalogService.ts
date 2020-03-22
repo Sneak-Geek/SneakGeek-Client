@@ -52,4 +52,14 @@ export class CatalogService extends BaseService implements ICatalogService {
       }
     );
   }
+
+  public async getCatalogByTag(token: string, tag: string): Promise<Catalog> {
+    const response = await this.apiClient.getInstance().get(`/catalogue?tag=${tag}`, {
+      headers: {
+        authorization: token
+      }
+    });
+
+    return response.data.catalog;
+  }
 }

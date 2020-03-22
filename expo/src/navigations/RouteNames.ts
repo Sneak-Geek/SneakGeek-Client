@@ -8,7 +8,9 @@ const RouteNames = {
   },
   Product: {
     Name: 'Product',
-    ProductDetail: 'ProductDetail'
+    ProductDetail: 'ProductDetail',
+    NewReview: 'ProductNewReview',
+    AllReviews: 'ProductAllReviews'
   },
   Tab: {
     Name: 'Tabs',

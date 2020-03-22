@@ -6,6 +6,16 @@ export declare type ICatalogState = {
         error?: any;
         catalogs?: Catalog[];
     };
+    homepageCatalogState: {
+        state: NetworkRequestState;
+        error?: any;
+        catalogs?: {
+            Nike: Catalog;
+            Jordan: Catalog;
+            adidas: Catalog;
+            hot: Catalog;
+        };
+    };
 };
 export declare const initialCatalogState: ICatalogState;
 export declare const CatalogReducers: import("redux-actions").ReduxCompatibleReducer<ICatalogState, any>;

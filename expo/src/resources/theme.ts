@@ -1,4 +1,4 @@
-import { StyleSheet } from "react-native";
+import { StyleSheet, Platform } from "react-native";
 
 export const themes = {
   FacebookThemeColor: "#3B5998",
@@ -13,6 +13,16 @@ export const themes = {
   AppModalBackground: 'rgba(0.0, 0.0, 0.0, 0.5)',
   DisabledTheme: 'rgba(0, 0, 0, 0.05)',
   AppDisabledColor: '#DADADA',
+  AppSellColor: '#E2603F',
+  ButtonShadow: Platform.select({
+    android: { elevation: 5 },
+    ios: {
+      shadowColor: '#000',
+      shadowOffset: { width: 0.5, height: 0.5 },
+      shadowOpacity: 0.3,
+      shadowRadius: 1,
+    }
+  }),
   TextStyle: StyleSheet.create({
     largeTitle: {
       fontFamily: 'RobotoBold',
@@ -21,7 +31,7 @@ export const themes = {
 
     title1: {
       fontFamily: 'RobotoBold',
-      fontSize: 28,
+      fontSize: 26,
     },
 
     title2: {

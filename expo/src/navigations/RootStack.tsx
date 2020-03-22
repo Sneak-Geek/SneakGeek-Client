@@ -7,10 +7,20 @@ import { NavigationContainer } from '@react-navigation/native';
 import { ProductStack } from './ProductStack';
 import { Shoe } from 'business';
 
-
 export type RootStackParams = {
   ProductDetail: { shoe: Shoe };
-}
+  ProductNewReview: { shoe: Shoe };
+  ProductAllReviews: { shoe: Shoe };
+  Login: undefined;
+  EmailSignUp: undefined;
+  EmailLogin: undefined;
+  HomeTab: undefined;
+  HomeTabMain: undefined;
+  SearchTabMain: undefined;
+  TrasactionTabMain: undefined;
+  AccountTabMain: undefined;
+  AccountTabEditProfile: undefined;
+};
 
 const Stack = createStackNavigator();
 

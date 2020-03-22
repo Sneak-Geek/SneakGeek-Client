@@ -63,4 +63,15 @@ export class AccountService extends BaseService {
             return undefined;
         });
     }
+    updateProfile(token, profile) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const headers = {
+                authorization: token
+            };
+            const response = yield this.apiClient.getInstance().put("/profile/update", profile, {
+                headers
+            });
+            return response.data.profile;
+        });
+    }
 }

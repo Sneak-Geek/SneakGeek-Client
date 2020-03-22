@@ -6,4 +6,5 @@ export declare class CatalogService extends BaseService implements ICatalogServi
     getShoes(token: string, value: any): Promise<Shoe[] | undefined>;
     saveCatalog(token: string, catalog: Catalog, catalogID: string): Promise<void>;
     createNewCatalog(token: string, catalogTitle: string, catalogDescription: string, products: string[]): Promise<void>;
+    getCatalogByTag(token: string, tag: string): Promise<Catalog>;
 }

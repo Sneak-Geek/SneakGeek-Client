@@ -77,4 +77,16 @@ export class AccountService extends BaseService implements IAccountService {
 
     return undefined;
   }
+
+  public async updateProfile(token: string, profile: Partial<Profile>): Promise<Profile> {
+    const headers = {
+      authorization: token
+    };
+
+    const response = await this.apiClient.getInstance().put("/profile/update", profile, {
+      headers
+    });
+
+    return response.data.profile as Profile;
+  }
 }

@@ -1,10 +1,10 @@
 import { Action } from "redux-actions";
-import { dismissNotification, showErrorNotification } from "actions";
+import { dismissNotification, showErrorNotification, showSuccessNotification } from "actions";
 import { handleActionsWithReset } from "utilities/ReduxUtilities";
 
 export type Notifcation = {
   id: string;
-  type: 'error' | 'regular';
+  type: 'success' | 'error' | 'regular';
   message: string;
   timeout: number;
 };
@@ -24,6 +24,15 @@ export const NotificationReducers = handleActionsWithReset<INotificationState, a
       notifications: [...state.notifications, {
         id: new Date().getTime().toString(),
         type: 'error',
+        message: action.payload,
+        timeout: 5
+      }]
+    }),
+    [`${showSuccessNotification}`]: (state: INotificationState, action: Action<string>) => ({
+      ...state,
+      notifications: [...state.notifications, {
+        id: new Date().getTime().toString(),
+        type: 'success',
         message: action.payload,
         timeout: 5
       }]

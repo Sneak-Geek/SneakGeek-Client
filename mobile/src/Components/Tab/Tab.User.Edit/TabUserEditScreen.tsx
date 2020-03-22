@@ -18,7 +18,6 @@ const optionsList = [
     title: "Họ",
     placeholder: "Họ",
     value: (profile: Profile) => (profile.userProvidedName ? profile.userProvidedName.lastName : ""),
-    // "trung",
     onUpdate: (value: string, profile: Profile) => {
       return Object.assign(profile, {
         userProvidedName: {

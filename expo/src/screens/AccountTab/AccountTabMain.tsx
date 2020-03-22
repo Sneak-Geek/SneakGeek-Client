@@ -11,10 +11,13 @@ import {
   ActionSheetProps,
   connectActionSheet,
 } from '@expo/react-native-action-sheet';
+import { StackNavigationProp } from '@react-navigation/stack';
+import RouteNames from 'navigations/RouteNames';
 
 type Props = {
   account: Account;
   profile: Profile;
+  navigation: StackNavigationProp<any>;
 };
 
 type Setting = {
@@ -51,7 +54,8 @@ class UnconnectedAccountTabMain extends React.Component<Props & ActionSheetProps
   private settings: Setting[] = [
     {
       title: strings.AccountInfo,
-      onClick: () => {},
+      onClick: () =>
+        this.props.navigation.push(RouteNames.Tab.AccountTab.EditProfile),
       leftIcon: 'person',
     },
     {
@@ -130,6 +134,7 @@ class UnconnectedAccountTabMain extends React.Component<Props & ActionSheetProps
         bottomDivider={true}
         titleStyle={themes.TextStyle.body}
         leftIcon={{ name: setting.leftIcon, color: themes.AppPrimaryColor }}
+        onPress={setting.onClick}
       />
     ));
   }
