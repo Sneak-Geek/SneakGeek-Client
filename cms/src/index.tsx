@@ -13,7 +13,9 @@ import {
   ICatalogService,
   CatalogService,
   IReviewOrdersService,
-  ReviewOrdersService
+  ReviewOrdersService,
+  ShoeService,
+  IShoeService
 } from "business";
 import { FacebookSdk } from "./services";
 
@@ -33,6 +35,7 @@ ObjectFactory.register<ISettingsProvider>(
   FactoryKeys.ISettingsProvider,
   new SettingsProvider()
 );
+ObjectFactory.register<IShoeService>(FactoryKeys.IShoeService, new ShoeService());
 
 ReactDOM.render(<App />, document.getElementById("root"));
 
