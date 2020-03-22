@@ -12,7 +12,7 @@ import HttpStatus from "http-status";
 export class CatalogService extends BaseService {
     getAllCatalogs(token) {
         return __awaiter(this, void 0, void 0, function* () {
-            const response = yield this.apiClient.getInstance().get(`/catalogue/`, {
+            const response = yield this.apiClient.getInstance().get(`/catalogue/all`, {
                 headers: {
                     authorization: token
                 }

@@ -8,6 +8,5 @@ export interface ICatalogService {
     catalogDescription: string,
     products: string[]
   ): Promise<void>;
-  getShoes(token: string, value: any): Promise<Shoe[] | undefined>;
   saveCatalog(token: string, catalog: Catalog, catalogID: string): Promise<void>;
 }
