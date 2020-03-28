@@ -9,15 +9,28 @@ import {
   Dimensions,
   ActivityIndicator,
   Alert,
+  FlatList,
+  TouchableOpacity,
 } from 'react-native';
 import { SafeAreaConsumer } from 'react-native-safe-area-context';
 import { ScrollView } from 'react-native-gesture-handler';
-import { AppText } from '@screens/Shared';
+import { AppText, LiteShoeCard } from '@screens/Shared';
 import { strings, themes, images } from '@resources';
-import { Icon, Avatar, Rating, Button } from 'react-native-elements';
+import { Icon, Avatar, Rating } from 'react-native-elements';
 import { connect, toVnDateFormat } from 'utilities';
+import Humanize from 'humanize-plus';
 import { IAppState } from '@store/AppStore';
-import { NetworkRequestState, Review, getReviews, Profile } from 'business';
+import {
+  NetworkRequestState,
+  Review,
+  getReviews,
+  Profile,
+  getShoeInfo,
+  Shoe,
+  SellOrder,
+  BuyOrder,
+  PriceData,
+} from 'business';
 import RouteNames from 'navigations/RouteNames';
 
 type Props = {
@@ -29,7 +42,15 @@ type Props = {
     reviews: Review[];
     error?: any;
   };
+  shoeInfoState: {
+    state: NetworkRequestState;
+    error?: any;
+    relatedShoes: Shoe[];
+    lowestSellOrder?: SellOrder;
+    highestBuyOrder?: BuyOrder;
+  };
   getReviews: (shoeId: string) => void;
+  getShoeInfo: (shoeId: string) => void;
 };
 
 const styles = StyleSheet.create({
@@ -74,7 +95,7 @@ const styles = StyleSheet.create({
   detailRow: {
     flexDirection: 'row',
     marginVertical: 10,
-    alignItems: 'center',
+    alignItems: 'flex-start',
     justifyContent: 'center',
   },
   detailKey: {
@@ -114,6 +135,9 @@ const styles = StyleSheet.create({
   bottomButtonStyle: {
     height: themes.ButtonHeight,
     width: Dimensions.get('window').width * 0.45,
+    alignItems: 'center',
+    borderRadius: themes.ButtonBorderRadius,
+    flexDirection: 'row',
   },
 });
 
@@ -138,9 +162,7 @@ const ReviewItem = (props: { review: Review }): JSX.Element => {
           <AppText.Body>
             {userProvidedName.firstName} {userProvidedName.lastName}
           </AppText.Body>
-          <AppText.Footnote>
-            {(review as any).createdAt || '25/11/2020'}
-          </AppText.Footnote>
+          <AppText.Footnote>{toVnDateFormat(review.updatedAt)}</AppText.Footnote>
         </View>
         <Rating
           startingValue={review.rating}
@@ -156,10 +178,12 @@ const ReviewItem = (props: { review: Review }): JSX.Element => {
 @connect(
   (state: IAppState) => ({
     reviewState: state.ProductState.reviewState,
+    shoeInfoState: state.ProductState.infoState,
     profile: state.UserState.profileState.profile,
   }),
   (dispatch: Function) => ({
     getReviews: (shoeId: string) => dispatch(getReviews(shoeId)),
+    getShoeInfo: (shoeId: string) => dispatch(getShoeInfo(shoeId)),
   }),
 )
 export class ProductDetail extends React.Component<Props> {
@@ -167,6 +191,7 @@ export class ProductDetail extends React.Component<Props> {
 
   public componentDidMount() {
     this.props.getReviews(this._shoe._id);
+    this.props.getShoeInfo(this._shoe._id);
   }
 
   public render(): JSX.Element {
@@ -327,12 +352,14 @@ export class ProductDetail extends React.Component<Props> {
       profile.userProvidedName.firstName &&
       profile.userProvidedName.lastName
     ) {
+      // @ts-ignore
       navigation.push(RouteNames.Product.NewReview, { shoe: this._shoe });
     } else {
       Alert.alert(strings.AccountInfo, strings.MissingInfoForReview, [
         {
           text: strings.AddInfoForReview,
           onPress: () =>
+            // @ts-ignore
             navigation.navigate(RouteNames.Tab.AccountTab.Name, {
               screen: RouteNames.Tab.AccountTab.EditProfile,
             }),
@@ -346,16 +373,77 @@ export class ProductDetail extends React.Component<Props> {
     }
   }
 
-  private _renderRelatedShoes() {}
+  private _renderRelatedShoes() {
+    let content: JSX.Element;
+    const { shoeInfoState } = this.props;
+
+    if (shoeInfoState.state === NetworkRequestState.REQUESTING) {
+      content = <ActivityIndicator size={'large'} />;
+    } else if (shoeInfoState.state === NetworkRequestState.SUCCESS) {
+      content = (
+        <FlatList
+          horizontal={true}
+          showsHorizontalScrollIndicator={false}
+          style={{ marginBottom: 20, paddingBottom: 10 }}
+          data={shoeInfoState.relatedShoes}
+          keyExtractor={itm => itm._id}
+          renderItem={({ item }) => (
+            <LiteShoeCard
+              shoe={item}
+              onPress={() =>
+                // @ts-ignore
+                this.props.navigation.push(RouteNames.Product.ProductDetail, {
+                  shoe: item,
+                })
+              }
+              style={{ marginRight: 20, paddingBottom: 8 }}
+            />
+          )}
+        />
+      );
+    }
+
+    return (
+      <View style={{ flex: 1, padding: 20 }}>
+        <View style={styles.ratingHeaderContainer}>
+          <AppText.Title2>{strings.RelatedProducts}</AppText.Title2>
+        </View>
+        {content}
+      </View>
+    );
+  }
 
   private _renderActionButtons(bottom: number) {
+    const { highestBuyOrder, lowestSellOrder } = this.props.shoeInfoState;
     return (
       <View style={{ bottom, ...styles.bottomContainer }}>
-        {this._renderSingleActionButton('Bán', 'cart-arrow-up', themes.AppSellColor)}
+        {this._renderSingleActionButton(
+          'Bán',
+          `Cao: ${highestBuyOrder ? highestBuyOrder.buyPrice : '-'}`,
+          'cart-arrow-up',
+          themes.AppSellColor,
+          () => {
+            // @ts-ignore
+            this.props.navigation.push(RouteNames.Product.NewSellOrder, {
+              shoe: this._shoe,
+            });
+          },
+        )}
         {this._renderSingleActionButton(
           'Mua',
+          `Thấp: ${
+            lowestSellOrder
+              ? Humanize.compactInteger((lowestSellOrder.sellNowPrice as PriceData).price, 2)
+              : '-'
+          }`,
           'cart-arrow-down',
           themes.AppPrimaryColor,
+          () => {
+            // @ts-ignore
+            this.props.navigation.push(RouteNames.Product.SizeSelection, {
+              shoe: this._shoe,
+            });
+          },
         )}
       </View>
     );
@@ -363,22 +451,37 @@ export class ProductDetail extends React.Component<Props> {
 
   private _renderSingleActionButton(
     title: string,
+    subtitle: string,
     iconName: string,
     backgroundColor: string,
+    onPress: () => void,
   ) {
     return (
-      <Button
-        title={title}
-        type={'solid'}
-        icon={{
-          name: iconName,
-          type: 'material-community',
-          color: themes.AppAccentColor,
-        }}
-        buttonStyle={{ backgroundColor, ...styles.bottomButtonStyle }}
-        titleStyle={themes.TextStyle.title3}
-        containerStyle={themes.ButtonShadow}
-      />
+      <TouchableOpacity onPress={onPress}>
+        <View
+          style={{
+            backgroundColor,
+            ...styles.bottomButtonStyle,
+            ...themes.ButtonShadow,
+          }}
+        >
+          <Icon
+            name={iconName}
+            size={themes.IconSize}
+            color={themes.AppAccentColor}
+            type={'material-community'}
+            containerStyle={{ marginHorizontal: 10 }}
+          />
+          <View style={{ flex: 1, marginLeft: 10 }}>
+            <AppText.Title3 style={{ color: themes.AppAccentColor }}>
+              {title}
+            </AppText.Title3>
+            <AppText.Callout style={{ color: themes.AppAccentColor }}>
+              {subtitle}
+            </AppText.Callout>
+          </View>
+        </View>
+      </TouchableOpacity>
     );
   }
 }

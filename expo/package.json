@@ -21,6 +21,7 @@
     "expo-image-picker": "~8.0.1",
     "expo-web-browser": "~8.0.0",
     "http-status": "^1.4.2",
+    "humanize-plus": "^1.8.2",
     "react": "~16.9.0",
     "react-dom": "~16.9.0",
     "react-native": "https://github.com/expo/react-native/archive/sdk-36.0.0.tar.gz",
@@ -33,10 +34,12 @@
     "react-redux": "^7.2.0",
     "redux": "^4.0.5",
     "redux-actions": "^2.6.5",
-    "redux-thunk": "^2.3.0"
+    "redux-thunk": "^2.3.0",
+    "rn-viewpager": "^1.2.9"
   },
   "devDependencies": {
     "@babel/core": "^7.0.0",
+    "@types/humanize-plus": "^1.8.0",
     "@types/react": "~16.9.0",
     "@types/react-native": "~0.60.23",
     "@types/react-redux": "^7.1.7",

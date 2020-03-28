@@ -1,4 +1,4 @@
-import { ISettingsProvider, SettingsKey } from "business";
+import { ISettingsProvider, SettingsKey, ObjectFactory, FactoryKeys, ISettingService } from "business";
 import { AsyncStorage } from "react-native";
 
 export class SettingsProvider implements ISettingsProvider {
@@ -18,8 +18,17 @@ export class SettingsProvider implements ISettingsProvider {
     return true;
   }
 
-  loadServerSettings(): Promise<boolean> {
-    return Promise.resolve(true);
+  public async loadServerSettings(): Promise<boolean> {
+    const token = this.getValue(SettingsKey.CurrentAccessToken);
+    const settingsService = ObjectFactory.getObjectInstance<ISettingService>(FactoryKeys.ISettingService);
+
+    try {
+      const remoteSettings = await settingsService.getServerSettings(token);
+      await this.setValue(SettingsKey.RemoteSettings, remoteSettings);
+      return true;
+    } catch (error) {
+      return false;
+    }
   }
 
   public async save(): Promise<boolean> {

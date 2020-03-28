@@ -11,6 +11,8 @@ const styles = StyleSheet.create({
     bottom: 0,
     right: 0,
     left: 0,
+    width: '100%',
+    height: themes.ButtonHeight
   },
   buttonStyle: {
     height: themes.ButtonHeight,

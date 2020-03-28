@@ -1,6 +1,7 @@
 const RouteNames = {
   Auth: {
     Name: 'Authentication',
+    AuthCheck: 'AuthCheck',
     Login: 'Login',
     EmailSignUp: 'EmailSignUp',
     EmailLogin: 'EmailLogin',
@@ -10,13 +11,16 @@ const RouteNames = {
     Name: 'Product',
     ProductDetail: 'ProductDetail',
     NewReview: 'ProductNewReview',
-    AllReviews: 'ProductAllReviews'
+    AllReviews: 'ProductAllReviews',
+    NewSellOrder: 'ProductNewSellOrder',
+    SizeSelection: 'ProductSizeSelection',
   },
   Tab: {
     Name: 'Tabs',
     HomeTab: {
       Name: 'HomeTab',
       Main: 'HomeTabMain',
+      SeeMore: 'HomeTabSeeMore'
     },
     SearchTab: {
       Name: 'SearchTab',

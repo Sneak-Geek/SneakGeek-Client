@@ -25,6 +25,7 @@ import { Icon } from 'react-native-elements';
 import { connect } from 'utilities/ReduxUtilities';
 import { IAppState } from '@store/AppStore';
 import { showErrorNotification, showSuccessNotification } from 'actions';
+import { getToken } from 'utilities';
 
 const optionsList = [
   {
@@ -271,11 +272,9 @@ export class AccountTabEditProfile extends React.Component<Props, State> {
   }
 
   private async _updateProfile() {
-    const token = this._settings.getValue(SettingsKey.CurrentAccessToken);
-    console.log(this.state.updatedInfo);
     try {
       const profile = await this._accountService.updateProfile(
-        token,
+        getToken(),
         this.state.updatedInfo,
       );
       this.props.showNotification(`Cập nhật thông tin cá nhân thành công`);

@@ -8,7 +8,6 @@ import {
   Keyboard,
   EmitterSubscription,
   Dimensions,
-  TouchableOpacity,
 } from 'react-native';
 import { SafeAreaConsumer } from 'react-native-safe-area-context';
 import { SearchBar, Icon, ListItem, Button } from 'react-native-elements';
@@ -40,7 +39,6 @@ const styles = StyleSheet.create({
   },
   pageContainer: {
     flex: 1,
-    padding: 20,
     position: 'relative',
     backgroundColor: 'white',
     flexDirection: 'column',
@@ -155,20 +153,19 @@ export class SearchTabMain extends React.Component<Props, State> {
   }
 
   private _renderHotKeywords(): JSX.Element {
-    if (this.state.shoes.length > 0 && !this.state.showDropDown) {
-      return null;
-    }
-
     return (
-      <View>
-        <ScrollView horizontal style={{ flex: 1 }}>
+      <ScrollView horizontal={true}>
+        <View style={{ flexDirection: 'row', padding: 15 }}>
           {this._hotKeyWords.map(k => (
             <Button
               type={'outline'}
               title={k}
               key={k}
               containerStyle={{ marginRight: 8 }}
-              buttonStyle={{ borderColor: themes.AppSecondaryColor, borderWidth: 1 }}
+              buttonStyle={{
+                borderColor: themes.AppSecondaryColor,
+                borderWidth: 0.5,
+              }}
               titleStyle={[
                 themes.TextStyle.body,
                 { color: themes.AppSecondaryColor },
@@ -176,8 +173,8 @@ export class SearchTabMain extends React.Component<Props, State> {
               onPress={() => {}}
             />
           ))}
-        </ScrollView>
-      </View>
+        </View>
+      </ScrollView>
     );
   }
 
@@ -225,16 +222,17 @@ export class SearchTabMain extends React.Component<Props, State> {
     }
 
     return (
-      <View style={StyleSheet.absoluteFill} onTouchStart={() => Keyboard.dismiss()}>
+      <View onTouchStart={() => Keyboard.dismiss()}>
         <FlatList
           data={this.state.shoes}
           keyExtractor={(item: Shoe, _: number) => item._id}
           renderItem={({ item }) => (
             <ColumnShoeCard shoe={item} onPress={() => this._goToProduct(item)} />
           )}
+          columnWrapperStyle={{ flex: 1, justifyContent: 'space-around' }}
           numColumns={2}
-          contentContainerStyle={{ alignItems: 'center', justifyContent: 'center' }}
           onEndReached={_ => this._search(this.state.searchText, true)}
+          style={{ marginHorizontal: 5 }}
         />
         {this.state.isSearching && <ActivityIndicator size={'small'} />}
       </View>

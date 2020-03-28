@@ -11,6 +11,7 @@ import { IAppState } from '@store/AppStore';
 import { Notifcation } from 'reducers/NotificationReducers';
 import { dismissNotification } from 'actions';
 import { connect } from 'utilities/ReduxUtilities';
+import { Icon } from 'react-native-elements';
 
 type Props = {
   notifications: Notifcation[];
@@ -26,7 +27,10 @@ const ToastItem = ({ item, onPress }: { item: Notifcation; onPress: () => void }
       style={[styles.toastContainer, toastContainer]}
       onPress={onPress}
     >
-      <AppText.Body style={styles.toastTitle}>{item.message}</AppText.Body>
+      <View style={styles.toastInnerContainer}>
+        <AppText.Body style={styles.toastTitle}>{item.message}</AppText.Body>
+        <Icon name={'x'} type={'feather'} size={themes.IconSize} color={themes.AppAccentColor}/>
+      </View>
     </TouchableWithoutFeedback>
   );
 };
@@ -94,12 +98,19 @@ const styles = StyleSheet.create({
     left: 0,
     right: 0,
   },
+  toastInnerContainer: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    flexDirection: 'row',
+    paddingHorizontal: 20,
+  },
   toastContainer: {
     width: '100%',
     height: themes.ButtonHeight,
     justifyContent: 'center',
     borderWidth: 1,
-    borderColor: themes.AppAccentColor
+    borderColor: themes.AppAccentColor,
   },
   toastRegular: {
     backgroundColor: themes.AppPrimaryColor,
@@ -109,6 +120,5 @@ const styles = StyleSheet.create({
   },
   toastTitle: {
     color: themes.AppAccentColor,
-    marginLeft: 20,
   },
 });

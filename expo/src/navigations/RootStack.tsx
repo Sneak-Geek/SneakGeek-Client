@@ -5,21 +5,24 @@ import { AuthenticationStack } from './AuthenticationStack';
 import { TabStack } from './TabStack';
 import { NavigationContainer } from '@react-navigation/native';
 import { ProductStack } from './ProductStack';
-import { Shoe } from 'business';
+import { Shoe, Catalog } from 'business';
 
 export type RootStackParams = {
   ProductDetail: { shoe: Shoe };
   ProductNewReview: { shoe: Shoe };
   ProductAllReviews: { shoe: Shoe };
+  SizeSelection: { shoe: Shoe };
   Login: undefined;
   EmailSignUp: undefined;
   EmailLogin: undefined;
   HomeTab: undefined;
   HomeTabMain: undefined;
+  CatalogSeeMore: { catalog: Catalog };
   SearchTabMain: undefined;
   TrasactionTabMain: undefined;
   AccountTabMain: undefined;
   AccountTabEditProfile: undefined;
+  NewSellOrder: { shoe: Shoe };
 };
 
 const Stack = createStackNavigator();

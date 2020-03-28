@@ -1,6 +1,6 @@
 export const images = {
   Home: require("../../assets/icons/home.png"),
-  Logo: require("../../assets/icons/logo.png"),
+  Logo: require("../../assets/icons/LogoLight.png"),
   Facebook: require("../../assets/icons/facebook.png"),
   Google: require("../../assets/icons/google.png"),
   Email: require("../../assets/icons/email.png"),

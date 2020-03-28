@@ -1,18 +1,15 @@
-import React, { useState } from 'react';
-import { SafeAreaView, View, Image, StyleSheet, Alert } from 'react-native';
-import { AppText, BottomButton } from '@screens/Shared';
+import React from 'react';
+import { SafeAreaView, View } from 'react-native';
+import {
+  AppText,
+  BottomButton,
+  ShoeHeaderSummary,
+  DismissKeyboardView,
+} from '@screens/Shared';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { RootStackParams } from 'navigations/RootStack';
 import { RouteProp } from '@react-navigation/native';
-import {
-  Shoe,
-  ObjectFactory,
-  IShoeService,
-  FactoryKeys,
-  ISettingsProvider,
-  SettingsKey,
-  Review,
-} from 'business';
+import { Shoe, IShoeService, FactoryKeys, Review } from 'business';
 import { Rating, Input } from 'react-native-elements';
 import { themes, strings } from '@resources';
 import { connect } from 'utilities/ReduxUtilities';
@@ -22,6 +19,7 @@ import {
   showSuccessNotification,
 } from 'actions';
 import { IAppState } from '@store/AppStore';
+import { getToken, getService } from 'utilities';
 
 type Props = {
   route: RouteProp<RootStackParams, 'ProductNewReview'>;
@@ -37,45 +35,23 @@ type State = {
   description: string;
 };
 
-const styles = StyleSheet.create({
-  summaryContainer: {
-    alignItems: 'flex-start',
-    flexDirection: 'row',
-    borderBottomColor: themes.DisabledColor,
-    borderBottomWidth: 1,
-    paddingHorizontal: 10,
-    paddingTop: 20,
-    paddingBottom: 20,
-  },
-  titleContainer: {
-    flex: 1,
-    alignItems: 'flex-start',
-    justifyContent: 'flex-start',
-    flexWrap: 'wrap',
-  },
-  shoeImage: {
-    width: 120,
-    aspectRatio: 2,
-  },
-});
-
 @connect(
   (_: IAppState) => ({}),
   (dispatch: Function) => ({
-    showSuccessNotification: (message: string) => {
+    showSuccessNotification: (message: string): void => {
       dispatch(showSuccessNotification(message));
     },
-    showErrorNotification: (message: string) => {
+    showErrorNotification: (message: string): void => {
       dispatch(showErrorNotification(message));
     },
-    toggleLoadingIndicator: (isLoading: boolean, message?: string) => {
+    toggleLoadingIndicator: (isLoading: boolean, message?: string): void => {
       dispatch(toggleIndicator({ isLoading, message }));
     },
   }),
 )
 export class NewReview extends React.Component<Props, State> {
   private shoe: Shoe = this.props.route.params.shoe;
-  private unmountTimeout: number = 0;
+  private unmountTimeout = 0;
 
   state = {
     description: '',
@@ -83,11 +59,10 @@ export class NewReview extends React.Component<Props, State> {
   };
 
   public render(): JSX.Element {
-    const { rating } = this.state;
     return (
       <SafeAreaView style={{ flex: 1, backgroundColor: 'white' }}>
-        <View style={{ flex: 1, position: 'relative' }}>
-          {this._rendershoeSummary()}
+        <DismissKeyboardView style={{ flex: 1, position: 'relative' }}>
+          <ShoeHeaderSummary shoe={this.shoe} />
           <View style={{ padding: 20 }}>
             {this._renderRatingView()}
             {this._renderDescriptionView()}
@@ -95,31 +70,15 @@ export class NewReview extends React.Component<Props, State> {
           <BottomButton
             style={{ backgroundColor: themes.AppPrimaryColor }}
             title={strings.PostRating}
-            onPress={() => this._postReview()}
+            onPress={this._postReview.bind(this)}
           />
-        </View>
+        </DismissKeyboardView>
       </SafeAreaView>
     );
   }
 
   public componentWillUnmount() {
     clearTimeout(this.unmountTimeout);
-  }
-
-  private _rendershoeSummary() {
-    return (
-      <View style={styles.summaryContainer}>
-        <Image
-          source={{ uri: this.shoe.imageUrl }}
-          style={styles.shoeImage}
-          resizeMode={'contain'}
-        />
-        <View style={styles.titleContainer}>
-          <AppText.Body style={{ flex: 1 }}>{this.shoe.title}</AppText.Body>
-          <AppText.Subhead>{this.shoe.colorway.join(', ')}</AppText.Subhead>
-        </View>
-      </View>
-    );
   }
 
   private _renderRatingView(): JSX.Element {
@@ -165,17 +124,12 @@ export class NewReview extends React.Component<Props, State> {
     );
   }
 
-  private async _postReview() {
+  private async _postReview(): Promise<void> {
     const { rating, description } = this.state;
     const { toggleLoadingIndicator, navigation, showErrorNotification } = this.props;
 
-    const shoeService = ObjectFactory.getObjectInstance<IShoeService>(
-      FactoryKeys.IShoeService,
-    );
-    const settings = ObjectFactory.getObjectInstance<ISettingsProvider>(
-      FactoryKeys.ISettingsProvider,
-    );
-    const token = settings.getValue(SettingsKey.CurrentAccessToken);
+    const shoeService = getService<IShoeService>(FactoryKeys.IShoeService);
+    const token = getToken();
 
     toggleLoadingIndicator(true);
     try {
@@ -187,7 +141,7 @@ export class NewReview extends React.Component<Props, State> {
       } as Review);
 
       showSuccessNotification('Đã đánh giá sản phẩm thành công');
-      
+
       this.unmountTimeout = setTimeout(() => {
         navigation.goBack();
       }, 1000);

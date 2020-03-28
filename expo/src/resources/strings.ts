@@ -40,5 +40,10 @@ export const strings = {
   PostRating: 'Đăng đánh giá',
   MissingInfoForReview: 'Bạn cần thêm thông tin cá nhân trước khi đánh giá sản phẩm',
   AddInfoForReview: 'Thêm thông tin',
-  PleaseWait: 'Xin chờ'
+  PleaseWait: 'Xin chờ',
+  NewSell: 'Đăng bán sản phẩm',
+  Continue: 'Tiếp tục',
+  SellShoe: 'Đăng bán',
+  RelatedProducts: 'Sản phẩm liên quan',
+  ChooseSize: 'Chọn cỡ và giá'
 }

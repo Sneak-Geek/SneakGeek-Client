@@ -14,7 +14,12 @@ import { connect } from 'utilities';
 import { IAppState } from '@store/AppStore';
 import { NetworkRequestState, Catalog, getHomeCatalogs, Shoe } from 'business';
 import { toggleIndicator } from 'actions';
-import { strings } from '@resources';
+import { strings, themes } from '@resources';
+import { StackNavigationProp } from '@react-navigation/stack';
+import { RootStackParams } from 'navigations/RootStack';
+import RouteNames from 'navigations/RouteNames';
+import { TouchableOpacity } from 'react-native-gesture-handler';
+
 type Props = {
   homeCatalogState: {
     state: NetworkRequestState;
@@ -26,9 +31,15 @@ type Props = {
       hot: Catalog;
     };
   };
+  navigation: StackNavigationProp<RootStackParams, 'HomeTabMain'>;
 
   toggleLoadingIndicator: (isLoading: boolean, message: string) => void;
   getHomepageCatalogs(): void;
+};
+
+type ShoeCardProps = {
+  shoe: Shoe;
+  onPress: () => void;
 };
 
 @connect(
@@ -95,7 +106,7 @@ export class HomeTabMain extends React.Component<Props> {
   private _renderTrendingShoes() {
     const hotCatalog = this.props.homeCatalogState.catalogs.hot;
     return (
-      <View>
+      <View style={{ marginBottom: 20 }}>
         <AppText.Title1 style={styles.sectionTitle}>
           {hotCatalog.title}
         </AppText.Title1>
@@ -103,9 +114,14 @@ export class HomeTabMain extends React.Component<Props> {
           horizontal={true}
           keyExtractor={(itm, _) => itm._id}
           data={hotCatalog.products}
-          renderItem={({ item }) => <HotShoe shoe={item} />}
-          contentContainerStyle={{ paddingBottom: 15 }}
+          renderItem={({ item }) => (
+            <HotShoeLarge
+              shoe={item}
+              onPress={this._navigateToProductDetail.bind(this, item)}
+            />
+          )}
           showsHorizontalScrollIndicator={false}
+          pagingEnabled={true}
         />
       </View>
     );
@@ -113,38 +129,107 @@ export class HomeTabMain extends React.Component<Props> {
 
   private _renderByBrand(brand: 'Nike' | 'adidas' | 'Jordan') {
     const catalog = this.props.homeCatalogState.catalogs[brand];
+    return (
+      <View style={{ marginVertical: 10 }}>
+        <View style={styles.brandTitleContainer}>
+          <AppText.Title2>{catalog.title}</AppText.Title2>
+          <AppText.Footnote
+            style={{ textDecorationLine: 'underline' }}
+            onPress={this._seeMore.bind(this, catalog)}
+          >
+            {strings.SeeMore}
+          </AppText.Footnote>
+        </View>
+        <FlatList
+          horizontal={true}
+          keyExtractor={(itm, _) => itm._id}
+          data={catalog.products.slice(0, 10)}
+          style={{ marginVertical: 20, paddingLeft: 20 }}
+          showsHorizontalScrollIndicator={false}
+          renderItem={({ item }) => (
+            <HotShoeRegular
+              shoe={item}
+              onPress={this._navigateToProductDetail.bind(this, item)}
+            />
+          )}
+        />
+      </View>
+    );
+  }
+
+  private _navigateToProductDetail(shoe: Shoe) {
+    this.props.navigation.push(RouteNames.Product.Name, {
+      screen: RouteNames.Product.ProductDetail,
+      params: { shoe },
+    });
+  }
+
+  private _seeMore(catalog: Catalog) {
+    this.props.navigation.push(RouteNames.Tab.HomeTab.SeeMore, { catalog });
   }
 }
 
-const HotShoe = ({ shoe }: { shoe: Shoe }): JSX.Element => (
-  <View style={styles.hotShoeContainer}>
-    <Image
-      source={{ uri: shoe.imageUrl, cache: 'default' }}
-      style={styles.shoeImage}
-      resizeMode={'contain'}
-    />
-    <AppText.Title3
-      numberOfLines={2}
-      style={styles.hotShoeTitle}
-      ellipsizeMode={'tail'}
-    >
-      {shoe.title}
-    </AppText.Title3>
-  </View>
+const HotShoeLarge = ({ shoe, onPress }: ShoeCardProps): JSX.Element => (
+  <TouchableOpacity onPress={onPress}>
+    <View style={styles.hotShoeContainer}>
+      <View style={styles.hotShoeContentContainer}>
+        <Image
+          source={{ uri: shoe.imageUrl, cache: 'default' }}
+          style={styles.shoeImage}
+          resizeMode={'contain'}
+        />
+        <AppText.Title3
+          numberOfLines={2}
+          style={styles.hotShoeTitle}
+          ellipsizeMode={'tail'}
+        >
+          {shoe.title}
+        </AppText.Title3>
+      </View>
+    </View>
+  </TouchableOpacity>
+);
+
+const HotShoeRegular = ({ shoe, onPress }: ShoeCardProps): JSX.Element => (
+  <TouchableOpacity onPress={onPress}>
+    <View style={{ width: 145, marginRight: 30 }}>
+      <Image
+        source={{ uri: shoe.imageUrl }}
+        style={{ width: 140, height: 120 }}
+        resizeMode={'contain'}
+      />
+      <AppText.Subhead
+        numberOfLines={2}
+        ellipsizeMode={'tail'}
+        style={{ marginTop: 25 }}
+      >
+        {shoe.title}
+      </AppText.Subhead>
+    </View>
+  </TouchableOpacity>
 );
 
 const styles = StyleSheet.create({
   hotShoeContainer: {
     width: Dimensions.get('window').width,
-    marginTop: 20,
     flexDirection: 'column',
     alignItems: 'center',
     justifyContent: 'center',
-    flex: 1,
+    marginTop: 15,
+  },
+  hotShoeContentContainer: {
+    borderColor: themes.DisabledColor,
+    borderWidth: 1,
+    width: '90%',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    height: Dimensions.get('window').height * 0.3,
+    paddingBottom: 8,
+    borderRadius: 20,
   },
   shoeImage: {
     flex: 1,
-    width: 300,
+    width: 250,
     height: 200,
     marginVertical: 5,
   },
@@ -153,6 +238,13 @@ const styles = StyleSheet.create({
     maxWidth: '85%',
   },
   sectionTitle: {
-    margin: 15,
+    marginTop: 15,
+    marginHorizontal: 15,
+  },
+  brandTitleContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    paddingHorizontal: 20,
   },
 });

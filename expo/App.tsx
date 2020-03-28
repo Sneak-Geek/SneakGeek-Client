@@ -16,6 +16,10 @@ import {
   CatalogService,
   IShoeService,
   ShoeService,
+  ISettingService,
+  SettingService,
+  IOrderService,
+  OrderService,
 } from 'business';
 import { Provider } from 'react-redux';
 import { SettingsProvider, FacebookSdk } from 'common';
@@ -38,7 +42,7 @@ export default function App(): JSX.Element {
   };
 
   const initializeFbSdk = (): Promise<void> => {
-    return Facebook.initializeAsync('1521812747994918', 'sneakgeek');
+    return Facebook.initializeAsync('1521812747994918', 'SneakGeek');
   };
 
   const initializeBusinessDep = async (): Promise<void> => {
@@ -48,20 +52,20 @@ export default function App(): JSX.Element {
     Factory.register<IEnvVar>(Keys.IEnvVar, {
       '__DEV__': __DEV__,
       devUrl: 'http://192.168.0.12:8080/api/v1',
+      prodUrl: 'https://sneakgeek-test.azurewebsites.net/api/v1'
     });
     Factory.register<ISettingsProvider>(Keys.ISettingsProvider, settingsProvider);
     Factory.register<IFacebookSDK>(Keys.IFacebookSDK, new FacebookSdk());
     Factory.register<IAccountService>(Keys.IAccountService, new AccountService());
     Factory.register<ICatalogService>(Keys.ICatalogService, new CatalogService());
     Factory.register<IShoeService>(Keys.IShoeService, new ShoeService());
+    Factory.register<ISettingService>(Keys.ISettingService, new SettingService());
+    Factory.register<IOrderService>(Keys.IOrderService, new OrderService());
   };
 
   useEffect(() => {
-    SplashScreen.preventAutoHide();
-
     Promise.all([initializeBusinessDep(), initializeFbSdk(), initializeFonts()]).then(
       () => {
-        SplashScreen.hide();
         setFontLoaded(true);
       },
     );

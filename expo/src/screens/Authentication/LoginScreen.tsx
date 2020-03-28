@@ -19,8 +19,6 @@ import { AppText } from '@screens/Shared';
 type Props = {
   account: Account;
   navigation: StackNavigationProp<any>;
-
-  getCurrentUser: () => void;
   facebookLogin: () => void;
 };
 
@@ -29,28 +27,12 @@ type Props = {
     account: state.UserState.accountState.account,
   }),
   (dispatch: Function) => ({
-    getCurrentUser: () => {
-      dispatch(getCurrentUser());
-    },
     facebookLogin: () => {
       dispatch(authenticateWithFb());
     },
   }),
 )
 export class LoginScreen extends React.Component<Props> {
-  public componentDidMount() {
-    this.props.getCurrentUser();
-  }
-
-  public componentDidUpdate(prev: Props) {
-    const { account, navigation } = this.props;
-    if (account === prev.account) return;
-
-    if (account && account !== prev.account) {
-      navigation.push(RouteNames.Tab.Name);
-    }
-  }
-
   public render(): JSX.Element {
     return (
       <ImageBackground source={images.Home} style={{ flex: 1 }}>
