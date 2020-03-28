@@ -8,4 +8,6 @@ export const FactoryKeys = {
     ISettingsProvider: Symbol.for("ISettingsProvider"),
     ICatalogService: Symbol.for("ICatalogService"),
     IShoeService: Symbol.for("IShoeService"),
+    ISettingService: Symbol.for("ISettingService"),
+    IOrderService: Symbol.for("IOrderService")
 };

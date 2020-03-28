@@ -16,7 +16,13 @@ export interface INotificationState {
 }
 
 const initialState: INotificationState = {
-  notifications: []
+  notifications: [
+    {
+      id: "1234",
+      message: "Hello",
+      timeout: 5
+    }
+  ]
 };
 
 export const NotificationReducers = handleActionsWithReset<INotificationState, any>(

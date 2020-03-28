@@ -5,4 +5,6 @@ export declare const FactoryKeys: {
     ISettingsProvider: symbol;
     ICatalogService: symbol;
     IShoeService: symbol;
+    ISettingService: symbol;
+    IOrderService: symbol;
 };

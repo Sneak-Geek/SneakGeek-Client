@@ -39,4 +39,24 @@ export class ShoeService extends BaseService {
             });
         });
     }
+    getShoeInfo(token, shoeId) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const response = yield this.apiClient.getInstance().get(`/shoe/detail?shoeId=${shoeId}`, {
+                headers: {
+                    authorization: token,
+                }
+            });
+            return response.data;
+        });
+    }
+    getLowestSellPrices(token, shoeId) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const response = yield this.apiClient.getInstance().get(`/shoe/sell-order/lowest-by-size?shoeId=${shoeId}`, {
+                headers: {
+                    authorization: token
+                }
+            });
+            return response.data;
+        });
+    }
 }

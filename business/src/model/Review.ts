@@ -6,5 +6,7 @@ export type Review = {
   shoeId: string,
   rating: number,
   description: string,
-  imageUrls: string[]
+  imageUrls: string[],
+  createdAt: string | Date,
+  updatedAt: string | Date
 };

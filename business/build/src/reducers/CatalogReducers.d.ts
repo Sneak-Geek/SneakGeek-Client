@@ -18,4 +18,4 @@ export declare type ICatalogState = {
     };
 };
 export declare const initialCatalogState: ICatalogState;
-export declare const CatalogReducers: import("redux-actions").ReduxCompatibleReducer<ICatalogState, any>;
+export declare const CatalogReducers: any;

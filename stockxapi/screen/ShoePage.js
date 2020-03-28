@@ -83,7 +83,6 @@ export default class ShoePage extends React.Component {
                   isPostingShoes: false
                 },
                 () => {
-                  console.log("shoes", this.state.shoes);
                   Alert.alert(`Error: ${JSON.stringify(e, null, 2)}`);
                 }
               );
@@ -102,7 +101,6 @@ export default class ShoePage extends React.Component {
       )
         .then(res => res.json())
         .then(data => {
-          console.log(data);
           let shoesData = data.Products.map(raw => ({
             brand: raw.brand,
             category: raw.category,

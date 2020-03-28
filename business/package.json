@@ -6,7 +6,8 @@
   "types": "build/src/index.d.ts",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "tsc"
+    "build": "tsc",
+    "postinstall": "yarn build"
   },
   "author": "Hoang Pham",
   "license": "ISC",
@@ -23,7 +24,8 @@
   "peerDependencies": {
     "redux": "*",
     "redux-actions": "*",
-    "redux-thunk": "*"
+    "redux-thunk": "*",
+    "@types/redux-actions": "*"
   },
   "devDependencies": {
     "@types/redux-actions": "2.6.1",

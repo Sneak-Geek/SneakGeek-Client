@@ -14,9 +14,17 @@ import { SettingsKey } from "../loader/interfaces";
 export const ShoeActions = {
     UPDATE_STATE_SEARCH_SHOES: "UPDATE_STATE_SEARCH_SHOES",
     UPDATE_STATE_GET_REVIEWES: "UPDATE_STATE_GET_REVIEWS",
+    UPDATE_STATE_GET_DETAIL: "UPDATE_STATE_GET_DETAIL",
 };
 export const updateStateSearchShoes = createAction(ShoeActions.UPDATE_STATE_SEARCH_SHOES);
 export const updateStateGetReviews = createAction(ShoeActions.UPDATE_STATE_SEARCH_SHOES);
+export const updateStateGetInfo = createAction(ShoeActions.UPDATE_STATE_GET_DETAIL);
+function getShoeServiceAndToken() {
+    const shoeService = ObjectFactory.getObjectInstance(FactoryKeys.IShoeService);
+    const settings = ObjectFactory.getObjectInstance(FactoryKeys.ISettingsProvider);
+    const token = settings.getValue(SettingsKey.CurrentAccessToken);
+    return { shoeService, token };
+}
 export const searchShoes = (key, page) => {
     return (dispatch) => __awaiter(void 0, void 0, void 0, function* () {
         dispatch(updateStateSearchShoes({
@@ -55,6 +63,25 @@ export const getReviews = (shoeId) => {
             dispatch(updateStateGetReviews({
                 state: NetworkRequestState.FAILED,
                 error,
+            }));
+        }
+    });
+};
+export const getShoeInfo = (shoeId) => {
+    return (dispatch) => __awaiter(void 0, void 0, void 0, function* () {
+        const { shoeService, token } = getShoeServiceAndToken();
+        dispatch(updateStateGetInfo({ state: NetworkRequestState.NOT_STARTED }));
+        try {
+            const data = yield shoeService.getShoeInfo(token, shoeId);
+            dispatch(updateStateGetInfo({
+                state: NetworkRequestState.SUCCESS,
+                data
+            }));
+        }
+        catch (error) {
+            dispatch(updateStateGetInfo({
+                state: NetworkRequestState.FAILED,
+                error
             }));
         }
     });

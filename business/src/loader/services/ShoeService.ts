@@ -1,4 +1,4 @@
-import { Shoe, Review } from "../../model";
+import { Shoe, Review, SellOrder, BuyOrder } from "../../model";
 import { BaseService } from "./BaseService";
 import { IShoeService } from "../interfaces/IShoeService";
 
@@ -19,7 +19,7 @@ export class ShoeService extends BaseService implements IShoeService {
   }
 
   public async addReview(token: string, review: Review): Promise<void> {
-    return this.apiClient.getInstance().post(`/review/`, 
+    return this.apiClient.getInstance().post(`/review/`,
       {
         shoeId: review.shoeId,
         rating: review.rating,
@@ -33,4 +33,29 @@ export class ShoeService extends BaseService implements IShoeService {
       }
     );
   }
+
+  public async getShoeInfo(token: string, shoeId: string): Promise<{
+    relatedShoes: Shoe[],
+    lowestSellOrder?: SellOrder,
+    highestBuyOrder?: BuyOrder
+  }> {
+    const response = await this.apiClient.getInstance().get(`/shoe/detail?shoeId=${shoeId}`, {
+      headers: {
+        authorization: token,
+      }
+    });
+
+    return response.data;
+  }
+
+  public async getLowestSellPrices(token: string, shoeId: string): Promise<{ minPrice: number; size: string; }[]> {
+    const response = await this.apiClient.getInstance().get(`/shoe/sell-order/lowest-by-size?shoeId=${shoeId}`, {
+      headers: {
+        authorization: token
+      }
+    });
+
+    return response.data as { minPrice: number, size: string }[];
+  }
+
 }

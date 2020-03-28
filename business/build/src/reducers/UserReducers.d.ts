@@ -13,4 +13,4 @@ export declare type IUserState = {
     };
 };
 export declare const initialUserState: IUserState;
-export declare const UserReducers: import("redux-actions").ReduxCompatibleReducer<IUserState, any>;
+export declare const UserReducers: any;

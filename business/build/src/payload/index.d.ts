@@ -1,4 +1,4 @@
-import { Account, Profile, Catalog, Shoe, Review } from "../model";
+import { Account, Profile, Catalog, Shoe, Review, SellOrder, BuyOrder } from "../model";
 export declare enum NetworkRequestState {
     NOT_STARTED = 0,
     REQUESTING = 1,
@@ -20,6 +20,11 @@ export declare type GetUserProfilePayload = NetworkPayload<{
 export declare type CatalogPayload = NetworkPayload<Catalog[]>;
 export declare type SearchShoesPayload = NetworkPayload<Shoe[]>;
 export declare type GetReviewsPayload = NetworkPayload<Review[]>;
+export declare type GetShoeInfoPayload = NetworkPayload<{
+    relatedShoes: Shoe[];
+    lowestSellOrder?: SellOrder;
+    highestBuyOrder?: BuyOrder;
+}>;
 export declare type HomePageCatalogsPayload = NetworkPayload<{
     Nike: Catalog;
     Jordan: Catalog;

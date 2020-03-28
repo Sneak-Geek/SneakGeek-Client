@@ -22,7 +22,6 @@ export default class Brand extends React.Component {
     fetch(`https://stockx.com/api/browse?productCategory=sneakers&brand=${this.brand}`)
       .then(res => res.json())
       .then(data => {
-        console.log(data)
         this.setState({
           brandTotal: data.Pagination.total,
           yearData: data.Facets.year ? data.Facets.year : {}

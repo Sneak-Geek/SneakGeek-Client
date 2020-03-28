@@ -4,3 +4,6 @@ export * from "./Catalog";
 export * from "./Shoe";
 export * from "./ShoeAuthentication";
 export * from "./Review";
+export * from "./SellOrder";
+export * from "./BuyOrder";
+export * from "./PriceData";

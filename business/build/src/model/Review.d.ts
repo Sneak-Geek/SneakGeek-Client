@@ -6,4 +6,6 @@ export declare type Review = {
     rating: number;
     description: string;
     imageUrls: string[];
+    createdAt: string | Date;
+    updatedAt: string | Date;
 };
