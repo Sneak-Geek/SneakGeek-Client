@@ -51,11 +51,7 @@ const PriceBox = (props: {
           styles.priceBox,
           selected ? { backgroundColor: themes.AppSecondaryColor } : {},
         ]}
-        onPress={() => {
-          return props.size === props.selected
-            ? props.onSelect('')
-            : props.onSelect(props.size);
-        }}
+        onPress={() => props.onSelect(props.size)}
       >
         <View style={[styles.priceTextContainer]}>
           <AppText.Callout style={{ marginBottom: 5, color }}>
@@ -72,6 +68,7 @@ export const SizePricePicker = (props: {
   sizes: string[];
   priceMap: Map<string, number>;
   style: StyleProp<ViewStyle>;
+  onSizeSelected: (size: string) => void;
 }): JSX.Element => {
   const [selectedSize, setSelectedSize] = useState('');
 
@@ -85,7 +82,10 @@ export const SizePricePicker = (props: {
           size={item}
           price={props.priceMap.get(item)}
           selected={selectedSize}
-          onSelect={(size: string) => setSelectedSize(size)}
+          onSelect={(size: string) => {
+            props.onSizeSelected(size);
+            setSelectedSize(size);
+          }}
         />
       )}
       numColumns={4}

@@ -6,6 +6,7 @@ import { Shoe } from 'business';
 
 const styles = StyleSheet.create({
   summaryContainer: {
+    backgroundColor: themes.AppAccentColor,
     alignItems: 'flex-start',
     flexDirection: 'row',
     borderBottomColor: themes.DisabledColor,
@@ -16,9 +17,9 @@ const styles = StyleSheet.create({
   },
   titleContainer: {
     flex: 1,
+    flexDirection: 'column',
     alignItems: 'flex-start',
-    justifyContent: 'flex-start',
-    flexWrap: 'wrap',
+    justifyContent: 'center',
   },
   shoeImage: {
     width: 120,
@@ -34,7 +35,9 @@ export const ShoeHeaderSummary = (props: { shoe: Shoe }): JSX.Element => (
       resizeMode={'contain'}
     />
     <View style={styles.titleContainer}>
-      <AppText.Body style={{ flex: 1 }}>{props.shoe.title}</AppText.Body>
+      <AppText.Body style={{ flexWrap: 'wrap', marginBottom: 8 }}>
+        {props.shoe.title}
+      </AppText.Body>
       <AppText.Subhead>{props.shoe.colorway.join(', ')}</AppText.Subhead>
     </View>
   </View>

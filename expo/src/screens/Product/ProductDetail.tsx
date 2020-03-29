@@ -424,8 +424,11 @@ export class ProductDetail extends React.Component<Props> {
           themes.AppSellColor,
           () => {
             // @ts-ignore
-            this.props.navigation.push(RouteNames.Product.NewSellOrder, {
-              shoe: this._shoe,
+            this.props.navigation.push(RouteNames.Order.Name, {
+              screen: RouteNames.Order.NewSellOrder,
+              params: {
+                shoe: this._shoe,
+              },
             });
           },
         )}
@@ -433,15 +436,21 @@ export class ProductDetail extends React.Component<Props> {
           'Mua',
           `Thấp: ${
             lowestSellOrder
-              ? Humanize.compactInteger((lowestSellOrder.sellNowPrice as PriceData).price, 2)
+              ? Humanize.compactInteger(
+                  (lowestSellOrder.sellNowPrice as PriceData).price,
+                  2,
+                )
               : '-'
           }`,
           'cart-arrow-down',
           themes.AppPrimaryColor,
           () => {
             // @ts-ignore
-            this.props.navigation.push(RouteNames.Product.SizeSelection, {
-              shoe: this._shoe,
+            this.props.navigation.push(RouteNames.Order.Name, {
+              screen: RouteNames.Order.SizeSelection,
+              params: {
+                shoe: this._shoe,
+              },
             });
           },
         )}

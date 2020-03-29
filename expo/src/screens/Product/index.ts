@@ -1,4 +1,5 @@
 export * from './ProductDetail';
 export * from "./AllReviews";
 export * from './NewReview';
-export * from './NewSellOrder';
+export * from '../Order/NewSellOrder';
+export * from '../Order/SizeSelection';

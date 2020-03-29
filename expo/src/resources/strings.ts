@@ -45,5 +45,10 @@ export const strings = {
   Continue: 'Tiếp tục',
   SellShoe: 'Đăng bán',
   RelatedProducts: 'Sản phẩm liên quan',
-  ChooseSize: 'Chọn cỡ và giá'
+  ChooseSize: 'Chọn cỡ và giá',
+  ErrorPleaseTryAgain: 'Đã có lỗi xảy ra, xin vui lòng thử lại',
+  BuyNow: 'Mua ngay',
+  SetBuyPrice: 'Đặt giá mua',
+  Checkout: 'Thanh toán',
+  BuyProduct: 'Mua sản phẩm'
 }

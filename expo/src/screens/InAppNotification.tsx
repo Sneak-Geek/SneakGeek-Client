@@ -109,8 +109,7 @@ const styles = StyleSheet.create({
     width: '100%',
     height: themes.ButtonHeight,
     justifyContent: 'center',
-    borderWidth: 1,
-    borderColor: themes.AppAccentColor,
+    marginBottom: 2
   },
   toastRegular: {
     backgroundColor: themes.AppPrimaryColor,

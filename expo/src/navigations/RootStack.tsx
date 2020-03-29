@@ -6,12 +6,16 @@ import { TabStack } from './TabStack';
 import { NavigationContainer } from '@react-navigation/native';
 import { ProductStack } from './ProductStack';
 import { Shoe, Catalog } from 'business';
+import { OrderStack } from './OrderStack';
 
 export type RootStackParams = {
   ProductDetail: { shoe: Shoe };
   ProductNewReview: { shoe: Shoe };
   ProductAllReviews: { shoe: Shoe };
   SizeSelection: { shoe: Shoe };
+  NewSellOrder: { shoe: Shoe };
+  OrderSizeSelection: { shoe: Shoe };
+  OrderBuyConfirmation: { shoe: Shoe }
   Login: undefined;
   EmailSignUp: undefined;
   EmailLogin: undefined;
@@ -22,7 +26,6 @@ export type RootStackParams = {
   TrasactionTabMain: undefined;
   AccountTabMain: undefined;
   AccountTabEditProfile: undefined;
-  NewSellOrder: { shoe: Shoe };
 };
 
 const Stack = createStackNavigator();
@@ -39,6 +42,13 @@ const RootStack = (): JSX.Element => (
         }}
       />
       <Stack.Screen name={RouteNames.Product.Name} component={ProductStack} />
+      <Stack.Screen
+        name={RouteNames.Order.Name}
+        component={OrderStack}
+        options={{
+          gestureEnabled: false,
+        }}
+      />
     </Stack.Navigator>
   </NavigationContainer>
 );

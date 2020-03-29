@@ -1,9 +1,8 @@
 import React from 'react';
 import { createStackNavigator } from '@react-navigation/stack';
 import RouteNames from './RouteNames';
-import { ProductDetail, AllReviews, NewReview, NewSellOrder } from '@screens/Product';
+import { ProductDetail, AllReviews, NewReview } from '@screens/Product';
 import { themes, strings } from '@resources';
-import { SizeSelection } from '@screens/Product/SizeSelection';
 
 const Stack = createStackNavigator();
 
@@ -24,22 +23,6 @@ export const ProductStack = (): JSX.Element => (
       options={{
         ...themes.headerStyle,
         title: strings.NewReview,
-      }}
-    />
-    <Stack.Screen
-      name={RouteNames.Product.NewSellOrder}
-      component={NewSellOrder}
-      options={{
-        headerTransparent: true,
-        headerShown: false,
-      }}
-    />
-    <Stack.Screen
-      name={RouteNames.Product.SizeSelection}
-      component={SizeSelection}
-      options={{
-        title: strings.ChooseSize,
-        ...themes.headerStyle,
       }}
     />
   </Stack.Navigator>

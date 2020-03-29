@@ -12,8 +12,12 @@ const RouteNames = {
     ProductDetail: 'ProductDetail',
     NewReview: 'ProductNewReview',
     AllReviews: 'ProductAllReviews',
-    NewSellOrder: 'ProductNewSellOrder',
-    SizeSelection: 'ProductSizeSelection',
+  },
+  Order: {
+    Name: 'Order',
+    NewSellOrder: 'NewSellOrder',
+    SizeSelection: 'OrderSizeSelection',
+    BuyConfirmation: 'OrderBuyConfirmation'
   },
   Tab: {
     Name: 'Tabs',
