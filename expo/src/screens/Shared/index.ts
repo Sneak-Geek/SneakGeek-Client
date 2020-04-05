@@ -5,3 +5,5 @@ export * from './ColumnShoeCard';
 export * from './ShoeHeaderSummary';
 export * from './BottomPicker';
 export * from './LiteShoeCard';
+export * from './TitleContentDescription';
+export * from './ImageRatioPreserved';

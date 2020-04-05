@@ -9,5 +9,4 @@ export interface IShoeService {
     lowestSellOrder?: SellOrder,
     highestBuyOrder?: BuyOrder
   }>;
-  getLowestSellPrices: (token: string, shoeId: string) => Promise<{ minPrice: number, size: string }[]>;
 }

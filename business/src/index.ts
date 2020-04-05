@@ -11,3 +11,4 @@ export * from "./loader/services";
 export * from "./model";
 export * from "./payload";
 export * from "./reducers";
+export * from "./assets";

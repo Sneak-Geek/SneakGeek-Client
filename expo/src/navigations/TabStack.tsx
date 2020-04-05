@@ -8,7 +8,6 @@ import { createStackNavigator } from '@react-navigation/stack';
 import { AccountTabEditProfile } from '@screens/AccountTab/AccountTabEditProfile';
 import { HomeTabMain } from '@screens/HomeTab/HomeTabMain';
 import { SearchTabMain } from '@screens/SearchTab/SearchTabMain';
-import { TransactionTabMain } from '@screens/TransactionTab/TransactionTabMain';
 import { Image } from 'react-native';
 import {
   ObjectFactory as Factory,
@@ -16,6 +15,12 @@ import {
   FactoryKeys as Keys,
 } from 'business';
 import { CatalogSeeMore } from '@screens/HomeTab';
+import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
+import {
+  SellOrders,
+  TransactionTabMain,
+  TransactionDetail,
+} from '@screens/TransactionTab';
 
 const Tab = createBottomTabNavigator();
 
@@ -74,12 +79,14 @@ const HomeTab = (): JSX.Element => (
         ),
       }}
     />
-    <HomeStack.Screen name={RouteNames.Tab.HomeTab.SeeMore}
+    <HomeStack.Screen
+      name={RouteNames.Tab.HomeTab.SeeMore}
       component={CatalogSeeMore}
       options={{
         title: strings.SeeMore,
-        ...themes.headerStyle
-      }}/>
+        ...themes.headerStyle,
+      }}
+    />
   </HomeStack.Navigator>
 );
 
@@ -93,15 +100,44 @@ const SearchTab = (): JSX.Element => (
   </SearchStack.Navigator>
 );
 
+const TopTab = createMaterialTopTabNavigator();
+
+const TransactionTopTabs = (): JSX.Element => (
+  <TopTab.Navigator tabBarOptions={themes.TabTopHeader}>
+    <TopTab.Screen
+      component={TransactionTabMain}
+      name={RouteNames.Tab.TransactionTab.Buy}
+      options={{
+        title: strings.BuyHistory,
+      }}
+    />
+    <TopTab.Screen
+      component={SellOrders}
+      name={RouteNames.Tab.TransactionTab.Sell}
+      options={{
+        title: strings.SellHistory,
+      }}
+    />
+  </TopTab.Navigator>
+);
+
 const TransactionStack = createStackNavigator();
 const TransactionTab = (): JSX.Element => (
   <TransactionStack.Navigator>
     <TransactionStack.Screen
       name={RouteNames.Tab.TransactionTab.Main}
-      component={TransactionTabMain}
+      component={TransactionTopTabs}
       options={{
         ...themes.headerStyle,
         title: strings.TransactionTab,
+      }}
+    />
+    <TransactionStack.Screen
+      name={RouteNames.Tab.TransactionTab.Detail}
+      component={TransactionDetail}
+      options={{
+        ...themes.headerStyle,
+        title: strings.TransactionDetail,
       }}
     />
   </TransactionStack.Navigator>

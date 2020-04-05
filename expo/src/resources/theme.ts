@@ -14,6 +14,7 @@ export const themes = {
   DisabledTheme: 'rgba(0, 0, 0, 0.05)',
   AppDisabledColor: '#DADADA',
   AppSellColor: '#E2603F',
+  AppPendingColor: '#E2C115',
   ButtonShadow: Platform.select({
     android: { elevation: 5 },
     ios: {
@@ -86,6 +87,15 @@ export const themes = {
     headerTitleStyle: {
       fontSize: 20,
       fontFamily: 'RobotoBold',
+    }
+  },
+  TabTopHeader: {
+    labelStyle: {
+      fontFamily: 'Roboto',
+      fontSize: 17
+    },
+    indicatorStyle: {
+      backgroundColor: '#000'
     }
   },
   avatarSize: 100

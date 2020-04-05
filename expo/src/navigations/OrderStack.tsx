@@ -1,7 +1,12 @@
 import React from 'react';
 import { createStackNavigator } from '@react-navigation/stack';
 import RouteNames from './RouteNames';
-import { NewSellOrder, SizeSelection, BuyConfirmation } from '@screens/Order';
+import {
+  NewSellOrder,
+  SizeSelection,
+  BuyConfirmation,
+  Payment,
+} from '@screens/Order';
 import { strings, themes } from '@resources';
 
 const Stack = createStackNavigator();
@@ -30,6 +35,14 @@ export const OrderStack = (): JSX.Element => (
       options={{
         title: strings.Checkout,
         ...themes.headerStyle,
+      }}
+    />
+    <Stack.Screen
+      name={RouteNames.Order.Payment}
+      component={Payment}
+      options={{
+        headerTransparent: true,
+        headerShown: false,
       }}
     />
   </Stack.Navigator>

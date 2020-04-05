@@ -23,5 +23,10 @@ export type HomePageCatalogsPayload = NetworkPayload<{
   Nike: Catalog,
   Jordan: Catalog,
   adidas: Catalog,
-  hot: Catalog
+  hot: Catalog,
+  ranking: Catalog,
+  toppick: Catalog,
+  buynow: Catalog
 }>;
+export type GetSellOrdersPayload = NetworkPayload<SellOrder[]>;
+export type GetBuyOrdersPayload = NetworkPayload<BuyOrder[]>;

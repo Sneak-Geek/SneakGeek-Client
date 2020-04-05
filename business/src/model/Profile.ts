@@ -1,3 +1,12 @@
+export type UserAddress = {
+    streetAddress: string,
+    ward: string,
+    wardCode: string,
+    district: string,
+    districtId: number,
+    city: string
+};
+
 export interface Profile {
     _id: string;
     accountId: string;
@@ -11,7 +20,7 @@ export interface Profile {
         middleName: string;
         lastName: string;
     };
-    userProvidedAddress?: string;
+    userProvidedAddress?: UserAddress;
     userProvidedGender?: string;
     userProvidedShoeSize?: string;
     userProvidedEmail?: string;

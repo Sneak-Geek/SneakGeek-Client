@@ -47,15 +47,4 @@ export class ShoeService extends BaseService implements IShoeService {
 
     return response.data;
   }
-
-  public async getLowestSellPrices(token: string, shoeId: string): Promise<{ minPrice: number; size: string; }[]> {
-    const response = await this.apiClient.getInstance().get(`/shoe/sell-order/lowest-by-size?shoeId=${shoeId}`, {
-      headers: {
-        authorization: token
-      }
-    });
-
-    return response.data as { minPrice: number, size: string }[];
-  }
-
 }

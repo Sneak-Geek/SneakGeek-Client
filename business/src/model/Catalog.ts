@@ -8,4 +8,5 @@ export type Catalog = {
   title: string;
   description?: string;
   products: Shoe[];
+  coverImage?: string;
 };

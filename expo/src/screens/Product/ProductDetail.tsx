@@ -21,6 +21,7 @@ import { connect, toVnDateFormat } from 'utilities';
 import Humanize from 'humanize-plus';
 import { IAppState } from '@store/AppStore';
 import {
+  Account,
   NetworkRequestState,
   Review,
   getReviews,
@@ -34,6 +35,7 @@ import {
 import RouteNames from 'navigations/RouteNames';
 
 type Props = {
+  account: Account;
   profile: Profile;
   route: RouteProp<RootStackParams, 'ProductDetail'>;
   navigation: StackNavigationProp<RootStackParams, 'ProductDetail'>;
@@ -179,17 +181,18 @@ const ReviewItem = (props: { review: Review }): JSX.Element => {
   (state: IAppState) => ({
     reviewState: state.ProductState.reviewState,
     shoeInfoState: state.ProductState.infoState,
+    account: state.UserState.accountState.account,
     profile: state.UserState.profileState.profile,
   }),
   (dispatch: Function) => ({
-    getReviews: (shoeId: string) => dispatch(getReviews(shoeId)),
-    getShoeInfo: (shoeId: string) => dispatch(getShoeInfo(shoeId)),
+    getReviews: (shoeId: string): void => dispatch(getReviews(shoeId)),
+    getShoeInfo: (shoeId: string): void => dispatch(getShoeInfo(shoeId)),
   }),
 )
 export class ProductDetail extends React.Component<Props> {
   private _shoe = this.props.route.params.shoe;
 
-  public componentDidMount() {
+  public componentDidMount(): void {
     this.props.getReviews(this._shoe._id);
     this.props.getShoeInfo(this._shoe._id);
   }
@@ -227,7 +230,7 @@ export class ProductDetail extends React.Component<Props> {
     );
   }
 
-  private _renderHeader(topInsets: number) {
+  private _renderHeader(topInsets: number): JSX.Element {
     return (
       <HeaderHeightContext.Consumer>
         {headerHeight => (
@@ -249,7 +252,7 @@ export class ProductDetail extends React.Component<Props> {
     );
   }
 
-  private _renderProductImage() {
+  private _renderProductImage(): JSX.Element {
     return (
       <View style={styles.shoeImageContainer}>
         <Image
@@ -261,7 +264,7 @@ export class ProductDetail extends React.Component<Props> {
     );
   }
 
-  private _renderProductTitle() {
+  private _renderProductTitle(): JSX.Element {
     return (
       <AppText.Title2 style={styles.shoeTitle} numberOfLines={3}>
         {this._shoe.title}
@@ -281,7 +284,7 @@ export class ProductDetail extends React.Component<Props> {
     );
   }
 
-  private _renderProductDetail() {
+  private _renderProductDetail(): JSX.Element {
     const fieldMapping = new Map<string, string>([
       [this._shoe.title, strings.ProductName],
       [this._shoe.colorway.join(', '), strings.Colorway],
@@ -313,6 +316,7 @@ export class ProductDetail extends React.Component<Props> {
     if (state === NetworkRequestState.REQUESTING) {
       content = <ActivityIndicator />;
     } else if (state === NetworkRequestState.FAILED) {
+      content = null;
     }
 
     if (state === NetworkRequestState.SUCCESS && reviews.length === 0) {
@@ -345,7 +349,7 @@ export class ProductDetail extends React.Component<Props> {
     );
   }
 
-  private _onEditReview() {
+  private _onEditReview(): void {
     const { profile, navigation } = this.props;
     if (
       profile.userProvidedName &&
@@ -355,22 +359,27 @@ export class ProductDetail extends React.Component<Props> {
       // @ts-ignore
       navigation.push(RouteNames.Product.NewReview, { shoe: this._shoe });
     } else {
-      Alert.alert(strings.AccountInfo, strings.MissingInfoForReview, [
-        {
-          text: strings.AddInfoForReview,
-          onPress: () =>
-            // @ts-ignore
-            navigation.navigate(RouteNames.Tab.AccountTab.Name, {
-              screen: RouteNames.Tab.AccountTab.EditProfile,
-            }),
-        },
-        {
-          text: strings.Cancel,
-          onPress: () => {},
-          style: 'cancel',
-        },
-      ]);
+      this._alertMissingInfo(strings.MissingInfoForReview);
     }
+  }
+
+  private _alertMissingInfo(message: string): void {
+    const { navigation } = this.props;
+    Alert.alert(strings.AccountInfo, message, [
+      {
+        text: strings.AddInfoForReview,
+        onPress: (): void =>
+          // @ts-ignore
+          navigation.navigate(RouteNames.Tab.AccountTab.Name, {
+            screen: RouteNames.Tab.AccountTab.EditProfile,
+          }),
+      },
+      {
+        text: strings.Cancel,
+        onPress: null,
+        style: 'cancel',
+      },
+    ]);
   }
 
   private _renderRelatedShoes() {
@@ -413,7 +422,7 @@ export class ProductDetail extends React.Component<Props> {
     );
   }
 
-  private _renderActionButtons(bottom: number) {
+  private _renderActionButtons(bottom: number): JSX.Element {
     const { highestBuyOrder, lowestSellOrder } = this.props.shoeInfoState;
     return (
       <View style={{ bottom, ...styles.bottomContainer }}>
@@ -464,9 +473,28 @@ export class ProductDetail extends React.Component<Props> {
     iconName: string,
     backgroundColor: string,
     onPress: () => void,
-  ) {
+  ): JSX.Element {
+    const { account, profile } = this.props;
+    
+    const isVerified = account.isVerified;
+    const missingAddress = !profile.userProvidedAddress
+      || !profile.userProvidedAddress.city 
+      || !profile.userProvidedAddress.districtId
+      || !profile.userProvidedAddress.wardCode
+      || !profile.userProvidedAddress.streetAddress;
+
+    const newOnPress = (): void => {
+      if (isVerified && !missingAddress) {
+        return onPress();
+      } else if (!isVerified) {
+        Alert.alert(strings.AccountNotVerifieid);
+      } else {
+        this._alertMissingInfo(`${strings.AddInfoForReview}: ${strings.MissingAddress}`);
+      }
+    };
+
     return (
-      <TouchableOpacity onPress={onPress}>
+      <TouchableOpacity onPress={newOnPress}>
         <View
           style={{
             backgroundColor,

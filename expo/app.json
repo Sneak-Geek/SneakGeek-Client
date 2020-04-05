@@ -16,13 +16,16 @@
       "fallbackToCacheTimeout": 0
     },
     "assetBundlePatterns": ["**/*"],
-    "version": "0.2003.3",
+    "version": "0.2003.4",
     "ios": {
       "supportsTablet": false,
       "bundleIdentifier": "com.sneakgeek.client.expo",
-      "buildNumber": "6",
+      "buildNumber": "3",
       "config": {
         "usesNonExemptEncryption": false
+      },
+      "splash": {
+        "resizeMode": "cover"
       }
     },
     "facebookScheme": "fb1521812747994918",

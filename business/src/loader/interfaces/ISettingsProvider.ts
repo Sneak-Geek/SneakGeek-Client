@@ -29,5 +29,6 @@ export interface ISettingsProvider {
 export const SettingsKey = {
   LocalSettings: "LocalSettings",
   CurrentAccessToken: "CurrentAccessToken",
+  GhnShippingAddress: "GhnValidShippingAddress",
   RemoteSettings: "RemoteSettings"
 };

@@ -62,16 +62,19 @@ export const getHomeCatalogs = () => {
     const token = settings.getValue(SettingsKey.CurrentAccessToken);
 
     try {
-      const [Nike, Jordan, adidas, hot] = await Promise.all([
+      const [Nike, Jordan, adidas, hot, ranking, toppick, buynow] = await Promise.all([
         catalogService.getCatalogByTag(token, "nike"),
         catalogService.getCatalogByTag(token, "jordan"),
         catalogService.getCatalogByTag(token, "adidas"),
-        catalogService.getCatalogByTag(token, "hot")
+        catalogService.getCatalogByTag(token, "hot"),
+        catalogService.getCatalogByTag(token, "ranking"),
+        catalogService.getCatalogByTag(token, "toppick"),
+        catalogService.getCatalogByTag(token, "buynow")
       ]);
 
       dispatch(updateGetHomeCatalogsState({
         state: NetworkRequestState.SUCCESS,
-        data: { Nike, Jordan, adidas, hot }
+        data: { Nike, Jordan, adidas, hot, ranking, toppick, buynow }
       }));
     } catch (err) {
       dispatch(updateGetHomeCatalogsState({

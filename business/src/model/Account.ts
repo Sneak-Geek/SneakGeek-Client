@@ -1,4 +1,4 @@
-import { Profile } from "./Profile";
+import { Profile } from "./Profile"
 
 export type Account = {
     isVerified: boolean;

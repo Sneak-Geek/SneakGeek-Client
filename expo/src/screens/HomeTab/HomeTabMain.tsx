@@ -1,5 +1,5 @@
 import React from 'react';
-import { AppText } from '@screens/Shared';
+import { AppText, ImageRatioPreserved } from '@screens/Shared';
 import {
   StatusBar,
   SafeAreaView,
@@ -9,6 +9,7 @@ import {
   StyleSheet,
   Dimensions,
   FlatList,
+  TouchableWithoutFeedback,
 } from 'react-native';
 import { connect } from 'utilities';
 import { IAppState } from '@store/AppStore';
@@ -19,6 +20,69 @@ import { StackNavigationProp } from '@react-navigation/stack';
 import { RootStackParams } from 'navigations/RootStack';
 import RouteNames from 'navigations/RouteNames';
 import { TouchableOpacity } from 'react-native-gesture-handler';
+import { Avatar } from 'react-native-elements';
+
+const styles = StyleSheet.create({
+  hotShoeContainer: {
+    width: Dimensions.get('window').width,
+    flexDirection: 'column',
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginTop: 15,
+  },
+  hotShoeContentContainer: {
+    borderColor: themes.DisabledColor,
+    borderWidth: 1,
+    width: '90%',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    height: Dimensions.get('window').height * 0.3,
+    paddingBottom: 8,
+    borderRadius: 20,
+  },
+  shoeImage: {
+    flex: 1,
+    width: 250,
+    height: 200,
+    marginVertical: 5,
+  },
+  hotShoeTitle: {
+    textAlign: 'center',
+    maxWidth: '85%',
+  },
+  sectionTitle: {
+    marginTop: 15,
+    marginHorizontal: 15,
+  },
+  brandTitleContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    paddingHorizontal: 20,
+  },
+  catalogImage: {
+    borderTopWidth: 0.5,
+    borderBottomWidth: 0.5,
+    borderTopColor: themes.DisabledColor,
+    borderBottomColor: themes.DisabledColor,
+  },
+  rankingRootContainer: {
+    width: Dimensions.get('screen').width,
+    padding: 20,
+  },
+  shoeRankingContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'flex-start',
+    marginHorizontal: 20,
+    flex: 1,
+  },
+  rankingInnerContainer: {
+    borderWidth: 0.5,
+    borderColor: themes.AppDisabledColor,
+    borderRadius: 40,
+  },
+});
 
 type Props = {
   homeCatalogState: {
@@ -29,6 +93,9 @@ type Props = {
       Jordan: Catalog;
       adidas: Catalog;
       hot: Catalog;
+      ranking: Catalog;
+      toppick: Catalog;
+      buynow: Catalog;
     };
   };
   navigation: StackNavigationProp<RootStackParams, 'HomeTabMain'>;
@@ -47,20 +114,20 @@ type ShoeCardProps = {
     homeCatalogState: state.CatalogState.homepageCatalogState,
   }),
   (dispatch: Function) => ({
-    toggleLoadingIndicator: (isLoading: boolean, message: string) => {
+    toggleLoadingIndicator: (isLoading: boolean, message: string): void => {
       dispatch(toggleIndicator({ isLoading, message }));
     },
-    getHomepageCatalogs: () => {
+    getHomepageCatalogs: (): void => {
       dispatch(getHomeCatalogs());
     },
   }),
 )
 export class HomeTabMain extends React.Component<Props> {
-  public componentDidMount() {
+  public componentDidMount(): void {
     this.props.getHomepageCatalogs();
   }
 
-  public componentDidUpdate(prevProps: Props) {
+  public componentDidUpdate(prevProps: Props): void {
     const prevState = prevProps.homeCatalogState.state;
     const { homeCatalogState, toggleLoadingIndicator } = this.props;
 
@@ -93,8 +160,11 @@ export class HomeTabMain extends React.Component<Props> {
           <ScrollView showsVerticalScrollIndicator={false}>
             <View style={{ flex: 1, marginBottom: 15 }}>
               {this._renderTrendingShoes()}
+              {this._renderRanking()}
               {this._renderByBrand('Nike')}
+              {this._renderImageCatalog(homeCatalogState.catalogs.toppick)}
               {this._renderByBrand('adidas')}
+              {this._renderImageCatalog(homeCatalogState.catalogs.buynow)}
               {this._renderByBrand('Jordan')}
             </View>
           </ScrollView>
@@ -103,7 +173,69 @@ export class HomeTabMain extends React.Component<Props> {
     );
   }
 
-  private _renderTrendingShoes() {
+  private _renderImageCatalog(catalog: Catalog): JSX.Element {
+    return (
+      <View style={styles.catalogImage}>
+        <ImageRatioPreserved source={catalog.coverImage} />
+      </View>
+    );
+  }
+
+  private _renderRanking(): JSX.Element {
+    const ranking = this.props.homeCatalogState.catalogs.ranking;
+
+    return (
+      <View>
+        <AppText.Title2 style={styles.sectionTitle}>{ranking.title}</AppText.Title2>
+        <ScrollView horizontal={true} pagingEnabled={true}>
+          {this._renderRankingList(ranking.products.slice(0, 5), 1)}
+          {this._renderRankingList(ranking.products.slice(6, 11), 6)}
+        </ScrollView>
+      </View>
+    );
+  }
+
+  private _renderRankingList(products: Shoe[], startIndex: number): JSX.Element {
+    return (
+      <View style={styles.rankingRootContainer}>
+        <View style={styles.rankingInnerContainer}>
+          {products.map(
+            (shoe, index): JSX.Element => (
+              <TouchableWithoutFeedback
+                key={shoe._id}
+                onPress={(): void => this._navigateToProductDetail(shoe)}
+              >
+                <View style={styles.shoeRankingContainer}>
+                  <Avatar
+                    rounded
+                    title={(index + startIndex).toString()}
+                    size={'medium'}
+                    titleStyle={themes.TextStyle.body}
+                    overlayContainerStyle={{
+                      backgroundColor: themes.AppPrimaryColor,
+                    }}
+                  />
+                  <Image
+                    source={{ uri: shoe.imageUrl }}
+                    style={{ width: 90, aspectRatio: 1, marginHorizontal: 20 }}
+                    resizeMode={'contain'}
+                  />
+                  <AppText.Subhead
+                    style={{ flex: 1, flexWrap: 'wrap' }}
+                    numberOfLines={2}
+                  >
+                    {shoe.title}
+                  </AppText.Subhead>
+                </View>
+              </TouchableWithoutFeedback>
+            ),
+          )}
+        </View>
+      </View>
+    );
+  }
+
+  private _renderTrendingShoes(): JSX.Element {
     const hotCatalog = this.props.homeCatalogState.catalogs.hot;
     return (
       <View style={{ marginBottom: 20 }}>
@@ -112,9 +244,9 @@ export class HomeTabMain extends React.Component<Props> {
         </AppText.Title1>
         <FlatList
           horizontal={true}
-          keyExtractor={(itm, _) => itm._id}
+          keyExtractor={(itm, _): string => itm._id}
           data={hotCatalog.products}
-          renderItem={({ item }) => (
+          renderItem={({ item }): JSX.Element => (
             <HotShoeLarge
               shoe={item}
               onPress={this._navigateToProductDetail.bind(this, item)}
@@ -127,7 +259,7 @@ export class HomeTabMain extends React.Component<Props> {
     );
   }
 
-  private _renderByBrand(brand: 'Nike' | 'adidas' | 'Jordan') {
+  private _renderByBrand(brand: 'Nike' | 'adidas' | 'Jordan'): JSX.Element {
     const catalog = this.props.homeCatalogState.catalogs[brand];
     return (
       <View style={{ marginVertical: 10 }}>
@@ -142,11 +274,11 @@ export class HomeTabMain extends React.Component<Props> {
         </View>
         <FlatList
           horizontal={true}
-          keyExtractor={(itm, _) => itm._id}
+          keyExtractor={(itm, _): string => itm._id}
           data={catalog.products.slice(0, 10)}
           style={{ marginVertical: 20, paddingLeft: 20 }}
           showsHorizontalScrollIndicator={false}
-          renderItem={({ item }) => (
+          renderItem={({ item }): JSX.Element => (
             <HotShoeRegular
               shoe={item}
               onPress={this._navigateToProductDetail.bind(this, item)}
@@ -157,14 +289,14 @@ export class HomeTabMain extends React.Component<Props> {
     );
   }
 
-  private _navigateToProductDetail(shoe: Shoe) {
+  private _navigateToProductDetail(shoe: Shoe): void {
     this.props.navigation.push(RouteNames.Product.Name, {
       screen: RouteNames.Product.ProductDetail,
       params: { shoe },
     });
   }
 
-  private _seeMore(catalog: Catalog) {
+  private _seeMore(catalog: Catalog): void {
     this.props.navigation.push(RouteNames.Tab.HomeTab.SeeMore, { catalog });
   }
 }
@@ -208,43 +340,3 @@ const HotShoeRegular = ({ shoe, onPress }: ShoeCardProps): JSX.Element => (
     </View>
   </TouchableOpacity>
 );
-
-const styles = StyleSheet.create({
-  hotShoeContainer: {
-    width: Dimensions.get('window').width,
-    flexDirection: 'column',
-    alignItems: 'center',
-    justifyContent: 'center',
-    marginTop: 15,
-  },
-  hotShoeContentContainer: {
-    borderColor: themes.DisabledColor,
-    borderWidth: 1,
-    width: '90%',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    height: Dimensions.get('window').height * 0.3,
-    paddingBottom: 8,
-    borderRadius: 20,
-  },
-  shoeImage: {
-    flex: 1,
-    width: 250,
-    height: 200,
-    marginVertical: 5,
-  },
-  hotShoeTitle: {
-    textAlign: 'center',
-    maxWidth: '85%',
-  },
-  sectionTitle: {
-    marginTop: 15,
-    marginHorizontal: 15,
-  },
-  brandTitleContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    paddingHorizontal: 20,
-  },
-});

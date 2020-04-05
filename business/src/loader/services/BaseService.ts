@@ -1,9 +1,9 @@
-import { ApiClient } from "./ApiClient";
+import { ApiClient, Instance } from "./ApiClient";
 import { ObjectFactory, FactoryKeys } from "../kernel";
 import { IEnvVar } from "../interfaces";
 
 export abstract class BaseService {
-  protected apiClient: ApiClient.Instance;
+  protected apiClient: Instance;
 
   public constructor() {
     const env: IEnvVar = ObjectFactory.getObjectInstance<IEnvVar>(FactoryKeys.IEnvVar);

@@ -1,21 +1,21 @@
 import React from 'react';
 import { SafeAreaView, StyleSheet, View } from 'react-native';
 import { SizePricePicker } from '@screens/Shared/SizePricePicker';
-import { getService, connect } from 'utilities';
+import { getService, connect, getToken } from 'utilities';
 import {
   ISettingsProvider,
   FactoryKeys,
   SettingsKey,
   Shoe,
-  IShoeService,
 } from 'business';
 import { StackNavigationProp } from '@react-navigation/stack';
-import { RouteProp, StackActions } from '@react-navigation/native';
+import { RouteProp } from '@react-navigation/native';
 import { RootStackParams } from 'navigations/RootStack';
 import { ShoeHeaderSummary, BottomButton } from '@screens/Shared';
 import { strings, themes } from '@resources';
 import { toggleIndicator, showErrorNotification } from 'actions';
 import RouteNames from 'navigations/RouteNames';
+import { IOrderService } from 'business/src';
 
 const styles = StyleSheet.create({
   rootContainer: {
@@ -65,7 +65,7 @@ export class SizeSelection extends React.Component<Props, State> {
     };
   }
 
-  public componentDidMount() {
+  public componentDidMount(): void {
     this._getPriceMap();
   }
 
@@ -92,9 +92,8 @@ export class SizeSelection extends React.Component<Props, State> {
     );
   }
 
-  private async _getPriceMap() {
-    const settings = getService<ISettingsProvider>(FactoryKeys.ISettingsProvider);
-    const shoeService = getService<IShoeService>(FactoryKeys.IShoeService);
+  private async _getPriceMap(): Promise<void> {
+    const orderService = getService<IOrderService>(FactoryKeys.IOrderService);
 
     this.props.toggleLoading(true);
 
@@ -102,17 +101,18 @@ export class SizeSelection extends React.Component<Props, State> {
       const priceData: {
         minPrice: number;
         size: string;
-      }[] = await shoeService.getLowestSellPrices(
-        settings.getValue(SettingsKey.CurrentAccessToken),
-        this.shoe._id,
-      );
+      }[] = await orderService.getLowestSellPrices(getToken(), this.shoe._id);
 
       const priceMap = new Map<string, number>();
       priceData.forEach(({ minPrice, size }) => priceMap.set(size, minPrice));
 
       this.setState({ priceMap });
     } catch (error) {
-      this.props.showErrorMessage(strings.ErrorPleaseTryAgain);
+      const errorMessage =
+        error.message.indexOf(403) >= 0
+          ? strings.AccountNotVerifieid
+          : strings.ErrorPleaseTryAgain;
+      this.props.showErrorMessage(errorMessage);
     } finally {
       this.props.toggleLoading(false);
     }
@@ -121,6 +121,8 @@ export class SizeSelection extends React.Component<Props, State> {
   private _onSizeSelected(size: string): void {
     this.setState({ selectedSize: size }, () => {
       this.props.navigation.push(RouteNames.Order.BuyConfirmation, {
+        size,
+        minPrice: this.state.priceMap.get(size),
         shoe: this.shoe,
       });
     });

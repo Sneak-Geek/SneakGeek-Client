@@ -17,7 +17,8 @@ const RouteNames = {
     Name: 'Order',
     NewSellOrder: 'NewSellOrder',
     SizeSelection: 'OrderSizeSelection',
-    BuyConfirmation: 'OrderBuyConfirmation'
+    BuyConfirmation: 'OrderBuyConfirmation',
+    Payment: 'OrderPayment',
   },
   Tab: {
     Name: 'Tabs',
@@ -32,7 +33,10 @@ const RouteNames = {
     },
     TransactionTab: {
       Name: 'TransactionTab',
-      Main: 'TransactionTabMain'
+      Main: 'TransactionTabMain',
+      Buy: 'TransactionBuyOrder',
+      Sell: 'TransactionSellOrder',
+      Detail: 'TransactionDetail'
     },
     AccountTab: {
       Name: 'AccountTab',

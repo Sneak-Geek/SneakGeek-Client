@@ -3,7 +3,7 @@ import { Dispatch, AnyAction } from "redux";
 import { GetUserProfilePayload, NetworkRequestState } from "../payload";
 import { ObjectFactory, FactoryKeys } from "../loader/kernel";
 import { IAccountService, ISettingsProvider, SettingsKey } from "../loader/interfaces";
-import { Profile } from "../types";
+import { Profile } from "../model";
 
 export const ProfileActions = {
   UPDATE_STATE_GET_USER_PROFILE: "UPDATE_GET_USER_PROFILE",

@@ -4,5 +4,6 @@ export const images = {
   Facebook: require("../../assets/icons/facebook.png"),
   Google: require("../../assets/icons/google.png"),
   Email: require("../../assets/icons/email.png"),
-  Profile: require("../../assets/icons/profile.jpg")
+  Profile: require("../../assets/icons/profile.jpg"),
+  ImagePlaceholder: require("../../assets/icons/ImagePlaceholder.jpg")
 }

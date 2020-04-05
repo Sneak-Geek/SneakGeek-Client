@@ -5,7 +5,7 @@ import { AuthenticationStack } from './AuthenticationStack';
 import { TabStack } from './TabStack';
 import { NavigationContainer } from '@react-navigation/native';
 import { ProductStack } from './ProductStack';
-import { Shoe, Catalog } from 'business';
+import { Shoe, Catalog, SellOrder, PaymentType } from 'business';
 import { OrderStack } from './OrderStack';
 
 export type RootStackParams = {
@@ -15,7 +15,15 @@ export type RootStackParams = {
   SizeSelection: { shoe: Shoe };
   NewSellOrder: { shoe: Shoe };
   OrderSizeSelection: { shoe: Shoe };
-  OrderBuyConfirmation: { shoe: Shoe }
+  OrderBuyConfirmation: { shoe: Shoe; size: string; minPrice: number };
+  OrderPayment: {
+    sellOrder: SellOrder;
+    paymentType: PaymentType;
+  };
+  TransactionSellOrder: undefined;
+  TransactionDetail: {
+    sellOrder: SellOrder;
+  };
   Login: undefined;
   EmailSignUp: undefined;
   EmailLogin: undefined;

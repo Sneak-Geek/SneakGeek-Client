@@ -2,7 +2,7 @@ import { ISettingsProvider, SettingsKey, ObjectFactory, FactoryKeys, ISettingSer
 import { AsyncStorage } from "react-native";
 
 export class SettingsProvider implements ISettingsProvider {
-  private _isLoaded: boolean = false;
+  private _isLoaded = false;
   private _storageKey: string = SettingsKey.LocalSettings;
   private _values: { [key: string]: string } = {};
 

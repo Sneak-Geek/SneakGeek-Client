@@ -20,6 +20,31 @@ export interface Props<T> {
   onSelectPickerCancel: () => void;
 }
 
+const styles = StyleSheet.create({
+  modalContainer: {
+    backgroundColor: themes.AppModalBackground,
+    flex: 1,
+    position: 'relative',
+  },
+
+  pickerContainer: {
+    position: 'absolute',
+    bottom: 0,
+    left: 0,
+    right: 0,
+    backgroundColor: 'white',
+  },
+
+  pickerActionButtons: {
+    flex: 1,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    paddingHorizontal: 20,
+    marginTop: 10,
+  },
+});
+
 export class BottomPicker<T> extends React.PureComponent<Props<T>, State<T>> {
   constructor(props: Props<T>) {
     super(props);
@@ -29,6 +54,10 @@ export class BottomPicker<T> extends React.PureComponent<Props<T>, State<T>> {
   }
 
   public render(): JSX.Element {
+    if (!this.props.visible){
+      return null;
+    }
+
     return (
       <Modal
         presentationStyle={'overFullScreen'}
@@ -74,28 +103,3 @@ export class BottomPicker<T> extends React.PureComponent<Props<T>, State<T>> {
     );
   }
 }
-
-const styles = StyleSheet.create({
-  modalContainer: {
-    backgroundColor: themes.AppModalBackground,
-    flex: 1,
-    position: 'relative',
-  },
-
-  pickerContainer: {
-    position: 'absolute',
-    bottom: 0,
-    left: 0,
-    right: 0,
-    backgroundColor: 'white',
-  },
-
-  pickerActionButtons: {
-    flex: 1,
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    paddingHorizontal: 20,
-    marginTop: 10,
-  },
-});
