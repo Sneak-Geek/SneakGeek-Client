@@ -15,13 +15,14 @@ export const themes = {
   AppDisabledColor: '#DADADA',
   AppSellColor: '#E2603F',
   AppPendingColor: '#E2C115',
+  AppBackgroundColor: '#f5f5f7',
   ButtonShadow: Platform.select({
     android: { elevation: 5 },
     ios: {
       shadowColor: '#000',
       shadowOffset: { width: 0.5, height: 0.5 },
-      shadowOpacity: 0.3,
-      shadowRadius: 1,
+      shadowOpacity: 0.1,
+      shadowRadius: 0.5,
     }
   }),
   TextStyle: StyleSheet.create({

@@ -1,4 +1,4 @@
-import { IOrderService, PaymentType } from "../interfaces";
+import { IOrderService, PaymentType, OrderType } from "../interfaces";
 import { BaseService } from "./BaseService";
 import { SellOrder, BuyOrder, Transaction } from "../../model";
 
@@ -75,8 +75,8 @@ export class OrderService extends BaseService implements IOrderService {
     return response.data;
   }
 
-  public async getUserOrders(token: string, type: "buy" | "sell"): Promise<Array<BuyOrder> | Array<SellOrder>> {
-    const response = await this.apiClient.getInstance().get(`/order/my?type=${type}`, {
+  public async getUserOrders(token: string, type: OrderType): Promise<Array<BuyOrder> | Array<SellOrder>> {
+    const response = await this.apiClient.getInstance().get(`/order?orderType=${type}`, {
       headers: {
         authorization: token
       }

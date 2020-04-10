@@ -1,16 +1,28 @@
 import { SellOrder } from "./SellOrder";
 import { BuyOrder } from "./BuyOrder";
-import { TransactionStatus } from "../assets";
+import { PaymentStatus, TrackingStatus } from "../assets";
 
 export type Transaction = {
-  tracking: string;
-  buyOrder: string | BuyOrder;
-  sellOrder: string | SellOrder;
-  feeBreakdown: {
-    totalFee: number,
-    shippingFeeFromSellerToSnkg: number,
-    shippingFeeFromSnkgToBuyer: number,
-    productPrice: number
+  tracking?: {
+    ghnDeliverFromSellerCode: string;
+    ghnDeliverToBuyerCode: string;
+    trackingStatusHistory: [
+      {
+        status: TrackingStatus;
+        expectedDeliveryDate?: Date;
+      }
+    ];
   };
-  status: TransactionStatus;
+  feeBreakdown: {
+    totalFee: number;
+    shippingFeeFromSellerToSnkg: number;
+    shippingFeeFromSnkgToBuyer: number;
+    productPrice: number;
+  };
+  paymentStatus: {
+    status: PaymentStatus;
+    message?: string;
+  };
+  sellOrder: string | SellOrder;
+  buyOrder: string | BuyOrder;
 }

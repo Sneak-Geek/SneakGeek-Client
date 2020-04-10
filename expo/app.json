@@ -16,11 +16,11 @@
       "fallbackToCacheTimeout": 0
     },
     "assetBundlePatterns": ["**/*"],
-    "version": "0.2003.4",
+    "version": "0.2004.2",
     "ios": {
       "supportsTablet": false,
       "bundleIdentifier": "com.sneakgeek.client.expo",
-      "buildNumber": "3",
+      "buildNumber": "1",
       "config": {
         "usesNonExemptEncryption": false
       },

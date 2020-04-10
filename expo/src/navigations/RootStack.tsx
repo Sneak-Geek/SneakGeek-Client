@@ -5,10 +5,11 @@ import { AuthenticationStack } from './AuthenticationStack';
 import { TabStack } from './TabStack';
 import { NavigationContainer } from '@react-navigation/native';
 import { ProductStack } from './ProductStack';
-import { Shoe, Catalog, SellOrder, PaymentType } from 'business';
+import { Shoe, Catalog, SellOrder, PaymentType, BuyOrder, OrderType } from 'business';
 import { OrderStack } from './OrderStack';
 
 export type RootStackParams = {
+  ProductRequest: undefined;
   ProductDetail: { shoe: Shoe };
   ProductNewReview: { shoe: Shoe };
   ProductAllReviews: { shoe: Shoe };
@@ -21,8 +22,10 @@ export type RootStackParams = {
     paymentType: PaymentType;
   };
   TransactionSellOrder: undefined;
+  TransactionBuyOrder: undefined;
   TransactionDetail: {
-    sellOrder: SellOrder;
+    order: SellOrder | BuyOrder;
+    orderType: OrderType;
   };
   Login: undefined;
   EmailSignUp: undefined;

@@ -5427,6 +5427,13 @@ react-is@^16.12.0, react-is@^16.7.0, react-is@^16.8.1, react-is@^16.8.4, react-i
   resolved "https://registry.yarnpkg.com/react-is/-/react-is-16.13.0.tgz#0f37c3613c34fe6b37cd7f763a0d6293ab15c527"
   integrity sha512-GFMtL0vHkiBv9HluwNZTggSn/sCyEt9n02aM0dSAjGGyqyNlAyftYm4phPxdvCigG15JreC5biwxCgTAJZ7yAA==
 
+react-native-collapsible@^1.5.2:
+  version "1.5.2"
+  resolved "https://registry.yarnpkg.com/react-native-collapsible/-/react-native-collapsible-1.5.2.tgz#544616dc04a71870508dc707049544a805402993"
+  integrity sha512-pmETueIStEhKY93yO/nh+G9jyMZaZta9xyUO51KP+p/tefXDtDG8Ok9QELld0Fk/kiDOldvG5Tjy+JcdS8Sdxw==
+  dependencies:
+    prop-types "^15.6.2"
+
 react-native-elements@^1.2.7:
   version "1.2.7"
   resolved "https://registry.yarnpkg.com/react-native-elements/-/react-native-elements-1.2.7.tgz#1eca2db715c41722aeb67aea62bd2a4621adb134"
@@ -5495,6 +5502,11 @@ react-native-tab-view@^2.13.0:
   version "2.13.0"
   resolved "https://registry.yarnpkg.com/react-native-tab-view/-/react-native-tab-view-2.13.0.tgz#23037aa43b0f8f682ddc20415a4baaaf6f82ae8f"
   integrity sha512-AeYbp/u91+D/C9+PmVEPBmFb3ixv8IkLMC3Sc5MajJ/fg0Zl3Of+BcEknBvTnKoe7Fj2y8+Qf9zorBbh5xzh4A==
+
+react-native-timeline-flatlist@^0.7.1:
+  version "0.7.1"
+  resolved "https://registry.yarnpkg.com/react-native-timeline-flatlist/-/react-native-timeline-flatlist-0.7.1.tgz#30de567cfb5ea200e66383f0b85e306d6bc503f9"
+  integrity sha512-7lr2xCX4UoOPY/U8efDk8JJEVIjAPVSSjybS2LFA28SKg2freZJOf1BCi0zvEDEh+ybRSMuRfb+sv0dou0mk4w==
 
 react-native-view-shot@3.0.2:
   version "3.0.2"

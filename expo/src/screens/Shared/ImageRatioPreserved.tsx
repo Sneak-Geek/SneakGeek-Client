@@ -39,11 +39,13 @@ export const ImageRatioPreserved = (props: {
       source={{ uri: props.source }}
       progressiveRenderingEnabled={true}
       loadingIndicatorSource={images.ImagePlaceholder}
-      style={{
-        width: windowWidth,
-        height: windowWidth / aspectRatio,
-        ...props.style
-      }}
+      style={[
+        {
+          width: windowWidth,
+          height: windowWidth / aspectRatio,
+        },
+        props.style,
+      ]}
       resizeMode={'cover'}
     />
   );
