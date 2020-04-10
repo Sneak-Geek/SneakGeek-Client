@@ -1,11 +1,11 @@
 import React from 'react';
 import {
   NetworkRequestState,
-  SellOrder,
   PriceData,
   OrderStatus,
   getOrders,
   Shoe,
+  BuyOrder,
 } from 'business';
 import { connect, toCurrencyString } from 'utilities';
 import { IAppState } from '@store/AppStore';
@@ -37,9 +37,9 @@ const styles = StyleSheet.create({
 });
 
 type Props = {
-  sellOrdersState: {
+  buyOrderState: {
     state: NetworkRequestState;
-    orders: SellOrder[];
+    orders: BuyOrder[];
     error?: unknown;
   };
 
@@ -47,24 +47,24 @@ type Props = {
   getOrders: () => void;
 
   // navigation
-  navigation: StackNavigationProp<RootStackParams, 'TransactionSellOrder'>;
+  navigation: StackNavigationProp<RootStackParams, 'TransactionBuyOrder'>;
 };
 
 @connect(
   (state: IAppState) => ({
-    sellOrdersState: state.OrderState.sellOrdersState,
+    buyOrderState: state.OrderState.buyOrdersState,
   }),
   (dispatch: Function) => ({
-    getOrders: (): void => dispatch(getOrders('SellOrder')),
+    getOrders: (): void => dispatch(getOrders('BuyOrder')),
   }),
 )
-export class SellOrders extends React.Component<Props> {
+export class BuyOrders extends React.Component<Props> {
   public componentDidMount(): void {
     this.props.getOrders();
   }
 
   public render(): JSX.Element {
-    const { orders, state } = this.props.sellOrdersState;
+    const { orders, state } = this.props.buyOrderState;
 
     if (state === NetworkRequestState.REQUESTING) {
       return <ShimmerLoadList />;
@@ -95,8 +95,8 @@ export class SellOrders extends React.Component<Props> {
     );
   }
 
-  private _renderOrder(order: SellOrder): JSX.Element {
-    const shoe = order.shoeId as Shoe;
+  private _renderOrder(order: BuyOrder): JSX.Element {
+    const shoe = order.shoe as Shoe;
     let status: string;
     let color: string;
 
@@ -134,7 +134,7 @@ export class SellOrders extends React.Component<Props> {
             <AppText.Subhead style={{ marginBottom: 5 }}>
               {strings.Price}:{' '}
               <AppText.Body>
-                {toCurrencyString((order.sellNowPrice as PriceData).price)}
+                {toCurrencyString((order.buyPrice as PriceData).price)}
               </AppText.Body>
             </AppText.Subhead>
             <AppText.Subhead style={{ marginBottom: 5 }}>
@@ -150,10 +150,10 @@ export class SellOrders extends React.Component<Props> {
     );
   }
 
-  private _onOrderPress(order: SellOrder): void {
+  private _onOrderPress(order: BuyOrder): void {
     this.props.navigation.navigate(RouteNames.Tab.TransactionTab.Detail, {
       order: order,
-      orderType: "SellOrder"
+      orderType: "BuyOrder"
     });
   }
 }

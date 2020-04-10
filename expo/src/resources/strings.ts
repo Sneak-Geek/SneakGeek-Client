@@ -79,5 +79,7 @@ export const strings = {
   Status: 'Tình trạng',
   TransactionCanceled: 'Đơn hàng bị huỷ',
   TransactionPending: 'Đang xác nhận',
-  TransactionProcessed: 'Đã thanh toán'
+  TransactionProcessed: 'Đã thanh toán',
+  ProductNotFound: 'Không tìm thấy sản phẩm bạn muốn?',
+  RequestNewProduct: 'Yêu cầu sản phẩm'
 }

@@ -10,13 +10,16 @@ import {
   PriceData,
   IOrderService,
   FactoryKeys,
-  TransactionStatus,
+  PaymentStatus,
   OrderStatus,
+  BuyOrder,
+  OrderType,
 } from 'business';
-import { strings } from '@resources';
+import { strings, themes } from '@resources';
 import { ScrollView } from 'react-native-gesture-handler';
 import { toCurrencyString, getService, getToken, connect } from 'utilities';
 import { toggleIndicator } from 'actions';
+import Timeline from 'react-native-timeline-flatlist';
 
 type Props = {
   route: RouteProp<RootStackParams, 'TransactionDetail'>;
@@ -35,11 +38,13 @@ type State = {
   }),
 )
 export class TransactionDetail extends React.Component<Props, State> {
-  private sellOrder: SellOrder;
+  private order: SellOrder | BuyOrder;
+  private orderType: OrderType;
 
   public constructor(props: Props) {
     super(props);
-    this.sellOrder = this.props.route.params.sellOrder;
+    this.order = this.props.route.params.order;
+    this.orderType = this.props.route.params.orderType;
     this.state = {
       transaction: null,
     };
@@ -57,30 +62,39 @@ export class TransactionDetail extends React.Component<Props, State> {
     return (
       <SafeAreaView style={{ flex: 1 }}>
         <View style={{ flex: 1 }}>
-          <ShoeHeaderSummary shoe={this.sellOrder.shoeId as Shoe} />
-          <ScrollView style={{ flex: 1, backgroundColor: 'white', padding: 20 }}>
+          <ShoeHeaderSummary shoe={this._getShoe()} />
+          <ScrollView
+            style={{
+              flex: 1,
+              backgroundColor: 'white',
+              padding: 20,
+              paddingBottom: 40,
+            }}
+          >
             <TitleContentDescription
               emphasizeTitle={true}
               title={strings.Price}
-              content={toCurrencyString(
-                (this.sellOrder.sellNowPrice as PriceData).price,
-              )}
+              content={toCurrencyString(this._getShoePrice().price)}
             />
             <TitleContentDescription
               emphasizeTitle={true}
               title={strings.ShoeSize}
-              content={this.sellOrder.shoeSize}
+              content={this.order.shoeSize}
             />
-            <TitleContentDescription
-              emphasizeTitle={true}
-              title={strings.Description}
-              content={this._getProductDescription()}
-            />
+            {this.orderType === 'SellOrder' && (
+              <TitleContentDescription
+                emphasizeTitle={true}
+                title={strings.Description}
+                content={this._getProductDescription()}
+              />
+            )}
             {this._shouldGetTransaction() && (
               <TitleContentDescription
                 emphasizeTitle={true}
                 title={strings.Status}
                 content={this._getTransactionStatus()}
+                renderCollapsibleIndicator={true}
+                renderCollapsibleContent={this._renderTimeline.bind(this)}
               />
             )}
           </ScrollView>
@@ -89,8 +103,24 @@ export class TransactionDetail extends React.Component<Props, State> {
     );
   }
 
+  private _getShoe(): Shoe {
+    return this.orderType === 'BuyOrder'
+      ? ((this.order as BuyOrder).shoe as Shoe)
+      : ((this.order as SellOrder).shoeId as Shoe);
+  }
+
+  private _getShoePrice(): PriceData {
+    return this.orderType === 'BuyOrder'
+      ? ((this.order as BuyOrder).buyPrice as PriceData)
+      : ((this.order as SellOrder).sellNowPrice as PriceData);
+  }
+
   private _getProductDescription(): string {
-    const { isNewShoe, productCondition } = this.sellOrder;
+    if (this.orderType === 'BuyOrder') {
+      return null;
+    }
+
+    const { isNewShoe, productCondition } = this.order as SellOrder;
 
     const condition = isNewShoe ? strings.NewCondition : strings.OldCondition;
     const tainted = productCondition.isTainted ? strings.Tainted : '';
@@ -102,13 +132,13 @@ export class TransactionDetail extends React.Component<Props, State> {
   }
 
   private _getTransactionStatus(): string {
-    const { status } = this.state.transaction;
-    switch (status) {
-      case TransactionStatus.CANCELED:
+    const { paymentStatus } = this.state.transaction;
+    switch (paymentStatus.status) {
+      case PaymentStatus.CANCELED:
         return strings.Cancel;
-      case TransactionStatus.PENDING:
+      case PaymentStatus.PENDING:
         return strings.TransactionPending;
-      case TransactionStatus.PROCESSED:
+      case PaymentStatus.PROCESSED:
         return strings.TransactionProcessed;
       default:
         return '';
@@ -121,7 +151,7 @@ export class TransactionDetail extends React.Component<Props, State> {
       const orderService = getService<IOrderService>(FactoryKeys.IOrderService);
       const transaction = await orderService.getTransactionBySellOrder(
         getToken(),
-        this.sellOrder._id,
+        this.order._id,
       );
 
       this.setState({ transaction });
@@ -133,6 +163,48 @@ export class TransactionDetail extends React.Component<Props, State> {
   }
 
   private _shouldGetTransaction(): boolean {
-    return this.sellOrder.status === OrderStatus.COMPLETED;
+    return this.order.status === OrderStatus.COMPLETED;
+  }
+
+  /**
+   * Potential warning: This will show a warning that VirtualizedLists
+   * should never be nested inside plain ScrollView.
+   *
+   * FlatLists inside of ScrollViews with the same direction
+   * will render all of the items at once and can’t be virtualized.
+   * So you can have a FlatList inside a ScrollView,
+   * but all the performance benefits will be worthless as they’re not working.
+   *
+   * Given the number of data is limited, this will not cause much performance issue
+   */
+  private _renderTimeline(): JSX.Element {
+    return (
+      <View>
+        <Timeline
+          data={this._getShippingData()}
+          lineColor={themes.AppPrimaryColor}
+          circleColor={themes.AppPrimaryColor}
+          titleStyle={themes.TextStyle.body}
+          innerCircle={'dot'}
+          timeStyle={themes.TextStyle.subhead}
+          descriptionStyle={themes.TextStyle.subhead}
+          options={{
+            style: { marginBottom: 20 },
+          }}
+        />
+      </View>
+    );
+  }
+
+  private _getShippingData(): Array<any> {
+    // TODO: Return with real shipping data
+    return [
+      { time: '9:00', title: 'Event 1', description: 'Event 1' },
+      { time: '10:00', title: 'Event 2', description: 'Event 2' },
+      { time: '10:30', title: 'Event 3', description: 'Event 3' },
+      { time: '9:00', title: 'Event 1', description: 'Event 1' },
+      { time: '10:00', title: 'Event 2', description: 'Event 2' },
+      { time: '10:30', title: 'Event 3', description: 'Event 3' },
+    ];
   }
 }

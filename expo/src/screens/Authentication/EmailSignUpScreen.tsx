@@ -32,13 +32,13 @@ type Props = {
     accountState: state.UserState.accountState,
   }),
   (dispatch: Function) => ({
-    toggleLoadingIndicator: (isLoading: boolean, message?: string) => {
+    toggleLoadingIndicator: (isLoading: boolean, message?: string): void => {
       dispatch(toggleIndicator({ isLoading, message }));
     },
-    showErrorNotification: (message: string) => {
+    showErrorNotification: (message: string): void => {
       dispatch(showErrorNotification(message));
     },
-    emailSignUp: (email: string, password: string) => {
+    emailSignUp: (email: string, password: string): void => {
       dispatch(authenticateWithEmail(email, password, true));
     },
   }),
@@ -52,7 +52,7 @@ export class EmailSignUpScreen extends React.Component<Props, State> {
     };
   }
 
-  public componentDidUpdate(prevProps: Props) {
+  public componentDidUpdate(prevProps: Props): void {
     const {
       accountState,
       showErrorNotification,
@@ -109,7 +109,7 @@ export class EmailSignUpScreen extends React.Component<Props, State> {
     );
   }
 
-  private _renderPassword() {
+  private _renderPassword(): JSX.Element {
     const { password } = this.state;
     return (
       <View style={styles.inputContainer}>
@@ -117,7 +117,7 @@ export class EmailSignUpScreen extends React.Component<Props, State> {
           style={styles.input}
           placeholder={strings.Password}
           value={password}
-          onChangeText={password => this.setState({ password })}
+          onChangeText={(password): void => this.setState({ password })}
           selectionColor={themes.AppPrimaryColor}
           secureTextEntry={true}
           autoCapitalize={'none'}
@@ -127,13 +127,12 @@ export class EmailSignUpScreen extends React.Component<Props, State> {
   }
 
   private _renderTermsOfService(): JSX.Element {
-    const { navigation } = this.props;
     return (
       <AppText.Body style={styles.forgotContainer}>
         {`${strings.TermsOfServiceAgreement}. `}
         <AppText.Body
           style={{ textDecorationLine: 'underline' }}
-          onPress={() => Browser.openBrowserAsync('https://google.com')}
+          onPress={(): Promise<any> => Browser.openBrowserAsync('https://google.com')}
         >
           {`${strings.SeeMore}`}
         </AppText.Body>

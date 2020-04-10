@@ -20,7 +20,9 @@ import {
   SellOrders,
   TransactionTabMain,
   TransactionDetail,
+  BuyOrders,
 } from '@screens/TransactionTab';
+import { ProductRequest } from '@screens/SearchTab';
 
 const Tab = createBottomTabNavigator();
 
@@ -92,10 +94,22 @@ const HomeTab = (): JSX.Element => (
 
 const SearchStack = createStackNavigator();
 const SearchTab = (): JSX.Element => (
-  <SearchStack.Navigator headerMode={'none'}>
+  <SearchStack.Navigator>
     <SearchStack.Screen
       name={RouteNames.Tab.SearchTab.Main}
       component={SearchTabMain}
+      options={{
+        headerShown: false,
+        headerTransparent: true,
+      }}
+    />
+    <SearchStack.Screen
+      name={RouteNames.Tab.SearchTab.ProductRequest}
+      component={ProductRequest}
+      options={{
+        ...themes.headerStyle,
+        title: strings.RequestNewProduct,
+      }}
     />
   </SearchStack.Navigator>
 );
@@ -105,7 +119,7 @@ const TopTab = createMaterialTopTabNavigator();
 const TransactionTopTabs = (): JSX.Element => (
   <TopTab.Navigator tabBarOptions={themes.TabTopHeader}>
     <TopTab.Screen
-      component={TransactionTabMain}
+      component={BuyOrders}
       name={RouteNames.Tab.TransactionTab.Buy}
       options={{
         title: strings.BuyHistory,

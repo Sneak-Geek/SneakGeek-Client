@@ -106,7 +106,7 @@ export class Payment extends React.Component<Props, State> {
       );
       this.setState({ paymentUrl });
     } catch (error) {
-      console.log(`Error`, error);
+      console.warn(JSON.stringify(error, null, 2));
     } finally {
       this.props.toggleLoading(false);
     }
@@ -122,7 +122,12 @@ export class Payment extends React.Component<Props, State> {
           <View style={[styles.header, { height: headerHeight + top }]}>
             <View style={{ width: themes.IconSize, aspectRatio: 1 }} />
             <AppText.Title3>{title}</AppText.Title3>
-            <Icon name={'x'} type={'feather'} size={themes.IconSize} />
+            <Icon
+              name={'x'}
+              type={'feather'}
+              size={themes.IconSize}
+              onPress={(): void => this.props.navigation.goBack()}
+            />
           </View>
         )}
       </HeaderHeightContext.Consumer>

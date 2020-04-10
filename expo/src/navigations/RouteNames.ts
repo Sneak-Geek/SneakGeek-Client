@@ -29,7 +29,8 @@ const RouteNames = {
     },
     SearchTab: {
       Name: 'SearchTab',
-      Main: 'SearchTabMain'
+      Main: 'SearchTabMain',
+      ProductRequest: 'ProductRequest'
     },
     TransactionTab: {
       Name: 'TransactionTab',

@@ -1,5 +1,5 @@
 import React from 'react';
-import { ColumnShoeCard } from '@screens/Shared';
+import { ColumnShoeCard, AppText } from '@screens/Shared';
 import {
   Image,
   View,
@@ -8,6 +8,9 @@ import {
   Keyboard,
   EmitterSubscription,
   Dimensions,
+  LayoutChangeEvent,
+  TouchableWithoutFeedback,
+  Modal,
 } from 'react-native';
 import { SafeAreaConsumer } from 'react-native-safe-area-context';
 import { SearchBar, Icon, ListItem, Button } from 'react-native-elements';
@@ -16,6 +19,7 @@ import { IShoeService, ObjectFactory, FactoryKeys, Shoe } from 'business';
 import { ScrollView, FlatList } from 'react-native-gesture-handler';
 import { StackNavigationProp } from '@react-navigation/stack';
 import RouteNames from 'navigations/RouteNames';
+import { RootStackParams } from 'navigations/RootStack';
 
 const styles = StyleSheet.create({
   rootContainer: { backgroundColor: 'white', flex: 1 },
@@ -39,13 +43,11 @@ const styles = StyleSheet.create({
   },
   pageContainer: {
     flex: 1,
-    position: 'relative',
     backgroundColor: 'white',
     flexDirection: 'column',
   },
   dropDownContainer: {
     position: 'absolute',
-    top: 0,
     left: 0,
     right: 0,
     maxHeight: Dimensions.get('window').height / 3,
@@ -64,10 +66,25 @@ const styles = StyleSheet.create({
     width: 60,
     height: 40,
   },
+  productNotFound: {
+    position: 'absolute',
+    bottom: 0,
+    left: 0,
+    right: 0,
+    paddingHorizontal: 20,
+    height: (themes.ButtonHeight * 2) / 3,
+    borderTopColor: themes.AppPrimaryColor,
+    borderBottomColor: themes.AppPrimaryColor,
+    borderBottomWidth: 0.5,
+    borderTopWidth: 0.5,
+    justifyContent: 'center',
+    backgroundColor: 'white',
+    zIndex: 100,
+  },
 });
 
 type Props = {
-  navigation: StackNavigationProp<any>;
+  navigation: StackNavigationProp<RootStackParams, 'SearchTabMain'>;
 };
 
 type State = {
@@ -77,6 +94,8 @@ type State = {
   showDropDown: boolean;
   currentSearchPage: number;
   shouldSearchScrollEnd: boolean;
+  searchBarYLocation?: number;
+  filterVisible: boolean;
 };
 
 export class SearchTabMain extends React.Component<Props, State> {
@@ -86,22 +105,23 @@ export class SearchTabMain extends React.Component<Props, State> {
   private _keyboardHideListener: EmitterSubscription;
   private _hotKeyWords = ['Nike', 'adidas', 'Jordan', 'Off-White'];
 
-  state = {
+  state: State = {
     searchText: '',
     isSearching: false,
     shoes: [],
     showDropDown: false,
     currentSearchPage: 0,
     shouldSearchScrollEnd: true,
+    filterVisible: false,
   };
 
-  public componentDidMount() {
+  public componentDidMount(): void {
     this._keyboardHideListener = Keyboard.addListener('keyboardDidHide', () => {
       this.state.showDropDown && this.setState({ showDropDown: false });
     });
   }
 
-  public componentWillUnmount() {
+  public componentWillUnmount(): void {
     this._keyboardHideListener.remove();
   }
 
@@ -111,11 +131,10 @@ export class SearchTabMain extends React.Component<Props, State> {
         {(insets): JSX.Element => (
           <View style={[styles.rootContainer, { paddingTop: insets.top }]}>
             {this._renderSearchHeader()}
-            <View style={styles.pageContainer}>
-              {this._renderSearchDropDown()}
-              {this._renderHotKeywords()}
-              {this._renderSearchResults()}
-            </View>
+            {this._renderSearchDropDown(insets.top)}
+            <View style={styles.pageContainer}>{this._renderSearchResults()}</View>
+            {this._renderProductRequest()}
+            {this._renderFilterModal()}
           </View>
         )}
       </SafeAreaConsumer>
@@ -124,30 +143,40 @@ export class SearchTabMain extends React.Component<Props, State> {
 
   private _renderSearchHeader(): JSX.Element {
     return (
-      <View style={styles.searchBarRoot}>
-        <SearchBar
-          placeholder={strings.SearchTab}
-          lightTheme={true}
-          round={true}
-          value={this.state.searchText}
-          containerStyle={styles.searchContainer}
-          inputContainerStyle={styles.searchInputContainer}
-          searchIcon={{ size: themes.IconSize, name: 'search' }}
-          inputStyle={themes.TextStyle.body}
-          onChangeText={this._search.bind(this)}
-          onCancel={() =>
-            this.setState({ showDropDown: false, shouldSearchScrollEnd: true })
-          }
-          onClear={() =>
+      <View>
+        <View
+          style={styles.searchBarRoot}
+          onLayout={(event: LayoutChangeEvent): void =>
             this.setState({
-              showDropDown: false,
-              shoes: [],
-              shouldSearchScrollEnd: true,
+              searchBarYLocation: event.nativeEvent.layout.height,
             })
           }
-          onSubmitEditing={() => this.setState({ showDropDown: false })}
-        />
-        <Icon name={'sort'} size={themes.IconSize} />
+        >
+          <SearchBar
+            placeholder={strings.SearchTab}
+            lightTheme={true}
+            round={true}
+            value={this.state.searchText}
+            containerStyle={styles.searchContainer}
+            inputContainerStyle={styles.searchInputContainer}
+            searchIcon={{ size: themes.IconSize, name: 'search' }}
+            inputStyle={themes.TextStyle.body}
+            onChangeText={this._search.bind(this)}
+            onCancel={(): void =>
+              this.setState({ showDropDown: false, shouldSearchScrollEnd: true })
+            }
+            onClear={(): void =>
+              this.setState({
+                showDropDown: false,
+                shoes: [],
+                shouldSearchScrollEnd: true,
+              })
+            }
+            onSubmitEditing={(): void => this.setState({ showDropDown: false })}
+          />
+          <Icon name={'sort'} size={themes.IconSize} />
+        </View>
+        {this._renderHotKeywords()}
       </View>
     );
   }
@@ -170,7 +199,16 @@ export class SearchTabMain extends React.Component<Props, State> {
                 themes.TextStyle.body,
                 { color: themes.AppSecondaryColor },
               ]}
-              onPress={() => {}}
+              onPress={(): void =>
+                this.setState(
+                  {
+                    searchText: k,
+                  },
+                  () => {
+                    this._search(k);
+                  },
+                )
+              }
             />
           ))}
         </View>
@@ -178,12 +216,12 @@ export class SearchTabMain extends React.Component<Props, State> {
     );
   }
 
-  private _renderSearchDropDown(): JSX.Element {
-    if (!this.state.showDropDown) {
+  private _renderSearchDropDown(topInset: number): JSX.Element {
+    if (!this.state.showDropDown || !this.state.searchBarYLocation) {
       return null;
     }
 
-    const renderLeftAvatar = (s: Shoe) => (
+    const renderLeftAvatar = (s: Shoe): JSX.Element => (
       <Image
         source={{ uri: s.imageUrl }}
         style={styles.thumbnail}
@@ -192,7 +230,12 @@ export class SearchTabMain extends React.Component<Props, State> {
     );
 
     return (
-      <View style={styles.dropDownContainer}>
+      <View
+        style={[
+          styles.dropDownContainer,
+          { top: this.state.searchBarYLocation + topInset },
+        ]}
+      >
         {this.state.isSearching && (
           <View style={{ marginVertical: 20 }}>
             <ActivityIndicator />
@@ -222,16 +265,21 @@ export class SearchTabMain extends React.Component<Props, State> {
     }
 
     return (
-      <View onTouchStart={() => Keyboard.dismiss()}>
+      <View onTouchStart={(): void => Keyboard.dismiss()}>
         <FlatList
           data={this.state.shoes}
-          keyExtractor={(item: Shoe, _: number) => item._id}
-          renderItem={({ item }) => (
-            <ColumnShoeCard shoe={item} onPress={() => this._goToProduct(item)} />
+          keyExtractor={(item: Shoe): string => item._id}
+          renderItem={({ item }): JSX.Element => (
+            <ColumnShoeCard
+              shoe={item}
+              onPress={(): void => this._goToProduct(item)}
+            />
           )}
           columnWrapperStyle={{ flex: 1, justifyContent: 'space-around' }}
           numColumns={2}
-          onEndReached={_ => this._search(this.state.searchText, true)}
+          onEndReached={(): Promise<void> =>
+            this._search(this.state.searchText, true)
+          }
           style={{ marginHorizontal: 5 }}
         />
         {this.state.isSearching && <ActivityIndicator size={'small'} />}
@@ -239,46 +287,63 @@ export class SearchTabMain extends React.Component<Props, State> {
     );
   }
 
-  private _search(text: string, scrollEnd: boolean = false): void {
+  private async _search(text: string, scrollEnd = false): Promise<void> {
     const {
       searchText,
       currentSearchPage,
       shoes,
       shouldSearchScrollEnd,
     } = this.state;
-    const shouldSearch = text.length > searchText.length && text.length >= 3;
+    const shouldSearch = text.length >= searchText.length && text.length >= 3;
 
-    this.setState(
-      {
-        showDropDown: shouldSearch,
-        searchText: text,
-        isSearching: shouldSearch,
-        currentSearchPage: currentSearchPage + 1,
-      },
-      async () => {
-        if (shouldSearch || (scrollEnd && shouldSearchScrollEnd)) {
-          let newShoes = await this._shoeService.searchShoes(
-            searchText,
-            currentSearchPage,
-          );
-          const shouldSearchScrollEnd = !(
-            newShoes.length === 0 && currentSearchPage > 0
-          );
-          newShoes = newShoes.filter(t => !shoes.some(old => old._id === t._id));
-          this.setState({
-            isSearching: false,
-            shoes: [...shoes, ...newShoes],
-            shouldSearchScrollEnd,
-          });
-        }
-      },
-    );
+    this.setState({
+      showDropDown: shouldSearch,
+      searchText: text,
+      isSearching: shouldSearch,
+      currentSearchPage: currentSearchPage + 1,
+    });
+
+    if (shouldSearch || (scrollEnd && shouldSearchScrollEnd)) {
+      let newShoes = await this._shoeService.searchShoes(
+        searchText,
+        currentSearchPage,
+      );
+      const shouldSearchScrollEnd = !(newShoes.length === 0 && currentSearchPage > 0);
+      newShoes = newShoes.filter(t => !shoes.some(old => old._id === t._id));
+      this.setState({
+        isSearching: false,
+        shoes: [...shoes, ...newShoes],
+        shouldSearchScrollEnd,
+      });
+    }
   }
 
-  private _goToProduct(shoe: Shoe) {
+  private _goToProduct(shoe: Shoe): void {
     this.props.navigation.push(RouteNames.Product.Name, {
       screen: RouteNames.Product.ProductDetail,
       params: { shoe },
     });
+  }
+
+  private _renderProductRequest(): JSX.Element {
+    return (
+      <TouchableWithoutFeedback
+        onPress={(): void =>
+          this.props.navigation.push(RouteNames.Tab.SearchTab.ProductRequest)
+        }
+      >
+        <View style={styles.productNotFound}>
+          <AppText.Callout style={{ color: themes.AppPrimaryColor }}>
+            {strings.ProductNotFound}
+          </AppText.Callout>
+        </View>
+      </TouchableWithoutFeedback>
+    );
+  }
+
+  private _renderFilterModal(): JSX.Element {
+    return (
+      <Modal visible={this.state.filterVisible}>// TODO: render search here</Modal>
+    );
   }
 }

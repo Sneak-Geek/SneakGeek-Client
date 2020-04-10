@@ -2,7 +2,7 @@ import { createAction } from "redux-actions"
 import { Shoe, BuyOrder, SellOrder } from "../model"
 import { GetBuyOrdersPayload, GetSellOrdersPayload, NetworkRequestState } from "../payload";
 import { ObjectFactory, FactoryKeys } from "../loader/kernel";
-import { ISettingsProvider, IOrderService, SettingsKey } from "../loader/interfaces";
+import { ISettingsProvider, IOrderService, SettingsKey, OrderType } from "../loader/interfaces";
 
 export const OrderActions = {
   BUY_SHOE: "BUY_SHOE",
@@ -17,10 +17,10 @@ export const buyShoe = createAction<{
 export const updateGetBuyOrdersState = createAction<GetBuyOrdersPayload>(OrderActions.UPDATE_GET_BUY_ORDERS_STATE);
 export const updateGetSellOrdersState = createAction<GetSellOrdersPayload>(OrderActions.UPDATE_GET_SELL_ORDERS_STATE);
 
-export const getOrders = (type: "buy" | "sell") => {
+export const getOrders = (type: OrderType) => {
   const settings = ObjectFactory.getObjectInstance<ISettingsProvider>(FactoryKeys.ISettingsProvider);
   const orderService = ObjectFactory.getObjectInstance<IOrderService>(FactoryKeys.IOrderService);
-  const updateAction = type === "buy" ? updateGetBuyOrdersState : updateGetSellOrdersState;
+  const updateAction = type === "BuyOrder" ? updateGetBuyOrdersState : updateGetSellOrdersState;
 
   return async (dispatch: Function) => {
     dispatch(updateAction({ state: NetworkRequestState.REQUESTING }));

@@ -23,14 +23,21 @@ import { TouchableOpacity } from 'react-native-gesture-handler';
 import { Avatar } from 'react-native-elements';
 
 const styles = StyleSheet.create({
+  rootContainer: {
+    flex: 1,
+    marginBottom: 15,
+    backgroundColor: themes.AppBackgroundColor,
+  },
   hotShoeContainer: {
     width: Dimensions.get('window').width,
     flexDirection: 'column',
     alignItems: 'center',
     justifyContent: 'center',
-    marginTop: 15,
+    marginVertical: 15,
+    ...themes.ButtonShadow
   },
   hotShoeContentContainer: {
+    backgroundColor: 'white',
     borderColor: themes.DisabledColor,
     borderWidth: 1,
     width: '90%',
@@ -78,9 +85,22 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   rankingInnerContainer: {
+    backgroundColor: 'white',
     borderWidth: 0.5,
     borderColor: themes.AppDisabledColor,
     borderRadius: 40,
+    ...themes.ButtonShadow
+  },
+  hotShoeRegularContainer: {
+    width: 165,
+    marginRight: 20,
+    backgroundColor: 'white',
+    alignItems: 'center',
+    borderWidth: 0.5,
+    borderColor: themes.AppDisabledColor,
+    borderRadius: themes.ButtonBorderRadius * 2,
+    ...themes.ButtonShadow,
+    marginVertical: 5
   },
 });
 
@@ -158,7 +178,7 @@ export class HomeTabMain extends React.Component<Props> {
         <StatusBar barStyle={'dark-content'} />
         {state === NetworkRequestState.SUCCESS && (
           <ScrollView showsVerticalScrollIndicator={false}>
-            <View style={{ flex: 1, marginBottom: 15 }}>
+            <View style={styles.rootContainer}>
               {this._renderTrendingShoes()}
               {this._renderRanking()}
               {this._renderByBrand('Nike')}
@@ -244,7 +264,7 @@ export class HomeTabMain extends React.Component<Props> {
         </AppText.Title1>
         <FlatList
           horizontal={true}
-          keyExtractor={(itm, _): string => itm._id}
+          keyExtractor={(itm): string => itm._id}
           data={hotCatalog.products}
           renderItem={({ item }): JSX.Element => (
             <HotShoeLarge
@@ -274,7 +294,7 @@ export class HomeTabMain extends React.Component<Props> {
         </View>
         <FlatList
           horizontal={true}
-          keyExtractor={(itm, _): string => itm._id}
+          keyExtractor={(itm): string => itm._id}
           data={catalog.products.slice(0, 10)}
           style={{ marginVertical: 20, paddingLeft: 20 }}
           showsHorizontalScrollIndicator={false}
@@ -324,7 +344,7 @@ const HotShoeLarge = ({ shoe, onPress }: ShoeCardProps): JSX.Element => (
 
 const HotShoeRegular = ({ shoe, onPress }: ShoeCardProps): JSX.Element => (
   <TouchableOpacity onPress={onPress}>
-    <View style={{ width: 145, marginRight: 30 }}>
+    <View style={styles.hotShoeRegularContainer}>
       <Image
         source={{ uri: shoe.imageUrl }}
         style={{ width: 140, height: 120 }}
@@ -333,7 +353,7 @@ const HotShoeRegular = ({ shoe, onPress }: ShoeCardProps): JSX.Element => (
       <AppText.Subhead
         numberOfLines={2}
         ellipsizeMode={'tail'}
-        style={{ marginTop: 25 }}
+        style={{ marginTop: 25, paddingVertical: 8, paddingHorizontal: 12 }}
       >
         {shoe.title}
       </AppText.Subhead>
