@@ -12,5 +12,4 @@ export * from "./ISettingService";
 export * from "./IReviewOrdersService";
 export * from "./IShoeAuthenticationTransactionService";
 export * from "./IShoeService";
-export * from "./IReviewOrdersService";
 export * from "./IShoeAuthenticationTransactionService";

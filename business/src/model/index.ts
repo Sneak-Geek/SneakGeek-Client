@@ -10,4 +10,3 @@ export * from "./Address";
 export * from "./Transaction";
 export * from "./ReviewOrder";
 export * from "./Review";
-export * from "./ReviewOrder";
