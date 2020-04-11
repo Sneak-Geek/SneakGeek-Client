@@ -5,8 +5,9 @@ export type ShoeAuthentication = {
   size: number;
   isNew: boolean;
   images: string[];
-  condition: object;
-  trackingID: string;
+  condition?: object;
+  trackingId: string;
   status: string;
   uploadDate: string;
+  transactionId: string;
 };

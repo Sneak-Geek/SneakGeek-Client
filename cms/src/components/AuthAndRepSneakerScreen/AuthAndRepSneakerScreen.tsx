@@ -2,9 +2,11 @@ import React from "react";
 import { Table, Header, Grid, Form, TextArea, Button, Segment, Modal, Image, Label } from "semantic-ui-react";
 import "./style.css";
 import {
-  ShoeAuthentication
+  ShoeAuthentication, FactoryKeys, SettingsKey
 } from "business";
 import { History } from "history";
+import { TrackingStatusEnum } from "../SneakersCheckingScreen";
+import { ObjectFactory, IShoeAuthenticationTransactionService, ISettingsProvider } from "business";
 
 type Props = {
   history: History;
@@ -13,15 +15,19 @@ type Props = {
 
 type State = {
   shoeAuthentication: ShoeAuthentication,
+  description: string
 };
 
 export class AuthAndRepSneakerScreen extends React.Component<Props, State> {
+  private readonly _shoeAuthenticationTransactionService = ObjectFactory.getObjectInstance<IShoeAuthenticationTransactionService>(FactoryKeys.IShoeAuthenticationTransactionService);
+
+  private readonly _settingProvider = ObjectFactory.getObjectInstance<ISettingsProvider>(FactoryKeys.ISettingsProvider);
 
   constructor(props: Props) {
     super(props);
     this.state = {
       shoeAuthentication: this.props.location.state.shoeAuthentication,
-
+      description: ""
     };
   }
 
@@ -71,16 +77,47 @@ export class AuthAndRepSneakerScreen extends React.Component<Props, State> {
     );
   }
 
+  private async _updateAuthenticationStatus(status: number) {
+    const token = this._settingProvider.getValue(SettingsKey.CurrentAccessToken);
+    console.log(this.state.description);
+    switch (status) {
+      case 1:
+        try {
+          await this._shoeAuthenticationTransactionService.updateAuthenticationStatus(token, this.state.shoeAuthentication.transactionId, TrackingStatusEnum.APPROVED_BY_SNEAKGEEK, this.state.description);
+        }
+        catch (error) {
+          alert("Error in updating authentication status!")
+        }
+        break;
+      case -1:
+        try {
+          await this._shoeAuthenticationTransactionService.updateAuthenticationStatus(token, this.state.shoeAuthentication.transactionId, TrackingStatusEnum.REJECTED_BY_SNEAKGEEK, this.state.description);
+        }
+        catch (error) {
+          alert("Error in updating authentication status!")
+        }
+        break;
+      default:
+        break;
+    }
+    this.props.history.push(`/shoe-authentication/`);
+  }
+
+  private _handleInputChange(event: any, data: any) {
+    const { value } = data;
+    this.setState({ description: value });
+  }
+
   private _renderCheckerInput() {
     return (
       <>
         <Form>
           <Form.Field>
-            <TextArea placeholder='Mô tả tình trạng giày nếu không đạt tiêu chuẩn...' style={{ minHeight: 400 }} />
+            <TextArea onChange={(event, data) => { this._handleInputChange(event, data) }} placeholder='Mô tả tình trạng giày nếu không đạt tiêu chuẩn...' style={{ minHeight: 400 }} />
           </Form.Field>
-          <Button floated="right" type='submit' color="blue">Xác nhận </Button>
-          <Button floated="right" type='submit'>Huỷ</Button>
-          <Button floated="right" type='submit' color="brown">Chưa đạt</Button>
+          <Button onClick={() => this._updateAuthenticationStatus(1)} floated="right" type='submit' color="blue">Xác nhận </Button>
+          <Button onClick={() => this._updateAuthenticationStatus(0)} floated="right" type='submit'>Huỷ</Button>
+          <Button onClick={() => this._updateAuthenticationStatus(-1)} floated="right" type='submit' color="brown">Chưa đạt</Button>
         </Form>
 
       </>
@@ -106,12 +143,14 @@ export class AuthAndRepSneakerScreen extends React.Component<Props, State> {
   }
 
   private _renderShoeAuthStatus(shoeAuthentication: ShoeAuthentication) {
-    if (shoeAuthentication.status === "Chờ xét duyệt") {
+    if (shoeAuthentication.status === TrackingStatusEnum.DELIVERED_TO_SNEAKGEEK) {
       return (<Label color="yellow" circular empty />);
-    } else if (shoeAuthentication.status === "Đạt tiêu chuẩn") {
+    } else if (shoeAuthentication.status === TrackingStatusEnum.APPROVED_BY_SNEAKGEEK) {
       return (<Label color="green" circular empty />);
-    } else {
+    } else if (shoeAuthentication.status === TrackingStatusEnum.REJECTED_BY_SNEAKGEEK) {
       return (<Label color="red" circular empty />);
+    } else {
+      return (<Label color="black" circular empty />);
     }
   }
 
@@ -121,7 +160,7 @@ export class AuthAndRepSneakerScreen extends React.Component<Props, State> {
       return (
         <Table.Row>
           <Table.Cell textAlign="center" verticalAlign="middle">{this._renderShoeAuthStatus(shoeAuthentication)}</Table.Cell>
-          <Table.Cell>{shoeAuthentication.trackingID}</Table.Cell>
+          <Table.Cell>{shoeAuthentication.trackingId}</Table.Cell>
           <Table.Cell>
             {""}
             <img className="image" src={shoeAuthentication.imageUrl} />

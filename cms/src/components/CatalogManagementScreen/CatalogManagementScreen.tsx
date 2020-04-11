@@ -114,7 +114,7 @@ export class CatalogManagementScreen extends React.Component<Props, State> {
     this.setState({
       catalog: {
         ...this.state.catalog,
-        products: this.state.catalog.products.filter(t => t._id !== id)
+        products: (this.state.catalog.products as Shoe[]).filter(t => t._id !== id)
       }
     });
   }
@@ -123,7 +123,7 @@ export class CatalogManagementScreen extends React.Component<Props, State> {
     if (catalog!.products)
       return (
         <Table.Body>
-          {catalog!.products.map((shoe: Shoe) => {
+          {(catalog!.products as Shoe[]).map((shoe: Shoe) => {
             return (
               <Table.Row>
                 <Table.Cell>
@@ -224,8 +224,12 @@ export class CatalogManagementScreen extends React.Component<Props, State> {
   private async _saveProducts() {
     const token = this._settingsProvider.getValue(SettingsKey.CurrentAccessToken);
 
+
     try {
-      await this._catalogService.saveCatalog(token, this.state.catalog, this.state.catalog._id);
+      await this._catalogService.saveCatalog(
+        token,
+        { ...this.state.catalog, products: (this.state.catalog.products as Shoe[]).map(shoe => shoe._id) },
+        this.state.catalog._id);
     } catch (error) {
       alert("Error in Saving Products");
     }

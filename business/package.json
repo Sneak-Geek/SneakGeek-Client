@@ -1,6 +1,12 @@
 {
   "name": "business",
+<<<<<<< HEAD
   "version": "0.0.37",
+||||||| merged common ancestors
+  "version": "0.0.35",
+=======
+  "version": "0.0.57",
+>>>>>>> Implement fucntion to update authorization transaction status
   "description": "",
   "main": "build/src/index.js",
   "types": "build/src/index.d.ts",
