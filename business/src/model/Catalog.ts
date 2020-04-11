@@ -7,12 +7,5 @@ export type Catalog = {
   updatedAt: string;
   title: string;
   description?: string;
-<<<<<<< HEAD
-  products: Shoe[];
-  coverImage?: string;
-||||||| merged common ancestors
-  products: Shoe[];
-=======
   products: Shoe[] | string[];
->>>>>>> Implement fucntion to update authorization transaction status
 };
