@@ -1,8 +1,8 @@
 import React from "react";
 import { Table, Header, Grid, Search, Label } from "semantic-ui-react";
-import { ShoeAuthentication } from "business";
-import { Link } from "react-router-dom";
+import { ShoeAuthentication, FactoryKeys, SettingsKey } from "business";
 import { History } from "history";
+import { ObjectFactory, IShoeAuthenticationTransactionService, ISettingsProvider } from "business";
 
 type Props = {
   history: History
@@ -16,121 +16,32 @@ type State = {
   searchTextInput: string;
 };
 
+export enum TrackingStatusEnum {
+  PENDING_PICKUP_FROM_SELLER = "PENDING_PICKUP_FROM_SELLER",
+  DELIVERING_TO_SNEAKGEEK = "DELIVERING_TO_SNEAKGEEK",
+  DELIVERED_TO_SNEAKGEEK = "DELIVERED_TO_SNEAKGEEK",
+  APPROVED_BY_SNEAKGEEK = "APPROVED_BY_SNEAKGEEK",
+  REJECTED_BY_SNEAKGEEK = "REJECTED_BY_SNEAKGEEK",
+  PENDING_PICKUP_FROM_SNEAKGEEK = "PENDING_PICKUP_FROM_SNEAKGEEK",
+  DELIVERING_TO_BUYER = "DELIVERING_TO_BUYER",
+  DELIVERED_TO_BUYER = "DELIVERED_TO_BUYER"
+}
+
 export class SneakersCheckingScreen extends React.Component<Props, State> {
+  private readonly _shoeAuthenticationTransactionService = ObjectFactory.getObjectInstance<IShoeAuthenticationTransactionService>(FactoryKeys.IShoeAuthenticationTransactionService);
+
+  private readonly _settingsProvider = ObjectFactory.getObjectInstance<ISettingsProvider>(
+    FactoryKeys.ISettingsProvider
+  );
+
   constructor(props: Props) {
     super(props);
+    this.getPendingAuthenticationTransaction();
     this.state = {
       searchTextInput: "",
       searchResults: [],
       isLoading: false,
       value: "",
-      shoeAuthentications: [
-        {
-          title: "Balenciaga",
-          imageUrl:
-            "https://stockx.imgix.net/Nike-Kobe-4-Protro-Draft-Day-Hornets-Product.jpg?fit=fill&bg=FFFFFF&w=700&h=500&auto=format,compress&trim=color&q=90&dpr=2&updated_at=1552673057",
-          brand: "string",
-          size: 102,
-          isNew: false,
-
-          images: ["https://stockx.imgix.net/Air-Jordan-1-Retro-High-Satin-Black-Toe-W.png?fit=fill&bg=FFFFFF&w=700&h=500&auto=format,compress&trim=color&q=90&dpr=2&updated_at=1557337703", "https://stockx.imgix.net/Nike-Air-Max-1-Bordeaux-Desert-Sand.png?fit=fill&bg=FFFFFF&w=700&h=500&auto=format,compress&trim=color&q=90&dpr=2&updated_at=1557802469", "https://stockx.imgix.net/Air-Foamposite-Pro-Gucci-Product.jpg?fit=fill&bg=FFFFFF&w=700&h=500&auto=format,compress&trim=color&q=90&dpr=2&updated_at=1559767909", "https://stockx.imgix.net/Air-Foamposite-Pro-White-Gucci-Product.jpg?fit=fill&bg=FFFFFF&w=700&h=500&auto=format,compress&trim=color&q=90&dpr=2&updated_at=1555964877", "https://stockx.imgix.net/Nike-Kobe-4-Protro-Carpe-Diem.png?fit=fill&bg=FFFFFF&w=700&h=500&auto=format,compress&trim=color&q=90&dpr=2&updated_at=1557452514", "https://stockx.imgix.net/Nike-Kobe-4-Protro-Draft-Day-Hornets-Product.jpg?fit=fill&bg=FFFFFF&w=700&h=500&auto=format,compress&trim=color&q=90&dpr=2&updated_at=1552673057"],
-          condition: {},
-          trackingID: "1e8kdd12jKl",
-          status: "Chờ xét duyệt",
-          uploadDate: "17-01-2020 8PM UTC"
-        },
-        {
-          title: "Gucci",
-          imageUrl:
-            "https://stockx.imgix.net/Nike-Zoom-Fly-3-White-Black.png?fit=fill&bg=FFFFFF&w=700&h=500&auto=format,compress&trim=color&q=90&dpr=2&updated_at=1561165977",
-          brand: "string",
-          size: 102,
-          isNew: true,
-          images: ["string", "string"],
-          condition: {},
-          trackingID: "1kd0239dj0",
-          status: "Chờ xét duyệt",
-          uploadDate: "17-01-2020 8PM UTC"
-        },
-        {
-          title: "Yeezy",
-          imageUrl:
-            "https://stockx.imgix.net/Nike-SB-Nike-Air-Force-2-Low-Team-Red-Obsidian.png?fit=fill&bg=FFFFFF&w=700&h=500&auto=format,compress&trim=color&q=90&dpr=2&updated_at=1560959207",
-          brand: "string",
-          size: 102,
-          isNew: false,
-          images: ["string", "string"],
-          condition: {},
-          trackingID: "2od09023dd",
-          status: "Chờ xét duyệt",
-          uploadDate: "17-01-2020 8PM UTC"
-        },
-        {
-          title: "Yeezy",
-          imageUrl:
-            "https://stockx.imgix.net/Nike-SB-Nike-Air-Force-2-Low-Team-Red-Obsidian.png?fit=fill&bg=FFFFFF&w=700&h=500&auto=format,compress&trim=color&q=90&dpr=2&updated_at=1560959207",
-          brand: "string",
-          size: 102,
-          isNew: false,
-          images: ["string", "string"],
-          condition: {},
-          trackingID: "oopp0011nn",
-          status: "Đạt tiêu chuẩn",
-          uploadDate: "17-01-2020 8PM UTC"
-        },
-        {
-          title: "Yeezy",
-          imageUrl:
-            "https://stockx.imgix.net/Nike-SB-Nike-Air-Force-2-Low-Team-Red-Obsidian.png?fit=fill&bg=FFFFFF&w=700&h=500&auto=format,compress&trim=color&q=90&dpr=2&updated_at=1560959207",
-          brand: "string",
-          size: 102,
-          isNew: false,
-          images: ["string", "string"],
-          condition: {},
-          trackingID: "39jxnd12s",
-          status: "Đạt tiêu chuẩn",
-          uploadDate: "17-01-2020 8PM UTC"
-        },
-        {
-          title: "Yeezy",
-          imageUrl:
-            "https://stockx.imgix.net/Nike-SB-Nike-Air-Force-2-Low-Team-Red-Obsidian.png?fit=fill&bg=FFFFFF&w=700&h=500&auto=format,compress&trim=color&q=90&dpr=2&updated_at=1560959207",
-          brand: "string",
-          size: 102,
-          isNew: false,
-          images: ["string", "string"],
-          condition: {},
-          trackingID: "oloaf9320jdsd020",
-          status: "Đạt tiêu chuẩn",
-          uploadDate: "17-01-2020 8PM UTC"
-        },
-        {
-          title: "Yeezy",
-          imageUrl:
-            "https://stockx.imgix.net/Nike-SB-Nike-Air-Force-2-Low-Team-Red-Obsidian.png?fit=fill&bg=FFFFFF&w=700&h=500&auto=format,compress&trim=color&q=90&dpr=2&updated_at=1560959207",
-          brand: "string",
-          size: 102,
-          isNew: false,
-          images: ["string", "string"],
-          condition: {},
-          trackingID: "Omd03mla021",
-          status: "Chưa đạt tiêu chuẩn",
-          uploadDate: "17-01-2020 8PM UTC"
-        },
-        {
-          title: "Yeezy",
-          imageUrl:
-            "https://stockx.imgix.net/Nike-SB-Nike-Air-Force-2-Low-Team-Red-Obsidian.png?fit=fill&bg=FFFFFF&w=700&h=500&auto=format,compress&trim=color&q=90&dpr=2&updated_at=1560959207",
-          brand: "string",
-          size: 102,
-          isNew: false,
-          images: ["string", "string"],
-          condition: {},
-          trackingID: "AA2ncdj918Fl0",
-          status: "Chưa đạt tiêu chuẩn",
-          uploadDate: "17-01-2020 8PM UTC"
-        }
-      ]
     };
   }
 
@@ -147,6 +58,7 @@ export class SneakersCheckingScreen extends React.Component<Props, State> {
     );
   }
 
+
   private _handleSearchChange(event: any, data: any) {
     const { value } = data;
     this.setState({ isLoading: true, searchTextInput: value });
@@ -155,7 +67,7 @@ export class SneakersCheckingScreen extends React.Component<Props, State> {
       return {
         image: shoeAu.imageUrl,
         ...shoeAu,
-        title: shoeAu.trackingID
+        title: shoeAu.trackingId
       };
     });
     this.setState({ isLoading: false, searchResults: results });
@@ -163,7 +75,7 @@ export class SneakersCheckingScreen extends React.Component<Props, State> {
 
   private _linkToAuthAndRepSneakerScreen(data: ShoeAuthentication) {
     //TO DO: Link to a new screen that allow admins to shoe authentication
-    this.props.history.push(`/shoe-authentication/${data.trackingID}`, {
+    this.props.history.push(`/shoe-authentication/${data.trackingId}`, {
       shoeAuthentication: data
     });
   }
@@ -171,6 +83,14 @@ export class SneakersCheckingScreen extends React.Component<Props, State> {
   private _onSearchSelect(event: any, data: any) {
     const { result } = data;
     this._linkToAuthAndRepSneakerScreen(data);
+  }
+
+  private async getPendingAuthenticationTransaction() {
+    const token = this._settingsProvider.getValue(SettingsKey.CurrentAccessToken);
+    const response = await this._shoeAuthenticationTransactionService.getPendingAuthenticationTransaction(token);
+
+    this.setState({ shoeAuthentications: response });
+    console.log(response);
   }
 
   private _renderSearchReviewProducts() {
@@ -201,19 +121,21 @@ export class SneakersCheckingScreen extends React.Component<Props, State> {
           <Table.HeaderCell>Tên giày</Table.HeaderCell>
           <Table.HeaderCell>Hãng giày</Table.HeaderCell>
           <Table.HeaderCell>Mới/Cũ</Table.HeaderCell>
-          <Table.HeaderCell>Ngày tạo đơn hàng</Table.HeaderCell>
+          <Table.HeaderCell>Ngày nhận đơn hàng</Table.HeaderCell>
         </Table.Row>
       </Table.Header>
     );
   }
 
   private _renderShoeAuthStatus(shoeAuthentication: ShoeAuthentication) {
-    if (shoeAuthentication.status === "Chờ xét duyệt") {
+    if (shoeAuthentication.status === TrackingStatusEnum.DELIVERED_TO_SNEAKGEEK) {
       return (<Label color="yellow" circular empty />);
-    } else if (shoeAuthentication.status === "Đạt tiêu chuẩn") {
+    } else if (shoeAuthentication.status === TrackingStatusEnum.APPROVED_BY_SNEAKGEEK) {
       return (<Label color="green" circular empty />);
-    } else {
+    } else if (shoeAuthentication.status === TrackingStatusEnum.REJECTED_BY_SNEAKGEEK) {
       return (<Label color="red" circular empty />);
+    } else {
+      return (<Label color="black" circular empty />);
     }
   }
 
@@ -225,15 +147,14 @@ export class SneakersCheckingScreen extends React.Component<Props, State> {
             return (
               <Table.Row
                 onClick={() => {
-                  if (shoeAuthentication.status === "Chờ xét duyệt") {
-
+                  if (shoeAuthentication.status === TrackingStatusEnum.DELIVERED_TO_SNEAKGEEK) {
                     this._linkToAuthAndRepSneakerScreen(shoeAuthentication);
                   }
                 }}
               >
                 <Table.Cell textAlign="center" verticalAlign="middle">{this._renderShoeAuthStatus(shoeAuthentication)}</Table.Cell>
                 <Table.Cell>
-                  {shoeAuthentication.trackingID}
+                  {shoeAuthentication.trackingId}
                 </Table.Cell>
                 <Table.Cell>
                   {" "}

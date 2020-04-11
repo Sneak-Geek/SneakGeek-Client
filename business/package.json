@@ -1,6 +1,6 @@
 {
   "name": "business",
-  "version": "0.0.35",
+  "version": "0.0.57",
   "description": "",
   "main": "build/src/index.js",
   "types": "build/src/index.d.ts",

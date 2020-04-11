@@ -9,3 +9,4 @@ export * from "./IEnvVar";
 export * from "./ICatalogService";
 export * from "./IShoeService";
 export * from "./IReviewOrdersService";
+export * from "./IShoeAuthenticationTransactionService";

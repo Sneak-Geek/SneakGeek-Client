@@ -14,8 +14,8 @@ export class ReviewOrdersService extends BaseService {
         return __awaiter(this, void 0, void 0, function* () {
             const response = yield this.apiClient.getInstance().get("order/sell-order/all", {
                 headers: {
-                    authorization: token
-                }
+                    authorization: token,
+                },
             });
             if (response &&
                 (response.status === HttpStatus.CREATED || response.status === HttpStatus.OK)) {
@@ -28,11 +28,11 @@ export class ReviewOrdersService extends BaseService {
         return __awaiter(this, void 0, void 0, function* () {
             yield this.apiClient.getInstance().patch("order/sell-order/set-status", {
                 sellOrderId: sellOrderId,
-                sellOrderStatus: sellOrderStatus
+                sellOrderStatus: sellOrderStatus,
             }, {
                 headers: {
-                    authorization: token
-                }
+                    authorization: token,
+                },
             });
         });
     }

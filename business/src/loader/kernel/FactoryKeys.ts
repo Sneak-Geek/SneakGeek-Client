@@ -9,5 +9,8 @@ export const FactoryKeys = {
   ISettingsProvider: Symbol.for("ISettingsProvider"),
   ICatalogService: Symbol.for("ICatalogService"),
   IShoeService: Symbol.for("IShoeService"),
-  IReviewOrdersService: Symbol.for("IReviewOrdersService")
+  IReviewOrdersService: Symbol.for("IReviewOrdersService"),
+  IShoeAuthenticationTransactionService: Symbol.for(
+    "IShoeAuthenticationTransactionService"
+  ),
 };

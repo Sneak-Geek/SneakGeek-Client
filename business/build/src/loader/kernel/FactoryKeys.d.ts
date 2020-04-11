@@ -6,4 +6,5 @@ export declare const FactoryKeys: {
     ICatalogService: symbol;
     IShoeService: symbol;
     IReviewOrdersService: symbol;
+    IShoeAuthenticationTransactionService: symbol;
 };

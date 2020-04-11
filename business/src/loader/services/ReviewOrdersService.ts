@@ -7,8 +7,8 @@ export class ReviewOrdersService extends BaseService implements IReviewOrdersSer
   public async getAllSellOrders(token: string): Promise<ReviewOrder[] | undefined> {
     const response = await this.apiClient.getInstance().get("order/sell-order/all", {
       headers: {
-        authorization: token
-      }
+        authorization: token,
+      },
     });
     if (
       response &&
@@ -28,12 +28,12 @@ export class ReviewOrdersService extends BaseService implements IReviewOrdersSer
       "order/sell-order/set-status",
       {
         sellOrderId: sellOrderId,
-        sellOrderStatus: sellOrderStatus
+        sellOrderStatus: sellOrderStatus,
       },
       {
         headers: {
-          authorization: token
-        }
+          authorization: token,
+        },
       }
     );
   }
