@@ -306,8 +306,8 @@ export class SearchTabMain extends React.Component<Props, State> {
     const shouldSearch = this.state.searchText.length >= 3 || this._isFiltered();
 
     this.setState({
+      shoes: scrollEnd ? shoes : [],
       isSearching: shouldSearch,
-      currentSearchPage: currentSearchPage + 1,
     });
 
     if (shouldSearch || (scrollEnd && shouldSearchScrollEnd)) {
@@ -332,6 +332,7 @@ export class SearchTabMain extends React.Component<Props, State> {
         this.setState({
           shoes: [...shoes, ...newShoes],
           shouldSearchScrollEnd,
+          currentSearchPage: scrollEnd && shouldSearchScrollEnd ? currentSearchPage + 1 : 0
         });
       }
     }
