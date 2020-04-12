@@ -81,5 +81,8 @@ export const strings = {
   TransactionPending: 'Đang xác nhận',
   TransactionProcessed: 'Đã thanh toán',
   ProductNotFound: 'Không tìm thấy sản phẩm bạn muốn?',
-  RequestNewProduct: 'Yêu cầu sản phẩm'
+  RequestNewProduct: 'Yêu cầu sản phẩm',
+  Gender: 'Giới tính',
+  Men: 'Nam',
+  Women: 'Nữ'
 }

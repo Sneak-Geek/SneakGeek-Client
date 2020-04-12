@@ -1,5 +1,5 @@
 import React from 'react';
-import { ColumnShoeCard, AppText } from '@screens/Shared';
+import { ColumnShoeCard, AppText, BottomButton } from '@screens/Shared';
 import {
   Image,
   View,
@@ -12,14 +12,52 @@ import {
   TouchableWithoutFeedback,
   Modal,
 } from 'react-native';
-import { SafeAreaConsumer } from 'react-native-safe-area-context';
+import { SafeAreaConsumer, SafeAreaView } from 'react-native-safe-area-context';
 import { SearchBar, Icon, ListItem, Button } from 'react-native-elements';
 import { themes, strings } from '@resources';
-import { IShoeService, ObjectFactory, FactoryKeys, Shoe } from 'business';
+import { IShoeService, ObjectFactory, FactoryKeys, Shoe, Gender } from 'business';
 import { ScrollView, FlatList } from 'react-native-gesture-handler';
 import { StackNavigationProp } from '@react-navigation/stack';
 import RouteNames from 'navigations/RouteNames';
 import { RootStackParams } from 'navigations/RootStack';
+import { getService, getToken } from 'utilities';
+import { ISettingsProvider, SettingsKey } from 'business/src';
+
+const ListChoice = (props: {
+  isMultiple: boolean;
+  options: string[];
+  chosen: string | string[];
+  onSelect: (value: string) => void;
+}): JSX.Element => {
+  const isChosen = (value: string): boolean => {
+    return props.isMultiple
+      ? (props.chosen as string[]).some(t => t === value)
+      : props.chosen === value;
+  };
+  return (
+    <View>
+      {props.options.map((item, index) => (
+        <ListItem
+          key={index}
+          title={item}
+          titleStyle={[themes.TextStyle.body, { color: 'white' }]}
+          onPress={(): void => props.onSelect(item)}
+          bottomDivider={true}
+          containerStyle={{ backgroundColor: 'transparent' }}
+          rightIcon={
+            isChosen(item) ? (
+              <Icon
+                name={'check'}
+                size={themes.IconSize}
+                color={themes.AppPrimaryColor}
+              />
+            ) : null
+          }
+        />
+      ))}
+    </View>
+  );
+};
 
 const styles = StyleSheet.create({
   rootContainer: { backgroundColor: 'white', flex: 1 },
@@ -81,6 +119,26 @@ const styles = StyleSheet.create({
     backgroundColor: 'white',
     zIndex: 100,
   },
+  filterTitle: {
+    margin: 15,
+    color: 'white',
+  },
+  chipContainer: {
+    alignItems: 'center',
+    justifyContent: 'flex-start',
+    flexDirection: 'row',
+    backgroundColor: themes.AppDisabledColor,
+    maxWidth: 200,
+    marginHorizontal: 5,
+    paddingVertical: 5,
+    paddingHorizontal: 8,
+  },
+  modalCloseIcon: {
+    position: 'absolute',
+    top: 10,
+    right: 10,
+    zIndex: 100,
+  },
 });
 
 type Props = {
@@ -96,6 +154,10 @@ type State = {
   shouldSearchScrollEnd: boolean;
   searchBarYLocation?: number;
   filterVisible: boolean;
+  filter: {
+    brand: string[];
+    gender: string;
+  };
 };
 
 export class SearchTabMain extends React.Component<Props, State> {
@@ -113,6 +175,10 @@ export class SearchTabMain extends React.Component<Props, State> {
     currentSearchPage: 0,
     shouldSearchScrollEnd: true,
     filterVisible: false,
+    filter: {
+      gender: '',
+      brand: [],
+    },
   };
 
   public componentDidMount(): void {
@@ -161,7 +227,11 @@ export class SearchTabMain extends React.Component<Props, State> {
             inputContainerStyle={styles.searchInputContainer}
             searchIcon={{ size: themes.IconSize, name: 'search' }}
             inputStyle={themes.TextStyle.body}
-            onChangeText={this._search.bind(this)}
+            onChangeText={(text: string): void => {
+              this.setState({ showDropDown: true }, () => {
+                this._search.bind(this);
+              });
+            }}
             onCancel={(): void =>
               this.setState({ showDropDown: false, shouldSearchScrollEnd: true })
             }
@@ -174,11 +244,23 @@ export class SearchTabMain extends React.Component<Props, State> {
             }
             onSubmitEditing={(): void => this.setState({ showDropDown: false })}
           />
-          <Icon name={'sort'} size={themes.IconSize} />
+          <Icon
+            name={'sort'}
+            size={themes.IconSize}
+            color={
+              this._isFiltered() ? themes.AppPrimaryColor : themes.AppSecondaryColor
+            }
+            onPress={(): void => this.setState({ filterVisible: true })}
+          />
         </View>
         {this._renderHotKeywords()}
       </View>
     );
+  }
+
+  private _isFiltered(): boolean {
+    const { gender, brand } = this.state.filter;
+    return gender.length > 0 || brand.length > 0;
   }
 
   private _renderHotKeywords(): JSX.Element {
@@ -205,7 +287,7 @@ export class SearchTabMain extends React.Component<Props, State> {
                     searchText: k,
                   },
                   () => {
-                    this._search(k);
+                    this._search();
                   },
                 )
               }
@@ -250,7 +332,7 @@ export class SearchTabMain extends React.Component<Props, State> {
                 title={s.title}
                 titleStyle={themes.TextStyle.subhead}
                 accessible={true}
-                onPress={() => this._goToProduct(s)}
+                onPress={(): void => this._goToProduct(s)}
               />
             ))}
           </ScrollView>
@@ -287,29 +369,35 @@ export class SearchTabMain extends React.Component<Props, State> {
     );
   }
 
-  private async _search(text: string, scrollEnd = false): Promise<void> {
+  private async _search(text?: string, scrollEnd = false): Promise<void> {
     const {
       searchText,
-      currentSearchPage,
       shoes,
+      currentSearchPage,
       shouldSearchScrollEnd,
     } = this.state;
-    const shouldSearch = text.length >= searchText.length && text.length >= 3;
+    const shouldSearch =
+      !text || (text.length >= searchText.length && text.length >= 3);
 
     this.setState({
-      showDropDown: shouldSearch,
-      searchText: text,
+      searchText: text || '',
       isSearching: shouldSearch,
       currentSearchPage: currentSearchPage + 1,
     });
 
     if (shouldSearch || (scrollEnd && shouldSearchScrollEnd)) {
-      let newShoes = await this._shoeService.searchShoes(
+      text = text ?? this.state.searchText;
+      const result = await this._shoeService.searchShoes(
+        getToken(),
         searchText,
         currentSearchPage,
+        this._getStandardizedGender(),
+        this.state.filter.brand,
       );
+      let newShoes = result.shoes;
       const shouldSearchScrollEnd = !(newShoes.length === 0 && currentSearchPage > 0);
       newShoes = newShoes.filter(t => !shoes.some(old => old._id === t._id));
+
       this.setState({
         isSearching: false,
         shoes: [...shoes, ...newShoes],
@@ -343,7 +431,125 @@ export class SearchTabMain extends React.Component<Props, State> {
 
   private _renderFilterModal(): JSX.Element {
     return (
-      <Modal visible={this.state.filterVisible}>// TODO: render search here</Modal>
+      <Modal
+        visible={this.state.filterVisible}
+        presentationStyle={'overFullScreen'}
+        transparent={true}
+        animated={true}
+        animationType={'slide'}
+      >
+        <SafeAreaView style={{ flex: 1, backgroundColor: themes.AppModalBackground }}>
+          <View style={{ flex: 1 }}>
+            <Icon
+              name={'x'}
+              type={'feather'}
+              color={themes.AppAccentColor}
+              onPress={(): void => this.setState({ filterVisible: false })}
+              containerStyle={styles.modalCloseIcon}
+            />
+            <ScrollView style={{ flex: 1 }}>
+              <View style={{ flex: 1 }}>
+                {this._renderGenderSelector()}
+                {this._renderBrandSelector()}
+              </View>
+            </ScrollView>
+            <BottomButton
+              onPress={(): void =>
+                this.setState(
+                  { filterVisible: false, showDropDown: false },
+                  (): any => this._search(undefined, false),
+                )
+              }
+              title={'Xem kết quả'}
+              style={{ backgroundColor: themes.AppPrimaryColor }}
+            />
+          </View>
+        </SafeAreaView>
+      </Modal>
+    );
+  }
+
+  private _renderGenderSelector(): JSX.Element {
+    return (
+      <View>
+        <AppText.Title2 style={styles.filterTitle}>{strings.Gender}</AppText.Title2>
+        <ListChoice
+          isMultiple={false}
+          chosen={this.state.filter.gender}
+          onSelect={(value: string): void => {
+            this.setState({
+              filter: {
+                ...this.state.filter,
+                gender: this.state.filter.gender === value ? '' : value,
+              },
+            });
+          }}
+          options={[strings.Men, strings.Women]}
+        />
+      </View>
+    );
+  }
+
+  private _getStandardizedGender(): string {
+    const { gender } = this.state.filter;
+    if (gender.length > 0) {
+      return gender === strings.Men ? Gender.men : Gender.women;
+    }
+
+    return '';
+  }
+
+  private _renderBrandSelector(): JSX.Element {
+    const settings = getService<ISettingsProvider>(FactoryKeys.ISettingsProvider);
+    const brands = settings.getValue(SettingsKey.RemoteSettings).shoeBrands;
+
+    return (
+      <View style={{ marginBottom: themes.ButtonHeight }}>
+        <AppText.Title2 style={styles.filterTitle}>{strings.Brand}</AppText.Title2>
+        <FlatList
+          horizontal={true}
+          data={this.state.filter.brand}
+          showsHorizontalScrollIndicator={false}
+          keyExtractor={(item, index): string => index.toString()}
+          renderItem={({ item }): JSX.Element => (
+            <TouchableWithoutFeedback
+              onPress={(): void =>
+                this.setState({
+                  filter: {
+                    ...this.state.filter,
+                    brand: this.state.filter.brand.filter(t => t !== item),
+                  },
+                })
+              }
+            >
+              <View style={styles.chipContainer}>
+                <AppText.Subhead>{item}</AppText.Subhead>
+                <Icon name={'x'} type={'feather'} size={themes.IconSize} />
+              </View>
+            </TouchableWithoutFeedback>
+          )}
+        />
+        <ListChoice
+          isMultiple={true}
+          options={brands}
+          chosen={this.state.filter.brand}
+          onSelect={(item: string): void => {
+            let brand = this.state.filter.brand;
+            if (this.state.filter.brand.some(t => t === item)) {
+              brand = brand.filter(t => t !== item);
+            } else {
+              brand = [...brand, item];
+            }
+
+            this.setState({
+              filter: {
+                ...this.state.filter,
+                brand,
+              },
+            });
+          }}
+        />
+      </View>
     );
   }
 }

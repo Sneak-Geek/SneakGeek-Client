@@ -21,3 +21,14 @@ export enum TrackingStatus {
   DELIVERING_TO_BUYER = "DELIVERING_TO_BUYER",
   DELIVERED_TO_BUYER = "DELIVERED_TO_BUYER"
 }
+
+export enum Gender {
+  none = "none",
+  men = "men",
+  women = "women",
+  unisex = "unisex",
+  child = "child",
+  toddler = "toddler",
+  infant = "infant",
+  preschool = "preschool"
+}

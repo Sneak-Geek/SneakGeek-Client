@@ -10,7 +10,7 @@ export const themes = {
   AppSecondaryColor: "#000",
   AppAccentColor: "#FFF",
   AppErrorColor: "#FF2D55",
-  AppModalBackground: 'rgba(0.0, 0.0, 0.0, 0.5)',
+  AppModalBackground: 'rgba(0.0, 0.0, 0.0, 0.65)',
   DisabledTheme: 'rgba(0, 0, 0, 0.05)',
   AppDisabledColor: '#DADADA',
   AppSellColor: '#E2603F',

@@ -3,9 +3,26 @@ import { BaseService } from "./BaseService";
 import { IShoeService } from "../interfaces/IShoeService";
 
 export class ShoeService extends BaseService implements IShoeService {
-  public async searchShoes(key: string, page: number = 0): Promise<Shoe[]> {
-    const response = await this.apiClient.getInstance().get(`/shoe/find?page=${page}&title=${key}`);
-    return response.data as Shoe[];
+  public async searchShoes(token: string, key: string, page: number = 0, gender?: string, brand?: string[]): Promise<{ count: number, shoes: Shoe[] }> {
+    let queryUrl = `/shoe/find?page=${page}`;
+    if (key.length > 0) {
+      queryUrl += `&title=${key}`;
+    }
+
+    if (gender && gender.length > 0) {
+      queryUrl += `&gender=${gender}`;
+    }
+
+    if (brand && brand.length > 0) {
+      queryUrl += `&brand=${brand.join(",")}`;
+    }
+
+    const response = await this.apiClient.getInstance().get(queryUrl, {
+      headers: {
+        authorization: token
+      }
+    });
+    return response.data;
   }
 
   public async getShoeReviews(token: string, shoeId: string): Promise<Review[]> {
