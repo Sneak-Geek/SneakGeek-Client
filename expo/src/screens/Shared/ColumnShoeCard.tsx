@@ -2,7 +2,7 @@ import React from 'react';
 import { Shoe } from 'business';
 import { View, Image, StyleSheet, Dimensions } from 'react-native';
 import { AppText } from './Text';
-import { themes } from '@resources';
+import { themes, Constants } from '@resources';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 
 const styles = StyleSheet.create({
@@ -57,7 +57,7 @@ export const ColumnShoeCard = (props: {
     <TouchableOpacity onPress={props.onPress}>
       <View style={styles.container}>
         <Image
-          source={{ uri: props.shoe.imageUrl }}
+          source={{ uri: props.shoe.imageUrl || Constants.imagePlaceholderUrl }}
           style={styles.cardImage}
           resizeMode={'contain'}
         />

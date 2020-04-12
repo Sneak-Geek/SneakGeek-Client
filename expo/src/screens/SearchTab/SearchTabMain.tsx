@@ -14,7 +14,7 @@ import {
 } from 'react-native';
 import { SafeAreaConsumer, SafeAreaView } from 'react-native-safe-area-context';
 import { SearchBar, Icon, ListItem, Button } from 'react-native-elements';
-import { themes, strings } from '@resources';
+import { themes, strings, images } from '@resources';
 import { IShoeService, ObjectFactory, FactoryKeys, Shoe, Gender } from 'business';
 import { ScrollView, FlatList } from 'react-native-gesture-handler';
 import { StackNavigationProp } from '@react-navigation/stack';
@@ -305,7 +305,7 @@ export class SearchTabMain extends React.Component<Props, State> {
 
     const renderLeftAvatar = (s: Shoe): JSX.Element => (
       <Image
-        source={{ uri: s.imageUrl }}
+        source={s.imageUrl ? { uri: s.imageUrl } : images.ImagePlaceholder}
         style={styles.thumbnail}
         resizeMode={'contain'}
       />
