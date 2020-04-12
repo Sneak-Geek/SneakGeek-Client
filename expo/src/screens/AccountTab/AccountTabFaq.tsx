@@ -1,11 +1,7 @@
 import React from 'react';
 import { getService } from 'utilities';
 import { ISettingsProvider, FactoryKeys, SettingsKey } from 'business/src';
-import {
-  SafeAreaView,
-  View,
-  SectionList,
-} from 'react-native';
+import { SafeAreaView, View, SectionList, StyleSheet } from 'react-native';
 import { AppText } from '@screens/Shared';
 import { themes } from '@resources';
 
@@ -16,6 +12,19 @@ type FAQ = Array<{
     answer: string;
   }>;
 }>;
+
+const styles = StyleSheet.create({
+  sectionContainer: {
+    backgroundColor: 'white',
+    borderBottomColor: themes.AppDisabledColor,
+    borderBottomWidth: 0.5,
+  },
+  sectionTitle: { 
+    marginVertical: 8, 
+    marginLeft: 10, 
+    color: themes.AppPrimaryColor 
+  },
+});
 
 export const AccountTabFaq = (): JSX.Element => {
   const settings = getService<ISettingsProvider>(FactoryKeys.ISettingsProvider);
@@ -32,14 +41,8 @@ export const AccountTabFaq = (): JSX.Element => {
           sections={sectionalFaq}
           keyExtractor={(item, index): string => index.toString()}
           renderSectionHeader={({ section }): JSX.Element => (
-            <View
-              style={{
-                backgroundColor: 'white',
-                borderBottomColor: themes.AppDisabledColor,
-                borderBottomWidth: 0.5,
-              }}
-            >
-              <AppText.Title1 style={{ marginVertical: 8, marginLeft: 10, color: themes.AppPrimaryColor }}>
+            <View style={styles.sectionContainer}>
+              <AppText.Title1 style={styles.sectionTitle}>
                 {section.title}
               </AppText.Title1>
             </View>
