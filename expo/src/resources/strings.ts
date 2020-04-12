@@ -18,7 +18,7 @@ export const strings = {
   AccountInfo: 'Thông tin tài khoản',
   NotificationSettings: 'Cài đặt thông báo',
   ShareApplication: 'Chia sẻ ứng dụng',
-  InfoAppSetting: 'Thông tin sản phẩm',
+  InfoAppSetting: 'Các câu hỏi thường gặp',
   AppContact: 'Liên hệ',
   LogOut: 'Đăng xuất',
   HomeTabTitle: 'Trang chủ',

@@ -42,7 +42,8 @@ const RouteNames = {
     AccountTab: {
       Name: 'AccountTab',
       Main: 'AccountTabMain',
-      EditProfile: 'AccountTabEditProfile'
+      EditProfile: 'AccountTabEditProfile',
+      Faq: 'AccountTabFaq'
     }
   }
 };

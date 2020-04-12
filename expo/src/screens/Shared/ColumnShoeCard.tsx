@@ -1,6 +1,6 @@
 import React from 'react';
 import { Shoe } from 'business';
-import { View, Image, StyleSheet, Dimensions } from 'react-native';
+import { View, Image, StyleSheet } from 'react-native';
 import { AppText } from './Text';
 import { themes, Constants } from '@resources';
 import { TouchableOpacity } from 'react-native-gesture-handler';

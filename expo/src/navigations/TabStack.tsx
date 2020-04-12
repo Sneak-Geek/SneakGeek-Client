@@ -3,9 +3,8 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import RouteNames from './RouteNames';
 import { themes, strings, images } from '@resources';
 import { Icon } from 'react-native-elements';
-import { AccountTabMain } from '@screens/AccountTab/AccountTabMain';
+import { AccountTabMain, AccountTabEditProfile, AccountTabFaq } from '@screens/AccountTab';
 import { createStackNavigator } from '@react-navigation/stack';
-import { AccountTabEditProfile } from '@screens/AccountTab/AccountTabEditProfile';
 import { HomeTabMain } from '@screens/HomeTab/HomeTabMain';
 import { SearchTabMain } from '@screens/SearchTab/SearchTabMain';
 import { Image } from 'react-native';
@@ -18,7 +17,6 @@ import { CatalogSeeMore } from '@screens/HomeTab';
 import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
 import {
   SellOrders,
-  TransactionTabMain,
   TransactionDetail,
   BuyOrders,
 } from '@screens/TransactionTab';
@@ -47,6 +45,14 @@ const AccountTab = (): JSX.Element => (
       options={{
         headerShown: false,
         headerTransparent: true,
+      }}
+    />
+    <AccountStack.Screen
+      name={RouteNames.Tab.AccountTab.Faq}
+      component={AccountTabFaq}
+      options={{
+        ...themes.headerStyle,
+        title: strings.InfoAppSetting
       }}
     />
   </AccountStack.Navigator>
