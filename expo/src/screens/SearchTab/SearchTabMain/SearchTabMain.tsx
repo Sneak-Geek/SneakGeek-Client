@@ -3,11 +3,9 @@ import { ColumnShoeCard, AppText, BottomButton } from '@screens/Shared';
 import {
   Image,
   View,
-  StyleSheet,
   ActivityIndicator,
   Keyboard,
   EmitterSubscription,
-  Dimensions,
   LayoutChangeEvent,
   TouchableWithoutFeedback,
   Modal,
@@ -22,6 +20,7 @@ import RouteNames from 'navigations/RouteNames';
 import { RootStackParams } from 'navigations/RootStack';
 import { getService, getToken } from 'utilities';
 import { ISettingsProvider, SettingsKey } from 'business/src';
+import { styles } from './styles';
 
 const ListChoice = (props: {
   isMultiple: boolean;
@@ -40,10 +39,19 @@ const ListChoice = (props: {
         <ListItem
           key={index}
           title={item}
-          titleStyle={[themes.TextStyle.body, { color: 'white' }]}
+          titleStyle={[
+            themes.TextStyle.body,
+            {
+              color: isChosen(item)
+                ? themes.AppSecondaryColor
+                : themes.AppAccentColor,
+            },
+          ]}
           onPress={(): void => props.onSelect(item)}
           bottomDivider={true}
-          containerStyle={{ backgroundColor: 'transparent' }}
+          containerStyle={{
+            backgroundColor: isChosen(item) ? themes.AppAccentColor : 'transparent',
+          }}
           rightIcon={
             isChosen(item) ? (
               <Icon
@@ -58,88 +66,6 @@ const ListChoice = (props: {
     </View>
   );
 };
-
-const styles = StyleSheet.create({
-  rootContainer: { backgroundColor: 'white', flex: 1 },
-  searchBarRoot: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
-    paddingHorizontal: 10,
-  },
-  searchContainer: {
-    alignItems: 'center',
-    justifyContent: 'center',
-    backgroundColor: 'white',
-    borderTopColor: 'transparent',
-    borderWidth: 0,
-    borderBottomColor: 'transparent',
-    flex: 1,
-  },
-  searchInputContainer: {
-    backgroundColor: 'rgba(0, 0, 0, 0.03)',
-  },
-  pageContainer: {
-    flex: 1,
-    backgroundColor: 'white',
-    flexDirection: 'column',
-  },
-  dropDownContainer: {
-    position: 'absolute',
-    left: 0,
-    right: 0,
-    maxHeight: Dimensions.get('window').height / 3,
-    flex: 1,
-    borderWidth: 1,
-    borderTopWidth: 0,
-    borderBottomLeftRadius: 20,
-    borderBottomRightRadius: 20,
-    borderColor: themes.DisabledColor,
-    paddingBottom: 10,
-    paddingHorizontal: 10,
-    zIndex: 100,
-    backgroundColor: 'white',
-  },
-  thumbnail: {
-    width: 60,
-    height: 40,
-  },
-  productNotFound: {
-    position: 'absolute',
-    bottom: 0,
-    left: 0,
-    right: 0,
-    paddingHorizontal: 20,
-    height: (themes.ButtonHeight * 2) / 3,
-    borderTopColor: themes.AppPrimaryColor,
-    borderBottomColor: themes.AppPrimaryColor,
-    borderBottomWidth: 0.5,
-    borderTopWidth: 0.5,
-    justifyContent: 'center',
-    backgroundColor: 'white',
-    zIndex: 100,
-  },
-  filterTitle: {
-    margin: 15,
-    color: 'white',
-  },
-  chipContainer: {
-    alignItems: 'center',
-    justifyContent: 'flex-start',
-    flexDirection: 'row',
-    backgroundColor: themes.AppDisabledColor,
-    maxWidth: 200,
-    marginHorizontal: 5,
-    paddingVertical: 5,
-    paddingHorizontal: 8,
-  },
-  modalCloseIcon: {
-    position: 'absolute',
-    top: 10,
-    right: 10,
-    zIndex: 100,
-  },
-});
 
 type Props = {
   navigation: StackNavigationProp<RootStackParams, 'SearchTabMain'>;
@@ -228,8 +154,11 @@ export class SearchTabMain extends React.Component<Props, State> {
             searchIcon={{ size: themes.IconSize, name: 'search' }}
             inputStyle={themes.TextStyle.body}
             onChangeText={(text: string): void => {
-              this.setState({ showDropDown: true }, () => {
-                this._search.bind(this);
+              const oldText = this.state.searchText;
+              this.setState({ showDropDown: true, searchText: text }, () => {
+                if (text.length > oldText.length) {
+                  this._search();
+                }
               });
             }}
             onCancel={(): void =>
@@ -359,9 +288,7 @@ export class SearchTabMain extends React.Component<Props, State> {
           )}
           columnWrapperStyle={{ flex: 1, justifyContent: 'space-around' }}
           numColumns={2}
-          onEndReached={(): Promise<void> =>
-            this._search(this.state.searchText, true)
-          }
+          onEndReached={(): Promise<void> => this._search(true)}
           style={{ marginHorizontal: 5 }}
         />
         {this.state.isSearching && <ActivityIndicator size={'small'} />}
@@ -369,24 +296,21 @@ export class SearchTabMain extends React.Component<Props, State> {
     );
   }
 
-  private async _search(text?: string, scrollEnd = false): Promise<void> {
+  private async _search(scrollEnd = false): Promise<void> {
     const {
       searchText,
       shoes,
       currentSearchPage,
       shouldSearchScrollEnd,
     } = this.state;
-    const shouldSearch =
-      !text || (text.length >= searchText.length && text.length >= 3);
+    const shouldSearch = this.state.searchText.length >= 3 || this._isFiltered();
 
     this.setState({
-      searchText: text || '',
       isSearching: shouldSearch,
       currentSearchPage: currentSearchPage + 1,
     });
 
     if (shouldSearch || (scrollEnd && shouldSearchScrollEnd)) {
-      text = text ?? this.state.searchText;
       const result = await this._shoeService.searchShoes(
         getToken(),
         searchText,
@@ -394,15 +318,22 @@ export class SearchTabMain extends React.Component<Props, State> {
         this._getStandardizedGender(),
         this.state.filter.brand,
       );
-      let newShoes = result.shoes;
-      const shouldSearchScrollEnd = !(newShoes.length === 0 && currentSearchPage > 0);
-      newShoes = newShoes.filter(t => !shoes.some(old => old._id === t._id));
-
       this.setState({
         isSearching: false,
-        shoes: [...shoes, ...newShoes],
-        shouldSearchScrollEnd,
       });
+
+      if (result && result.shoes) {
+        let newShoes = result.shoes;
+        const shouldSearchScrollEnd = !(
+          newShoes.length === 0 && currentSearchPage > 0
+        );
+        newShoes = newShoes.filter(t => !shoes.some(old => old._id === t._id));
+
+        this.setState({
+          shoes: [...shoes, ...newShoes],
+          shouldSearchScrollEnd,
+        });
+      }
     }
   }
 
@@ -457,7 +388,7 @@ export class SearchTabMain extends React.Component<Props, State> {
               onPress={(): void =>
                 this.setState(
                   { filterVisible: false, showDropDown: false },
-                  (): any => this._search(undefined, false),
+                  (): any => this._search(),
                 )
               }
               title={'Xem kết quả'}
@@ -507,6 +438,7 @@ export class SearchTabMain extends React.Component<Props, State> {
       <View style={{ marginBottom: themes.ButtonHeight }}>
         <AppText.Title2 style={styles.filterTitle}>{strings.Brand}</AppText.Title2>
         <FlatList
+          style={{ marginBottom: 5 }}
           horizontal={true}
           data={this.state.filter.brand}
           showsHorizontalScrollIndicator={false}
