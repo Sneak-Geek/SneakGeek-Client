@@ -51,7 +51,7 @@ export default function App(): JSX.Element {
 
     Factory.register<IEnvVar>(Keys.IEnvVar, {
       '__DEV__': __DEV__,
-      devUrl: 'http://192.168.0.11:8080/api/v1',
+      devUrl: 'http://10.0.0.52:8080/api/v1',
       prodUrl: 'https://sneakgeek-test.azurewebsites.net/api/v1'
     });
     Factory.register<ISettingsProvider>(Keys.ISettingsProvider, settingsProvider);

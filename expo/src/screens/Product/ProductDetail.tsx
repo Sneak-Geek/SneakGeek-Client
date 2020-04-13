@@ -309,7 +309,7 @@ export class ProductDetail extends React.Component<Props> {
   }
 
   private _renderProductReviews(): JSX.Element {
-    const { reviewState } = this.props;
+    const { reviewState, navigation } = this.props;
     const { state, reviews } = reviewState;
 
     let content: JSX.Element;
@@ -345,7 +345,18 @@ export class ProductDetail extends React.Component<Props> {
           />
         </View>
         {content}
-      </View>
+        {
+          reviews.length >= 3 ?
+            <View style={{ flex: 1, flexDirection: "row-reverse" }}>
+              <AppText.Callout style={{ color: '#808080' }} onPress={(): void => {
+                // @ts-ignore
+                navigation.push(RouteNames.Product.AllReviews, { reviews: reviews })
+              }}>
+                {strings.SeeMore}
+              </AppText.Callout>
+            </View> : <View></View>
+        }
+      </View >
     );
   }
 
@@ -444,12 +455,12 @@ export class ProductDetail extends React.Component<Props> {
         {this._renderSingleActionButton(
           'Mua',
           `Thấp: ${
-            lowestSellOrder
-              ? Humanize.compactInteger(
-                  (lowestSellOrder.sellNowPrice as PriceData).price,
-                  2,
-                )
-              : '-'
+          lowestSellOrder
+            ? Humanize.compactInteger(
+              (lowestSellOrder.sellNowPrice as PriceData).price,
+              2,
+            )
+            : '-'
           }`,
           'cart-arrow-down',
           themes.AppPrimaryColor,
@@ -475,10 +486,10 @@ export class ProductDetail extends React.Component<Props> {
     onPress: () => void,
   ): JSX.Element {
     const { account, profile } = this.props;
-    
+
     const isVerified = account.isVerified;
     const missingAddress = !profile.userProvidedAddress
-      || !profile.userProvidedAddress.city 
+      || !profile.userProvidedAddress.city
       || !profile.userProvidedAddress.districtId
       || !profile.userProvidedAddress.wardCode
       || !profile.userProvidedAddress.streetAddress;
