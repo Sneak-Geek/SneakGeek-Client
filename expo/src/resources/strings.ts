@@ -84,5 +84,10 @@ export const strings = {
   RequestNewProduct: 'Yêu cầu sản phẩm',
   Gender: 'Giới tính',
   Men: 'Nam',
-  Women: 'Nữ'
+  Women: 'Nữ',
+  HighestBuyOrderPrice: 'Giá đặt mua cao nhất',
+  BuyNowPrice: 'Giá mua ngay',
+  HighestBuyOrderExplanation: 'Dựa trên các đơn đặt mua trên thị trường, SneakGeek đưa ra giá đặt mua cao nhất để tham khảo',
+  SetPrice: 'Đặt giá',
+  SetPriceSuccess: 'Đặt giá thành công'
 }

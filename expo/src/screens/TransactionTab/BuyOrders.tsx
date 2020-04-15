@@ -60,7 +60,10 @@ type Props = {
 )
 export class BuyOrders extends React.Component<Props> {
   public componentDidMount(): void {
-    this.props.getOrders();
+    const { state, orders } = this.props.buyOrderState;
+    if (state === NetworkRequestState.NOT_STARTED && orders.length === 0) {
+      this.props.getOrders();
+    }
   }
 
   public render(): JSX.Element {

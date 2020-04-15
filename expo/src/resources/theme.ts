@@ -3,8 +3,10 @@ import { StyleSheet, Platform } from "react-native";
 export const themes = {
   FacebookThemeColor: "#3B5998",
   IconSize: 24,
-  ButtonHeight: 54,
+  RegularButtonHeight: 54,
+  MediumButtonHeigt: 40,
   ButtonBorderRadius: 4,
+  LargeBorderRadius: 40,
   DisabledColor: "#DADADA",
   AppPrimaryColor: "#1ABC9C",
   AppSecondaryColor: "#000",
@@ -69,6 +71,11 @@ export const themes = {
     footnote: {
       fontSize: 13,
       fontFamily: 'RobotoLight',
+    },
+
+    footnoteRegular: {
+      fontSize: 13,
+      fontFamily: 'Roboto'
     },
 
     caption1: {

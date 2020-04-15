@@ -31,7 +31,7 @@ const styles = StyleSheet.create({
   },
   button: {
     borderRadius: themes.ButtonBorderRadius,
-    height: themes.ButtonHeight,
+    height: themes.RegularButtonHeight,
     marginVertical: 5,
     alignItems: 'center',
     justifyContent: 'flex-start',

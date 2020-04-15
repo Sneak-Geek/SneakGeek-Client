@@ -94,4 +94,29 @@ export class OrderService extends BaseService implements IOrderService {
 
     return response.data.transaction;
   }
+
+  public async getSellOrderInfoForBuy(token: string, shoeId: string, shoeSize: string) {
+    const queryUrl = `/order/sell-order/get-sell-info-for-buy?shoeId=${shoeId}&shoeSize=${shoeSize}`;
+
+    const response = await this.apiClient.getInstance().get(queryUrl, {
+      headers: {
+        authorization: token
+      }
+    });
+
+    return response.data;
+  }
+
+  public async createBuyOrder(token: string, buyOrder: Partial<BuyOrder>) {
+    const response = await this.apiClient.getInstance().post(`/order/buy-order/new`,
+      buyOrder,
+      {
+        headers: {
+          authorization: token
+        }
+      }
+    );
+
+    return response.data;
+  }
 }
