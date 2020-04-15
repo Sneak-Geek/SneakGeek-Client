@@ -60,7 +60,10 @@ type Props = {
 )
 export class SellOrders extends React.Component<Props> {
   public componentDidMount(): void {
-    this.props.getOrders();
+    const { state, orders } = this.props.sellOrdersState;
+    if (state === NetworkRequestState.NOT_STARTED && orders.length === 0) {
+      this.props.getOrders();
+    }
   }
 
   public render(): JSX.Element {
@@ -153,7 +156,7 @@ export class SellOrders extends React.Component<Props> {
   private _onOrderPress(order: SellOrder): void {
     this.props.navigation.navigate(RouteNames.Tab.TransactionTab.Detail, {
       order: order,
-      orderType: "SellOrder"
+      orderType: 'SellOrder',
     });
   }
 }

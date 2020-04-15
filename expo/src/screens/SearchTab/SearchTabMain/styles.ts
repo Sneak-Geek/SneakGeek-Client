@@ -52,7 +52,7 @@ export const styles = StyleSheet.create({
     left: 0,
     right: 0,
     paddingHorizontal: 20,
-    height: (themes.ButtonHeight * 2) / 3,
+    height: (themes.RegularButtonHeight * 2) / 3,
     borderTopColor: themes.AppPrimaryColor,
     borderBottomColor: themes.AppPrimaryColor,
     borderBottomWidth: 0.5,

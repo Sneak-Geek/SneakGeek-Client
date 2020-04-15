@@ -53,7 +53,7 @@ type Setting = {
 
 export class ProductRequiredInfo extends React.PureComponent<Props, State> {
   private appSettings: ISettingsProvider;
-  private remoteSettings: Object;
+  private remoteSettings: Record<string, any>;
   private settings: Setting[];
 
   public constructor(props: any) {
@@ -222,7 +222,7 @@ const styles = StyleSheet.create({
   footerButton: {
     width: Dimensions.get('window').width / 2,
     borderRadius: 0,
-    height: themes.ButtonHeight,
+    height: themes.RegularButtonHeight,
   },
 
   footerContainer: {

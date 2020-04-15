@@ -51,7 +51,7 @@ const PriceBox = (props: {
           styles.priceBox,
           selected ? { backgroundColor: themes.AppSecondaryColor } : {},
         ]}
-        onPress={() => props.onSelect(props.size)}
+        onPress={(): void => props.onSelect(props.size)}
       >
         <View style={[styles.priceTextContainer]}>
           <AppText.Callout style={{ marginBottom: 5, color }}>
@@ -76,13 +76,13 @@ export const SizePricePicker = (props: {
     <FlatList
       style={[{ marginHorizontal: 5 }, props.style]}
       data={props.sizes}
-      keyExtractor={(itm, _) => itm}
-      renderItem={({ item }) => (
+      keyExtractor={(itm): string => itm}
+      renderItem={({ item }): JSX.Element => (
         <PriceBox
           size={item}
           price={props.priceMap.get(item)}
           selected={selectedSize}
-          onSelect={(size: string) => {
+          onSelect={(size: string): void => {
             props.onSizeSelected(size);
             setSelectedSize(size);
           }}

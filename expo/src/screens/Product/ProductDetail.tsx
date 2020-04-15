@@ -135,7 +135,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: '3%',
   },
   bottomButtonStyle: {
-    height: themes.ButtonHeight,
+    height: themes.RegularButtonHeight,
     width: Dimensions.get('window').width * 0.45,
     alignItems: 'center',
     borderRadius: themes.ButtonBorderRadius,
@@ -212,7 +212,7 @@ export class ProductDetail extends React.Component<Props> {
               <View
                 style={{
                   ...styles.pageContainer,
-                  marginBottom: insets.bottom + themes.ButtonHeight,
+                  marginBottom: insets.bottom + themes.RegularButtonHeight,
                 }}
               >
                 {this._renderProductImage()}
@@ -233,7 +233,7 @@ export class ProductDetail extends React.Component<Props> {
   private _renderHeader(topInsets: number): JSX.Element {
     return (
       <HeaderHeightContext.Consumer>
-        {headerHeight => (
+        {(headerHeight): JSX.Element => (
           <View
             style={{ ...styles.headerContainer, height: headerHeight + topInsets }}
           >
@@ -241,7 +241,7 @@ export class ProductDetail extends React.Component<Props> {
               name={'ios-arrow-back'}
               type={'ionicon'}
               size={themes.IconSize}
-              onPress={() => this.props.navigation.goBack()}
+              onPress={(): void => this.props.navigation.goBack()}
               hitSlop={styles.backHitSlop}
             />
             <AppText.Title3>{strings.ProductDetail}</AppText.Title3>
@@ -382,7 +382,7 @@ export class ProductDetail extends React.Component<Props> {
     ]);
   }
 
-  private _renderRelatedShoes() {
+  private _renderRelatedShoes(): JSX.Element {
     let content: JSX.Element;
     const { shoeInfoState } = this.props;
 
@@ -428,7 +428,14 @@ export class ProductDetail extends React.Component<Props> {
       <View style={{ bottom, ...styles.bottomContainer }}>
         {this._renderSingleActionButton(
           'Bán',
-          `Cao: ${highestBuyOrder ? highestBuyOrder.buyPrice : '-'}`,
+          `Cao: ${
+            highestBuyOrder
+              ? Humanize.compactInteger(
+                  (highestBuyOrder.buyPrice as PriceData).price,
+                  2,
+                )
+              : '-'
+          }`,
           'cart-arrow-up',
           themes.AppSellColor,
           () => {
@@ -475,13 +482,14 @@ export class ProductDetail extends React.Component<Props> {
     onPress: () => void,
   ): JSX.Element {
     const { account, profile } = this.props;
-    
+
     const isVerified = account.isVerified;
-    const missingAddress = !profile.userProvidedAddress
-      || !profile.userProvidedAddress.city 
-      || !profile.userProvidedAddress.districtId
-      || !profile.userProvidedAddress.wardCode
-      || !profile.userProvidedAddress.streetAddress;
+    const missingAddress =
+      !profile.userProvidedAddress ||
+      !profile.userProvidedAddress.city ||
+      !profile.userProvidedAddress.districtId ||
+      !profile.userProvidedAddress.wardCode ||
+      !profile.userProvidedAddress.streetAddress;
 
     const newOnPress = (): void => {
       if (isVerified && !missingAddress) {
@@ -489,7 +497,9 @@ export class ProductDetail extends React.Component<Props> {
       } else if (!isVerified) {
         Alert.alert(strings.AccountNotVerifieid);
       } else {
-        this._alertMissingInfo(`${strings.AddInfoForReview}: ${strings.MissingAddress}`);
+        this._alertMissingInfo(
+          `${strings.AddInfoForReview}: ${strings.MissingAddress}`,
+        );
       }
     };
 

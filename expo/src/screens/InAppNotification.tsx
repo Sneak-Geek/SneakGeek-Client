@@ -107,7 +107,7 @@ const styles = StyleSheet.create({
   },
   toastContainer: {
     width: '100%',
-    height: themes.ButtonHeight,
+    height: themes.RegularButtonHeight,
     justifyContent: 'center',
     marginBottom: 2
   },
