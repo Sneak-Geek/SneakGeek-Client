@@ -9,7 +9,8 @@ export const strings = {
   Password: 'Mật khẩu',
   ForgotPassword: 'Quên mật khẩu?',
   InvalidLogin: 'Email hoặc mật khẩu không đúng',
-  TermsOfServiceAgreement: 'Khi đăng nhập, bạn đã đồng ý với điều khoản sử dụng của chúng tôi',
+  TermsOfServiceAgreement:
+    'Khi đăng nhập, bạn đã đồng ý với điều khoản sử dụng của chúng tôi',
   SeeMore: 'Xem thêm',
   HomeTab: 'Trang chủ',
   SearchTab: 'Tìm kiếm',
@@ -27,6 +28,7 @@ export const strings = {
   ChoosePictureLocal: 'Chọn ảnh từ thư viện',
   ProductDetail: 'Chi tiết sản phẩm',
   ProductName: 'Tên sản phẩm',
+  AllReviews: 'Tất cả đánh giá',
   Colorway: 'Màu chủ đạo',
   Brand: 'Hãng',
   Category: 'Phân khúc',
@@ -81,5 +83,8 @@ export const strings = {
   TransactionPending: 'Đang xác nhận',
   TransactionProcessed: 'Đã thanh toán',
   ProductNotFound: 'Không tìm thấy sản phẩm bạn muốn?',
-  RequestNewProduct: 'Yêu cầu sản phẩm'
-}
+  RequestNewProduct: 'Yêu cầu sản phẩm',
+  AddReview: 'Thêm đánh giá',
+  SortByDate: 'Sắp xếp theo thời gian',
+  NoRating: 'Chưa có đánh giá',
+};

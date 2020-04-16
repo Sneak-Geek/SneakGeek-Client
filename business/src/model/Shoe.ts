@@ -11,4 +11,13 @@ export interface Shoe {
   title: string;
   retailPrice?: number;
   releaseDate?: string;
+  reviewStats: {
+    avgRating: number;
+    totalReviews: number;
+    fiveStarReviews: number;
+    fourStarReviews: number;
+    threeStarReviews: number;
+    twoStarReviews: number;
+    oneStarReviews: number;
+  };
 }

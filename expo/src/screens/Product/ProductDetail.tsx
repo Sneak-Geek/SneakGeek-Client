@@ -143,7 +143,7 @@ const styles = StyleSheet.create({
   },
 });
 
-const ReviewItem = (props: { review: Review }): JSX.Element => {
+export const ReviewItem = (props: { review: Review }): JSX.Element => {
   const { review } = props;
   const profile = review.reviewedBy.profile as Partial<Profile>;
   const { userProvidedName, userProvidedProfilePic } = profile;
@@ -167,6 +167,7 @@ const ReviewItem = (props: { review: Review }): JSX.Element => {
           <AppText.Footnote>{toVnDateFormat(review.updatedAt)}</AppText.Footnote>
         </View>
         <Rating
+          ratingColor='#1ABC9C'
           startingValue={review.rating}
           readonly
           imageSize={themes.IconSize / 1.5}
@@ -212,7 +213,7 @@ export class ProductDetail extends React.Component<Props> {
               <View
                 style={{
                   ...styles.pageContainer,
-                  marginBottom: insets.bottom + themes.ButtonHeight,
+                  marginBottom: insets.bottom + themes.ButtonHeight
                 }}
               >
                 {this._renderProductImage()}
@@ -350,7 +351,11 @@ export class ProductDetail extends React.Component<Props> {
             <View style={{ flex: 1, flexDirection: "row-reverse" }}>
               <AppText.Callout style={{ color: '#808080' }} onPress={(): void => {
                 // @ts-ignore
-                navigation.push(RouteNames.Product.AllReviews, { reviews: reviews })
+                navigation.push(RouteNames.Product.AllReviews, {
+                  reviews: reviews,
+                  shoe: this._shoe,
+                  profile: this.props.profile
+                })
               }}>
                 {strings.SeeMore}
               </AppText.Callout>
