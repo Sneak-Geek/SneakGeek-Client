@@ -54,28 +54,30 @@ class UnconnectedAccountTabMain extends React.Component<Props & ActionSheetProps
   private settings: Setting[] = [
     {
       title: strings.AccountInfo,
-      onClick: () =>
+      onClick: (): void =>
         this.props.navigation.push(RouteNames.Tab.AccountTab.EditProfile),
       leftIcon: 'person',
     },
     {
       title: strings.NotificationSettings,
-      onClick: () => {},
+      onClick: (): void => null,
       leftIcon: 'notifications-active',
     },
     {
       title: strings.ShareApplication,
-      onClick: () => {},
+      onClick: (): void => null,
       leftIcon: 'share',
     },
     {
       title: strings.InfoAppSetting,
-      onClick: () => {},
+      onClick: (): void => {
+        this.props.navigation.push(RouteNames.Tab.AccountTab.Faq);
+      },
       leftIcon: 'info',
     },
     {
       title: strings.AppContact,
-      onClick: () => {},
+      onClick: (): void => null,
       leftIcon: 'phone',
     },
   ];
@@ -143,7 +145,7 @@ class UnconnectedAccountTabMain extends React.Component<Props & ActionSheetProps
     return (
       <BottomButton
         title={strings.LogOut}
-        onPress={() => {}}
+        onPress={(): void => null}
         style={{ backgroundColor: themes.AppErrorColor }}
       />
     );

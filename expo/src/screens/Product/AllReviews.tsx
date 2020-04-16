@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, StyleSheet, ScrollView, Dimensions, Alert } from 'react-native';
+import { View, StyleSheet, ScrollView, Alert } from 'react-native';
 import { AppText, BottomButton } from '@screens/Shared';
 import { RouteProp } from '@react-navigation/native';
 import { RootStackParams } from 'navigations/RootStack';
@@ -7,14 +7,33 @@ import { StackNavigationProp, HeaderHeightContext } from '@react-navigation/stac
 import { SafeAreaConsumer } from 'react-native-safe-area-context';
 import { themes, strings } from '@resources';
 import { Icon, Rating } from 'react-native-elements';
-import { Review, Shoe } from 'business';
-import { ReviewItem } from './ProductDetail';
+import { Review, Shoe, ObjectFactory, SettingsKey } from 'business';
+import { ReviewItem } from '../Shared';
 import "../Shared/BottomButton";
 import RouteNames from 'navigations/RouteNames';
+import { IShoeService, FactoryKeys, ISettingsProvider } from 'business/src';
+import { connect } from 'utilities/ReduxUtilities';
+import {
+  toggleIndicator,
+  showErrorNotification,
+} from 'actions';
+import { IAppState } from '@store/AppStore';
 
 type Props = {
   navigation: StackNavigationProp<RootStackParams, 'ProductAllReviews'>;
   route: RouteProp<RootStackParams, 'ProductAllReviews'>;
+  showErrorNotification: (msg: string) => void;
+  toggleLoadingIndicator: (isLoading: boolean, message?: string) => void;
+}
+
+type State = {
+  reviewStatistics: {
+    avg: number,
+    ratingCounts: Array<{
+      count: number;
+      rating: number;
+    }>
+  }
 }
 
 const styles = StyleSheet.create({
@@ -43,7 +62,10 @@ const styles = StyleSheet.create({
     right: 10,
   },
   sortingContainer: {
-    flexDirection: "row"
+    flexDirection: "row",
+    paddingLeft: 20,
+    paddingRight: 20,
+    marginTop: 10
   }
   ,
   reviewStatsContainer: {
@@ -51,27 +73,59 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     paddingTop: 40,
   },
+  displayRating: {
+    color: '#1ABC9C',
+    textAlign: "center"
+  }
 })
 
+@connect(
+  (_: IAppState) => ({}),
+  (dispatch: Function) => ({
+    showErrorNotification: (message: string): void => {
+      dispatch(showErrorNotification(message));
+    },
+    toggleLoadingIndicator: (isLoading: boolean, message?: string): void => {
+      dispatch(toggleIndicator({ isLoading, message }));
+    },
+  }),
+)
 export class AllReviews extends React.Component<Props>{
   private reviews: Review[] = this.props.route.params.reviews;
   private shoe: Shoe = this.props.route.params.shoe;
+  private readonly _shoeService = ObjectFactory.getObjectInstance<IShoeService>(
+    FactoryKeys.IShoeService
+  );
+  private readonly _settingsProvider = ObjectFactory.getObjectInstance<ISettingsProvider>(
+    FactoryKeys.ISettingsProvider
+  );
+
+  state: State = {
+    reviewStatistics: {
+      avg: 0,
+      ratingCounts: []
+    }
+  }
+
+  async componentDidMount() {
+    await this.getReviewStats(this.shoe._id);
+  }
 
   public render(): JSX.Element {
     return (
-      <SafeAreaConsumer >
+      <SafeAreaConsumer>
         {(insets): JSX.Element => (
           <View
             style={{
               paddingTop: insets.top,
-              ...styles.rootContainer,
+              ...styles.rootContainer
             }}>
             {this._renderHeader(insets.top)}
-            <ScrollView style={{ flex: 1 }} showsVerticalScrollIndicator={false}>
+            <ScrollView style={{ flex: 1, marginBottom: insets.bottom + themes.RegularButtonHeight }}
+              showsVerticalScrollIndicator={false}>
               <View
                 style={{
                   ...styles.pageContainer,
-                  marginBottom: insets.bottom + themes.ButtonHeight,
                 }}
               >
                 {this._renderStats()}
@@ -81,8 +135,7 @@ export class AllReviews extends React.Component<Props>{
             </ScrollView>
             {this._renderAddReviewButton(insets.bottom)}
           </View>
-        )
-        }
+        )}
       </SafeAreaConsumer>
     );
   }
@@ -117,7 +170,7 @@ export class AllReviews extends React.Component<Props>{
 
   private _renderSortingBar(): JSX.Element {
     return (
-      <View style={{ ...styles.sortingContainer, paddingLeft: 20, paddingRight: 20, marginTop: 10 }}>
+      <View style={{ ...styles.sortingContainer }}>
         <Icon
           name={'tune'}
           size={themes.IconSize * 0.95}
@@ -132,48 +185,65 @@ export class AllReviews extends React.Component<Props>{
   }
 
   private _renderStats(): JSX.Element {
-    const reviewStats = this.shoe.reviewStats;
+    let reviewStats = this.state.reviewStatistics;
+    if (reviewStats) {
+      let totalRatingCount = 0;
+      let numStars = [0, 0, 0, 0, 0];
+      reviewStats.ratingCounts.map(ratingCount => {
+        numStars[ratingCount.rating - 1] = ratingCount.count;
+        totalRatingCount += ratingCount.count;
+      });
+      numStars.reverse();
+      const avgRating = Math.round(reviewStats.avg * 10) / 10;
+      let displayRating: JSX.Element;
+      if (avgRating === 0)
+        displayRating = <AppText.Title1 style={styles.displayRating}> - /5 </AppText.Title1>
+      else
+        displayRating = (
+          <AppText.Title1 style={styles.displayRating}> <AppText.LargeTitle style={{ fontSize: 40 }}>{avgRating}</AppText.LargeTitle> /5 </AppText.Title1>
+        );
+      let starIndex = 6;
 
-    let stars = [5, 4, 3, 2, 1]
-    let numStars = [reviewStats.oneStarReviews, reviewStats.twoStarReviews, reviewStats.threeStarReviews, reviewStats.fourStarReviews, reviewStats.fiveStarReviews,]
-
+      return (
+        <View style={{ ...styles.reviewStatsContainer, padding: 20 }}>
+          <View>
+            {displayRating}
+            <AppText.Title2 style={{ fontSize: 20, textAlign: "center" }}>
+              Tổng quan
+          </AppText.Title2>
+            <AppText.Caption1 style={{ fontSize: 16, marginVertical: 5, textAlign: "center" }}>
+              {totalRatingCount} đánh giá
+            </AppText.Caption1>
+          </View>
+          <View>
+            {numStars.map((star, index) => {
+              starIndex--;
+              return (
+                <View key={index} style={{ flexDirection: "row" }}>
+                  <AppText.Body style={{ paddingRight: 10 }}>
+                    {star} người
+                  </AppText.Body>
+                  <Rating
+                    ratingColor={themes.AppPrimaryColor}
+                    startingValue={starIndex}
+                    readonly
+                    imageSize={themes.IconSize / 1.5}
+                  />
+                </View>
+              );
+            })
+            }
+          </View>
+        </View >
+      );
+    }
     return (
-      <View style={{ ...styles.reviewStatsContainer, padding: 20 }}>
-        <View>
-          <AppText.Title1 style={{ color: '#1ABC9C', textAlign: "center" }}>
-            {reviewStats.avgRating === 0 ? '- /5' : <AppText.LargeTitle>{reviewStats.avgRating}</AppText.LargeTitle> + ` /5`}
-          </AppText.Title1>
-          <AppText.Title2 style={{ fontSize: 20, textAlign: "center" }}>
-            Tổng quan
-        </AppText.Title2>
-          <AppText.Caption1 style={{ fontSize: 16, marginVertical: 5, textAlign: "center" }}>
-            {this.shoe.reviewStats.totalReviews} đánh giá
-          </AppText.Caption1>
-        </View>
-
-        <View>
-          {stars.map(star => {
-            return (
-              <View style={{ flexDirection: "row" }}>
-                <AppText.Body style={{ paddingRight: 10 }}>
-                  {numStars[star - 1]} người
-              </AppText.Body>
-                <Rating
-                  ratingColor={themes.AppPrimaryColor}
-                  startingValue={star}
-                  readonly
-                  imageSize={themes.IconSize / 1.5}
-                />
-              </View>
-            );
-          })
-          }
-        </View>
-      </View >
+      <AppText.Title1>Hi</AppText.Title1>
     );
+
   }
   private _renderReviews(reviews: Review[]): JSX.Element {
-    if (this.shoe.reviewStats.totalReviews === 0)
+    if (this.state.reviewStatistics.avg === 0)
       return (
         <AppText.Body style={{ textAlign: "center", paddingVertical: 150 }}>{strings.NoRating}</AppText.Body>
       );
@@ -227,5 +297,20 @@ export class AllReviews extends React.Component<Props>{
         style: 'cancel',
       },
     ]);
+  }
+
+  private async getReviewStats(shoeId: string) {
+    const { toggleLoadingIndicator, navigation, showErrorNotification } = this.props;
+    toggleLoadingIndicator(true);
+    try {
+      const token = this._settingsProvider.getValue(SettingsKey.CurrentAccessToken);
+      const response = await this._shoeService.getReviewStats(token, shoeId);
+      this.setState({ reviewStatistics: response });
+      return response;
+    } catch (error) {
+      showErrorNotification('Đã có lỗi xảy ra');
+    } finally {
+      toggleLoadingIndicator(false);
+    }
   }
 };

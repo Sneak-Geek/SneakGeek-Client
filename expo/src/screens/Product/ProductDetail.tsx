@@ -14,9 +14,9 @@ import {
 } from 'react-native';
 import { SafeAreaConsumer } from 'react-native-safe-area-context';
 import { ScrollView } from 'react-native-gesture-handler';
-import { AppText, LiteShoeCard } from '@screens/Shared';
-import { strings, themes, images } from '@resources';
-import { Icon, Avatar, Rating } from 'react-native-elements';
+import { AppText, LiteShoeCard, ReviewItem } from '@screens/Shared';
+import { strings, themes } from '@resources';
+import { Icon } from 'react-native-elements';
 import { connect, toVnDateFormat } from 'utilities';
 import Humanize from 'humanize-plus';
 import { IAppState } from '@store/AppStore';
@@ -117,14 +117,6 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     alignItems: 'center',
   },
-  reviewContent: { flexDirection: 'row', marginBottom: 8 },
-  reviewAvatar: { borderWidth: 0.5, borderColor: themes.DisabledColor },
-  reviewAuthor: {
-    flex: 1,
-    alignItems: 'flex-start',
-    marginLeft: 20,
-    justifyContent: 'space-between',
-  },
   bottomContainer: {
     position: 'absolute',
     width: '100%',
@@ -135,48 +127,13 @@ const styles = StyleSheet.create({
     paddingHorizontal: '3%',
   },
   bottomButtonStyle: {
-    height: themes.ButtonHeight,
+    height: themes.RegularButtonHeight,
     width: Dimensions.get('window').width * 0.45,
     alignItems: 'center',
     borderRadius: themes.ButtonBorderRadius,
     flexDirection: 'row',
   },
 });
-
-export const ReviewItem = (props: { review: Review }): JSX.Element => {
-  const { review } = props;
-  const profile = review.reviewedBy.profile as Partial<Profile>;
-  const { userProvidedName, userProvidedProfilePic } = profile;
-  const avatar = userProvidedProfilePic
-    ? { uri: userProvidedProfilePic }
-    : images.Profile;
-
-  return (
-    <View style={{ marginVertical: 8 }}>
-      <View style={styles.reviewContent}>
-        <Avatar
-          rounded
-          source={avatar}
-          size={'small'}
-          containerStyle={styles.reviewAvatar}
-        />
-        <View style={styles.reviewAuthor}>
-          <AppText.Body>
-            {userProvidedName.firstName} {userProvidedName.lastName}
-          </AppText.Body>
-          <AppText.Footnote>{toVnDateFormat(review.updatedAt)}</AppText.Footnote>
-        </View>
-        <Rating
-          ratingColor='#1ABC9C'
-          startingValue={review.rating}
-          readonly
-          imageSize={themes.IconSize / 1.5}
-        />
-      </View>
-      <AppText.Subhead>{review.description}</AppText.Subhead>
-    </View>
-  );
-};
 
 @connect(
   (state: IAppState) => ({
@@ -213,7 +170,7 @@ export class ProductDetail extends React.Component<Props> {
               <View
                 style={{
                   ...styles.pageContainer,
-                  marginBottom: insets.bottom + themes.ButtonHeight
+                  marginBottom: insets.bottom + themes.RegularButtonHeight,
                 }}
               >
                 {this._renderProductImage()}
@@ -234,7 +191,7 @@ export class ProductDetail extends React.Component<Props> {
   private _renderHeader(topInsets: number): JSX.Element {
     return (
       <HeaderHeightContext.Consumer>
-        {headerHeight => (
+        {(headerHeight): JSX.Element => (
           <View
             style={{ ...styles.headerContainer, height: headerHeight + topInsets }}
           >
@@ -242,7 +199,7 @@ export class ProductDetail extends React.Component<Props> {
               name={'ios-arrow-back'}
               type={'ionicon'}
               size={themes.IconSize}
-              onPress={() => this.props.navigation.goBack()}
+              onPress={(): void => this.props.navigation.goBack()}
               hitSlop={styles.backHitSlop}
             />
             <AppText.Title3>{strings.ProductDetail}</AppText.Title3>
@@ -398,7 +355,7 @@ export class ProductDetail extends React.Component<Props> {
     ]);
   }
 
-  private _renderRelatedShoes() {
+  private _renderRelatedShoes(): JSX.Element {
     let content: JSX.Element;
     const { shoeInfoState } = this.props;
 
@@ -444,7 +401,14 @@ export class ProductDetail extends React.Component<Props> {
       <View style={{ bottom, ...styles.bottomContainer }}>
         {this._renderSingleActionButton(
           'Bán',
-          `Cao: ${highestBuyOrder ? highestBuyOrder.buyPrice : '-'}`,
+          `Cao: ${
+          highestBuyOrder
+            ? Humanize.compactInteger(
+              (highestBuyOrder.buyPrice as PriceData).price,
+              2,
+            )
+            : '-'
+          }`,
           'cart-arrow-up',
           themes.AppSellColor,
           () => {
@@ -493,11 +457,12 @@ export class ProductDetail extends React.Component<Props> {
     const { account, profile } = this.props;
 
     const isVerified = account.isVerified;
-    const missingAddress = !profile.userProvidedAddress
-      || !profile.userProvidedAddress.city
-      || !profile.userProvidedAddress.districtId
-      || !profile.userProvidedAddress.wardCode
-      || !profile.userProvidedAddress.streetAddress;
+    const missingAddress =
+      !profile.userProvidedAddress ||
+      !profile.userProvidedAddress.city ||
+      !profile.userProvidedAddress.districtId ||
+      !profile.userProvidedAddress.wardCode ||
+      !profile.userProvidedAddress.streetAddress;
 
     const newOnPress = (): void => {
       if (isVerified && !missingAddress) {
@@ -505,7 +470,9 @@ export class ProductDetail extends React.Component<Props> {
       } else if (!isVerified) {
         Alert.alert(strings.AccountNotVerifieid);
       } else {
-        this._alertMissingInfo(`${strings.AddInfoForReview}: ${strings.MissingAddress}`);
+        this._alertMissingInfo(
+          `${strings.AddInfoForReview}: ${strings.MissingAddress}`,
+        );
       }
     };
 

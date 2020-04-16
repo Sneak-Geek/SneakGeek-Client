@@ -76,7 +76,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
     alignItems: 'center',
     justifyContent: 'flex-start',
-    height: themes.ButtonHeight,
+    height: themes.RegularButtonHeight,
     borderTopWidth: 0.5,
     borderTopColor: themes.DisabledColor,
   },
@@ -360,7 +360,7 @@ export class AccountTabEditProfile extends React.Component<Props, State> {
             {this._renderHeader(insets.top)}
             <ScrollView
               showsVerticalScrollIndicator={false}
-              style={{ marginBottom: this.state.editMode ? themes.ButtonHeight : 0 }}
+              style={{ marginBottom: this.state.editMode ? themes.RegularButtonHeight : 0 }}
             >
               {this._renderSettingSections()}
             </ScrollView>
@@ -389,9 +389,11 @@ export class AccountTabEditProfile extends React.Component<Props, State> {
     const settingsProvider = getService<ISettingsProvider>(
       FactoryKeys.ISettingsProvider,
     );
+    this._validShippingAddress = settingsProvider.getValue(SettingsKey.GhnShippingAddress);
 
-    this.props.toggleLoadingIndicator(true);
-    settingsService
+    if (!this._validShippingAddress) {
+      this.props.toggleLoadingIndicator(true);
+      settingsService
       .getValidShippingAddress(getToken())
       .then(async ({ districts, wards }) => {
         await settingsProvider.setValue(SettingsKey.GhnShippingAddress, {
@@ -401,6 +403,7 @@ export class AccountTabEditProfile extends React.Component<Props, State> {
         this._validShippingAddress = { districts, wards };
         this.props.toggleLoadingIndicator(false);
       });
+    }
   }
 
   public componentWillUnmount(): void {

@@ -25,7 +25,6 @@ import { Avatar } from 'react-native-elements';
 const styles = StyleSheet.create({
   rootContainer: {
     flex: 1,
-    marginBottom: 15,
     backgroundColor: themes.AppBackgroundColor,
   },
   hotShoeContainer: {

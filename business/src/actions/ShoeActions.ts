@@ -3,7 +3,7 @@ import { createAction } from "redux-actions"
 import { SearchShoesPayload, NetworkRequestState, GetReviewsPayload, GetShoeInfoPayload } from "../payload"
 import { ObjectFactory, FactoryKeys } from "../loader/kernel";
 import { IShoeService, ISettingsProvider, SettingsKey } from "../loader/interfaces";
-import { Shoe, Review } from "../model";
+import { Review } from "../model";
 
 export const ShoeActions = {
   UPDATE_STATE_SEARCH_SHOES: "UPDATE_STATE_SEARCH_SHOES",
@@ -28,9 +28,10 @@ export const searchShoes = (key: string,
     dispatch(updateStateSearchShoes({
       state: NetworkRequestState.REQUESTING,
     }));
+    const settings = ObjectFactory.getObjectInstance<ISettingsProvider>(FactoryKeys.ISettingsProvider);
     const shoeService = ObjectFactory.getObjectInstance<IShoeService>(FactoryKeys.IShoeService);
     try {
-      const shoes: Shoe[] = await shoeService.searchShoes(key, page);
+      const { shoes } = await shoeService.searchShoes(settings.getValue(SettingsKey.CurrentAccessToken), key, page);
 
       dispatch(updateStateSearchShoes({
         state: NetworkRequestState.SUCCESS,

@@ -1,6 +1,6 @@
 import React from 'react';
 import { SafeAreaConsumer } from 'react-native-safe-area-context';
-import { View, StyleSheet, ScrollView, FlatList } from 'react-native';
+import { View, ScrollView, FlatList } from 'react-native';
 import { HeaderHeightContext, StackNavigationProp } from '@react-navigation/stack';
 import { Icon } from 'react-native-elements';
 import { themes, strings } from '@resources';
@@ -8,13 +8,14 @@ import { AppText, ShoeHeaderSummary, BottomButton } from '@screens/Shared';
 import { Shoe, SellOrder, IOrderService, FactoryKeys } from 'business';
 import { RouteProp } from '@react-navigation/native';
 import { RootStackParams } from 'navigations/RootStack';
-import { ProductSetPrice } from '../Product/ProductSetPrice';
-import { ProductConditionExtra } from '../Product/ProductConditionExtra';
-import { ProductSellSummary } from '../Product/ProductSellSummary';
-import { ProductRequiredInfo } from '../Product/ProductRequiredInfo';
+import { ProductSetPrice } from '../../Product/ProductSetPrice';
+import { ProductConditionExtra } from '../../Product/ProductConditionExtra';
+import { ProductSellSummary } from '../../Product/ProductSellSummary';
+import { ProductRequiredInfo } from '../../Product/ProductRequiredInfo';
 import { connect, getToken, getService } from 'utilities';
 import { IAppState } from '@store/AppStore';
 import { showErrorNotification, showSuccessNotification } from 'actions';
+import { styles } from './styles';
 
 type Props = {
   route: RouteProp<RootStackParams, 'NewSellOrder'>;
@@ -34,43 +35,13 @@ type State = {
   currentIndex: number;
 };
 
-const styles = StyleSheet.create({
-  headerContainer: {
-    backgroundColor: 'white',
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    borderBottomColor: themes.DisabledColor,
-    borderBottomWidth: 1,
-    paddingHorizontal: 10,
-  },
-  shoeDetailContainer: {
-    marginTop: 20,
-    flexDirection: 'row',
-    alignItems: 'flex-start',
-    justifyContent: 'space-between',
-    flexWrap: 'wrap',
-    flex: 1,
-    paddingHorizontal: 8,
-    maxHeight: 100,
-  },
-  shoeDetailTextContainer: {
-    flex: 1,
-    flexWrap: 'wrap',
-    flexDirection: 'column',
-    justifyContent: 'flex-start',
-    alignItems: 'flex-start',
-    paddingRight: 5,
-  },
-});
-
 @connect(
-  (_: IAppState) => ({}),
+  () => ({}),
   (dispatch: Function) => ({
-    showErrorNotification: (message: string) => {
+    showErrorNotification: (message: string): void => {
       dispatch(showErrorNotification(message));
     },
-    showSuccessNotification: (message: string) => {
+    showSuccessNotification: (message: string): void => {
       dispatch(showSuccessNotification(message));
     },
   }),
@@ -102,7 +73,7 @@ export class NewSellOrder extends React.Component<Props, State> {
     };
     this.childComponents = [
       {
-        render: () => (
+        render: (): JSX.Element => (
           <ProductRequiredInfo
             key={0}
             onSetShoeSize={this._setShoeSize.bind(this)}
@@ -110,7 +81,7 @@ export class NewSellOrder extends React.Component<Props, State> {
             onSetBoxCondition={this._setBoxCondition.bind(this)}
           />
         ),
-        canProceed: () => {
+        canProceed: (): boolean => {
           const { sellOrder } = this.state;
           return Boolean(
             sellOrder.shoeSize &&
@@ -120,7 +91,7 @@ export class NewSellOrder extends React.Component<Props, State> {
         },
       },
       {
-        render: () => (
+        render: (): JSX.Element => (
           <ProductConditionExtra
             key={1}
             onSetShoeHeavilyTorn={this._setShoeHeavilyTorn.bind(this)}
@@ -130,35 +101,35 @@ export class NewSellOrder extends React.Component<Props, State> {
             onSetShoeOtherDetail={this._setShoeOtherDetail.bind(this)}
           />
         ),
-        canProceed: () => {
+        canProceed: (): boolean => {
           return true;
         },
       },
       {
-        render: () => (
+        render: (): JSX.Element => (
           <ProductSetPrice key={2} onSetShoePrice={this._setShoePrice.bind(this)} />
         ),
-        canProceed: () => {
+        canProceed: (): boolean => {
           const { sellOrder } = this.state;
           return sellOrder.sellNowPrice !== undefined;
         },
       },
       {
-        render: () => (
+        render: (): JSX.Element => (
           <ProductSellSummary
             key={3}
             orderSummary={this.state.sellOrder}
             onShoePictureAdded={(picUri: string) => this._onPictureAdded(picUri)}
           />
         ),
-        canProceed: () => {
+        canProceed: (): JSX.Element => {
           return true;
         },
       },
     ];
   }
 
-  public componentWillUnmount() {
+  public componentWillUnmount(): void {
     clearTimeout(this._goBackTimeout);
   }
 
@@ -259,7 +230,7 @@ export class NewSellOrder extends React.Component<Props, State> {
     }
   }
 
-  private _onListScroll(forward: boolean = true) {
+  private _onListScroll(forward = true) {
     const shouldContinue = this.childComponents[this.state.currentIndex].canProceed();
     const canGoNext =
       shouldContinue &&

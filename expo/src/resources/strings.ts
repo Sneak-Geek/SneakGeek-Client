@@ -19,7 +19,7 @@ export const strings = {
   AccountInfo: 'Thông tin tài khoản',
   NotificationSettings: 'Cài đặt thông báo',
   ShareApplication: 'Chia sẻ ứng dụng',
-  InfoAppSetting: 'Thông tin sản phẩm',
+  InfoAppSetting: 'Các câu hỏi thường gặp',
   AppContact: 'Liên hệ',
   LogOut: 'Đăng xuất',
   HomeTabTitle: 'Trang chủ',
@@ -87,4 +87,13 @@ export const strings = {
   AddReview: 'Thêm đánh giá',
   SortByDate: 'Sắp xếp theo thời gian',
   NoRating: 'Chưa có đánh giá',
+  Gender: 'Giới tính',
+  Men: 'Nam',
+  Women: 'Nữ',
+  HighestBuyOrderPrice: 'Giá đặt mua cao nhất',
+  BuyNowPrice: 'Giá mua ngay',
+  HighestBuyOrderExplanation:
+    'Dựa trên các đơn đặt mua trên thị trường, SneakGeek đưa ra giá đặt mua cao nhất để tham khảo',
+  SetPrice: 'Đặt giá',
+  SetPriceSuccess: 'Đặt giá thành công',
 };
