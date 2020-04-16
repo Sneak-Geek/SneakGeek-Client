@@ -8,7 +8,13 @@ export type BuyOrder = {
   buyerId: string,
   shoe: string | Shoe,
   shoeSize: string,
-  buyPrice: string | PriceData,
+  /**
+   * buyPrice's type:
+   * - string: ID of the PriceData
+   * - PriceData: populated object
+   * - number: for object creation purpose
+   */
+  buyPrice: string | PriceData | number,
   sellOrder?: string | SellOrder,
   status?: OrderStatus,
   transactionId?: string

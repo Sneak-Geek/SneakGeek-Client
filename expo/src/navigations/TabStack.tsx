@@ -174,7 +174,7 @@ export const TabStack = (): JSX.Element => {
   return (
     <Tab.Navigator
       tabBarOptions={{
-        labelStyle: themes.TextStyle.footnote,
+        labelStyle: themes.TextStyle.footnoteRegular,
         activeTintColor: themes.AppPrimaryColor,
         inactiveTintColor: themes.AppDisabledColor,
       }}

@@ -436,7 +436,7 @@ export class SearchTabMain extends React.Component<Props, State> {
     const brands = settings.getValue(SettingsKey.RemoteSettings).shoeBrands;
 
     return (
-      <View style={{ marginBottom: themes.ButtonHeight }}>
+      <View style={{ marginBottom: themes.RegularButtonHeight }}>
         <AppText.Title2 style={styles.filterTitle}>{strings.Brand}</AppText.Title2>
         <FlatList
           style={{ marginBottom: 5 }}

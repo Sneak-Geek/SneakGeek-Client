@@ -12,10 +12,10 @@ const styles = StyleSheet.create({
     right: 0,
     left: 0,
     width: '100%',
-    height: themes.ButtonHeight
+    height: themes.RegularButtonHeight
   },
   buttonStyle: {
-    height: themes.ButtonHeight,
+    height: themes.RegularButtonHeight,
     alignItems: 'stretch',
     justifyContent: 'center',
   },

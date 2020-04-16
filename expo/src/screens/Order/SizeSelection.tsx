@@ -81,7 +81,7 @@ export class SizeSelection extends React.Component<Props, State> {
             onSizeSelected={this._onSizeSelected.bind(this)}
           />
           <BottomButton
-            onPress={() => this.props.navigation.goBack()}
+            onPress={(): void => this.props.navigation.goBack()}
             title={strings.Cancel}
             style={{
               backgroundColor: themes.AppErrorColor,

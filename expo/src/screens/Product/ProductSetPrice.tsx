@@ -5,7 +5,7 @@
 import * as React from 'react';
 import { ScrollView, View, StyleSheet, Dimensions } from 'react-native';
 import { AppText } from '@screens/Shared';
-import { themes } from '@resources';
+import { themes, strings } from '@resources';
 import { TextInput } from 'react-native-gesture-handler';
 import { toCurrencyString } from 'utilities';
 
@@ -18,51 +18,6 @@ type State = {
 type Props = {
   onSetShoePrice: (price: number) => void;
 };
-
-export class ProductSetPrice extends React.Component<Props, State> {
-  constructor(props: any) {
-    super(props);
-    this.state = {
-      isModalOpen: false,
-      shoePrice: '',
-    };
-  }
-
-  public render(): JSX.Element {
-    return (
-      <ScrollView style={{ flex: 1, width: Dimensions.get('screen').width }}>
-        <View style={{ flex: 1, paddingHorizontal: 20 }}>
-          {this._renderSetPrice()}
-        </View>
-      </ScrollView>
-    );
-  }
-
-  private _renderSetPrice(): JSX.Element {
-    return (
-      <View style={[styles.rowSeparatedContainer, { marginVertical: 15 }]}>
-        <AppText.Headline>Đặt giá bán</AppText.Headline>
-        <View style={styles.inputContainer}>
-          <TextInput
-            keyboardType={'numeric'}
-            onChangeText={shoePrice => this.setState({ shoePrice })}
-            value={this.state.shoePrice}
-            onEndEditing={() => {
-              const shoePrice = this.state.shoePrice;
-              this.props.onSetShoePrice(parseInt(shoePrice));
-              this.setState({ shoePrice: toCurrencyString(shoePrice) });
-            }}
-            onFocus={() => {
-              this.setState({ shoePrice: '' });
-            }}
-            placeholder={'1000000'}
-            style={themes.TextStyle.body}
-          />
-        </View>
-      </View>
-    );
-  }
-}
 
 const styles = StyleSheet.create({
   rowSeparatedContainer: {
@@ -99,9 +54,54 @@ const styles = StyleSheet.create({
     width: '100%',
     paddingVertical: 8,
     paddingHorizontal: 5,
-    minHeight: themes.ButtonHeight,
+    minHeight: themes.RegularButtonHeight,
     alignItems: 'center',
     justifyContent: 'center',
     marginTop: 20,
   },
 });
+
+export class ProductSetPrice extends React.Component<Props, State> {
+  constructor(props: any) {
+    super(props);
+    this.state = {
+      isModalOpen: false,
+      shoePrice: '',
+    };
+  }
+
+  public render(): JSX.Element {
+    return (
+      <ScrollView style={{ flex: 1, width: Dimensions.get('screen').width }}>
+        <View style={{ flex: 1, paddingHorizontal: 20 }}>
+          {this._renderSetPrice()}
+        </View>
+      </ScrollView>
+    );
+  }
+
+  private _renderSetPrice(): JSX.Element {
+    return (
+      <View style={[styles.rowSeparatedContainer, { marginVertical: 15 }]}>
+        <AppText.Headline>{strings.SetPrice}</AppText.Headline>
+        <View style={styles.inputContainer}>
+          <TextInput
+            keyboardType={'numeric'}
+            onChangeText={shoePrice => this.setState({ shoePrice })}
+            value={this.state.shoePrice}
+            onEndEditing={() => {
+              const shoePrice = this.state.shoePrice;
+              this.props.onSetShoePrice(parseInt(shoePrice));
+              this.setState({ shoePrice: toCurrencyString(shoePrice) });
+            }}
+            onFocus={() => {
+              this.setState({ shoePrice: '' });
+            }}
+            placeholder={'1000000'}
+            style={themes.TextStyle.body}
+          />
+        </View>
+      </View>
+    );
+  }
+}
