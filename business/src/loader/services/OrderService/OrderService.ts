@@ -1,6 +1,6 @@
-import { IOrderService, PaymentType, OrderType } from "../interfaces";
-import { BaseService } from "./BaseService";
-import { SellOrder, BuyOrder, Transaction } from "../../model";
+import { IOrderService, PaymentType, OrderType } from "./IOrderService";
+import { BaseService } from "../BaseService";
+import { SellOrder, BuyOrder, Transaction } from "../../../model";
 
 export class OrderService extends BaseService implements IOrderService {
   public async createSellOrder(token: string, sellOrder: SellOrder): Promise<void> {

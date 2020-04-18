@@ -20,6 +20,8 @@ import {
   SettingService,
   IOrderService,
   OrderService,
+  ICdnService,
+  CdnService,
 } from 'business';
 import { Provider } from 'react-redux';
 import { SettingsProvider, FacebookSdk } from 'common';
@@ -61,6 +63,7 @@ export default function App(): JSX.Element {
     Factory.register<IShoeService>(Keys.IShoeService, new ShoeService());
     Factory.register<ISettingService>(Keys.ISettingService, new SettingService());
     Factory.register<IOrderService>(Keys.IOrderService, new OrderService());
+    Factory.register<ICdnService>(Keys.ICdnService, new CdnService());
   };
 
   useEffect(() => {

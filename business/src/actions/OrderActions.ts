@@ -2,7 +2,7 @@ import { createAction } from "redux-actions"
 import { Shoe, BuyOrder, SellOrder } from "../model"
 import { GetBuyOrdersPayload, GetSellOrdersPayload, NetworkRequestState } from "../payload";
 import { ObjectFactory, FactoryKeys } from "../loader/kernel";
-import { ISettingsProvider, IOrderService, SettingsKey, OrderType } from "../loader/interfaces";
+import { ISettingsProvider, IOrderService, SettingsKey, OrderType } from "../loader";
 
 export const OrderActions = {
   BUY_SHOE: "BUY_SHOE",
