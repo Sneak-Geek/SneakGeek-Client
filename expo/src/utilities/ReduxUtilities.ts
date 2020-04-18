@@ -31,14 +31,14 @@ export interface IConnect {
   <IStateProps = {}, IDispatchProps = {}, IOwnProps = {}>(
     mapStateToProps?: MapStateToPropsParam<IStateProps, IOwnProps, IAppState>,
     mapDispatchToProps?: MapDispatchToPropsParam<IDispatchProps, IOwnProps>,
-  ): InferableComponentEnhancerWithProps<IStateProps & IDispatchProps, IOwnProps>
+  ): InferableComponentEnhancerWithProps<IStateProps & IDispatchProps, IOwnProps>;
 
   <IStateProps = {}, IDispatchProps = {}, IOwnProps = {}, IMergedProps = {}>(
     mapStateToProps?: MapStateToPropsParam<IStateProps, IOwnProps, IAppState>,
     mapDispatchToProps?: MapDispatchToPropsParam<IDispatchProps, IOwnProps>,
     mergeProps?: MergeProps<IStateProps, IDispatchProps, IOwnProps, IMergedProps>,
     options?: Options<IStateProps, IOwnProps, IMergedProps>,
-  ): InferableComponentEnhancerWithProps<IMergedProps, IOwnProps>
+  ): InferableComponentEnhancerWithProps<IMergedProps, IOwnProps>;
 
 }
 

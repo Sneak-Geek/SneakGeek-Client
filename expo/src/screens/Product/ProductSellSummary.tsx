@@ -14,6 +14,25 @@ import { SellOrder } from 'business';
 import { toCurrencyString } from 'utilities';
 import { themes } from '@resources';
 
+const styles = StyleSheet.create({
+  sectionContainer: {
+    flexDirection: 'column',
+    alignItems: 'flex-start',
+    marginBottom: 30,
+  },
+
+  detail: {
+    color: '#1ABC9C',
+    marginTop: 10,
+  },
+
+  imageContainer: {
+    width: 93,
+    aspectRatio: 1,
+    marginRight: 12,
+  },
+});
+
 type Props = {
   orderSummary: Partial<SellOrder>;
   onShoePictureAdded: (picUrl: string) => void;
@@ -126,8 +145,6 @@ export class ProductSellSummary extends React.Component<Props, State> {
   }
 
   private _renderPicture(pictureUri: string | null, index: number) {
-    pictureUri = pictureUri as string;
-
     return (
       <Image
         key={index}
@@ -138,22 +155,3 @@ export class ProductSellSummary extends React.Component<Props, State> {
     );
   }
 }
-
-const styles = StyleSheet.create({
-  sectionContainer: {
-    flexDirection: 'column',
-    alignItems: 'flex-start',
-    marginBottom: 30,
-  },
-
-  detail: {
-    color: '#1ABC9C',
-    marginTop: 10,
-  },
-
-  imageContainer: {
-    width: 93,
-    aspectRatio: 1,
-    marginRight: 12,
-  },
-});

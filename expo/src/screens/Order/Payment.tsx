@@ -3,7 +3,7 @@ import { SellOrder, PaymentType, IOrderService, FactoryKeys } from 'business';
 import { getService, connect, getToken } from 'utilities';
 import { toggleIndicator, showSuccessNotification } from 'actions';
 import { strings, themes } from '@resources';
-import { IAppState } from '@store/AppStore';
+
 import { View, StyleSheet } from 'react-native';
 import { WebView, WebViewMessageEvent } from 'react-native-webview';
 import { RouteProp } from '@react-navigation/native';
@@ -40,7 +40,7 @@ const styles = StyleSheet.create({
 });
 
 @connect(
-  (_: IAppState) => ({}),
+  () => ({}),
   (dispatch: Function) => ({
     toggleLoading: (isLoading: boolean): void => {
       dispatch(toggleIndicator({ isLoading, message: strings.PleaseWait }));

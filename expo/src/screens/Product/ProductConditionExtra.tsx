@@ -3,10 +3,26 @@
 // !
 
 import * as React from 'react';
-import { Dimensions, StyleSheet, Switch, View } from 'react-native';
+import { Dimensions, Switch, View, StyleSheet } from 'react-native';
 import { AppText } from '@screens/Shared';
 import { themes } from '@resources';
 import { Input } from 'react-native-elements';
+
+const styles = StyleSheet.create({
+  settingContainer: {
+    flexDirection: 'row',
+    marginHorizontal: 20,
+    marginVertical: 15,
+    alignItems: 'center',
+    justifyContent: 'space-between',
+  },
+
+  otherDetailContainer: {
+    flexDirection: 'column',
+    marginHorizontal: 20,
+    marginVertical: 15,
+  },
+});
 
 interface IShoeConditionExtraInfoState {
   tainted: boolean; // ố vàng
@@ -124,19 +140,3 @@ export class ProductConditionExtra extends React.PureComponent<
     );
   }
 }
-
-const styles = StyleSheet.create({
-  settingContainer: {
-    flexDirection: 'row',
-    marginHorizontal: 20,
-    marginVertical: 15,
-    alignItems: 'center',
-    justifyContent: 'space-between',
-  },
-
-  otherDetailContainer: {
-    flexDirection: 'column',
-    marginHorizontal: 20,
-    marginVertical: 15,
-  },
-});

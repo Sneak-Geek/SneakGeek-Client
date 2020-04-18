@@ -31,4 +31,4 @@ export class FacebookSdk implements IFacebookSDK {
   public getCurrentAccessToken(): Promise<string> {
     return Promise.resolve(accessToken);
   }
-};
+}

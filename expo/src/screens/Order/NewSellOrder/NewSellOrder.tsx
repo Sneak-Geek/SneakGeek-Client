@@ -13,7 +13,7 @@ import { ProductConditionExtra } from '../../Product/ProductConditionExtra';
 import { ProductSellSummary } from '../../Product/ProductSellSummary';
 import { ProductRequiredInfo } from '../../Product/ProductRequiredInfo';
 import { connect, getToken, getService } from 'utilities';
-import { IAppState } from '@store/AppStore';
+
 import { showErrorNotification, showSuccessNotification } from 'actions';
 import { styles } from './styles';
 
@@ -122,7 +122,7 @@ export class NewSellOrder extends React.Component<Props, State> {
             onShoePictureAdded={(picUri: string) => this._onPictureAdded(picUri)}
           />
         ),
-        canProceed: (): JSX.Element => {
+        canProceed: (): boolean => {
           return true;
         },
       },

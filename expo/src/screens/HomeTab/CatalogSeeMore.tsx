@@ -1,7 +1,7 @@
 import React from 'react';
 import { Shoe } from 'business';
-import { FlatList, View, Image, TouchableOpacity } from 'react-native';
-import { AppText, LiteShoeCard } from '@screens/Shared';
+import { FlatList } from 'react-native';
+import {  LiteShoeCard } from '@screens/Shared';
 import { RootStackParams } from 'navigations/RootStack';
 import { RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';

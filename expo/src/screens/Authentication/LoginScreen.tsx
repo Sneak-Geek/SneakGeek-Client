@@ -12,7 +12,7 @@ import { strings, themes, images } from '@resources';
 import { StackNavigationProp } from '@react-navigation/stack';
 import RouteNames from 'navigations/RouteNames';
 import { connect } from 'utilities/ReduxUtilities';
-import { authenticateWithFb, Account, getCurrentUser } from 'business';
+import { authenticateWithFb, Account } from 'business';
 import { IAppState } from 'store/AppStore';
 import { AppText } from '@screens/Shared';
 

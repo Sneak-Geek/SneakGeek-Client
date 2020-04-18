@@ -3,7 +3,7 @@
 //!
 
 import React from 'react';
-import { View, StyleSheet, SafeAreaView } from 'react-native';
+import { View,  SafeAreaView, StyleSheet } from 'react-native';
 import { FlatList, TouchableWithoutFeedback } from 'react-native-gesture-handler';
 import { AppText } from '@screens/Shared';
 import { themes } from '@resources';
@@ -12,6 +12,46 @@ import { Notifcation } from 'reducers/NotificationReducers';
 import { dismissNotification } from 'actions';
 import { connect } from 'utilities/ReduxUtilities';
 import { Icon } from 'react-native-elements';
+
+
+const styles = StyleSheet.create({
+  root: {
+    zIndex: 1000,
+    flex: 1,
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+  },
+  toastListContainer: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+  },
+  toastInnerContainer: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    flexDirection: 'row',
+    paddingHorizontal: 20,
+  },
+  toastContainer: {
+    width: '100%',
+    height: themes.RegularButtonHeight,
+    justifyContent: 'center',
+    marginBottom: 2
+  },
+  toastRegular: {
+    backgroundColor: themes.AppPrimaryColor,
+  },
+  toastError: {
+    backgroundColor: themes.AppErrorColor,
+  },
+  toastTitle: {
+    color: themes.AppAccentColor,
+  },
+});
 
 type Props = {
   notifications: Notifcation[];
@@ -82,42 +122,3 @@ export class InAppNotification extends React.Component<Props> {
     this.timeouts.forEach(t => clearTimeout(t));
   }
 }
-
-const styles = StyleSheet.create({
-  root: {
-    zIndex: 1000,
-    flex: 1,
-    position: 'absolute',
-    top: 0,
-    left: 0,
-    right: 0,
-  },
-  toastListContainer: {
-    position: 'absolute',
-    top: 0,
-    left: 0,
-    right: 0,
-  },
-  toastInnerContainer: {
-    flex: 1,
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    flexDirection: 'row',
-    paddingHorizontal: 20,
-  },
-  toastContainer: {
-    width: '100%',
-    height: themes.RegularButtonHeight,
-    justifyContent: 'center',
-    marginBottom: 2
-  },
-  toastRegular: {
-    backgroundColor: themes.AppPrimaryColor,
-  },
-  toastError: {
-    backgroundColor: themes.AppErrorColor,
-  },
-  toastTitle: {
-    color: themes.AppAccentColor,
-  },
-});

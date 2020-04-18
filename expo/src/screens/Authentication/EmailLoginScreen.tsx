@@ -9,6 +9,44 @@ import { authenticateWithEmail, NetworkRequestState, Account } from 'business';
 import { IAppState } from '@store/AppStore';
 import { showErrorNotification, toggleIndicator } from 'actions';
 
+
+const styles = StyleSheet.create({
+  container: {
+    paddingTop: 40,
+    flex: 1,
+  },
+  title: {
+    lineHeight: 25,
+    textAlign: 'left',
+    paddingLeft: 42,
+  },
+  inputContainer: {
+    height: 52,
+    justifyContent: 'center',
+    paddingHorizontal: 15,
+    borderWidth: 1,
+    borderColor: 'black',
+    borderRadius: 4,
+    marginVertical: 5,
+  },
+  absolute: {
+    position: 'absolute',
+    left: 12,
+    top: -7,
+    backgroundColor: 'white',
+  },
+  input: {
+    fontFamily: 'Roboto',
+    fontSize: 16,
+    flex: 1,
+  },
+  forgotContainer: {
+    marginTop: 25,
+    textAlign: 'center',
+    textDecorationLine: 'underline',
+  },
+});
+
 type State = {
   email: string;
   password: string;
@@ -160,40 +198,3 @@ export class EmailLoginScreen extends React.Component<Props, State> {
     );
   }
 }
-
-const styles = StyleSheet.create({
-  container: {
-    paddingTop: 40,
-    flex: 1,
-  },
-  title: {
-    lineHeight: 25,
-    textAlign: 'left',
-    paddingLeft: 42,
-  },
-  inputContainer: {
-    height: 52,
-    justifyContent: 'center',
-    paddingHorizontal: 15,
-    borderWidth: 1,
-    borderColor: 'black',
-    borderRadius: 4,
-    marginVertical: 5,
-  },
-  absolute: {
-    position: 'absolute',
-    left: 12,
-    top: -7,
-    backgroundColor: 'white',
-  },
-  input: {
-    fontFamily: 'Roboto',
-    fontSize: 16,
-    flex: 1,
-  },
-  forgotContainer: {
-    marginTop: 25,
-    textAlign: 'center',
-    textDecorationLine: 'underline',
-  },
-});

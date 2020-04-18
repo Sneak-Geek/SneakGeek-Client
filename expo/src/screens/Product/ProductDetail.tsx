@@ -356,7 +356,6 @@ export class ProductDetail extends React.Component<Props> {
       profile.userProvidedName.firstName &&
       profile.userProvidedName.lastName
     ) {
-      // @ts-ignore
       navigation.push(RouteNames.Product.NewReview, { shoe: this._shoe });
     } else {
       this._alertMissingInfo(strings.MissingInfoForReview);
@@ -369,7 +368,6 @@ export class ProductDetail extends React.Component<Props> {
       {
         text: strings.AddInfoForReview,
         onPress: (): void =>
-          // @ts-ignore
           navigation.navigate(RouteNames.Tab.AccountTab.Name, {
             screen: RouteNames.Tab.AccountTab.EditProfile,
           }),
@@ -400,7 +398,6 @@ export class ProductDetail extends React.Component<Props> {
             <LiteShoeCard
               shoe={item}
               onPress={() =>
-                // @ts-ignore
                 this.props.navigation.push(RouteNames.Product.ProductDetail, {
                   shoe: item,
                 })
@@ -439,7 +436,6 @@ export class ProductDetail extends React.Component<Props> {
           'cart-arrow-up',
           themes.AppSellColor,
           () => {
-            // @ts-ignore
             this.props.navigation.push(RouteNames.Order.Name, {
               screen: RouteNames.Order.NewSellOrder,
               params: {
@@ -461,7 +457,6 @@ export class ProductDetail extends React.Component<Props> {
           'cart-arrow-down',
           themes.AppPrimaryColor,
           () => {
-            // @ts-ignore
             this.props.navigation.push(RouteNames.Order.Name, {
               screen: RouteNames.Order.SizeSelection,
               params: {

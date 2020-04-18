@@ -38,7 +38,7 @@ type State = {
 };
 
 @connect(
-  _ => ({}),
+  () => ({}),
   (dispatch: Function) => ({
     toggleLoading: (isLoading: boolean) => {
       dispatch(toggleIndicator({ isLoading, message: 'Xin chờ' }));

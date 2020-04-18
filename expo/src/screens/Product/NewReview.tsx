@@ -18,7 +18,7 @@ import {
   showErrorNotification,
   showSuccessNotification,
 } from 'actions';
-import { IAppState } from '@store/AppStore';
+
 import { getToken, getService } from 'utilities';
 
 type Props = {
@@ -36,7 +36,7 @@ type State = {
 };
 
 @connect(
-  (_: IAppState) => ({}),
+  () => ({}),
   (dispatch: Function) => ({
     showSuccessNotification: (message: string): void => {
       dispatch(showSuccessNotification(message));

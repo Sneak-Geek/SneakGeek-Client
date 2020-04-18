@@ -9,7 +9,6 @@ import {
   Dimensions,
   SafeAreaView,
   TouchableOpacity,
-  Picker,
 } from 'react-native';
 import {
   ISettingsProvider,
@@ -19,6 +18,55 @@ import {
 } from 'business';
 import { AppText, BottomPicker } from '@screens/Shared';
 import { themes } from '@resources';
+
+
+const styles = StyleSheet.create({
+  buttonContainer: {
+    width: 60,
+    height: 60,
+    borderRadius: 30,
+    marginBottom: 10,
+    marginTop: 10,
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: 'white',
+  },
+
+  buttonSelected: {
+    backgroundColor: '#1ABC9C',
+  },
+
+  settingContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    marginVertical: 15,
+    marginHorizontal: 20,
+  },
+
+  shoeSizesContainer: {
+    position: 'relative',
+    flex: 1,
+    backgroundColor: 'rgba(0.0, 0.0, 0.0, 0.9)',
+    paddingHorizontal: 20,
+  },
+
+  footerButton: {
+    width: Dimensions.get('window').width / 2,
+    borderRadius: 0,
+    height: themes.RegularButtonHeight,
+  },
+
+  footerContainer: {
+    flex: 1,
+    position: 'absolute',
+    bottom: 0,
+    right: 0,
+    left: 0,
+    flexDirection: 'row',
+  },
+});
+
 
 enum PickerType {
   ShoeSize = 'ShoeSize',
@@ -187,50 +235,3 @@ export class ProductRequiredInfo extends React.PureComponent<Props, State> {
     return null;
   }
 }
-
-const styles = StyleSheet.create({
-  buttonContainer: {
-    width: 60,
-    height: 60,
-    borderRadius: 30,
-    marginBottom: 10,
-    marginTop: 10,
-    alignItems: 'center',
-    justifyContent: 'center',
-    backgroundColor: 'white',
-  },
-
-  buttonSelected: {
-    backgroundColor: '#1ABC9C',
-  },
-
-  settingContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    marginVertical: 15,
-    marginHorizontal: 20,
-  },
-
-  shoeSizesContainer: {
-    position: 'relative',
-    flex: 1,
-    backgroundColor: 'rgba(0.0, 0.0, 0.0, 0.9)',
-    paddingHorizontal: 20,
-  },
-
-  footerButton: {
-    width: Dimensions.get('window').width / 2,
-    borderRadius: 0,
-    height: themes.RegularButtonHeight,
-  },
-
-  footerContainer: {
-    flex: 1,
-    position: 'absolute',
-    bottom: 0,
-    right: 0,
-    left: 0,
-    flexDirection: 'row',
-  },
-});
