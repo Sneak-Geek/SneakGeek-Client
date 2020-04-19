@@ -1,7 +1,7 @@
 import { createAction } from "redux-actions";
 import { AuthenticationPayload, NetworkRequestState } from "../payload";
 import { ObjectFactory, FactoryKeys } from "../loader/kernel";
-import { IAccountService, ISettingsProvider, IFacebookSDK } from "../loader/interfaces";
+import { IAccountService, ISettingsProvider, IFacebookSDK } from "../loader";
 import { SettingsKey } from "../loader/interfaces";
 import { getUserProfile } from "./ProfileActions";
 import { Dispatch } from "redux";

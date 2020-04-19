@@ -2,10 +2,10 @@
 //! Copyright (c) 2019 - SneakGeek. All rights reserved
 //!
 
-import { IAccountService } from "../interfaces";
-import { AuthProvider } from "../../types";
-import { Account, Profile } from "../../model";
-import { BaseService } from "./BaseService";
+import { IAccountService } from "./IAccountService";
+import { AuthProvider } from "../../../types";
+import { Account, Profile } from "../../../model";
+import { BaseService } from "../BaseService";
 import HttpStatus from "http-status";
 
 export class AccountService extends BaseService implements IAccountService {
@@ -79,12 +79,10 @@ export class AccountService extends BaseService implements IAccountService {
   }
 
   public async updateProfile(token: string, profile: Partial<Profile>): Promise<Profile> {
-    const headers = {
-      authorization: token
-    };
-
     const response = await this.apiClient.getInstance().put("/profile/update", profile, {
-      headers
+      headers: {
+        authorization: token
+      }
     });
 
     return response.data.profile as Profile;

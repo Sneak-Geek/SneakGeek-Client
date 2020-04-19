@@ -1,4 +1,4 @@
-import { SellOrder, BuyOrder, Transaction } from "../../model";
+import { SellOrder, BuyOrder, Transaction } from "../../../model";
 
 export type PaymentType = "intl" | "domestic";
 export type OrderType = "BuyOrder" | "SellOrder";

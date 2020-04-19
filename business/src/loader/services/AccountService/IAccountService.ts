@@ -2,8 +2,8 @@
 //! Copyright (c) 2019 - SneakGeek. All rights reserved
 //!
 
-import { AuthProvider } from "../../types";
-import { Profile, Account } from "../../model";
+import { AuthProvider } from "../../../types";
+import { Profile, Account } from "../../../model";
 
 export interface IAccountService {
   login(

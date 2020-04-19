@@ -6,34 +6,26 @@ import {
   StyleSheet,
   View,
   TouchableOpacity,
+  FlatList,
 } from 'react-native';
 import {} from 'react-native-gesture-handler';
 import * as ImagePicker from 'expo-image-picker';
 import { AppText } from '@screens/Shared';
 import { SellOrder } from 'business';
 import { toCurrencyString } from 'utilities';
-import { themes } from '@resources';
+import { images } from '@resources';
 
 type Props = {
   orderSummary: Partial<SellOrder>;
-  onShoePictureAdded: (picUrl: string) => void;
+  onShoePictureAdded: (picUri: string) => void;
 };
 
-type State = {
-  pictures: Array<string | null>;
-};
-
-export class ProductSellSummary extends React.Component<Props, State> {
-  public state = {
-    pictures: [null],
-  };
-
+export class ProductSellSummary extends React.Component<Props> {
   private readonly imagePickerOptions = {
-    title: 'Upload images',
-    storageOptions: {
-      skipBackup: true,
-      path: 'images',
-    },
+    allowsEditing: true,
+    mediaTypes: ImagePicker.MediaTypeOptions.Images,
+    allowsMultipleSelection: false,
+    quality: 0.5,
   };
 
   public /** override */ render(): JSX.Element {
@@ -78,64 +70,37 @@ export class ProductSellSummary extends React.Component<Props, State> {
     return (
       <View style={{ flex: 1, flexDirection: 'column' }}>
         <AppText.Body>Ảnh sản phẩm</AppText.Body>
-        <ScrollView
-          style={{ flex: 1, marginTop: 12 }}
-          horizontal={true}
-          showsHorizontalScrollIndicator={false}
-        >
-          <View style={{ flexDirection: 'row' }}>
-            {this.state.pictures.map((item, index) => {
-              if (!item) {
-                return this._renderImagePicker(index);
-              }
-              return this._renderPicture(item, index);
-            })}
+        <ScrollView horizontal={true} showsHorizontalScrollIndicator={false}>
+          <View style={{ flex: 1, flexDirection: 'row', marginTop: 10 }}>
+            <TouchableOpacity onPress={this._launchSystemImagePicker.bind(this)}>
+              <Image
+                source={images.CameraPlaceholder}
+                style={styles.imageContainer}
+              />
+            </TouchableOpacity>
+            {this.props.orderSummary?.pictures?.map((item, index) => (
+              <Image
+                key={index}
+                source={{ uri: item }}
+                style={styles.imageContainer}
+                resizeMode={'cover'}
+              />
+            ))}
           </View>
         </ScrollView>
       </View>
     );
   }
 
-  private _renderImagePicker(index: number): JSX.Element {
-    return (
-      <TouchableOpacity
-        key={index}
-        style={{ backgroundColor: themes.DisabledColor, ...styles.imageContainer }}
-        onPress={this._launchSystemImagePicker.bind(this)}
-      >
-        {/* <Image source={} /> */}
-      </TouchableOpacity>
-    );
-  }
-
-  private _launchSystemImagePicker(): void {
-    ImagePicker.launchImageLibrary(
+  private async _launchSystemImagePicker(): Promise<void> {
+    const response = await ImagePicker.launchImageLibraryAsync(
       this.imagePickerOptions,
-      (response: ImagePickerResponse) => {
-        if (!response.didCancel && !response.error) {
-          this.setState(prevState => {
-            this.props.onShoePictureAdded(response.uri);
-
-            return {
-              pictures: [...prevState.pictures, response.uri],
-            };
-          });
-        }
-      },
     );
-  }
 
-  private _renderPicture(pictureUri: string | null, index: number) {
-    pictureUri = pictureUri as string;
-
-    return (
-      <Image
-        key={index}
-        source={{ uri: pictureUri }}
-        style={styles.imageContainer}
-        resizeMode={'cover'}
-      />
-    );
+    if (!response.cancelled) {
+      const info = response as { uri: string; type: string };
+      this.props.onShoePictureAdded(info.uri);
+    }
   }
 }
 
@@ -152,7 +117,7 @@ const styles = StyleSheet.create({
   },
 
   imageContainer: {
-    width: 93,
+    width: 95,
     aspectRatio: 1,
     marginRight: 12,
   },

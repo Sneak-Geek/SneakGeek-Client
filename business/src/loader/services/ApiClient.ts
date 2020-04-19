@@ -47,6 +47,10 @@ export class Instance {
 
     return this.axiosInstance;
   }
+
+  public getUrl() {
+    return this.axiosInstance?.defaults.baseURL;
+  }
 }
 
 export const ApiClient = {
