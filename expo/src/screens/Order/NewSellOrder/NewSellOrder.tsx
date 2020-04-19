@@ -14,8 +14,9 @@ import { ProductSellSummary } from '../../Product/ProductSellSummary';
 import { ProductRequiredInfo } from '../../Product/ProductRequiredInfo';
 import { connect, getToken, getService } from 'utilities';
 import { IAppState } from '@store/AppStore';
-import { showErrorNotification, showSuccessNotification } from 'actions';
+import { showErrorNotification, showSuccessNotification, toggleIndicator } from 'actions';
 import { styles } from './styles';
+import { CdnService } from 'business/src';
 
 type Props = {
   route: RouteProp<RootStackParams, 'NewSellOrder'>;
@@ -23,6 +24,7 @@ type Props = {
 
   showErrorNotification: (message: string) => void;
   showSuccessNotification: (message: string) => void;
+  toggleLoading: (isLoading: boolean) => void;
 };
 
 type SellDetailChild = {
@@ -38,6 +40,9 @@ type State = {
 @connect(
   () => ({}),
   (dispatch: Function) => ({
+    toggleLoading: (isLoading: boolean) => {
+      dispatch(toggleIndicator({ isLoading, message: strings.PleaseWait }))
+    },
     showErrorNotification: (message: string): void => {
       dispatch(showErrorNotification(message));
     },
@@ -68,6 +73,7 @@ export class NewSellOrder extends React.Component<Props, State> {
           otherDetail: '',
           isTorn: false,
         },
+        pictures: []
       },
       currentIndex: 0,
     };
@@ -119,10 +125,12 @@ export class NewSellOrder extends React.Component<Props, State> {
           <ProductSellSummary
             key={3}
             orderSummary={this.state.sellOrder}
-            onShoePictureAdded={(picUri: string) => this._onPictureAdded(picUri)}
+            onShoePictureAdded={(picUri: string): void =>
+              this._onPictureAdded(picUri)
+            }
           />
         ),
-        canProceed: (): JSX.Element => {
+        canProceed: (): boolean => {
           return true;
         },
       },
@@ -217,16 +225,35 @@ export class NewSellOrder extends React.Component<Props, State> {
 
   private async _sellShoe() {
     const token = getToken();
+    const order = this.state.sellOrder;
+
     const orderService = getService<IOrderService>(FactoryKeys.IOrderService);
+    const cdnService = getService<CdnService>(FactoryKeys.ICdnService);
+    let uploadedPictures: string[] = [];
+    this.props.toggleLoading(true);
+    
+    try {
+      uploadedPictures = await cdnService.uploadImages(token, order?.pictures.map(i => ({
+        uri: i,
+        type: "image/png"
+      })));
+      order.pictures = uploadedPictures;
+    } catch (error) {
+      this.props.showErrorNotification(strings.ErrorPleaseTryAgain);
+      this.props.toggleLoading(false);
+      return;
+    }
 
     try {
-      await orderService.createSellOrder(token, this.state.sellOrder as SellOrder);
+      await orderService.createSellOrder(token, order as SellOrder);
       this.props.showSuccessNotification('Đã bán thành công sản phẩm!');
       this._goBackTimeout = setTimeout(() => {
         this.props.navigation.goBack();
       }, 500);
     } catch (error) {
       this.props.showErrorNotification('Đã có lỗi xảy ra, xin vui lòng thử lại');
+    } finally {
+      this.props.toggleLoading(false);
     }
   }
 
@@ -335,15 +362,13 @@ export class NewSellOrder extends React.Component<Props, State> {
     }));
   }
 
-  private _onPictureAdded(picUri: string) {
+  private _onPictureAdded(picUri: string): void {
     this.setState(prevState => {
-      let pictures: string[] = prevState.sellOrder.pictures || [];
-      pictures = [...pictures, picUri];
       return {
         ...prevState,
         sellOrder: {
           ...prevState.sellOrder,
-          shoePictures: pictures,
+          pictures: (this.state.sellOrder.pictures || []).concat(picUri),
         },
       };
     });
