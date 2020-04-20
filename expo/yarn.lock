@@ -1908,7 +1908,7 @@ buffer-from@^1.0.0:
   integrity sha512-MQcXEUbCKtEo7bhqEs6560Hyd4XaovZlO/k9V3hjVUF/zwW7KBVdSK4gIt/bzwS9MbR5qob+F5jusZsb0YQK2A==
 
 "business@file:../business":
-  version "0.0.37"
+  version "0.0.38"
   dependencies:
     http-status "1.3.2"
     inversify "^5.0.1"

@@ -9,7 +9,8 @@ export const strings = {
   Password: 'Mật khẩu',
   ForgotPassword: 'Quên mật khẩu?',
   InvalidLogin: 'Email hoặc mật khẩu không đúng',
-  TermsOfServiceAgreement: 'Khi đăng nhập, bạn đã đồng ý với điều khoản sử dụng của chúng tôi',
+  TermsOfServiceAgreement:
+    'Khi đăng nhập, bạn đã đồng ý với điều khoản sử dụng của chúng tôi',
   SeeMore: 'Xem thêm',
   HomeTab: 'Trang chủ',
   SearchTab: 'Tìm kiếm',
@@ -27,6 +28,7 @@ export const strings = {
   ChoosePictureLocal: 'Chọn ảnh từ thư viện',
   ProductDetail: 'Chi tiết sản phẩm',
   ProductName: 'Tên sản phẩm',
+  AllReviews: 'Tất cả đánh giá',
   Colorway: 'Màu chủ đạo',
   Brand: 'Hãng',
   Category: 'Phân khúc',
@@ -47,6 +49,7 @@ export const strings = {
   RelatedProducts: 'Sản phẩm liên quan',
   ChooseSize: 'Chọn cỡ và giá',
   ErrorPleaseTryAgain: 'Đã có lỗi xảy ra, xin vui lòng thử lại',
+  Error: 'Đã có lỗi xảy ra',
   AccountNotVerifieid: 'Tài khoản của bạn chưa được xác thực',
   MissingAddress: 'thiếu địa chỉ giao hàng',
   BuyNow: 'Mua ngay',
@@ -82,12 +85,16 @@ export const strings = {
   TransactionProcessed: 'Đã thanh toán',
   ProductNotFound: 'Không tìm thấy sản phẩm bạn muốn?',
   RequestNewProduct: 'Yêu cầu sản phẩm',
+  AddReview: 'Thêm đánh giá',
+  SortByDate: 'Sắp xếp theo thời gian',
+  NoRating: 'Chưa có đánh giá',
   Gender: 'Giới tính',
   Men: 'Nam',
   Women: 'Nữ',
   HighestBuyOrderPrice: 'Giá đặt mua cao nhất',
   BuyNowPrice: 'Giá mua ngay',
-  HighestBuyOrderExplanation: 'Dựa trên các đơn đặt mua trên thị trường, SneakGeek đưa ra giá đặt mua cao nhất để tham khảo',
+  HighestBuyOrderExplanation:
+    'Dựa trên các đơn đặt mua trên thị trường, SneakGeek đưa ra giá đặt mua cao nhất để tham khảo',
   SetPrice: 'Đặt giá',
-  SetPriceSuccess: 'Đặt giá thành công'
-}
+  SetPriceSuccess: 'Đặt giá thành công',
+};

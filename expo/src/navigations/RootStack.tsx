@@ -5,14 +5,15 @@ import { AuthenticationStack } from './AuthenticationStack';
 import { TabStack } from './TabStack';
 import { NavigationContainer } from '@react-navigation/native';
 import { ProductStack } from './ProductStack';
-import { Shoe, Catalog, SellOrder, PaymentType, BuyOrder, OrderType } from 'business';
+import { Shoe, Catalog, SellOrder, PaymentType, BuyOrder, OrderType, Review } from 'business';
 import { OrderStack } from './OrderStack';
+import { Profile } from 'business/build/src/types';
 
 export type RootStackParams = {
   ProductRequest: undefined;
   ProductDetail: { shoe: Shoe };
   ProductNewReview: { shoe: Shoe };
-  ProductAllReviews: { shoe: Shoe };
+  ProductAllReviews: { shoe: Shoe, reviews: Review[] };
   SizeSelection: { shoe: Shoe };
   NewSellOrder: { shoe: Shoe };
   OrderSizeSelection: { shoe: Shoe };
