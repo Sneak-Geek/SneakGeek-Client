@@ -22,15 +22,10 @@ export interface IShoeService {
     token: string,
     shoeId: string
   ) => Promise<
-    | {
-        avg: number;
-        ratingCounts: [
-          {
-            count: number;
-            rating: number;
-          }
-        ];
-      }
+    | Array<{
+        count: number;
+        rating: number;
+      }>
     | undefined
   >;
 }

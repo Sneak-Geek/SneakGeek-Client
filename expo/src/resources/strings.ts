@@ -49,6 +49,7 @@ export const strings = {
   RelatedProducts: 'Sản phẩm liên quan',
   ChooseSize: 'Chọn cỡ và giá',
   ErrorPleaseTryAgain: 'Đã có lỗi xảy ra, xin vui lòng thử lại',
+  Error: 'Đã có lỗi xảy ra',
   AccountNotVerifieid: 'Tài khoản của bạn chưa được xác thực',
   MissingAddress: 'thiếu địa chỉ giao hàng',
   BuyNow: 'Mua ngay',

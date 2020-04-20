@@ -80,15 +80,10 @@ export class ShoeService extends BaseService implements IShoeService {
     token: string,
     shoeId: string
   ): Promise<
-    | {
-        avg: number;
-        ratingCounts: [
-          {
-            count: number;
-            rating: number;
-          }
-        ];
-      }
+    | Array<{
+        count: number;
+        rating: number;
+      }>
     | undefined
   > {
     const response = await this.apiClient

@@ -13,7 +13,7 @@ export type RootStackParams = {
   ProductRequest: undefined;
   ProductDetail: { shoe: Shoe };
   ProductNewReview: { shoe: Shoe };
-  ProductAllReviews: { shoe: Shoe, reviews: Review[], profile: Profile };
+  ProductAllReviews: { shoe: Shoe, reviews: Review[] };
   SizeSelection: { shoe: Shoe };
   NewSellOrder: { shoe: Shoe };
   OrderSizeSelection: { shoe: Shoe };

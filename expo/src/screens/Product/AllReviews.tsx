@@ -7,7 +7,7 @@ import { StackNavigationProp, HeaderHeightContext } from '@react-navigation/stac
 import { SafeAreaConsumer } from 'react-native-safe-area-context';
 import { themes, strings } from '@resources';
 import { Icon, Rating } from 'react-native-elements';
-import { Review, Shoe, ObjectFactory, SettingsKey } from 'business';
+import { Review, Shoe, ObjectFactory, SettingsKey, Profile } from 'business';
 import { ReviewItem } from '../Shared';
 import "../Shared/BottomButton";
 import RouteNames from 'navigations/RouteNames';
@@ -16,14 +16,17 @@ import { connect } from 'utilities/ReduxUtilities';
 import {
   toggleIndicator,
   showErrorNotification,
+
 } from 'actions';
 import { IAppState } from '@store/AppStore';
+import { getToken } from 'utilities';
 
 type Props = {
   navigation: StackNavigationProp<RootStackParams, 'ProductAllReviews'>;
   route: RouteProp<RootStackParams, 'ProductAllReviews'>;
   showErrorNotification: (msg: string) => void;
   toggleLoadingIndicator: (isLoading: boolean, message?: string) => void;
+  profile: Profile;
 }
 
 type State = {
@@ -80,7 +83,9 @@ const styles = StyleSheet.create({
 })
 
 @connect(
-  (_: IAppState) => ({}),
+  (state: IAppState) => ({
+    profile: state.UserState.profileState.profile,
+  }),
   (dispatch: Function) => ({
     showErrorNotification: (message: string): void => {
       dispatch(showErrorNotification(message));
@@ -95,9 +100,6 @@ export class AllReviews extends React.Component<Props>{
   private shoe: Shoe = this.props.route.params.shoe;
   private readonly _shoeService = ObjectFactory.getObjectInstance<IShoeService>(
     FactoryKeys.IShoeService
-  );
-  private readonly _settingsProvider = ObjectFactory.getObjectInstance<ISettingsProvider>(
-    FactoryKeys.ISettingsProvider
   );
 
   state: State = {
@@ -190,10 +192,9 @@ export class AllReviews extends React.Component<Props>{
       let totalRatingCount = 0;
       let numStars = [0, 0, 0, 0, 0];
       reviewStats.ratingCounts.map(ratingCount => {
-        numStars[ratingCount.rating - 1] = ratingCount.count;
+        numStars[5 - ratingCount.rating] = ratingCount.count;
         totalRatingCount += ratingCount.count;
       });
-      numStars.reverse();
       const avgRating = Math.round(reviewStats.avg * 10) / 10;
       let displayRating: JSX.Element;
       if (avgRating === 0)
@@ -238,7 +239,7 @@ export class AllReviews extends React.Component<Props>{
       );
     }
     return (
-      <AppText.Title1>Hi</AppText.Title1>
+      <AppText.Title1></AppText.Title1>
     );
 
   }
@@ -258,7 +259,7 @@ export class AllReviews extends React.Component<Props>{
 
   private _renderAddReviewButton(bottom: number): JSX.Element {
     const newOnPress = (): void => {
-      const { profile } = this.props.route.params;
+      const { profile } = this.props;
       if (
         profile.userProvidedName &&
         profile.userProvidedName.firstName &&
@@ -303,12 +304,12 @@ export class AllReviews extends React.Component<Props>{
     const { toggleLoadingIndicator, navigation, showErrorNotification } = this.props;
     toggleLoadingIndicator(true);
     try {
-      const token = this._settingsProvider.getValue(SettingsKey.CurrentAccessToken);
+      const token = getToken();
       const response = await this._shoeService.getReviewStats(token, shoeId);
       this.setState({ reviewStatistics: response });
       return response;
     } catch (error) {
-      showErrorNotification('Đã có lỗi xảy ra');
+      showErrorNotification(strings.Error);
     } finally {
       toggleLoadingIndicator(false);
     }

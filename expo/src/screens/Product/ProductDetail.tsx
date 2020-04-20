@@ -310,8 +310,7 @@ export class ProductDetail extends React.Component<Props> {
                 // @ts-ignore
                 navigation.push(RouteNames.Product.AllReviews, {
                   reviews: reviews,
-                  shoe: this._shoe,
-                  profile: this.props.profile
+                  shoe: this._shoe
                 })
               }}>
                 {strings.SeeMore}
