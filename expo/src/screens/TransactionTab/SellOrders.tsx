@@ -16,6 +16,7 @@ import {
   SafeAreaView,
   TouchableWithoutFeedback,
   StyleSheet,
+  RefreshControl,
 } from 'react-native';
 import { themes, strings } from '@resources';
 import { AppText, ShimmerLoadList } from '@screens/Shared';
@@ -69,7 +70,7 @@ export class SellOrders extends React.Component<Props> {
   public render(): JSX.Element {
     const { orders, state } = this.props.sellOrdersState;
 
-    if (state === NetworkRequestState.REQUESTING) {
+    if (this.props.sellOrdersState.state === NetworkRequestState.REQUESTING) {
       return <ShimmerLoadList />;
     }
 
@@ -77,6 +78,12 @@ export class SellOrders extends React.Component<Props> {
       <SafeAreaView style={{ flex: 1, backgroundColor: 'white' }}>
         {orders.length > 0 && (
           <FlatList
+            refreshControl={
+              <RefreshControl
+                refreshing={state === NetworkRequestState.REQUESTING}
+                onRefresh={(): void => this.props.getOrders()}
+              />
+            }
             data={orders}
             keyExtractor={(item): string => item._id}
             renderItem={({ item }): JSX.Element => this._renderOrder(item)}

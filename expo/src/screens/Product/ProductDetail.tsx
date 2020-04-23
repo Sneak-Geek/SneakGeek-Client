@@ -367,11 +367,11 @@ export class ProductDetail extends React.Component<Props> {
           showsHorizontalScrollIndicator={false}
           style={{ marginBottom: 20, paddingBottom: 10 }}
           data={shoeInfoState.relatedShoes}
-          keyExtractor={itm => itm._id}
-          renderItem={({ item }) => (
+          keyExtractor={(itm): string => itm._id}
+          renderItem={({ item }): JSX.Element => (
             <LiteShoeCard
               shoe={item}
-              onPress={() =>
+              onPress={(): void =>
                 // @ts-ignore
                 this.props.navigation.push(RouteNames.Product.ProductDetail, {
                   shoe: item,

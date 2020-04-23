@@ -156,8 +156,8 @@ const TransactionTab = (): JSX.Element => (
       name={RouteNames.Tab.TransactionTab.Detail}
       component={TransactionDetail}
       options={{
-        ...themes.headerStyle,
-        title: strings.TransactionDetail,
+        headerShown: false,
+        headerTransparent: true
       }}
     />
   </TransactionStack.Navigator>
