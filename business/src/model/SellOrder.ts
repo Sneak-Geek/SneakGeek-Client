@@ -14,6 +14,7 @@ export type SellOrder = {
     boxCondition?: string,
     isTainted?: boolean,
     isOutsoleWorn?: boolean,
+    isInsoleWorn?: boolean,
     isTorn?: boolean,
     otherDetail?: string
   },

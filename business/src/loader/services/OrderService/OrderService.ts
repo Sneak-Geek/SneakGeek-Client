@@ -1,4 +1,4 @@
-import { IOrderService, PaymentType, OrderType } from "./IOrderService";
+import { IOrderService, PaymentType, OrderType, SellOrderEditInput } from "./IOrderService";
 import { BaseService } from "../BaseService";
 import { SellOrder, BuyOrder, Transaction } from "../../../model";
 
@@ -116,6 +116,36 @@ export class OrderService extends BaseService implements IOrderService {
         }
       }
     );
+
+    return response.data;
+  }
+
+  public async updateSellOrder(token: string, order: SellOrderEditInput): Promise<void> {
+    const response = await this.apiClient.getInstance().put(`/order/sell-order/update`, order, {
+      headers: {
+        authorization: token
+      }
+    });
+
+    return response.data;
+  }
+
+  public async cancelSellOrder(token: string, orderId: string): Promise<void> {
+    const response = await this.apiClient.getInstance().put(`/order/sell-order/cancel?orderId=${orderId}`, null, {
+      headers: {
+        authorization: token
+      }
+    });
+
+    return response.data;
+  }
+
+  public async getSellOrderById(token: string, orderId: string): Promise<SellOrder> {
+    const response = await this.apiClient.getInstance().get(`/order/sell-order/${orderId}`, {
+      headers: {
+        authorization: token
+      }
+    });
 
     return response.data;
   }
