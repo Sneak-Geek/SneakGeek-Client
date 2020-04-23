@@ -16,7 +16,14 @@ export const ProductStack = (): JSX.Element => (
         headerShown: false,
       }}
     />
-    <Stack.Screen name={RouteNames.Product.AllReviews} component={AllReviews} />
+    <Stack.Screen
+      name={RouteNames.Product.AllReviews}
+      component={AllReviews}
+      options={{
+        headerTransparent: true,
+        headerShown: false,
+      }}
+    />
     <Stack.Screen
       name={RouteNames.Product.NewReview}
       component={NewReview}

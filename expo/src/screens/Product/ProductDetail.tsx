@@ -14,9 +14,9 @@ import {
 } from 'react-native';
 import { SafeAreaConsumer } from 'react-native-safe-area-context';
 import { ScrollView } from 'react-native-gesture-handler';
-import { AppText, LiteShoeCard } from '@screens/Shared';
-import { strings, themes, images } from '@resources';
-import { Icon, Avatar, Rating } from 'react-native-elements';
+import { AppText, LiteShoeCard, ReviewItem } from '@screens/Shared';
+import { strings, themes } from '@resources';
+import { Icon } from 'react-native-elements';
 import { connect, toVnDateFormat } from 'utilities';
 import Humanize from 'humanize-plus';
 import { IAppState } from '@store/AppStore';
@@ -117,14 +117,6 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     alignItems: 'center',
   },
-  reviewContent: { flexDirection: 'row', marginBottom: 8 },
-  reviewAvatar: { borderWidth: 0.5, borderColor: themes.DisabledColor },
-  reviewAuthor: {
-    flex: 1,
-    alignItems: 'flex-start',
-    marginLeft: 20,
-    justifyContent: 'space-between',
-  },
   bottomContainer: {
     position: 'absolute',
     width: '100%',
@@ -142,40 +134,6 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
   },
 });
-
-const ReviewItem = (props: { review: Review }): JSX.Element => {
-  const { review } = props;
-  const profile = review.reviewedBy.profile as Partial<Profile>;
-  const { userProvidedName, userProvidedProfilePic } = profile;
-  const avatar = userProvidedProfilePic
-    ? { uri: userProvidedProfilePic }
-    : images.Profile;
-
-  return (
-    <View style={{ marginVertical: 8 }}>
-      <View style={styles.reviewContent}>
-        <Avatar
-          rounded
-          source={avatar}
-          size={'small'}
-          containerStyle={styles.reviewAvatar}
-        />
-        <View style={styles.reviewAuthor}>
-          <AppText.Body>
-            {userProvidedName.firstName} {userProvidedName.lastName}
-          </AppText.Body>
-          <AppText.Footnote>{toVnDateFormat(review.updatedAt)}</AppText.Footnote>
-        </View>
-        <Rating
-          startingValue={review.rating}
-          readonly
-          imageSize={themes.IconSize / 1.5}
-        />
-      </View>
-      <AppText.Subhead>{review.description}</AppText.Subhead>
-    </View>
-  );
-};
 
 @connect(
   (state: IAppState) => ({
@@ -309,7 +267,7 @@ export class ProductDetail extends React.Component<Props> {
   }
 
   private _renderProductReviews(): JSX.Element {
-    const { reviewState } = this.props;
+    const { reviewState, navigation } = this.props;
     const { state, reviews } = reviewState;
 
     let content: JSX.Element;
@@ -345,7 +303,21 @@ export class ProductDetail extends React.Component<Props> {
           />
         </View>
         {content}
-      </View>
+        {
+          reviews.length >= 3 ?
+            <View style={{ flex: 1, flexDirection: "row-reverse" }}>
+              <AppText.Callout style={{ color: '#808080' }} onPress={(): void => {
+                // @ts-ignore
+                navigation.push(RouteNames.Product.AllReviews, {
+                  reviews: reviews,
+                  shoe: this._shoe
+                })
+              }}>
+                {strings.SeeMore}
+              </AppText.Callout>
+            </View> : <View></View>
+        }
+      </View >
     );
   }
 
@@ -429,12 +401,12 @@ export class ProductDetail extends React.Component<Props> {
         {this._renderSingleActionButton(
           'Bán',
           `Cao: ${
-            highestBuyOrder
-              ? Humanize.compactInteger(
-                  (highestBuyOrder.buyPrice as PriceData).price,
-                  2,
-                )
-              : '-'
+          highestBuyOrder
+            ? Humanize.compactInteger(
+              (highestBuyOrder.buyPrice as PriceData).price,
+              2,
+            )
+            : '-'
           }`,
           'cart-arrow-up',
           themes.AppSellColor,
@@ -451,12 +423,12 @@ export class ProductDetail extends React.Component<Props> {
         {this._renderSingleActionButton(
           'Mua',
           `Thấp: ${
-            lowestSellOrder
-              ? Humanize.compactInteger(
-                  (lowestSellOrder.sellNowPrice as PriceData).price,
-                  2,
-                )
-              : '-'
+          lowestSellOrder
+            ? Humanize.compactInteger(
+              (lowestSellOrder.sellNowPrice as PriceData).price,
+              2,
+            )
+            : '-'
           }`,
           'cart-arrow-down',
           themes.AppPrimaryColor,

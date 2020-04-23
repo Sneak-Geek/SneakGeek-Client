@@ -1,4 +1,4 @@
-export * from './BottomButton'
+export * from './BottomButton';
 export * from './Text';
 export * from './DismissKeyboardView';
 export * from './ColumnShoeCard';
@@ -8,3 +8,4 @@ export * from './LiteShoeCard';
 export * from './TitleContentDescription';
 export * from './ImageRatioPreserved';
 export * from './ShimmerLoadList';
+export * from './ReviewItem';
