@@ -35,6 +35,12 @@ const styles = StyleSheet.create({
     borderBottomWidth: 0.5,
     borderBottomColor: themes.DisabledColor,
   },
+  noOrderContainer: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    flex: 1,
+    backgroundColor: themes.AppBackgroundColor,
+  },
 });
 
 type Props = {
@@ -90,14 +96,7 @@ export class SellOrders extends React.Component<Props> {
           />
         )}
         {orders.length === 0 && (
-          <View
-            style={{
-              alignItems: 'center',
-              justifyContent: 'center',
-              flex: 1,
-              backgroundColor: themes.AppBackgroundColor,
-            }}
-          >
+          <View style={styles.noOrderContainer}>
             <AppText.Body>Hiện chưa có đơn bán nào</AppText.Body>
           </View>
         )}

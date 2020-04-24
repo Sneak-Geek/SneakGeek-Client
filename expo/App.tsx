@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react';
 import RootStack from './src/navigations/RootStack';
 import * as Font from 'expo-font';
 import { ActivityIndicator } from 'react-native';
-import { SplashScreen } from 'expo';
 import * as Facebook from 'expo-facebook';
 import {
   ObjectFactory as Factory,
@@ -52,8 +51,8 @@ export default function App(): JSX.Element {
     await settingsProvider.load();
 
     Factory.register<IEnvVar>(Keys.IEnvVar, {
-      '__DEV__': __DEV__,
-      devUrl: 'http://10.0.0.52:8080/api/v1',
+      dev: __DEV__,
+      devUrl: 'http://192.168.0.11:8080/api/v1',
       prodUrl: 'https://sneakgeek-test.azurewebsites.net/api/v1'
     });
     Factory.register<ISettingsProvider>(Keys.ISettingsProvider, settingsProvider);

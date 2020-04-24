@@ -9,15 +9,11 @@ import { themes, strings } from '@resources';
 import { Icon, Rating } from 'react-native-elements';
 import { Review, Shoe, ObjectFactory, SettingsKey, Profile } from 'business';
 import { ReviewItem } from '../Shared';
-import "../Shared/BottomButton";
+import '../Shared/BottomButton';
 import RouteNames from 'navigations/RouteNames';
 import { IShoeService, FactoryKeys, ISettingsProvider } from 'business/src';
 import { connect } from 'utilities/ReduxUtilities';
-import {
-  toggleIndicator,
-  showErrorNotification,
-
-} from 'actions';
+import { toggleIndicator, showErrorNotification } from 'actions';
 import { IAppState } from '@store/AppStore';
 import { getToken } from 'utilities';
 
@@ -27,17 +23,17 @@ type Props = {
   showErrorNotification: (msg: string) => void;
   toggleLoadingIndicator: (isLoading: boolean, message?: string) => void;
   profile: Profile;
-}
+};
 
 type State = {
   reviewStatistics: {
-    avg: number,
+    avg: number;
     ratingCounts: Array<{
       count: number;
       rating: number;
-    }>
-  }
-}
+    }>;
+  };
+};
 
 const styles = StyleSheet.create({
   rootContainer: {
@@ -65,12 +61,11 @@ const styles = StyleSheet.create({
     right: 10,
   },
   sortingContainer: {
-    flexDirection: "row",
+    flexDirection: 'row',
     paddingLeft: 20,
     paddingRight: 20,
-    marginTop: 10
-  }
-  ,
+    marginTop: 10,
+  },
   reviewStatsContainer: {
     flexDirection: 'row',
     justifyContent: 'space-between',
@@ -78,9 +73,9 @@ const styles = StyleSheet.create({
   },
   displayRating: {
     color: '#1ABC9C',
-    textAlign: "center"
-  }
-})
+    textAlign: 'center',
+  },
+});
 
 @connect(
   (state: IAppState) => ({
@@ -95,19 +90,19 @@ const styles = StyleSheet.create({
     },
   }),
 )
-export class AllReviews extends React.Component<Props>{
+export class AllReviews extends React.Component<Props> {
   private reviews: Review[] = this.props.route.params.reviews;
   private shoe: Shoe = this.props.route.params.shoe;
   private readonly _shoeService = ObjectFactory.getObjectInstance<IShoeService>(
-    FactoryKeys.IShoeService
+    FactoryKeys.IShoeService,
   );
 
   state: State = {
     reviewStatistics: {
       avg: 0,
-      ratingCounts: []
-    }
-  }
+      ratingCounts: [],
+    },
+  };
 
   async componentDidMount() {
     await this.getReviewStats(this.shoe._id);
@@ -120,11 +115,17 @@ export class AllReviews extends React.Component<Props>{
           <View
             style={{
               paddingTop: insets.top,
-              ...styles.rootContainer
-            }}>
+              ...styles.rootContainer,
+            }}
+          >
             {this._renderHeader(insets.top)}
-            <ScrollView style={{ flex: 1, marginBottom: insets.bottom + themes.RegularButtonHeight }}
-              showsVerticalScrollIndicator={false}>
+            <ScrollView
+              style={{
+                flex: 1,
+                marginBottom: insets.bottom + themes.RegularButtonHeight,
+              }}
+              showsVerticalScrollIndicator={false}
+            >
               <View
                 style={{
                   ...styles.pageContainer,
@@ -145,27 +146,27 @@ export class AllReviews extends React.Component<Props>{
   private _renderHeader(topInsets: number): JSX.Element {
     return (
       <HeaderHeightContext.Consumer>
-        {
-          headerHeight => (
-            <View style={{ ...styles.headerContainer, height: headerHeight + topInsets, }}>
-              <Icon
-                name={'ios-arrow-back'}
-                type={'ionicon'}
-                size={themes.IconSize}
-                hitSlop={styles.backHitSlop}
-                onPress={() => this.props.navigation.goBack()}
-              />
-              <AppText.Title3>{strings.AllReviews}</AppText.Title3>
-              <Icon
-                color="white"
-                name={'ios-arrow-back'}
-                type={'ionicon'}
-                size={themes.IconSize}
-                hitSlop={styles.backHitSlop}
-              />
-            </View>
-          )
-        }
+        {headerHeight => (
+          <View
+            style={{ ...styles.headerContainer, height: headerHeight + topInsets }}
+          >
+            <Icon
+              name={'ios-arrow-back'}
+              type={'ionicon'}
+              size={themes.IconSize}
+              hitSlop={styles.backHitSlop}
+              onPress={() => this.props.navigation.goBack()}
+            />
+            <AppText.Title3>{strings.AllReviews}</AppText.Title3>
+            <Icon
+              color="white"
+              name={'ios-arrow-back'}
+              type={'ionicon'}
+              size={themes.IconSize}
+              hitSlop={styles.backHitSlop}
+            />
+          </View>
+        )}
       </HeaderHeightContext.Consumer>
     );
   }
@@ -177,20 +178,18 @@ export class AllReviews extends React.Component<Props>{
           name={'tune'}
           size={themes.IconSize * 0.95}
           hitSlop={styles.backHitSlop}
-          onPress={() => { }}
+          onPress={() => {}}
         />
-        <AppText.Body style={{ paddingLeft: 5 }}>
-          {strings.SortByDate}
-        </AppText.Body>
+        <AppText.Body style={{ paddingLeft: 5 }}>{strings.SortByDate}</AppText.Body>
       </View>
     );
   }
 
   private _renderStats(): JSX.Element {
-    let reviewStats = this.state.reviewStatistics;
+    const reviewStats = this.state.reviewStatistics;
     if (reviewStats) {
       let totalRatingCount = 0;
-      let numStars = [0, 0, 0, 0, 0];
+      const numStars = [0, 0, 0, 0, 0];
       reviewStats.ratingCounts.map(ratingCount => {
         numStars[5 - ratingCount.rating] = ratingCount.count;
         totalRatingCount += ratingCount.count;
@@ -198,10 +197,18 @@ export class AllReviews extends React.Component<Props>{
       const avgRating = Math.round(reviewStats.avg * 10) / 10;
       let displayRating: JSX.Element;
       if (avgRating === 0)
-        displayRating = <AppText.Title1 style={styles.displayRating}> - /5 </AppText.Title1>
+        displayRating = (
+          <AppText.Title1 style={styles.displayRating}> - /5 </AppText.Title1>
+        );
       else
         displayRating = (
-          <AppText.Title1 style={styles.displayRating}> <AppText.LargeTitle style={{ fontSize: 40 }}>{avgRating}</AppText.LargeTitle> /5 </AppText.Title1>
+          <AppText.Title1 style={styles.displayRating}>
+            {' '}
+            <AppText.LargeTitle style={{ fontSize: 40 }}>
+              {avgRating}
+            </AppText.LargeTitle>{' '}
+            /5{' '}
+          </AppText.Title1>
         );
       let starIndex = 6;
 
@@ -209,10 +216,12 @@ export class AllReviews extends React.Component<Props>{
         <View style={{ ...styles.reviewStatsContainer, padding: 20 }}>
           <View>
             {displayRating}
-            <AppText.Title2 style={{ fontSize: 20, textAlign: "center" }}>
+            <AppText.Title2 style={{ fontSize: 20, textAlign: 'center' }}>
               Tổng quan
-          </AppText.Title2>
-            <AppText.Caption1 style={{ fontSize: 16, marginVertical: 5, textAlign: "center" }}>
+            </AppText.Title2>
+            <AppText.Caption1
+              style={{ fontSize: 16, marginVertical: 5, textAlign: 'center' }}
+            >
               {totalRatingCount} đánh giá
             </AppText.Caption1>
           </View>
@@ -220,7 +229,7 @@ export class AllReviews extends React.Component<Props>{
             {numStars.map((star, index) => {
               starIndex--;
               return (
-                <View key={index} style={{ flexDirection: "row" }}>
+                <View key={index} style={{ flexDirection: 'row' }}>
                   <AppText.Body style={{ paddingRight: 10 }}>
                     {star} người
                   </AppText.Body>
@@ -232,24 +241,25 @@ export class AllReviews extends React.Component<Props>{
                   />
                 </View>
               );
-            })
-            }
+            })}
           </View>
-        </View >
+        </View>
       );
     }
-    return (
-      <AppText.Title1></AppText.Title1>
-    );
-
+    return <AppText.Title1></AppText.Title1>;
   }
   private _renderReviews(reviews: Review[]): JSX.Element {
     if (this.state.reviewStatistics.avg === 0)
       return (
-        <AppText.Body style={{ textAlign: "center", paddingVertical: 150 }}>{strings.NoRating}</AppText.Body>
+        <AppText.Body style={{ textAlign: 'center', paddingVertical: 150 }}>
+          {strings.NoRating}
+        </AppText.Body>
       );
     return (
-      <ScrollView style={{ flex: 1, paddingHorizontal: 20, marginTop: 20 }} showsVerticalScrollIndicator={false}>
+      <ScrollView
+        style={{ flex: 1, paddingHorizontal: 20, marginTop: 20 }}
+        showsVerticalScrollIndicator={false}
+      >
         {reviews.map(review => (
           <ReviewItem key={review._id} review={review} />
         ))}
@@ -270,7 +280,7 @@ export class AllReviews extends React.Component<Props>{
       } else {
         this.alertMissingInfo(strings.MissingInfoForReview);
       }
-    }
+    };
     return (
       <BottomButton
         style={{ bottom, backgroundColor: themes.AppSecondaryColor }}
@@ -298,7 +308,7 @@ export class AllReviews extends React.Component<Props>{
         style: 'cancel',
       },
     ]);
-  }
+  };
 
   private async getReviewStats(shoeId: string) {
     const { toggleLoadingIndicator, navigation, showErrorNotification } = this.props;
@@ -314,4 +324,4 @@ export class AllReviews extends React.Component<Props>{
       toggleLoadingIndicator(false);
     }
   }
-};
+}
