@@ -29,63 +29,63 @@ export const themes = {
   }),
   TextStyle: StyleSheet.create({
     largeTitle: {
-      // fontFamily: 'Roboto-Bold',
+      fontFamily: 'RobotoCondensed-Bold',
       fontSize: 34,
     },
 
     title1: {
-      // fontFamily: 'Roboto-Bold',
+      fontFamily: 'RobotoCondensed-Bold',
       fontSize: 26,
     },
 
     title2: {
       fontSize: 22,
-      // fontFamily: 'Roboto-Bold',
+      fontFamily: 'RobotoCondensed-Bold',
     },
 
     title3: {
       fontSize: 20,
-      // fontFamily: 'Roboto-Bold',
+      fontFamily: 'RobotoCondensed-Bold',
     },
 
     headline: {
       fontSize: 17,
-      // fontFamily: 'Roboto-Bold',
+      fontFamily: 'RobotoCondensed-Bold',
     },
 
     body: {
       fontSize: 17,
-      // fontFamily: 'Roboto',
+      fontFamily: 'RobotoCondensed-Regular',
     },
 
     callout: {
       fontSize: 16,
-      // fontFamily: 'Roboto',
+      fontFamily: 'RobotoCondensed-Regular',
     },
 
     subhead: {
       fontSize: 15,
-      // fontFamily: 'Roboto-Light',
+      fontFamily: 'RobotoCondensed-Light',
     },
 
     footnote: {
       fontSize: 13,
-      // fontFamily: 'Roboto-Light',
+      fontFamily: 'RobotoCondensed-Light',
     },
 
     footnoteRegular: {
       fontSize: 13,
-      // fontFamily: 'Roboto',
+      fontFamily: 'RobotoCondensed-Regular',
     },
 
     caption1: {
       fontSize: 12,
-      // fontFamily: 'Roboto-Light',
+      fontFamily: 'RobotoCondensed-Light',
     },
 
     caption2: {
       fontSize: 11,
-      // fontFamily: 'Roboto-Light',
+      fontFamily: 'RobotoCondensed-Light',
     },
   }),
 
@@ -94,12 +94,12 @@ export const themes = {
     headerTintColor: '#000',
     headerTitleStyle: {
       fontSize: 20,
-      // fontFamily: 'Roboto-Bold',
+      fontFamily: 'RobotoCondensed-Bold',
     },
   },
   TabTopHeader: {
     labelStyle: {
-      // fontFamily: 'Roboto',
+      fontFamily: 'RobotoCondensed-Regular',
       fontSize: 17,
     },
     indicatorStyle: {
