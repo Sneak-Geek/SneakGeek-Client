@@ -21,6 +21,10 @@ import {CatalogSeeMore} from 'screens/HomeTab';
 import {createMaterialTopTabNavigator} from '@react-navigation/material-top-tabs';
 import {SellOrders, TransactionDetail, BuyOrders} from 'screens/TransactionTab';
 import {ProductRequest} from 'screens/SearchTab';
+import {getDependency, getToken, connect} from 'utilities';
+import {KeyExtensions} from 'common';
+import {IPushNotificationService} from 'services';
+import {IAppState} from 'store/AppStore';
 
 const Tab = createBottomTabNavigator();
 
@@ -163,53 +167,76 @@ const TransactionTab = (): JSX.Element => (
   </TransactionStack.Navigator>
 );
 
-export const TabStack = (): JSX.Element => {
-  useEffect(() => {
+type RootTabProps = {
+  pushDeviceToken: string;
+};
+
+@connect((state: IAppState) => ({
+  pushDeviceToken: state.EnvironmentState.pushDeviceToken,
+}))
+export class TabStack extends React.Component<RootTabProps> {
+  private notificationProvider = getDependency<IPushNotificationService>(
+    KeyExtensions.IPushNotificationService,
+  );
+
+  public componentDidMount() {
     const settingsProvider = Factory.getObjectInstance<ISettingsProvider>(
       Keys.ISettingsProvider,
     );
+    this.notificationProvider.initializeListeners();
     settingsProvider.loadServerSettings();
-  });
+  }
 
-  return (
-    <Tab.Navigator
-      tabBarOptions={{
-        labelStyle: themes.TextStyle.footnoteRegular,
-        activeTintColor: themes.AppPrimaryColor,
-        inactiveTintColor: themes.AppDisabledColor,
-      }}>
-      <Tab.Screen
-        name={RouteNames.Tab.HomeTab.Name}
-        component={HomeTab}
-        options={{
-          tabBarIcon: TabBarIcon('home'),
-          title: strings.HomeTab,
-        }}
-      />
-      <Tab.Screen
-        name={RouteNames.Tab.SearchTab.Name}
-        component={SearchTab}
-        options={{
-          tabBarIcon: TabBarIcon('search'),
-          title: strings.SearchTab,
-        }}
-      />
-      <Tab.Screen
-        name={RouteNames.Tab.TransactionTab.Name}
-        component={TransactionTab}
-        options={{
-          tabBarIcon: TabBarIcon('shopping-cart'),
-          title: strings.TransactionTab,
-        }}
-      />
-      <Tab.Screen
-        name={RouteNames.Tab.AccountTab.Name}
-        component={AccountTab}
-        options={{
-          tabBarIcon: TabBarIcon('person'),
-          title: strings.UserTab,
-        }}
-      />
-    </Tab.Navigator>
-  );
-};
+  public componentDidUpdate(prevProps: RootTabProps) {
+    if (
+      this.props.pushDeviceToken &&
+      this.props.pushDeviceToken !== prevProps.pushDeviceToken
+    ) {
+      this.notificationProvider.registerDevice(getToken());
+    }
+  }
+
+  public render() {
+    return (
+      <Tab.Navigator
+        tabBarOptions={{
+          labelStyle: themes.TextStyle.footnoteRegular,
+          activeTintColor: themes.AppPrimaryColor,
+          inactiveTintColor: themes.AppDisabledColor,
+        }}>
+        <Tab.Screen
+          name={RouteNames.Tab.HomeTab.Name}
+          component={HomeTab}
+          options={{
+            tabBarIcon: TabBarIcon('home'),
+            title: strings.HomeTab,
+          }}
+        />
+        <Tab.Screen
+          name={RouteNames.Tab.SearchTab.Name}
+          component={SearchTab}
+          options={{
+            tabBarIcon: TabBarIcon('search'),
+            title: strings.SearchTab,
+          }}
+        />
+        <Tab.Screen
+          name={RouteNames.Tab.TransactionTab.Name}
+          component={TransactionTab}
+          options={{
+            tabBarIcon: TabBarIcon('shopping-cart'),
+            title: strings.TransactionTab,
+          }}
+        />
+        <Tab.Screen
+          name={RouteNames.Tab.AccountTab.Name}
+          component={AccountTab}
+          options={{
+            tabBarIcon: TabBarIcon('person'),
+            title: strings.UserTab,
+          }}
+        />
+      </Tab.Navigator>
+    );
+  }
+}

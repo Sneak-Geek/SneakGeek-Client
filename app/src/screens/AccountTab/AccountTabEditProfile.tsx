@@ -29,7 +29,7 @@ import {Icon} from 'react-native-elements';
 import {connect} from 'utilities/ReduxUtilities';
 import {IAppState} from 'store/AppStore';
 import {showSuccessNotification, toggleIndicator} from 'actions';
-import {getToken, getService} from 'utilities';
+import {getToken, getDependency} from 'utilities';
 import {RootStackParams} from 'navigations/RootStack';
 
 const styles = StyleSheet.create({
@@ -346,7 +346,7 @@ export class AccountTabEditProfile extends React.Component<Props, State> {
 
   private _keyboardShowListener: EmitterSubscription;
   private _keyboardHideListener: EmitterSubscription;
-  private readonly _accountService = getService<IAccountService>(
+  private readonly _accountService = getDependency<IAccountService>(
     FactoryKeys.IAccountService,
   );
   private _validShippingAddress: {
@@ -395,10 +395,10 @@ export class AccountTabEditProfile extends React.Component<Props, State> {
   }
 
   private _initializeAddressSettings(): void {
-    const settingsService = getService<ISettingService>(
+    const settingsService = getDependency<ISettingService>(
       FactoryKeys.ISettingService,
     );
-    const settingsProvider = getService<ISettingsProvider>(
+    const settingsProvider = getDependency<ISettingsProvider>(
       FactoryKeys.ISettingsProvider,
     );
     this._validShippingAddress = settingsProvider.getValue(

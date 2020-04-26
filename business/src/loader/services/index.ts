@@ -8,3 +8,4 @@ export * from "./ShoeService";
 export * from "./SettingService";
 export * from "./OrderService";
 export * from "./CdnService";
+export * from "./BaseService";

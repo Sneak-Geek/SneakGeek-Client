@@ -12,6 +12,6 @@ export function getToken() {
   return settings.getValue(SettingsKey.CurrentAccessToken);
 }
 
-export function getService<T>(key: symbol): T {
+export function getDependency<T>(key: symbol): T {
   return ObjectFactory.getObjectInstance<T>(key);
 }

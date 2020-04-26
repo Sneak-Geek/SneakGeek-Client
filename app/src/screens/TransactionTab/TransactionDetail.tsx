@@ -30,7 +30,7 @@ import {
 import {strings, themes} from 'resources';
 import {
   toCurrencyString,
-  getService,
+  getDependency,
   getToken,
   connect,
   getOrderStatusStringAndColor,
@@ -293,7 +293,9 @@ export class TransactionDetail extends React.Component<Props, State> {
   private async _getTransaction(): Promise<void> {
     this.props.toggleLoading(true);
     try {
-      const orderService = getService<IOrderService>(FactoryKeys.IOrderService);
+      const orderService = getDependency<IOrderService>(
+        FactoryKeys.IOrderService,
+      );
       const transaction = await orderService.getTransactionBySellOrder(
         getToken(),
         this.state.currentOrder._id,
@@ -312,7 +314,9 @@ export class TransactionDetail extends React.Component<Props, State> {
   }
 
   private async _onOrderCanceled(): Promise<void> {
-    const orderService = getService<IOrderService>(FactoryKeys.IOrderService);
+    const orderService = getDependency<IOrderService>(
+      FactoryKeys.IOrderService,
+    );
     this.props.toggleLoading(true);
     try {
       await orderService.cancelSellOrder(
@@ -331,7 +335,9 @@ export class TransactionDetail extends React.Component<Props, State> {
   private async _onUpdateOrder(
     updatedOrder: SellOrderEditInput,
   ): Promise<void> {
-    const orderService = getService<IOrderService>(FactoryKeys.IOrderService);
+    const orderService = getDependency<IOrderService>(
+      FactoryKeys.IOrderService,
+    );
     this.props.toggleLoading(true);
     try {
       await orderService.updateSellOrder(getToken(), updatedOrder);
@@ -349,7 +355,9 @@ export class TransactionDetail extends React.Component<Props, State> {
   }
 
   private async _getCurrentOrder(): Promise<SellOrder> {
-    const orderService = getService<IOrderService>(FactoryKeys.IOrderService);
+    const orderService = getDependency<IOrderService>(
+      FactoryKeys.IOrderService,
+    );
     return await orderService.getSellOrderById(getToken(), this.order._id);
   }
 
