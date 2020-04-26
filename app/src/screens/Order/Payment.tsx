@@ -1,6 +1,6 @@
 import React from 'react';
 import {SellOrder, PaymentType, IOrderService, FactoryKeys} from 'business';
-import {getService, connect, getToken} from 'utilities';
+import {getDependency, connect, getToken} from 'utilities';
 import {toggleIndicator, showSuccessNotification} from 'actions';
 import {strings, themes} from 'resources';
 import {IAppState} from 'store/AppStore';
@@ -57,11 +57,10 @@ export class Payment extends React.Component<Props, State> {
   private orderService: IOrderService;
   private sellOrder: SellOrder;
   private paymentType: PaymentType;
-  private navigateTimeout: number;
 
   public constructor(props: Props) {
     super(props);
-    this.orderService = getService<IOrderService>(FactoryKeys.IOrderService);
+    this.orderService = getDependency<IOrderService>(FactoryKeys.IOrderService);
     this.sellOrder = this.props.route.params.sellOrder;
     this.paymentType = this.props.route.params.paymentType;
 
@@ -72,12 +71,6 @@ export class Payment extends React.Component<Props, State> {
 
   public componentDidMount(): void {
     this._getPaymentUrl();
-  }
-
-  public componentWillUnmount(): void {
-    if (this.navigateTimeout) {
-      clearTimeout(this.navigateTimeout);
-    }
   }
 
   public render(): JSX.Element {
@@ -144,11 +137,9 @@ export class Payment extends React.Component<Props, State> {
     const data = event.nativeEvent.data as PaymentResult;
     if (data === 'success') {
       this.props.showMessage(strings.PaymentSuccess);
-      this.navigateTimeout = setTimeout(() => {
-        this.props.navigation.navigate(RouteNames.Tab.Name, {
-          screen: RouteNames.Tab.TransactionTab.Name,
-        });
-      }, 250);
+      this.props.navigation.navigate(RouteNames.Tab.Name, {
+        screen: RouteNames.Tab.TransactionTab.Name,
+      });
     }
   }
 }

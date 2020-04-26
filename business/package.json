@@ -18,6 +18,7 @@
     "typescript": "3.7.2"
   },
   "peerDependencies": {
+    "@react-native-community/push-notification-ios": "^1.1.1",
     "@types/redux-actions": "*",
     "axios": "*",
     "redux": "*",

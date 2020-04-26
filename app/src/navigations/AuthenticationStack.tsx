@@ -6,21 +6,13 @@ import {
   EmailLoginScreen,
   EmailSignUpScreen,
   ForgotPasswordScreen,
-  AuthCheck,
 } from 'screens/Authentication';
 import {strings, themes} from 'resources';
 
 const Stack = createStackNavigator();
 
 export const AuthenticationStack = (): JSX.Element => (
-  <Stack.Navigator initialRouteName={RouteNames.Auth.AuthCheck}>
-    <Stack.Screen
-      name={RouteNames.Auth.AuthCheck}
-      component={AuthCheck}
-      options={{
-        header: () => null,
-      }}
-    />
+  <Stack.Navigator initialRouteName={RouteNames.Auth.Login}>
     <Stack.Screen
       name={RouteNames.Auth.Login}
       component={LoginScreen}

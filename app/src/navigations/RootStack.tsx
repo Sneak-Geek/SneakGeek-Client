@@ -15,6 +15,7 @@ import {
   Review,
 } from 'business';
 import {OrderStack} from './OrderStack';
+import {SplashScreen} from 'screens/SplashScreen';
 
 export type RootStackParams = {
   ProductRequest: undefined;
@@ -51,9 +52,14 @@ const Stack = createStackNavigator();
 
 const RootStack = (): JSX.Element => (
   <NavigationContainer>
-    <Stack.Navigator
-      initialRouteName={RouteNames.Auth.Name}
-      headerMode={'none'}>
+    <Stack.Navigator initialRouteName={RouteNames.Splash} headerMode={'none'}>
+      <Stack.Screen
+        name={RouteNames.Splash}
+        component={SplashScreen}
+        options={{
+          header: () => null,
+        }}
+      />
       <Stack.Screen
         name={RouteNames.Auth.Name}
         component={AuthenticationStack}

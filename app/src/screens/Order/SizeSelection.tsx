@@ -1,7 +1,7 @@
 import React from 'react';
 import {SafeAreaView, StyleSheet, View} from 'react-native';
 import {SizePricePicker} from 'screens/Shared';
-import {getService, connect, getToken} from 'utilities';
+import {getDependency, connect, getToken} from 'utilities';
 import {ISettingsProvider, FactoryKeys, SettingsKey, Shoe} from 'business';
 import {StackNavigationProp} from '@react-navigation/stack';
 import {RouteProp} from '@react-navigation/native';
@@ -50,7 +50,7 @@ export class SizeSelection extends React.Component<Props, State> {
   public constructor(props: any) {
     super(props);
 
-    const settings = getService<ISettingsProvider>(
+    const settings = getDependency<ISettingsProvider>(
       FactoryKeys.ISettingsProvider,
     );
     this.shoeSizes = settings.getValue(
@@ -92,7 +92,9 @@ export class SizeSelection extends React.Component<Props, State> {
   }
 
   private async _getPriceMap(): Promise<void> {
-    const orderService = getService<IOrderService>(FactoryKeys.IOrderService);
+    const orderService = getDependency<IOrderService>(
+      FactoryKeys.IOrderService,
+    );
 
     this.props.toggleLoading(true);
 
