@@ -61,6 +61,9 @@ export class PushNotificationService extends BaseService
   private _onRegistered(deviceToken: string) {
     console.log('Device registered for push notification', deviceToken);
     this._deviceToken = deviceToken;
+
+    // This is an unexpected side-effect,
+    // can be fix if initialize listeners is taking adidtional paramameter(s)
     AppStore.dispatch(updatePushDeviceToken(deviceToken));
   }
 
