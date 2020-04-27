@@ -28,4 +28,11 @@ export interface IShoeService {
       }>
     | undefined
   >;
+  updateRequestProduct: (
+    token: string,
+    title: string,
+    brand: string,
+    gender?: string,
+    imageUrls?: string[]
+  ) => Promise<void>;
 }
