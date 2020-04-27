@@ -95,4 +95,27 @@ export class ShoeService extends BaseService implements IShoeService {
       });
     return response.data;
   }
+
+  public async updateRequestProduct(
+    token: string,
+    title: string,
+    brand: string,
+    gender?: string,
+    imageUrls?: string[]
+  ): Promise<void> {
+    await this.apiClient.getInstance().post(
+      "/product-request/",
+      {
+        title: title,
+        brand: brand,
+        gender: gender,
+        imageUrls: imageUrls,
+      },
+      {
+        headers: {
+          authorization: token,
+        },
+      }
+    );
+  }
 }

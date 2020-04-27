@@ -1,17 +1,17 @@
-import { StyleSheet, Platform } from "react-native";
+import { StyleSheet, Platform } from 'react-native';
 
 export const themes = {
-  FacebookThemeColor: "#3B5998",
+  FacebookThemeColor: '#3B5998',
   IconSize: 24,
   RegularButtonHeight: 54,
   MediumButtonHeigt: 40,
   ButtonBorderRadius: 4,
   LargeBorderRadius: 40,
-  DisabledColor: "#DADADA",
-  AppPrimaryColor: "#1ABC9C",
-  AppSecondaryColor: "#000",
-  AppAccentColor: "#FFF",
-  AppErrorColor: "#FF2D55",
+  DisabledColor: '#DADADA',
+  AppPrimaryColor: '#EB4649',
+  AppSecondaryColor: '#000',
+  AppAccentColor: '#FFF',
+  AppErrorColor: '#FF2D55',
   AppModalBackground: 'rgba(0.0, 0.0, 0.0, 0.65)',
   DisabledTheme: 'rgba(0, 0, 0, 0.05)',
   AppDisabledColor: '#DADADA',
@@ -25,7 +25,7 @@ export const themes = {
       shadowOffset: { width: 0.5, height: 0.5 },
       shadowOpacity: 0.1,
       shadowRadius: 0.5,
-    }
+    },
   }),
   TextStyle: StyleSheet.create({
     largeTitle: {
@@ -75,7 +75,7 @@ export const themes = {
 
     footnoteRegular: {
       fontSize: 13,
-      fontFamily: 'Roboto'
+      fontFamily: 'Roboto',
     },
 
     caption1: {
@@ -95,16 +95,16 @@ export const themes = {
     headerTitleStyle: {
       fontSize: 20,
       fontFamily: 'RobotoBold',
-    }
+    },
   },
   TabTopHeader: {
     labelStyle: {
       fontFamily: 'Roboto',
-      fontSize: 17
+      fontSize: 17,
     },
     indicatorStyle: {
-      backgroundColor: '#000'
-    }
+      backgroundColor: '#000',
+    },
   },
-  avatarSize: 100
-}
+  avatarSize: 100,
+};

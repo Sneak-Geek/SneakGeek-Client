@@ -30,7 +30,7 @@ export const strings = {
   ProductName: 'Tên sản phẩm',
   AllReviews: 'Tất cả đánh giá',
   Colorway: 'Màu chủ đạo',
-  Brand: 'Hãng',
+  Brand: 'Thương Hiệu',
   Category: 'Phân khúc',
   NoReview: 'Hiện tại chưa có đánh giá nào.',
   Rating: 'Đánh giá sản phẩm',
@@ -95,6 +95,10 @@ export const strings = {
   Gender: 'Giới tính',
   Men: 'Nam',
   Women: 'Nữ',
+  Unisex: 'Unisex',
+  Toddler: 'Trẻ mới biết đi',
+  Infant: 'Trẻ sơ sinh',
+  Preschool: 'Trẻ mẫu giáo',
   HighestBuyOrderPrice: 'Giá đặt mua cao nhất',
   BuyNowPrice: 'Giá mua ngay',
   HighestBuyOrderExplanation:
@@ -105,5 +109,6 @@ export const strings = {
   ProductPictures: 'Ảnh sản phẩm',
   ProductOtherDetail: 'Các chi tiết khác của sản phẩm',
   UpdateOrder: 'Cập nhật đơn hàng',
-  CancelOrder: 'Huỷ đơn hàng'
+  CancelOrder: 'Huỷ đơn hàng',
+  OtherDescriptions: 'Mô tả khác',
 };
