@@ -6,6 +6,7 @@ export const images = {
   Email: require('../../assets/icons/email.png'),
   Profile: require('../../assets/icons/profile.jpg'),
   ImagePlaceholder: require('../../assets/icons/ImagePlaceholder.jpg'),
+  CameraPlaceholder: require('../../assets/icons/CameraPlaceholder.png'),
   ImageNotUploaded: require('../../assets/icons/ImageNotUploaded.png'),
   ImageNotUploadedx2: require('../../assets/icons/ImageNotUploadedx2.png'),
 };

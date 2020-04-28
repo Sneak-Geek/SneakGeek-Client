@@ -3,15 +3,15 @@ import { View, StyleSheet, ScrollView, Alert } from 'react-native';
 import { AppText, BottomButton } from '@screens/Shared';
 import { RouteProp } from '@react-navigation/native';
 import { RootStackParams } from 'navigations/RootStack';
-import { StackNavigationProp } from '@react-navigation/stack';
+import { StackNavigationProp, HeaderHeightContext } from '@react-navigation/stack';
 import { SafeAreaConsumer } from 'react-native-safe-area-context';
 import { themes, strings } from '@resources';
 import { Icon, Rating } from 'react-native-elements';
-import { Review, Shoe, ObjectFactory, Profile } from 'business';
-import { ReviewItem, Header } from '../Shared';
+import { Review, Shoe, ObjectFactory, SettingsKey, Profile } from 'business';
+import { ReviewItem } from '../Shared';
 import "../Shared/BottomButton";
 import RouteNames from 'navigations/RouteNames';
-import { IShoeService, FactoryKeys } from 'business/src';
+import { IShoeService, FactoryKeys, ISettingsProvider } from 'business/src';
 import { connect } from 'utilities/ReduxUtilities';
 import {
   toggleIndicator,
@@ -122,7 +122,7 @@ export class AllReviews extends React.Component<Props>{
               paddingTop: insets.top,
               ...styles.rootContainer
             }}>
-            <Header topInsets={insets.top} headerText={strings.AllReviews}></Header>
+            {this._renderHeader(insets.top)}
             <ScrollView style={{ flex: 1, marginBottom: insets.bottom + themes.RegularButtonHeight }}
               showsVerticalScrollIndicator={false}>
               <View
@@ -139,6 +139,34 @@ export class AllReviews extends React.Component<Props>{
           </View>
         )}
       </SafeAreaConsumer>
+    );
+  }
+
+  private _renderHeader(topInsets: number): JSX.Element {
+    return (
+      <HeaderHeightContext.Consumer>
+        {
+          headerHeight => (
+            <View style={{ ...styles.headerContainer, height: headerHeight + topInsets, }}>
+              <Icon
+                name={'ios-arrow-back'}
+                type={'ionicon'}
+                size={themes.IconSize}
+                hitSlop={styles.backHitSlop}
+                onPress={() => this.props.navigation.goBack()}
+              />
+              <AppText.Title3>{strings.AllReviews}</AppText.Title3>
+              <Icon
+                color="white"
+                name={'ios-arrow-back'}
+                type={'ionicon'}
+                size={themes.IconSize}
+                hitSlop={styles.backHitSlop}
+              />
+            </View>
+          )
+        }
+      </HeaderHeightContext.Consumer>
     );
   }
 

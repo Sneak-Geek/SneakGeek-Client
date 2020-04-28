@@ -2,7 +2,7 @@ import { createAction } from "redux-actions";
 import { Dispatch, AnyAction } from "redux";
 import { GetUserProfilePayload, NetworkRequestState } from "../payload";
 import { ObjectFactory, FactoryKeys } from "../loader/kernel";
-import { IAccountService, ISettingsProvider, SettingsKey } from "../loader/interfaces";
+import { IAccountService, ISettingsProvider, SettingsKey } from "../loader";
 import { Profile } from "../model";
 
 export const ProfileActions = {

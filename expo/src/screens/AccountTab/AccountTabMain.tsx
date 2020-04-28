@@ -2,7 +2,14 @@ import React from 'react';
 import { SafeAreaView, StatusBar, View, StyleSheet } from 'react-native';
 import { connect } from 'utilities/ReduxUtilities';
 import { IAppState } from '@store/AppStore';
-import { Profile, Account } from 'business';
+import {
+  Profile,
+  Account,
+  ICdnService,
+  FactoryKeys,
+  updateProfile,
+  IAccountService,
+} from 'business';
 import { themes, strings } from '@resources';
 import { AppText, BottomButton } from '@screens/Shared';
 import { ListItem, Avatar } from 'react-native-elements';
@@ -13,11 +20,20 @@ import {
 } from '@expo/react-native-action-sheet';
 import { StackNavigationProp } from '@react-navigation/stack';
 import RouteNames from 'navigations/RouteNames';
+import { getService, getToken } from 'utilities';
+import {
+  toggleIndicator,
+  showSuccessNotification,
+  showErrorNotification,
+} from 'actions';
 
 type Props = {
   account: Account;
   profile: Profile;
   navigation: StackNavigationProp<any>;
+  toggleLoading: (isLoading: boolean) => void;
+  showNotification: (message: string, isError?: boolean) => void;
+  updateProfile: (profile: Partial<Profile>) => void;
 };
 
 type Setting = {
@@ -46,10 +62,27 @@ const styles = StyleSheet.create({
   },
 });
 
-@connect((state: IAppState) => ({
-  account: state.UserState.accountState.account,
-  profile: state.UserState.profileState.profile,
-}))
+@connect(
+  (state: IAppState) => ({
+    account: state.UserState.accountState.account,
+    profile: state.UserState.profileState.profile,
+  }),
+  (dispatch: Function) => ({
+    toggleLoading: (isLoading: boolean): void => {
+      dispatch(toggleIndicator({ isLoading, message: strings.PleaseWait }));
+    },
+    showNotification: (message: string, isError = false): void => {
+      if (!isError) {
+        dispatch(showSuccessNotification(message));
+      } else {
+        dispatch(showErrorNotification(message));
+      }
+    },
+    updateProfile: (profile: Profile): void => {
+      dispatch(updateProfile(profile));
+    },
+  }),
+)
 class UnconnectedAccountTabMain extends React.Component<Props & ActionSheetProps> {
   private settings: Setting[] = [
     {
@@ -81,6 +114,12 @@ class UnconnectedAccountTabMain extends React.Component<Props & ActionSheetProps
       leftIcon: 'phone',
     },
   ];
+  private imagePickerOption: ImagePicker.ImagePickerOptions = {
+    allowsEditing: true,
+    mediaTypes: ImagePicker.MediaTypeOptions.Images,
+    allowsMultipleSelection: false,
+    quality: 0.5,
+  };
 
   public render(): JSX.Element {
     return (
@@ -176,18 +215,58 @@ class UnconnectedAccountTabMain extends React.Component<Props & ActionSheetProps
   private async _takeCameraPhoto(): Promise<void> {
     const permission = await ImagePicker.requestCameraPermissionsAsync();
     if (permission.granted) {
-      ImagePicker.launchCameraAsync({
-        allowsEditing: true,
-      });
+      const result = await ImagePicker.launchCameraAsync(this.imagePickerOption);
+
+      if (!result.cancelled) {
+        const imageInfo = result as { uri: string; type: string };
+        this._uploadProfileImage({
+          uri: imageInfo.uri,
+          type: imageInfo.type,
+        });
+      }
     }
   }
 
   private async _choosePictureLocal(): Promise<void> {
     const permission = await ImagePicker.requestCameraRollPermissionsAsync();
     if (permission.granted) {
-      ImagePicker.launchImageLibraryAsync({
-        allowsEditing: true,
+      const result: ImagePicker.ImagePickerResult = await ImagePicker.launchImageLibraryAsync(
+        this.imagePickerOption,
+      );
+
+      if (!result.cancelled) {
+        const imageInfo = result as { uri: string; type: string };
+        this._uploadProfileImage({
+          uri: imageInfo.uri,
+          type: imageInfo.type,
+        });
+      }
+    }
+  }
+
+  private async _uploadProfileImage(image: {
+    uri: string;
+    type: string;
+  }): Promise<void> {
+    const cdnService = getService<ICdnService>(FactoryKeys.ICdnService);
+    const accountService = getService<IAccountService>(FactoryKeys.IAccountService);
+
+    this.props.toggleLoading(true);
+    try {
+      const [url] = await cdnService.uploadImages(getToken(), [image]);
+
+      const profile = await accountService.updateProfile(getToken(), {
+        userProvidedProfilePic: url,
       });
+      
+      this.props.updateProfile(profile);
+      this.props.showNotification(strings.PaymentSuccess);
+    } catch (error) {
+      this.props.showNotification(strings.ErrorPleaseTryAgain, true);
+      console.warn(error);
+      console.log(JSON.stringify(error, null, 2));
+    } finally {
+      this.props.toggleLoading(false);
     }
   }
 }

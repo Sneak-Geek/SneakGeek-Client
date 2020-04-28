@@ -7,6 +7,13 @@ export * from './BottomPicker';
 export * from './LiteShoeCard';
 export * from './TitleContentDescription';
 export * from './ImageRatioPreserved';
+<<<<<<< HEAD
 export * from './ShimmerLoadList';
 export * from './ReviewItem';
 export * from './Header';
+||||||| merged common ancestors
+export * from './ShimmerLoadList';
+=======
+export * from './ShimmerLoadList';
+export * from './ReviewItem';
+>>>>>>> master

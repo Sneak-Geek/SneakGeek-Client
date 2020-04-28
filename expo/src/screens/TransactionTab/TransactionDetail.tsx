@@ -1,6 +1,17 @@
 import React from 'react';
-import { SafeAreaView, View } from 'react-native';
-import { ShoeHeaderSummary, TitleContentDescription } from '@screens/Shared';
+import {
+  View,
+  FlatList,
+  Image,
+  KeyboardAvoidingView,
+  ScrollView,
+} from 'react-native';
+import {
+  ShoeHeaderSummary,
+  TitleContentDescription,
+  AppText,
+  BottomButton,
+} from '@screens/Shared';
 import { RouteProp } from '@react-navigation/native';
 import { RootStackParams } from 'navigations/RootStack';
 import {
@@ -14,20 +25,36 @@ import {
   OrderStatus,
   BuyOrder,
   OrderType,
+  getOrders,
 } from 'business';
 import { strings, themes } from '@resources';
-import { ScrollView } from 'react-native-gesture-handler';
-import { toCurrencyString, getService, getToken, connect } from 'utilities';
+import {
+  toCurrencyString,
+  getService,
+  getToken,
+  connect,
+  getOrderStatusStringAndColor,
+} from 'utilities';
 import { toggleIndicator } from 'actions';
 import Timeline from 'react-native-timeline-flatlist';
+import { SafeAreaConsumer } from 'react-native-safe-area-context';
+import { HeaderHeightContext, StackNavigationProp } from '@react-navigation/stack';
+import { styles } from '@screens/SearchTab/SearchTabMain/styles';
+import { Icon } from 'react-native-elements';
+import { SellOrderEdit } from './SellOrderEdit';
+import { SellOrderEditInput } from 'business/src';
 
 type Props = {
   route: RouteProp<RootStackParams, 'TransactionDetail'>;
+  navigation: StackNavigationProp<RootStackParams, 'TransactionDetail'>;
   toggleLoading: (isLoading: boolean) => void;
+  getSellOrders: () => void;
 };
 
 type State = {
   transaction?: Transaction;
+  currentOrder: SellOrder | BuyOrder;
+  isEditMode?: boolean;
 };
 
 @connect(
@@ -35,6 +62,7 @@ type State = {
   (dispatch: Function) => ({
     toggleLoading: (isLoading: boolean): void =>
       dispatch(toggleIndicator({ isLoading, message: strings.PleaseWait })),
+    getSellOrders: (): void => dispatch(getOrders('SellOrder')),
   }),
 )
 export class TransactionDetail extends React.Component<Props, State> {
@@ -46,7 +74,9 @@ export class TransactionDetail extends React.Component<Props, State> {
     this.order = this.props.route.params.order;
     this.orderType = this.props.route.params.orderType;
     this.state = {
+      currentOrder: this.order,
       transaction: null,
+      isEditMode: false,
     };
   }
 
@@ -55,51 +85,156 @@ export class TransactionDetail extends React.Component<Props, State> {
   }
 
   public render(): JSX.Element {
-    if (!this.state.transaction && this._shouldGetTransaction()) {
+    return (
+      <SafeAreaConsumer>
+        {(insets): JSX.Element => (
+          <KeyboardAvoidingView
+            style={{ flex: 1, paddingTop: insets.top, backgroundColor: 'white' }}
+            behavior={'padding'}
+          >
+            {this._renderHeader(insets.top)}
+            <ShoeHeaderSummary shoe={this._getShoe()} />
+            <View style={styles.contentContainer}>
+              {!this.state.isEditMode && this._renderOrderDetail()}
+              {this.state.isEditMode && this._renderOrderEdit()}
+              {this._renderCancelOrder()}
+            </View>
+          </KeyboardAvoidingView>
+        )}
+      </SafeAreaConsumer>
+    );
+  }
+
+  private _renderCancelOrder(): JSX.Element {
+    if (
+      this.state.currentOrder.status !== OrderStatus.PENDING ||
+      this.state.isEditMode
+    )
       return null;
-    }
 
     return (
-      <SafeAreaView style={{ flex: 1 }}>
-        <View style={{ flex: 1 }}>
-          <ShoeHeaderSummary shoe={this._getShoe()} />
-          <ScrollView
-            style={{
-              flex: 1,
-              backgroundColor: 'white',
-              padding: 20,
-              paddingBottom: 40,
-            }}
-          >
+      <BottomButton
+        onPress={this._onOrderCanceled.bind(this)}
+        title={strings.CancelOrder}
+        style={{ backgroundColor: themes.AppErrorColor }}
+      />
+    );
+  }
+
+  private _renderHeader(top: number): JSX.Element {
+    return (
+      <HeaderHeightContext.Consumer>
+        {(headerHeight): JSX.Element => (
+          <View style={{ ...styles.headerContainer, height: headerHeight + top }}>
+            <Icon
+              name={'ios-arrow-back'}
+              type={'ionicon'}
+              size={themes.IconSize}
+              onPress={(): void => this.props.navigation.goBack()}
+            />
+            <AppText.Title3>
+              {this.orderType === 'SellOrder'
+                ? strings.TransactionSellDetail
+                : strings.TransactionBuyDetail}
+            </AppText.Title3>
+            {this.state.currentOrder.status === OrderStatus.PENDING ? (
+              <Icon
+                name={this.state.isEditMode ? 'x' : 'edit'}
+                type={'feather'}
+                size={themes.IconSize}
+                onPress={this._onEditOrder.bind(this)}
+              />
+            ) : (
+              <View style={{ height: themes.IconSize, aspectRatio: 1 }} />
+            )}
+          </View>
+        )}
+      </HeaderHeightContext.Consumer>
+    );
+  }
+
+  private _onEditOrder(): void {
+    this.setState({ isEditMode: !this.state.isEditMode });
+  }
+
+  private _renderOrderEdit(): JSX.Element {
+    if (this.orderType === 'SellOrder') {
+      return (
+        <SellOrderEdit
+          order={this.order as SellOrder}
+          onUpdateOrder={this._onUpdateOrder.bind(this)}
+        />
+      );
+    }
+
+    return null;
+  }
+
+  private _renderOrderDetail(): JSX.Element {
+    const { color, status } = getOrderStatusStringAndColor(
+      this.order,
+      this.orderType,
+    );
+    const shouldRenderImage =
+      this.orderType === 'SellOrder' && (this.order as SellOrder).pictures.length > 0;
+
+    return (
+      <ScrollView style={{ flex: 1 }}>
+        <View style={{ flex: 1, padding: 20 }}>
+          <TitleContentDescription
+            emphasizeTitle={true}
+            title={strings.Price}
+            content={toCurrencyString(this._getShoePrice().price)}
+          />
+          <TitleContentDescription
+            emphasizeTitle={true}
+            title={strings.ShoeSize}
+            content={this.state.currentOrder.shoeSize}
+          />
+          <TitleContentDescription
+            emphasizeTitle={true}
+            title={strings.OrderStatus}
+            content={status}
+            subtitleStyle={{ color }}
+          />
+          {this.orderType === 'SellOrder' && (
             <TitleContentDescription
               emphasizeTitle={true}
-              title={strings.Price}
-              content={toCurrencyString(this._getShoePrice().price)}
+              title={strings.OrderDescription}
+              content={this._getProductDescription()}
             />
+          )}
+          {shouldRenderImage && (
             <TitleContentDescription
               emphasizeTitle={true}
-              title={strings.ShoeSize}
-              content={this.order.shoeSize}
+              title={strings.ProductPictures}
+              content={
+                <FlatList
+                  style={{ marginTop: 15 }}
+                  horizontal={true}
+                  data={(this.order as SellOrder).pictures}
+                  keyExtractor={(_, index): string => index.toString()}
+                  renderItem={({ item }): JSX.Element => (
+                    <Image
+                      source={{ uri: item }}
+                      style={{ width: 95, aspectRatio: 1, marginRight: 10 }}
+                    />
+                  )}
+                />
+              }
             />
-            {this.orderType === 'SellOrder' && (
-              <TitleContentDescription
-                emphasizeTitle={true}
-                title={strings.Description}
-                content={this._getProductDescription()}
-              />
-            )}
-            {this._shouldGetTransaction() && (
-              <TitleContentDescription
-                emphasizeTitle={true}
-                title={strings.Status}
-                content={this._getTransactionStatus()}
-                renderCollapsibleIndicator={true}
-                renderCollapsibleContent={this._renderTimeline.bind(this)}
-              />
-            )}
-          </ScrollView>
+          )}
+          {this._shouldGetTransaction() && (
+            <TitleContentDescription
+              emphasizeTitle={true}
+              title={strings.CheckingStatus}
+              content={this._getTransactionStatus()}
+              renderCollapsibleIndicator={true}
+              renderCollapsibleContent={this._renderTimeline.bind(this)}
+            />
+          )}
         </View>
-      </SafeAreaView>
+      </ScrollView>
     );
   }
 
@@ -132,6 +267,10 @@ export class TransactionDetail extends React.Component<Props, State> {
   }
 
   private _getTransactionStatus(): string {
+    if (!this.state.transaction) {
+      return null;
+    }
+
     const { paymentStatus } = this.state.transaction;
     switch (paymentStatus.status) {
       case PaymentStatus.CANCELED:
@@ -151,7 +290,7 @@ export class TransactionDetail extends React.Component<Props, State> {
       const orderService = getService<IOrderService>(FactoryKeys.IOrderService);
       const transaction = await orderService.getTransactionBySellOrder(
         getToken(),
-        this.order._id,
+        this.state.currentOrder._id,
       );
 
       this.setState({ transaction });
@@ -163,7 +302,44 @@ export class TransactionDetail extends React.Component<Props, State> {
   }
 
   private _shouldGetTransaction(): boolean {
-    return this.order.status === OrderStatus.COMPLETED;
+    return this.state.currentOrder.status === OrderStatus.COMPLETED;
+  }
+
+  private async _onOrderCanceled(): Promise<void> {
+    const orderService = getService<IOrderService>(FactoryKeys.IOrderService);
+    this.props.toggleLoading(true);
+    try {
+      await orderService.cancelSellOrder(getToken(), this.state.currentOrder._id);
+      this.props.navigation.goBack();
+      this.props.getSellOrders();
+    } catch (error) {
+      console.log('Error cancel sell order');
+    } finally {
+      this.props.toggleLoading(false);
+    }
+  }
+
+  private async _onUpdateOrder(updatedOrder: SellOrderEditInput): Promise<void> {
+    const orderService = getService<IOrderService>(FactoryKeys.IOrderService);
+    this.props.toggleLoading(true);
+    try {
+      await orderService.updateSellOrder(getToken(), updatedOrder);
+      const newOrder = await this._getCurrentOrder();
+      this.setState({
+        currentOrder: newOrder,
+        isEditMode: false,
+      });
+      this.props.getSellOrders();
+    } catch (error) {
+      console.log('Error updating sell order');
+    } finally {
+      this.props.toggleLoading(false);
+    }
+  }
+
+  private async _getCurrentOrder(): Promise<SellOrder> {
+    const orderService = getService<IOrderService>(FactoryKeys.IOrderService);
+    return await orderService.getSellOrderById(getToken(), this.order._id);
   }
 
   /**

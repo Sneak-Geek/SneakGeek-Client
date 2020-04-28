@@ -4,7 +4,6 @@
 
 import { ICdnService } from "./ICdnService";
 import ApiClient from "../ApiClient";
-import * as HttpStatus from "http-status";
 import { injectable } from "inversify";
 import { Platform } from "react-native";
 import RNFetchBlob, { FetchBlobResponse } from "rn-fetch-blob";
@@ -13,15 +12,11 @@ import RNFetchBlob, { FetchBlobResponse } from "rn-fetch-blob";
 export class CdnService implements ICdnService {
   public async /** override **/ getImageUploadUrls(token: string, count: number): Promise<string[]> {
     const headers = { authorization: token };
-    const response = await ApiClient.get(`/transaction/sell/get-img-url?count=${count}`, {
+    const response = await ApiClient.get(`/image?count=${count}&type=User`, {
       headers
     });
 
-    if (response && response.status === HttpStatus.OK) {
-      return response.data as string[];
-    }
-
-    return [];
+    return response.data;
   }
 
   public async uploadImage(localUri: string, remoteUri: string, filetype: string): Promise<FetchBlobResponse> {
