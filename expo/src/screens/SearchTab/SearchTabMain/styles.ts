@@ -81,17 +81,4 @@ export const styles = StyleSheet.create({
     right: 10,
     zIndex: 100,
   },
-  headerContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    paddingHorizontal: 15,
-    borderBottomColor: themes.DisabledColor,
-    borderBottomWidth: 0.5,
-    backgroundColor: 'white'
-  },
-  contentContainer: {
-    flex: 1,
-    backgroundColor: 'white',
-  }
 });

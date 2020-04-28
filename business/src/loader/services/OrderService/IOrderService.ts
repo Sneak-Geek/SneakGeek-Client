@@ -2,16 +2,6 @@ import { SellOrder, BuyOrder, Transaction } from "../../../model";
 
 export type PaymentType = "intl" | "domestic";
 export type OrderType = "BuyOrder" | "SellOrder";
-export type SellOrderEditInput = {
-  _id: string;
-  sellNowPrice?: number;
-  productCondition?: {
-    isTainted?: boolean;
-    isOutsoleWorn?: boolean;
-    isTorn?: boolean;
-    otherDetail?: boolean;
-  };
-};
 
 export interface IOrderService {
   createSellOrder(token: string, sellOrder: SellOrder): Promise<void>;
@@ -26,7 +16,4 @@ export interface IOrderService {
     lowestSellOrder?: SellOrder;
     highestBuyOrderPrice?: number;
   }>;
-  updateSellOrder: (token: string, order: SellOrderEditInput) => Promise<void>;
-  cancelSellOrder: (token: string, orderId: string) => Promise<void>;
-  getSellOrderById: (token: string, orderId: string) => Promise<SellOrder>;
 }

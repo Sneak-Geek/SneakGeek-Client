@@ -13,6 +13,7 @@ import { ProductConditionExtra } from '../../Product/ProductConditionExtra';
 import { ProductSellSummary } from '../../Product/ProductSellSummary';
 import { ProductRequiredInfo } from '../../Product/ProductRequiredInfo';
 import { connect, getToken, getService } from 'utilities';
+import { IAppState } from '@store/AppStore';
 import { showErrorNotification, showSuccessNotification, toggleIndicator } from 'actions';
 import { styles } from './styles';
 import { CdnService } from 'business/src';
@@ -100,9 +101,9 @@ export class NewSellOrder extends React.Component<Props, State> {
           <ProductConditionExtra
             key={1}
             onSetShoeHeavilyTorn={this._setShoeHeavilyTorn.bind(this)}
+            onSetShoeInsoleWorn={this._setShoeOutsoleWorn.bind(this)}
             onSetShoeOutsoleWorn={this._setShoeOutsoleWorn.bind(this)}
             onSetShoeTainted={this._setShoeTainted.bind(this)}
-            onSetShoeInsoleWorn={this._setShoeInsoleWorn.bind(this)}
             onSetShoeOtherDetail={this._setShoeOtherDetail.bind(this)}
           />
         ),
@@ -256,7 +257,7 @@ export class NewSellOrder extends React.Component<Props, State> {
     }
   }
 
-  private _onListScroll(forward = true): void {
+  private _onListScroll(forward = true) {
     const shouldContinue = this.childComponents[this.state.currentIndex].canProceed();
     const canGoNext =
       shouldContinue &&
@@ -277,11 +278,11 @@ export class NewSellOrder extends React.Component<Props, State> {
     }
   }
 
-  private _setShoeSize(shoeSize: string): void {
+  private _setShoeSize(shoeSize: string) {
     this.setState({ sellOrder: { ...this.state.sellOrder, shoeSize } });
   }
 
-  private _setBoxCondition(boxCondition: string): void {
+  private _setBoxCondition(boxCondition: string) {
     this.setState({
       sellOrder: {
         ...this.state.sellOrder,
@@ -293,7 +294,7 @@ export class NewSellOrder extends React.Component<Props, State> {
     });
   }
 
-  private _setShoeCondition(shoeCondition: string): void {
+  private _setShoeCondition(shoeCondition: string) {
     this.setState({
       sellOrder: {
         ...this.state.sellOrder,
@@ -302,7 +303,7 @@ export class NewSellOrder extends React.Component<Props, State> {
     });
   }
 
-  private _setShoeHeavilyTorn(isTorn: boolean): void {
+  private _setShoeHeavilyTorn(isTorn: boolean) {
     this.setState(prevState => ({
       ...prevState,
       sellOrder: {
@@ -315,7 +316,7 @@ export class NewSellOrder extends React.Component<Props, State> {
     }));
   }
 
-  private _setShoeOutsoleWorn(isOutsoleWorn: boolean): void {
+  private _setShoeOutsoleWorn(isOutsoleWorn: boolean) {
     this.setState(prevState => ({
       ...prevState,
       sellOrder: {
@@ -328,20 +329,7 @@ export class NewSellOrder extends React.Component<Props, State> {
     }));
   }
 
-  private _setShoeInsoleWorn(isInsoleWorn: boolean): void {
-    this.setState(prevState => ({
-      ...prevState,
-      sellOrder: {
-        ...prevState.sellOrder,
-        productCondition: {
-          ...prevState.sellOrder.productCondition,
-          isInsoleWorn,
-        },
-      },
-    }));
-  }
-
-  private _setShoeTainted(isTainted: boolean): void {
+  private _setShoeTainted(isTainted: boolean) {
     this.setState(prevState => ({
       ...prevState,
       sellOrder: {
@@ -354,7 +342,7 @@ export class NewSellOrder extends React.Component<Props, State> {
     }));
   }
 
-  private _setShoeOtherDetail(otherDetail: string): void {
+  private _setShoeOtherDetail(otherDetail: string) {
     this.setState(prevState => ({
       ...prevState,
       sellOrder: {
@@ -367,7 +355,7 @@ export class NewSellOrder extends React.Component<Props, State> {
     }));
   }
 
-  private _setShoePrice(sellNowPrice: number): void {
+  private _setShoePrice(sellNowPrice: number) {
     this.setState(prevState => ({
       ...prevState,
       sellOrder: { ...prevState.sellOrder, sellNowPrice },

@@ -16,7 +16,6 @@ import {
   ObjectFactory as Factory,
   FactoryKeys,
   SettingsKey,
-  SellOrder,
 } from 'business';
 import { AppText, BottomPicker } from '@screens/Shared';
 import { themes } from '@resources';
@@ -144,19 +143,19 @@ export class ProductRequiredInfo extends React.PureComponent<Props, State> {
     switch (this.state.currentPicker) {
       case PickerType.ShoeSize:
         currentPickedSettings = this.settings[0];
-        onPickerSelected = (pickerOption: string): void => {
+        onPickerSelected = (pickerOption: string) => {
           this.props.onSetShoeSize(pickerOption);
         };
         break;
       case PickerType.BoxCondition:
         currentPickedSettings = this.settings[2];
-        onPickerSelected = (pickerOption: string): void => {
+        onPickerSelected = (pickerOption: string) => {
           this.props.onSetBoxCondition(pickerOption);
         };
         break;
       case PickerType.ShoeCondition:
         currentPickedSettings = this.settings[1];
-        onPickerSelected = (pickerOption: string): void => {
+        onPickerSelected = (pickerOption: string) => {
           this.props.onSetShoeCondition(pickerOption);
         };
         break;
@@ -170,8 +169,8 @@ export class ProductRequiredInfo extends React.PureComponent<Props, State> {
         <BottomPicker
           visible={this.state.pickerVisible}
           options={options}
-          optionLabelToString={(option: string): string => option}
-          onSelectPickerOK={(selectedValue: string): void => {
+          optionLabelToString={(option: string) => option}
+          onSelectPickerOK={(selectedValue: string) => {
             this.setState(
               {
                 pickerVisible: false,
@@ -180,7 +179,7 @@ export class ProductRequiredInfo extends React.PureComponent<Props, State> {
               () => onPickerSelected(selectedValue),
             );
           }}
-          onSelectPickerCancel={(): void => this.setState({ pickerVisible: false })}
+          onSelectPickerCancel={() => this.setState({ pickerVisible: false })}
         />
       );
     }

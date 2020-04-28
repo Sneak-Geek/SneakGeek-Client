@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, StyleSheet, TouchableWithoutFeedback, TextStyle } from 'react-native';
+import { View, StyleSheet, TouchableWithoutFeedback } from 'react-native';
 import { AppText } from './Text';
 import { Icon } from 'react-native-elements';
 import { themes } from '@resources';
@@ -23,18 +23,15 @@ const styles = StyleSheet.create({
 
 type Props = {
   title: string;
-  content: string | number | JSX.Element;
+  content: string | number;
   emphasizeTitle?: boolean;
   renderCollapsibleIndicator?: boolean;
   onCollapsibleExpand?: () => void;
   renderCollapsibleContent?: () => JSX.Element;
-  subtitleStyle?: TextStyle;
 };
 
 export const TitleContentDescription = (props: Props): JSX.Element => {
   const [collapsed, setCollapsed] = useState(true);
-  const isComponent =
-    typeof props.content !== 'number' && typeof props.content !== 'string';
 
   return (
     <TouchableWithoutFeedback
@@ -49,12 +46,7 @@ export const TitleContentDescription = (props: Props): JSX.Element => {
             <AppText.Subhead>
               {props.emphasizeTitle ? props.title.toUpperCase() : props.title}
             </AppText.Subhead>
-            {!isComponent && (
-              <AppText.Body style={[styles.content, props.subtitleStyle]}>
-                {props.content}
-              </AppText.Body>
-            )}
-            {isComponent && props.content}
+            <AppText.Body style={styles.content}>{props.content}</AppText.Body>
           </View>
           {props.renderCollapsibleIndicator && (
             <Icon

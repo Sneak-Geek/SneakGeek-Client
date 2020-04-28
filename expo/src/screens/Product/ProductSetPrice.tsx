@@ -8,7 +8,6 @@ import { AppText } from '@screens/Shared';
 import { themes, strings } from '@resources';
 import { TextInput } from 'react-native-gesture-handler';
 import { toCurrencyString } from 'utilities';
-import { SellOrder, PriceData } from 'business';
 
 type State = {
   isModalOpen: boolean;
@@ -17,7 +16,6 @@ type State = {
 };
 
 type Props = {
-  order?: SellOrder;
   onSetShoePrice: (price: number) => void;
 };
 
@@ -64,13 +62,11 @@ const styles = StyleSheet.create({
 });
 
 export class ProductSetPrice extends React.Component<Props, State> {
-  constructor(props: Props) {
+  constructor(props: any) {
     super(props);
     this.state = {
       isModalOpen: false,
-      shoePrice: props.order
-        ? toCurrencyString((props.order.sellNowPrice as PriceData).price)
-        : '',
+      shoePrice: '',
     };
   }
 
@@ -91,14 +87,14 @@ export class ProductSetPrice extends React.Component<Props, State> {
         <View style={styles.inputContainer}>
           <TextInput
             keyboardType={'numeric'}
-            onChangeText={(shoePrice): void => this.setState({ shoePrice })}
+            onChangeText={shoePrice => this.setState({ shoePrice })}
             value={this.state.shoePrice}
-            onEndEditing={(): void => {
+            onEndEditing={() => {
               const shoePrice = this.state.shoePrice;
               this.props.onSetShoePrice(parseInt(shoePrice));
               this.setState({ shoePrice: toCurrencyString(shoePrice) });
             }}
-            onFocus={(): void => {
+            onFocus={() => {
               this.setState({ shoePrice: '' });
             }}
             placeholder={'1000000'}
