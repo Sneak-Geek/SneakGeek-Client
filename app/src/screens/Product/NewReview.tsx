@@ -19,7 +19,7 @@ import {
   showSuccessNotification,
 } from 'actions';
 import {IAppState} from 'store/AppStore';
-import {getToken, getDependency} from 'utilities';
+import {getToken, getService} from 'utilities';
 
 type Props = {
   route: RouteProp<RootStackParams, 'ProductNewReview'>;
@@ -132,7 +132,7 @@ export class NewReview extends React.Component<Props, State> {
       showErrorNotification,
     } = this.props;
 
-    const shoeService = getDependency<IShoeService>(FactoryKeys.IShoeService);
+    const shoeService = getService<IShoeService>(FactoryKeys.IShoeService);
     const token = getToken();
 
     toggleLoadingIndicator(true);

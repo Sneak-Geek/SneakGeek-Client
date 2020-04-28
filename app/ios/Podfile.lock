@@ -267,8 +267,6 @@ PODS:
     - React
   - react-native-safe-area-context (0.7.3):
     - React
-  - react-native-splash-screen (3.2.0):
-    - React
   - react-native-webview (9.2.2):
     - React
   - React-RCTActionSheet (0.62.2):
@@ -330,13 +328,7 @@ PODS:
     - React-cxxreact (= 0.62.2)
     - React-jsi (= 0.62.2)
     - ReactCommon/callinvoker (= 0.62.2)
-  - RNCAsyncStorage (1.9.0):
-    - React
   - RNCMaskedView (0.1.10):
-    - React
-  - RNCPushNotificationIOS (1.1.1):
-    - React
-  - RNDeviceInfo (5.5.6):
     - React
   - RNGestureHandler (1.6.1):
     - React
@@ -390,7 +382,6 @@ DEPENDENCIES:
   - react-native-fbsdk (from `../node_modules/react-native-fbsdk`)
   - react-native-image-picker (from `../node_modules/react-native-image-picker`)
   - react-native-safe-area-context (from `../node_modules/react-native-safe-area-context`)
-  - react-native-splash-screen (from `../node_modules/react-native-splash-screen`)
   - react-native-webview (from `../node_modules/react-native-webview`)
   - React-RCTActionSheet (from `../node_modules/react-native/Libraries/ActionSheetIOS`)
   - React-RCTAnimation (from `../node_modules/react-native/Libraries/NativeAnimation`)
@@ -403,10 +394,7 @@ DEPENDENCIES:
   - React-RCTVibration (from `../node_modules/react-native/Libraries/Vibration`)
   - ReactCommon/callinvoker (from `../node_modules/react-native/ReactCommon`)
   - ReactCommon/turbomodule/core (from `../node_modules/react-native/ReactCommon`)
-  - "RNCAsyncStorage (from `../node_modules/@react-native-community/async-storage`)"
   - "RNCMaskedView (from `../node_modules/@react-native-community/masked-view`)"
-  - "RNCPushNotificationIOS (from `../node_modules/@react-native-community/push-notification-ios`)"
-  - RNDeviceInfo (from `../node_modules/react-native-device-info`)
   - RNGestureHandler (from `../node_modules/react-native-gesture-handler`)
   - RNReanimated (from `../node_modules/react-native-reanimated`)
   - RNScreens (from `../node_modules/react-native-screens`)
@@ -468,8 +456,6 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native-image-picker"
   react-native-safe-area-context:
     :path: "../node_modules/react-native-safe-area-context"
-  react-native-splash-screen:
-    :path: "../node_modules/react-native-splash-screen"
   react-native-webview:
     :path: "../node_modules/react-native-webview"
   React-RCTActionSheet:
@@ -492,14 +478,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native/Libraries/Vibration"
   ReactCommon:
     :path: "../node_modules/react-native/ReactCommon"
-  RNCAsyncStorage:
-    :path: "../node_modules/@react-native-community/async-storage"
   RNCMaskedView:
     :path: "../node_modules/@react-native-community/masked-view"
-  RNCPushNotificationIOS:
-    :path: "../node_modules/@react-native-community/push-notification-ios"
-  RNDeviceInfo:
-    :path: "../node_modules/react-native-device-info"
   RNGestureHandler:
     :path: "../node_modules/react-native-gesture-handler"
   RNReanimated:
@@ -544,7 +524,6 @@ SPEC CHECKSUMS:
   react-native-fbsdk: c35d42169e64aaf66f01713c1e18d0674f7f6519
   react-native-image-picker: 6a850c41f57f0848d918c2a77aedd7aa272ffa30
   react-native-safe-area-context: e200d4433aba6b7e60b52da5f37af11f7a0b0392
-  react-native-splash-screen: 200d11d188e2e78cea3ad319964f6142b6384865
   react-native-webview: 881baa70f381b838964574f48153a2d453402922
   React-RCTActionSheet: f41ea8a811aac770e0cc6e0ad6b270c644ea8b7c
   React-RCTAnimation: 49ab98b1c1ff4445148b72a3d61554138565bad0
@@ -556,10 +535,7 @@ SPEC CHECKSUMS:
   React-RCTText: fae545b10cfdb3d247c36c56f61a94cfd6dba41d
   React-RCTVibration: 4356114dbcba4ce66991096e51a66e61eda51256
   ReactCommon: ed4e11d27609d571e7eee8b65548efc191116eb3
-  RNCAsyncStorage: 453cd7c335ec9ba3b877e27d02238956b76f3268
   RNCMaskedView: 5a8ec07677aa885546a0d98da336457e2bea557f
-  RNCPushNotificationIOS: a0b6894f4ad9b93d9dac467fdf4d055660ac8a0d
-  RNDeviceInfo: 722dc13c269b9dbf305aa4b790d36731602e99b7
   RNGestureHandler: 8f09cd560f8d533eb36da5a6c5a843af9f056b38
   RNReanimated: 955cf4068714003d2f1a6e2bae3fb1118f359aff
   RNScreens: 19fee34a46de81b66e26960f5ac14ea616a5d089

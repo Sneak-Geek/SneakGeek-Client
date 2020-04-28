@@ -20,8 +20,6 @@ import {
   INotificationState,
   LoadingIndicatorReducers,
   ILoadingIndicatorState,
-  IEnvironmentState,
-  EnvironmentReducers,
 } from 'reducers';
 import {IOrderState, OrderReducers} from 'business/src';
 
@@ -32,7 +30,6 @@ export type IAppState = {
   LoadingIndicatorState: ILoadingIndicatorState;
   CatalogState: ICatalogState;
   OrderState: IOrderState;
-  EnvironmentState: IEnvironmentState;
 };
 
 const rootReducers = combineReducers({
@@ -42,7 +39,6 @@ const rootReducers = combineReducers({
   LoadingIndicatorState: LoadingIndicatorReducers,
   CatalogState: CatalogReducers,
   OrderState: OrderReducers,
-  EnvironmentState: EnvironmentReducers,
 });
 
 const composeEnhancers =

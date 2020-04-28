@@ -4,7 +4,7 @@ import {connect} from 'utilities';
 import {IAppState} from 'store/AppStore';
 import {Account, getCurrentUser, NetworkRequestState} from 'business';
 import RouteNames from 'navigations/RouteNames';
-import RNSplashScreen from 'react-native-splash-screen';
+import {ActivityIndicator, SafeAreaView} from 'react-native';
 
 type Props = {
   navigation: StackNavigationProp<any>;
@@ -26,7 +26,7 @@ type Props = {
     },
   }),
 )
-export class SplashScreen extends React.Component<Props> {
+export class AuthCheck extends React.Component<Props> {
   public componentDidMount(): void {
     this.props.getCurrentUser();
   }
@@ -38,20 +38,20 @@ export class SplashScreen extends React.Component<Props> {
     }
 
     if (accountState.state === NetworkRequestState.FAILED) {
-      navigation.navigate(RouteNames.Auth.Name, {
-        screen: RouteNames.Auth.Login,
-      });
-      RNSplashScreen.hide();
+      navigation.push(RouteNames.Auth.Login);
     } else if (
       accountState.state === NetworkRequestState.SUCCESS &&
       accountState.account
     ) {
-      navigation.navigate(RouteNames.Tab.Name);
-      RNSplashScreen.hide();
+      navigation.push(RouteNames.Tab.Name);
     }
   }
 
   public render(): JSX.Element {
-    return <></>;
+    return (
+      <SafeAreaView style={{flex: 1, alignContent: 'center'}}>
+        <ActivityIndicator />
+      </SafeAreaView>
+    );
   }
 }

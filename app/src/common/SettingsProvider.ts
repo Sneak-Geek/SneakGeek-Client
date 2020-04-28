@@ -5,7 +5,7 @@ import {
   FactoryKeys,
   ISettingService,
 } from 'business';
-import AsyncStorage from '@react-native-community/async-storage';
+import {AsyncStorage} from 'react-native';
 
 export class SettingsProvider implements ISettingsProvider {
   private _isLoaded = false;

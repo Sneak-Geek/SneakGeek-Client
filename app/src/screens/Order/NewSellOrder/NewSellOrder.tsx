@@ -15,7 +15,7 @@ import {ProductSetPrice} from '../../Product/ProductSetPrice';
 import {ProductConditionExtra} from '../../Product/ProductConditionExtra';
 import {ProductSellSummary} from '../../Product/ProductSellSummary';
 import {ProductRequiredInfo} from '../../Product/ProductRequiredInfo';
-import {connect, getToken, getDependency} from 'utilities';
+import {connect, getToken, getService} from 'utilities';
 import {
   showErrorNotification,
   showSuccessNotification,
@@ -245,10 +245,8 @@ export class NewSellOrder extends React.Component<Props, State> {
     const token = getToken();
     const order = this.state.sellOrder;
 
-    const orderService = getDependency<IOrderService>(
-      FactoryKeys.IOrderService,
-    );
-    const cdnService = getDependency<CdnService>(FactoryKeys.ICdnService);
+    const orderService = getService<IOrderService>(FactoryKeys.IOrderService);
+    const cdnService = getService<CdnService>(FactoryKeys.ICdnService);
     let uploadedPictures: string[] = [];
     this.props.toggleLoading(true);
 

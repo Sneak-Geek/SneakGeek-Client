@@ -1,5 +1,5 @@
 import React from 'react';
-import {getDependency} from 'utilities';
+import {getService} from 'utilities';
 import {ISettingsProvider, FactoryKeys, SettingsKey} from 'business';
 import {SafeAreaView, View, SectionList, StyleSheet} from 'react-native';
 import {AppText} from 'screens/Shared';
@@ -27,9 +27,7 @@ const styles = StyleSheet.create({
 });
 
 export const AccountTabFaq = (): JSX.Element => {
-  const settings = getDependency<ISettingsProvider>(
-    FactoryKeys.ISettingsProvider,
-  );
+  const settings = getService<ISettingsProvider>(FactoryKeys.ISettingsProvider);
   const faq: FAQ = settings.getValue(SettingsKey.RemoteSettings).faq;
   const sectionalFaq = faq.map((t) => ({
     title: t.category,

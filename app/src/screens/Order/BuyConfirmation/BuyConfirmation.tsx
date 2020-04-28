@@ -11,7 +11,7 @@ import {themes, strings} from 'resources';
 import {RouteProp} from '@react-navigation/native';
 import {RootStackParams} from 'navigations/RootStack';
 import {Shoe, Profile, SellOrder, BuyOrder} from 'business';
-import {connect, getDependency, getToken, toCurrencyString} from 'utilities';
+import {connect, getService, getToken, toCurrencyString} from 'utilities';
 import {IAppState} from 'store/AppStore';
 import {FactoryKeys, IOrderService, PaymentType, PriceData} from 'business/src';
 import {toggleIndicator, showSuccessNotification} from 'actions';
@@ -111,7 +111,7 @@ export class BuyConfirmation extends React.Component<Props, State> {
       displayBuyOrderPrice: '',
     };
 
-    this.orderService = getDependency<IOrderService>(FactoryKeys.IOrderService);
+    this.orderService = getService<IOrderService>(FactoryKeys.IOrderService);
   }
 
   public componentDidMount(): void {

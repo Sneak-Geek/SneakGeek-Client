@@ -16,7 +16,7 @@ import {ListItem, Avatar} from 'react-native-elements';
 import ImagePicker, {ImagePickerOptions} from 'react-native-image-picker';
 import {StackNavigationProp} from '@react-navigation/stack';
 import RouteNames from 'navigations/RouteNames';
-import {getDependency, getToken} from 'utilities';
+import {getService, getToken} from 'utilities';
 import {
   toggleIndicator,
   showSuccessNotification,
@@ -237,8 +237,8 @@ export class AccountTabMain extends React.Component<Props> {
     uri: string;
     type: string;
   }): Promise<void> {
-    const cdnService = getDependency<ICdnService>(FactoryKeys.ICdnService);
-    const accountService = getDependency<IAccountService>(
+    const cdnService = getService<ICdnService>(FactoryKeys.ICdnService);
+    const accountService = getService<IAccountService>(
       FactoryKeys.IAccountService,
     );
 

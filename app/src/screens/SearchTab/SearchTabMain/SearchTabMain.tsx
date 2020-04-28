@@ -18,7 +18,7 @@ import {ScrollView, FlatList} from 'react-native-gesture-handler';
 import {StackNavigationProp} from '@react-navigation/stack';
 import RouteNames from 'navigations/RouteNames';
 import {RootStackParams} from 'navigations/RootStack';
-import {getDependency, getToken} from 'utilities';
+import {getService, getToken} from 'utilities';
 import {ISettingsProvider, SettingsKey} from 'business/src';
 import {styles} from './styles';
 
@@ -441,7 +441,7 @@ export class SearchTabMain extends React.Component<Props, State> {
   }
 
   private _renderBrandSelector(): JSX.Element {
-    const settings = getDependency<ISettingsProvider>(
+    const settings = getService<ISettingsProvider>(
       FactoryKeys.ISettingsProvider,
     );
     const brands = settings.getValue(SettingsKey.RemoteSettings).shoeBrands;

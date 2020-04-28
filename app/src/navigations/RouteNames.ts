@@ -1,7 +1,7 @@
 const RouteNames = {
-  Splash: 'Splash',
   Auth: {
     Name: 'Authentication',
+    AuthCheck: 'AuthCheck',
     Login: 'Login',
     EmailSignUp: 'EmailSignUp',
     EmailLogin: 'EmailLogin',
