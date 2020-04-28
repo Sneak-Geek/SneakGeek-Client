@@ -4,7 +4,7 @@ export enum NetworkRequestState {
   NOT_STARTED,
   REQUESTING,
   SUCCESS,
-  FAILED
+  FAILED,
 }
 
 export type NetworkPayload<T> = {
@@ -13,20 +13,24 @@ export type NetworkPayload<T> = {
   data?: T;
 };
 
-export type AuthenticationPayload = NetworkPayload<{ user: Account; token: string }>;
+export type AuthenticationPayload = NetworkPayload<{ account: Account; token: string }>;
 export type GetUserProfilePayload = NetworkPayload<{ profile: Profile }>;
 export type CatalogPayload = NetworkPayload<Catalog[]>;
 export type SearchShoesPayload = NetworkPayload<Shoe[]>;
 export type GetReviewsPayload = NetworkPayload<Review[]>;
-export type GetShoeInfoPayload = NetworkPayload<{ relatedShoes: Shoe[], lowestSellOrder?: SellOrder, highestBuyOrder?: BuyOrder }>
+export type GetShoeInfoPayload = NetworkPayload<{
+  relatedShoes: Shoe[];
+  lowestSellOrder?: SellOrder;
+  highestBuyOrder?: BuyOrder;
+}>;
 export type HomePageCatalogsPayload = NetworkPayload<{
-  Nike: Catalog,
-  Jordan: Catalog,
-  adidas: Catalog,
-  hot: Catalog,
-  ranking: Catalog,
-  toppick: Catalog,
-  buynow: Catalog
+  Nike: Catalog;
+  Jordan: Catalog;
+  adidas: Catalog;
+  hot: Catalog;
+  ranking: Catalog;
+  toppick: Catalog;
+  buynow: Catalog;
 }>;
 export type GetSellOrdersPayload = NetworkPayload<SellOrder[]>;
 export type GetBuyOrdersPayload = NetworkPayload<BuyOrder[]>;

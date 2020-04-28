@@ -13,15 +13,15 @@ export class AccountService extends BaseService implements IAccountService {
     email: string,
     password: string,
     isSignUp: boolean = false
-  ): Promise<{ user: Account; token: string } | undefined> {
-    const endpoint = isSignUp ? `/account/email-signup` : `/account/email-login`;
+  ): Promise<{ account: Account; token: string } | undefined> {
+    const endpoint = isSignUp ? `/account/auth/email/signup` : `/account/auth/email/login`;
     const response = await this.apiClient.getInstance().post(
       endpoint,
       { email, password },
       {
         headers: {
-          "Access-Control-Request-Method": "POST"
-        }
+          "Access-Control-Request-Method": "POST",
+        },
       }
     );
 
@@ -38,11 +38,11 @@ export class AccountService extends BaseService implements IAccountService {
   public async login(
     token: string,
     provider: AuthProvider
-  ): Promise<{ user: Account; token: string } | undefined> {
+  ): Promise<{ account: Account; token: string } | undefined> {
     const headers = { access_token: token };
     const response = await this.apiClient
       .getInstance()
-      .post(`/account/${provider}`, {}, { headers });
+      .post(`/account/auth/${provider}`, {}, { headers });
     {
     }
     if (
@@ -56,7 +56,7 @@ export class AccountService extends BaseService implements IAccountService {
   }
   public async getCurrentUser(
     accessToken: string
-  ): Promise<{ user: Account; token: string } | undefined> {
+  ): Promise<{ account: Account; token: string } | undefined> {
     const headers = { authorization: accessToken };
     const response = await this.apiClient.getInstance().get(`/account`, { headers });
 
@@ -81,8 +81,8 @@ export class AccountService extends BaseService implements IAccountService {
   public async updateProfile(token: string, profile: Partial<Profile>): Promise<Profile> {
     const response = await this.apiClient.getInstance().put("/profile/update", profile, {
       headers: {
-        authorization: token
-      }
+        authorization: token,
+      },
     });
 
     return response.data.profile as Profile;

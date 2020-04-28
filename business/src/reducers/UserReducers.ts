@@ -1,7 +1,7 @@
 import {
   NetworkRequestState,
   AuthenticationPayload,
-  GetUserProfilePayload
+  GetUserProfilePayload,
 } from "../payload";
 import { Account, Profile } from "../model";
 import { handleActions, Action } from "redux-actions";
@@ -23,11 +23,11 @@ export type IUserState = {
 
 export const initialUserState: IUserState = {
   accountState: {
-    state: NetworkRequestState.NOT_STARTED
+    state: NetworkRequestState.NOT_STARTED,
   },
   profileState: {
-    state: NetworkRequestState.NOT_STARTED
-  }
+    state: NetworkRequestState.NOT_STARTED,
+  },
 };
 
 export const UserReducers = handleActions<IUserState, any>(
@@ -40,8 +40,8 @@ export const UserReducers = handleActions<IUserState, any>(
       accountState: {
         state: action.payload.state,
         error: action.payload.error,
-        account: action.payload.data?.user
-      }
+        account: action.payload.data?.account,
+      },
     }),
     [`${updateStateGetUserProfile}`]: (
       state: IUserState,
@@ -51,17 +51,17 @@ export const UserReducers = handleActions<IUserState, any>(
       profileState: {
         state: action.payload.state,
         error: action.payload.error,
-        profile: action.payload.data?.profile
-      }
+        profile: action.payload.data?.profile,
+      },
     }),
     [`${updateProfile}`]: (state: IUserState, action: Action<Profile>) => ({
       ...state,
       profileState: {
         ...state.profileState,
         error: null,
-        profile: action.payload
-      }
-    })
+        profile: action.payload,
+      },
+    }),
   },
   initialUserState
 );
