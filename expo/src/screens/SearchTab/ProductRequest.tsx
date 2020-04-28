@@ -288,6 +288,7 @@ export class ProductRequest extends React.Component<Props, State> {
     try {
       await _shoeService.updateRequestProduct(token, this.state.title, this.state.brandValue, gender)
     } catch (error) {
+      console.log(error)
       alert("Unexpected Error!")
     }
   }
