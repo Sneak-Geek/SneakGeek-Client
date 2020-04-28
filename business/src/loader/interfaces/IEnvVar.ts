@@ -3,7 +3,7 @@
 //!
 
 export interface IEnvVar {
-  dev: boolean;
+  __DEV__: boolean;
   devUrl?: string;
   prodUrl?: string;
 }

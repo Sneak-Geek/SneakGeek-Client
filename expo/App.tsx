@@ -52,7 +52,7 @@ export default function App(): JSX.Element {
     await settingsProvider.load();
 
     Factory.register<IEnvVar>(Keys.IEnvVar, {
-      dev: __DEV__,
+      '__DEV__': __DEV__,
       devUrl: 'http://10.0.0.52:8080/api/v1',
       prodUrl: 'https://sneakgeek-test.azurewebsites.net/api/v1'
     });
