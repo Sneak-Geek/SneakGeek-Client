@@ -10,3 +10,4 @@ export * from './ImageRatioPreserved';
 export * from './ShimmerLoadList';
 export * from './ReviewItem';
 export * from './SizePricePicker';
+export * from './BadgedIcon';

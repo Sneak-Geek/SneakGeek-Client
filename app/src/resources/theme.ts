@@ -18,6 +18,7 @@ export const themes = {
   AppSellColor: '#E2603F',
   AppPendingColor: '#E2C115',
   AppBackgroundColor: '#f5f5f7',
+  NotificationBackground: '#D8F2ED',
   ButtonShadow: Platform.select({
     android: {elevation: 5},
     ios: {
