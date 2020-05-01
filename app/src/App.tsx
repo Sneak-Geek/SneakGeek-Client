@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from 'react';
+import React, { useState, useEffect } from 'react';
 import RootStack from 'navigations/RootStack';
 import {
   ObjectFactory as Factory,
@@ -19,13 +19,13 @@ import {
   ICdnService,
   CdnService,
 } from 'business';
-import {Provider} from 'react-redux';
-import {SettingsProvider, FacebookSdk, KeyExtensions} from 'common';
-import {AppStore} from 'store/AppStore';
-import {InAppNotification} from 'screens/InAppNotification';
-import {AppLoadingIndicator} from 'screens/AppLoadingIndicator';
-import {IDeviceInfoProvider, DeviceInfoProvider} from 'providers';
-import {IPushNotificationService, PushNotificationService} from 'services';
+import { Provider } from 'react-redux';
+import { SettingsProvider, FacebookSdk, KeyExtensions } from 'common';
+import { AppStore } from 'store/AppStore';
+import { InAppNotification } from 'screens/InAppNotification';
+import { AppLoadingIndicator } from 'screens/AppLoadingIndicator';
+import { IDeviceInfoProvider, DeviceInfoProvider } from 'providers';
+import { IPushNotificationService, PushNotificationService } from 'services';
 
 export default function App(): JSX.Element {
   const [depLoaded, setDepLoaded] = useState(false);
@@ -84,8 +84,8 @@ export default function App(): JSX.Element {
           <RootStack />
         </>
       ) : (
-        <></>
-      )}
+          <></>
+        )}
     </Provider>
   );
 }
