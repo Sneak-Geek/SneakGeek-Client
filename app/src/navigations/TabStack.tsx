@@ -75,7 +75,9 @@ type HomeTabProps = {
 
 @connect((state: IAppState) => ({
   notificationCount:
-    state.UserState.profileState.profile?.notifications?.length || 0,
+    state.UserState.profileState.profile?.notifications?.filter(
+      (t) => !t.isRead,
+    ).length || 0,
 }))
 class HomeTab extends React.Component<HomeTabProps> {
   public render(): JSX.Element {
@@ -105,6 +107,7 @@ class HomeTab extends React.Component<HomeTabProps> {
                     RouteNames.Tab.HomeTab.Notification,
                   )
                 }
+                hitSlop={themes.IconHitSlop}
                 name={'bell-outline'}
                 type={'material-community'}
                 size={themes.IconSize}

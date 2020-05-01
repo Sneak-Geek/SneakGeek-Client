@@ -5,6 +5,7 @@ import {
   Image,
   KeyboardAvoidingView,
   ScrollView,
+  ActivityIndicator,
 } from 'react-native';
 import {
   ShoeHeaderSummary,
@@ -69,22 +70,32 @@ type State = {
   }),
 )
 export class TransactionDetail extends React.Component<Props, State> {
-  private order: SellOrder | BuyOrder;
+  private order?: SellOrder | BuyOrder;
+  private orderId?: string;
   private orderType: OrderType;
 
   public constructor(props: Props) {
     super(props);
     this.order = this.props.route.params.order;
     this.orderType = this.props.route.params.orderType;
+    this.orderId = this.props.route.params.orderId;
     this.state = {
-      currentOrder: this.order,
+      currentOrder: this.order || undefined,
       transaction: null,
       isEditMode: false,
     };
   }
 
   public componentDidMount(): void {
-    this._getTransaction();
+    if (this.order) {
+      this._getTransaction();
+    } else if (this.orderId) {
+      this._getCurrentOrder(this.orderId)
+        .then((newOrder) => this.setState({currentOrder: newOrder}))
+        .then(() => {
+          this._getTransaction();
+        });
+    }
   }
 
   public render(): JSX.Element {
@@ -94,13 +105,20 @@ export class TransactionDetail extends React.Component<Props, State> {
           <KeyboardAvoidingView
             style={{flex: 1, paddingTop: insets.top, backgroundColor: 'white'}}
             behavior={'padding'}>
-            {this._renderHeader(insets.top)}
-            <ShoeHeaderSummary shoe={this._getShoe()} />
-            <View style={styles.contentContainer}>
-              {!this.state.isEditMode && this._renderOrderDetail()}
-              {this.state.isEditMode && this._renderOrderEdit()}
-              {this._renderCancelOrder()}
-            </View>
+            {this.state.currentOrder ? (
+              <>
+                {this._renderHeader(insets.top)}
+
+                <ShoeHeaderSummary shoe={this._getShoe()} />
+                <View style={styles.contentContainer}>
+                  {!this.state.isEditMode && this._renderOrderDetail()}
+                  {this.state.isEditMode && this._renderOrderEdit()}
+                  {this._renderCancelOrder()}
+                </View>
+              </>
+            ) : (
+              <ActivityIndicator />
+            )}
           </KeyboardAvoidingView>
         )}
       </SafeAreaConsumer>
@@ -140,7 +158,8 @@ export class TransactionDetail extends React.Component<Props, State> {
                 ? strings.TransactionSellDetail
                 : strings.TransactionBuyDetail}
             </AppText.Title3>
-            {this.state.currentOrder.status === OrderStatus.PENDING ? (
+            {this.state.currentOrder.status !== OrderStatus.COMPLETED &&
+            this.state.currentOrder.status !== OrderStatus.DENIED ? (
               <Icon
                 name={this.state.isEditMode ? 'x' : 'edit'}
                 type={'feather'}
@@ -165,7 +184,9 @@ export class TransactionDetail extends React.Component<Props, State> {
       return (
         <SellOrderEdit
           order={this.order as SellOrder}
-          onUpdateOrder={this._onUpdateOrder.bind(this)}
+          onUpdateOrder={(sellOrder: SellOrderEditInput) => {
+            this._onUpdateOrder(sellOrder);
+          }}
         />
       );
     }
@@ -175,12 +196,12 @@ export class TransactionDetail extends React.Component<Props, State> {
 
   private _renderOrderDetail(): JSX.Element {
     const {color, status} = getOrderStatusStringAndColor(
-      this.order,
+      this.state.currentOrder,
       this.orderType,
     );
     const shouldRenderImage =
       this.orderType === 'SellOrder' &&
-      (this.order as SellOrder).pictures.length > 0;
+      (this.state.currentOrder as SellOrder).pictures.length > 0;
 
     return (
       <ScrollView style={{flex: 1}}>
@@ -216,7 +237,7 @@ export class TransactionDetail extends React.Component<Props, State> {
                 <FlatList
                   style={{marginTop: 15}}
                   horizontal={true}
-                  data={(this.order as SellOrder).pictures}
+                  data={(this.state.currentOrder as SellOrder).pictures}
                   keyExtractor={(_, index): string => index.toString()}
                   renderItem={({item}): JSX.Element => (
                     <Image
@@ -244,14 +265,14 @@ export class TransactionDetail extends React.Component<Props, State> {
 
   private _getShoe(): Shoe {
     return this.orderType === 'BuyOrder'
-      ? ((this.order as BuyOrder).shoe as Shoe)
-      : ((this.order as SellOrder).shoeId as Shoe);
+      ? ((this.state.currentOrder as BuyOrder).shoe as Shoe)
+      : ((this.state.currentOrder as SellOrder).shoeId as Shoe);
   }
 
   private _getShoePrice(): PriceData {
     return this.orderType === 'BuyOrder'
-      ? ((this.order as BuyOrder).buyPrice as PriceData)
-      : ((this.order as SellOrder).sellNowPrice as PriceData);
+      ? ((this.state.currentOrder as BuyOrder).buyPrice as PriceData)
+      : ((this.state.currentOrder as SellOrder).sellNowPrice as PriceData);
   }
 
   private _getProductDescription(): string {
@@ -259,7 +280,7 @@ export class TransactionDetail extends React.Component<Props, State> {
       return null;
     }
 
-    const {isNewShoe, productCondition} = this.order as SellOrder;
+    const {isNewShoe, productCondition} = this.state.currentOrder as SellOrder;
 
     const condition = isNewShoe ? strings.NewCondition : strings.OldCondition;
     const tainted = productCondition.isTainted ? strings.Tainted : '';
@@ -273,7 +294,7 @@ export class TransactionDetail extends React.Component<Props, State> {
   }
 
   private _getTransactionStatus(): string {
-    if (!this.state.transaction) {
+    if (!this.state.transaction || !this.state.transaction?.paymentStatus) {
       return null;
     }
 
@@ -354,11 +375,13 @@ export class TransactionDetail extends React.Component<Props, State> {
     }
   }
 
-  private async _getCurrentOrder(): Promise<SellOrder> {
+  private async _getCurrentOrder(
+    id: string = this.order?._id,
+  ): Promise<SellOrder> {
     const orderService = getDependency<IOrderService>(
       FactoryKeys.IOrderService,
     );
-    return await orderService.getSellOrderById(getToken(), this.order._id);
+    return await orderService.getSellOrderById(getToken(), id);
   }
 
   /**

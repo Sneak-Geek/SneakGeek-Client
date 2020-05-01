@@ -5,10 +5,13 @@ import {Notification, getUserProfile, NetworkRequestState} from 'business';
 import {FlatList, RefreshControl, StyleSheet} from 'react-native';
 import {ListItem} from 'react-native-elements';
 import {themes} from 'resources';
-import Humanize from 'humanize-plus';
+import {StackNavigationProp} from '@react-navigation/stack';
+import {RootStackParams} from 'navigations/RootStack';
+import RouteNames from 'navigations/RouteNames';
 
 type Props = {
   notifications: Notification[];
+  navigation: StackNavigationProp<RootStackParams, 'HomeTabNotification'>;
   getProfileState: NetworkRequestState;
   getProfile: () => void;
 };
@@ -23,7 +26,7 @@ const styles = StyleSheet.create({
   },
 });
 
-const NotificationItem = (props: {item: Notification}) => (
+const NotificationItem = (props: {item: Notification; onPress: () => void}) => (
   <ListItem
     title={props.item.title}
     subtitle={Intl.DateTimeFormat('vi').format(new Date(props.item.createdAt))}
@@ -32,6 +35,7 @@ const NotificationItem = (props: {item: Notification}) => (
     bottomDivider
     containerStyle={!props.item.isRead ? styles.notificationContainer : {}}
     leftAvatar={{source: {uri: props.item.imageUrl}}}
+    onPress={props.onPress}
   />
 );
 
@@ -52,7 +56,23 @@ export class NotificationsScreen extends React.Component<Props> {
       <FlatList
         data={this.props.notifications}
         keyExtractor={(item) => item._id}
-        renderItem={({item}) => <NotificationItem item={item} />}
+        renderItem={({item}) => (
+          <NotificationItem
+            item={item}
+            onPress={() =>
+              this.props.navigation.navigate(
+                RouteNames.Tab.TransactionTab.Name,
+                {
+                  screen: RouteNames.Tab.TransactionTab.Detail,
+                  params: {
+                    orderId: item.order,
+                    orderType: item.orderType,
+                  },
+                },
+              )
+            }
+          />
+        )}
         refreshControl={
           <RefreshControl
             refreshing={
