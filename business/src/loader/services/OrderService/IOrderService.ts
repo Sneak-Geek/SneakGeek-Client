@@ -3,7 +3,7 @@ import { SellOrder, BuyOrder, Transaction } from "../../../model";
 export type PaymentType = "intl" | "domestic";
 export type OrderType = "BuyOrder" | "SellOrder";
 export type SellOrderEditInput = {
-  _id: string;
+  orderId: string;
   sellNowPrice?: number;
   productCondition?: {
     isTainted?: boolean;
