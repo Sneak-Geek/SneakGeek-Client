@@ -12,7 +12,6 @@ import {KeyExtensions} from 'common';
 export class PushNotificationService extends BaseService
   implements IPushNotificationService {
   private _deviceToken: string = '';
-  private store = AppStore;
 
   public initializeListeners(): void {
     RNNotification.requestPermissions();

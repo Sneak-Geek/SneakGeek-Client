@@ -53,8 +53,8 @@ export default function App(): JSX.Element {
 
     Factory.register<IEnvVar>(Keys.IEnvVar, {
       dev: __DEV__,
-      devUrl: 'http://10.0.0.52:8080/api/v1',
-      prodUrl: 'https://sneakgeek-test.azurewebsites.net/api/v1'
+      devUrl: 'http://192.168.0.12:8080/api/v1',
+      prodUrl: 'https://dev.sneakgeek.app/api/v1'
     });
     Factory.register<ISettingsProvider>(Keys.ISettingsProvider, settingsProvider);
     Factory.register<IFacebookSDK>(Keys.IFacebookSDK, new FacebookSdk());

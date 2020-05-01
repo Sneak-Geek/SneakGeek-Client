@@ -7,6 +7,18 @@ export type UserAddress = {
     city: string
 };
 
+export interface Notification {
+    _id: string;
+    title: string;
+    body: string;
+    notificationType: string;
+    orderType: string;
+    order: string;
+    isRead: boolean;
+    createdAt: Date;
+    imageUrl?: string;
+}
+
 export interface Profile {
     _id: string;
     accountId: string;
@@ -26,4 +38,5 @@ export interface Profile {
     userProvidedEmail?: string;
     userProvidedPhoneNumber?: string;
     userProvidedProfilePic?: string;
+    notifications: Array<Notification>;
 }

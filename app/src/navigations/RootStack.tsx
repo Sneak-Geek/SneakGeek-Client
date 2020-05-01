@@ -33,7 +33,8 @@ export type RootStackParams = {
   TransactionSellOrder: undefined;
   TransactionBuyOrder: undefined;
   TransactionDetail: {
-    order: SellOrder | BuyOrder;
+    order?: SellOrder | BuyOrder;
+    orderId?: string;
     orderType: OrderType;
   };
   Login: undefined;
@@ -46,6 +47,7 @@ export type RootStackParams = {
   TrasactionTabMain: undefined;
   AccountTabMain: undefined;
   AccountTabEditProfile: undefined;
+  HomeTabNotification: undefined;
 };
 
 const Stack = createStackNavigator();

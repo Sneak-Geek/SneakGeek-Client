@@ -48,6 +48,8 @@ export class SplashScreen extends React.Component<Props> {
     ) {
       navigation.navigate(RouteNames.Tab.Name);
       RNSplashScreen.hide();
+    } else {
+      RNSplashScreen.hide();
     }
   }
 
