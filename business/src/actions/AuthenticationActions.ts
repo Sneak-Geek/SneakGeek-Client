@@ -7,7 +7,7 @@ import { getUserProfile } from "./ProfileActions";
 import { Dispatch } from "redux";
 
 export const AuthenticationActions = {
-  UPDATE_AUTHENTICATION_STATE: "UPDATE_AUTHENTICATION_STATE"
+  UPDATE_AUTHENTICATION_STATE: "UPDATE_AUTHENTICATION_STATE",
 };
 
 export const updateAuthenticationState = createAction<AuthenticationPayload>(
@@ -33,7 +33,7 @@ export const getCurrentUser = () => {
         dispatch(
           updateAuthenticationState({
             state: NetworkRequestState.SUCCESS,
-            data: accountPayload
+            data: accountPayload,
           })
         );
         dispatch(getUserProfile());
@@ -41,7 +41,7 @@ export const getCurrentUser = () => {
         dispatch(
           updateAuthenticationState({
             state: NetworkRequestState.FAILED,
-            error: new Error("Empty account")
+            error: new Error("Empty account"),
           })
         );
       }
@@ -51,7 +51,11 @@ export const getCurrentUser = () => {
   };
 };
 
-export const authenticateWithEmail = (email: string, password: string, isSignUp: boolean = false) => {
+export const authenticateWithEmail = (
+  email: string,
+  password: string,
+  isSignUp: boolean = false
+) => {
   const accountService = ObjectFactory.getObjectInstance<IAccountService>(
     FactoryKeys.IAccountService
   );
@@ -62,7 +66,7 @@ export const authenticateWithEmail = (email: string, password: string, isSignUp:
   return async (dispatch: Function) => {
     dispatch(updateAuthenticationState({ state: NetworkRequestState.REQUESTING }));
     try {
-      const accountPayload = await accountService.emailAuth(email, password, isSignUp); 
+      const accountPayload = await accountService.emailAuth(email, password, isSignUp);
       if (accountPayload) {
         await settings.setValue(SettingsKey.CurrentAccessToken, accountPayload.token);
         await settings.loadServerSettings();
@@ -71,7 +75,7 @@ export const authenticateWithEmail = (email: string, password: string, isSignUp:
         dispatch(
           updateAuthenticationState({
             state: NetworkRequestState.SUCCESS,
-            data: accountPayload
+            data: accountPayload,
           })
         );
       }
@@ -96,22 +100,25 @@ export const authenticateWithFb = () => {
       const loginResult = await fbSdk.loginWithPermission(permissions);
 
       if (loginResult.isCancelled) {
-        dispatch(updateAuthenticationState({
-          state: NetworkRequestState.FAILED
-        }));
+        dispatch(
+          updateAuthenticationState({
+            state: NetworkRequestState.FAILED,
+          })
+        );
       } else {
         const accessToken = await fbSdk.getCurrentAccessToken();
         const accountPayload = await accountService.login(accessToken, "facebook");
         await settings.setValue(SettingsKey.CurrentAccessToken, accountPayload!.token);
 
-        dispatch(updateAuthenticationState({
-          state: NetworkRequestState.SUCCESS,
-          data: accountPayload
-        }));
+        dispatch(
+          updateAuthenticationState({
+            state: NetworkRequestState.SUCCESS,
+            data: accountPayload,
+          })
+        );
       }
     } catch (error) {
       dispatch(updateAuthenticationState({ state: NetworkRequestState.FAILED, error }));
     }
   };
-}
-
+};
