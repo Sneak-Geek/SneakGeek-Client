@@ -23,6 +23,7 @@ import {
 } from 'actions';
 import {styles} from './styles';
 import {CdnService} from 'business/src';
+import RouteNames from 'navigations/RouteNames';
 
 type Props = {
   route: RouteProp<RootStackParams, 'NewSellOrder'>;
@@ -59,18 +60,23 @@ type State = {
 )
 export class NewSellOrder extends React.Component<Props, State> {
   private _shoe: Shoe;
+  private _size: string;
+  private _price: number;
   private childComponents: SellDetailChild[];
   private _childFlatList: FlatList<SellDetailChild>;
-  private _goBackTimeout: number;
 
   public constructor(props: Props) {
     super(props);
 
     this._shoe = this.props.route.params.shoe;
+    this._size = this.props.route.params.size;
+    this._price = this.props.route.params.price;
+
     this.state = {
       sellOrder: {
+        sellNowPrice: this._price,
         shoeId: this._shoe._id,
-        shoeSize: undefined,
+        shoeSize: this._size,
         isNewShoe: undefined,
         productCondition: {
           boxCondition: undefined,
@@ -121,6 +127,7 @@ export class NewSellOrder extends React.Component<Props, State> {
         render: (): JSX.Element => (
           <ProductSetPrice
             key={2}
+            order={this.state.sellOrder}
             onSetShoePrice={this._setShoePrice.bind(this)}
           />
         ),
@@ -144,10 +151,6 @@ export class NewSellOrder extends React.Component<Props, State> {
         },
       },
     ];
-  }
-
-  public componentWillUnmount(): void {
-    clearTimeout(this._goBackTimeout);
   }
 
   public render(): JSX.Element {
@@ -270,9 +273,7 @@ export class NewSellOrder extends React.Component<Props, State> {
     try {
       await orderService.createSellOrder(token, order as SellOrder);
       this.props.showSuccessNotification('Đã bán thành công sản phẩm!');
-      this._goBackTimeout = setTimeout(() => {
-        this.props.navigation.goBack();
-      }, 500);
+      this.props.navigation.navigate(RouteNames.Product.ProductDetail);
     } catch (error) {
       this.props.showErrorNotification(
         'Đã có lỗi xảy ra, xin vui lòng thử lại',

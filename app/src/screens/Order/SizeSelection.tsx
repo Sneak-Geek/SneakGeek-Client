@@ -2,7 +2,13 @@ import React from 'react';
 import {SafeAreaView, StyleSheet, View} from 'react-native';
 import {SizePricePicker} from 'screens/Shared';
 import {getDependency, connect, getToken} from 'utilities';
-import {ISettingsProvider, FactoryKeys, SettingsKey, Shoe} from 'business';
+import {
+  ISettingsProvider,
+  FactoryKeys,
+  SettingsKey,
+  Shoe,
+  OrderType,
+} from 'business';
 import {StackNavigationProp} from '@react-navigation/stack';
 import {RouteProp} from '@react-navigation/native';
 import {RootStackParams} from 'navigations/RootStack';
@@ -45,6 +51,7 @@ type State = {
 )
 export class SizeSelection extends React.Component<Props, State> {
   private shoeSizes: string[] = [];
+  private orderType: OrderType;
   private shoe: Shoe;
 
   public constructor(props: any) {
@@ -57,6 +64,7 @@ export class SizeSelection extends React.Component<Props, State> {
       SettingsKey.RemoteSettings,
     ).shoeSizes.Adult;
     this.shoe = this.props.route.params.shoe;
+    this.orderType = this.props.route.params.orderType;
 
     this.state = {
       priceMap: new Map(),
@@ -100,15 +108,20 @@ export class SizeSelection extends React.Component<Props, State> {
 
     try {
       const priceData: {
-        minPrice: number;
+        price: number;
         size: string;
-      }[] = await orderService.getLowestSellPrices(getToken(), this.shoe._id);
+      }[] = await orderService.getSizePricesMatching(
+        getToken(),
+        this.orderType,
+        this.shoe._id,
+      );
 
       const priceMap = new Map<string, number>();
-      priceData.forEach(({minPrice, size}) => priceMap.set(size, minPrice));
+      priceData.forEach(({price, size}) => priceMap.set(size, price));
 
       this.setState({priceMap});
     } catch (error) {
+      console.log(error);
       const errorMessage =
         error.message.indexOf(403) >= 0
           ? strings.AccountNotVerifieid
@@ -121,10 +134,18 @@ export class SizeSelection extends React.Component<Props, State> {
 
   private _onSizeSelected(size: string): void {
     this.setState({selectedSize: size}, () => {
-      this.props.navigation.push(RouteNames.Order.BuyConfirmation, {
-        size,
-        minPrice: this.state.priceMap.get(size),
+      if (this.orderType === 'SellOrder') {
+        return this.props.navigation.push(RouteNames.Order.BuyConfirmation, {
+          size,
+          minPrice: this.state.priceMap.get(size),
+          shoe: this.shoe,
+        });
+      }
+
+      return this.props.navigation.push(RouteNames.Order.NewSellOrder, {
         shoe: this.shoe,
+        size: this.state.selectedSize,
+        price: this.state.priceMap.get(this.state.selectedSize),
       });
     });
   }
