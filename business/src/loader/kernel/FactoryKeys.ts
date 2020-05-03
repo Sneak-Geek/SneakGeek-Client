@@ -6,10 +6,11 @@ export const FactoryKeys = {
   IEnvVar: Symbol.for("IEnvVar"),
   IAccountService: Symbol.for("IAccountService"),
   IFacebookSDK: Symbol.for("IFacebookSDK"),
+  IGoogleSDK: Symbol.for("IGoogleSDK"),
   ISettingsProvider: Symbol.for("ISettingsProvider"),
   ICatalogService: Symbol.for("ICatalogService"),
   IShoeService: Symbol.for("IShoeService"),
   ISettingService: Symbol.for("ISettingService"),
   IOrderService: Symbol.for("IOrderService"),
-  ICdnService: Symbol.for("ICdnService")
+  ICdnService: Symbol.for("ICdnService"),
 };

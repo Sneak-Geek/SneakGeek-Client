@@ -13,7 +13,7 @@ export type NetworkPayload<T> = {
   data?: T;
 };
 
-export type AuthenticationPayload = NetworkPayload<{ account: Account; token: string }>;
+export type AuthenticationPayload = NetworkPayload<{ account: Account; token?: string }>;
 export type GetUserProfilePayload = NetworkPayload<{ profile: Profile }>;
 export type CatalogPayload = NetworkPayload<Catalog[]>;
 export type SearchShoesPayload = NetworkPayload<Shoe[]>;
