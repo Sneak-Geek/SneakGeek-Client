@@ -94,6 +94,7 @@ export class NewSellOrder extends React.Component<Props, State> {
         render: (): JSX.Element => (
           <ProductRequiredInfo
             key={0}
+            order={this.state.sellOrder}
             onSetShoeSize={this._setShoeSize.bind(this)}
             onSetShoeCondition={this._setShoeCondition.bind(this)}
             onSetBoxCondition={this._setBoxCondition.bind(this)}

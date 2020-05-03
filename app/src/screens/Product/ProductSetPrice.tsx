@@ -67,9 +67,11 @@ export class ProductSetPrice extends React.Component<Props, State> {
   constructor(props: Props) {
     super(props);
 
-    const isEditOrder = typeof props.order.sellNowPrice !== 'number';
+    const isEditOrder =
+      typeof props.order !== 'undefined' &&
+      typeof props.order.sellNowPrice !== 'number';
     const price = isEditOrder
-      ? (props.order.sellNowPrice as PriceData).price
+      ? (props.order.sellNowPrice as PriceData)?.price
       : (props.order.sellNowPrice as number);
 
     this.state = {
