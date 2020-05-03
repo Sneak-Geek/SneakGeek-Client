@@ -176,7 +176,8 @@ export class BuyConfirmation extends React.Component<Props, State> {
           <View style={styles.orderTypeOutterContainer}>
             {this._renderOrderTypeSelector()}
           </View>
-          <ScrollView style={{flex: 1}}>
+          <ScrollView
+            style={{flex: 1, marginBottom: themes.RegularButtonHeight}}>
             <View style={{padding: 20}}>
               <View style={{flex: 1, flexDirection: 'column'}}>
                 <OrderSectionWithTitle

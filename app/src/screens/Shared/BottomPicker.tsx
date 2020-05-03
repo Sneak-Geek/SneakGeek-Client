@@ -14,6 +14,7 @@ type State<T> = {
 export interface Props<T> {
   options: T[];
   visible: boolean;
+  currentValue?: T;
 
   optionLabelToString: (option: T) => string;
   onSelectPickerOK: (selectedValue: T) => void;
@@ -50,7 +51,8 @@ export class BottomPicker<T> extends React.PureComponent<Props<T>, State<T>> {
     super(props);
     this.state = {
       selectedItem:
-        this.props.options.length > 0 ? this.props.options[0] : null,
+        this.props.currentValue ||
+        (this.props.options.length > 0 ? this.props.options[0] : null),
     };
   }
 

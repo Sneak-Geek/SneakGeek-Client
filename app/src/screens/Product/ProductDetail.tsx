@@ -14,9 +14,10 @@ import {
   Alert,
   FlatList,
   TouchableOpacity,
+  ScrollView,
+  RefreshControl,
 } from 'react-native';
 import {SafeAreaConsumer} from 'react-native-safe-area-context';
-import {ScrollView} from 'react-native-gesture-handler';
 import {AppText, LiteShoeCard, ReviewItem} from 'screens/Shared';
 import {strings, themes} from 'resources';
 import {Icon} from 'react-native-elements';
@@ -154,6 +155,10 @@ export class ProductDetail extends React.Component<Props> {
   private _shoe = this.props.route.params.shoe;
 
   public componentDidMount(): void {
+    this._getShoeData();
+  }
+
+  private _getShoeData() {
     this.props.getReviews(this._shoe._id);
     this.props.getShoeInfo(this._shoe._id);
   }
@@ -168,7 +173,20 @@ export class ProductDetail extends React.Component<Props> {
               ...styles.rootContainer,
             }}>
             {this._renderHeader(insets.top)}
-            <ScrollView style={{flex: 1}} showsVerticalScrollIndicator={false}>
+            <ScrollView
+              style={{flex: 1}}
+              showsVerticalScrollIndicator={false}
+              refreshControl={
+                <RefreshControl
+                  refreshing={
+                    this.props.reviewState.state ===
+                      NetworkRequestState.REQUESTING ||
+                    this.props.shoeInfoState.state ===
+                      NetworkRequestState.REQUESTING
+                  }
+                  onRefresh={this._getShoeData.bind(this)}
+                />
+              }>
               <View
                 style={{
                   ...styles.pageContainer,
@@ -420,12 +438,22 @@ export class ProductDetail extends React.Component<Props> {
           themes.AppSellColor,
           () => {
             // @ts-ignore
-            this.props.navigation.push(RouteNames.Order.Name, {
-              screen: RouteNames.Order.NewSellOrder,
-              params: {
-                shoe: this._shoe,
-              },
-            });
+            if (highestBuyOrder) {
+              this.props.navigation.push(RouteNames.Order.Name, {
+                screen: RouteNames.Order.SizeSelection,
+                params: {
+                  orderType: 'BuyOrder',
+                  shoe: this._shoe,
+                },
+              });
+            } else {
+              this.props.navigation.push(RouteNames.Order.Name, {
+                screen: RouteNames.Order.NewSellOrder,
+                params: {
+                  shoe: this._shoe,
+                },
+              });
+            }
           },
         )}
         {this._renderSingleActionButton(
@@ -445,6 +473,7 @@ export class ProductDetail extends React.Component<Props> {
             this.props.navigation.push(RouteNames.Order.Name, {
               screen: RouteNames.Order.SizeSelection,
               params: {
+                orderType: 'SellOrder',
                 shoe: this._shoe,
               },
             });

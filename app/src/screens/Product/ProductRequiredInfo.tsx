@@ -15,6 +15,7 @@ import {
   ObjectFactory as Factory,
   FactoryKeys,
   SettingsKey,
+  SellOrder,
 } from 'business';
 import {AppText, BottomPicker} from 'screens/Shared';
 import {themes} from 'resources';
@@ -26,6 +27,7 @@ enum PickerType {
 }
 
 type Props = {
+  order?: Partial<SellOrder>;
   onSetShoeSize: (shoeSize: string) => void;
   onSetShoeCondition: (shoeCondition: string) => void;
   onSetBoxCondition: (boxCondition: string) => void;
@@ -44,6 +46,7 @@ type State = {
 };
 
 type Setting = {
+  readonly currentValue?: string;
   readonly stateName: string;
   readonly title: string;
   readonly options: string[];
@@ -59,7 +62,7 @@ export class ProductRequiredInfo extends React.PureComponent<Props, State> {
     super(props);
     this.state = {
       pickerVisible: false,
-      shoeSize: undefined,
+      shoeSize: this.props.order?.shoeSize,
       shoeCondition: '',
       boxCondition: '',
       isSelectingShoeSize: false,
@@ -169,6 +172,7 @@ export class ProductRequiredInfo extends React.PureComponent<Props, State> {
       const {stateName, options} = currentPickedSettings;
       return (
         <BottomPicker
+          currentValue={currentPickedSettings.currentValue}
           visible={this.state.pickerVisible}
           options={options}
           optionLabelToString={(option: string): string => option}

@@ -22,8 +22,8 @@ export type RootStackParams = {
   ProductDetail: {shoe: Shoe};
   ProductNewReview: {shoe: Shoe};
   ProductAllReviews: {shoe: Shoe; reviews: Review[]};
-  SizeSelection: {shoe: Shoe};
-  NewSellOrder: {shoe: Shoe};
+  SizeSelection: {orderType: OrderType; shoe: Shoe};
+  NewSellOrder: {shoe: Shoe; size?: string; price?: number};
   OrderSizeSelection: {shoe: Shoe};
   OrderBuyConfirmation: {shoe: Shoe; size: string; minPrice: number};
   OrderPayment: {
@@ -33,7 +33,8 @@ export type RootStackParams = {
   TransactionSellOrder: undefined;
   TransactionBuyOrder: undefined;
   TransactionDetail: {
-    order: SellOrder | BuyOrder;
+    order?: SellOrder | BuyOrder;
+    orderId?: string;
     orderType: OrderType;
   };
   Login: undefined;
@@ -46,6 +47,7 @@ export type RootStackParams = {
   TrasactionTabMain: undefined;
   AccountTabMain: undefined;
   AccountTabEditProfile: undefined;
+  HomeTabNotification: undefined;
 };
 
 const Stack = createStackNavigator();
