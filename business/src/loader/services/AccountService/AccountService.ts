@@ -72,7 +72,7 @@ export class AccountService extends BaseService implements IAccountService {
     const response = await this.apiClient.getInstance().get("/profile", { headers });
 
     if (response && response.status === HttpStatus.OK) {
-      return response.data;
+      return response.data.profile;
     }
 
     return undefined;

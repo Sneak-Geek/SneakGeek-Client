@@ -26,6 +26,7 @@ const RouteNames = {
       Name: 'HomeTab',
       Main: 'HomeTabMain',
       SeeMore: 'HomeTabSeeMore',
+      Notification: 'HomeTabNotification',
     },
     SearchTab: {
       Name: 'SearchTab',

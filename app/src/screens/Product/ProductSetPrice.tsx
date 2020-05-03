@@ -17,7 +17,7 @@ type State = {
 };
 
 type Props = {
-  order?: SellOrder;
+  order?: Partial<SellOrder>;
   onSetShoePrice: (price: number) => void;
 };
 
@@ -66,11 +66,17 @@ const styles = StyleSheet.create({
 export class ProductSetPrice extends React.Component<Props, State> {
   constructor(props: Props) {
     super(props);
+
+    const isEditOrder =
+      typeof props.order !== 'undefined' &&
+      typeof props.order.sellNowPrice !== 'number';
+    const price = isEditOrder
+      ? (props.order.sellNowPrice as PriceData)?.price
+      : (props.order.sellNowPrice as number);
+
     this.state = {
       isModalOpen: false,
-      shoePrice: props.order
-        ? toCurrencyString((props.order.sellNowPrice as PriceData).price)
-        : '',
+      shoePrice: props.order ? toCurrencyString(price) : '',
     };
   }
 

@@ -29,7 +29,7 @@ export class SellOrderEdit extends React.Component<Props, State> {
     super(props);
     this.state = {
       updatedOrder: {
-        _id: props.order._id,
+        orderId: props.order._id,
       },
     };
   }

@@ -1,23 +1,26 @@
-import React, {useEffect} from 'react';
+import React from 'react';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import RouteNames from './RouteNames';
 import {themes, strings, images} from 'resources';
-import {Icon} from 'react-native-elements';
+import {Icon, Badge} from 'react-native-elements';
 import {
   AccountTabMain,
   AccountTabEditProfile,
   AccountTabFaq,
 } from 'screens/AccountTab';
-import {createStackNavigator} from '@react-navigation/stack';
+import {
+  createStackNavigator,
+  StackNavigationProp,
+} from '@react-navigation/stack';
 import {HomeTabMain} from 'screens/HomeTab/HomeTabMain';
 import {SearchTabMain} from 'screens/SearchTab/SearchTabMain';
-import {Image} from 'react-native';
+import {Image, View} from 'react-native';
 import {
   ObjectFactory as Factory,
   ISettingsProvider,
   FactoryKeys as Keys,
 } from 'business';
-import {CatalogSeeMore} from 'screens/HomeTab';
+import {CatalogSeeMore, NotificationsScreen} from 'screens/HomeTab';
 import {createMaterialTopTabNavigator} from '@react-navigation/material-top-tabs';
 import {SellOrders, TransactionDetail, BuyOrders} from 'screens/TransactionTab';
 import {ProductRequest} from 'screens/SearchTab';
@@ -25,6 +28,8 @@ import {getDependency, getToken, connect} from 'utilities';
 import {KeyExtensions} from 'common';
 import {IPushNotificationService} from 'services';
 import {IAppState} from 'store/AppStore';
+import {RootStackParams} from './RootStack';
+import {BadgedIcon} from 'screens/Shared';
 
 const Tab = createBottomTabNavigator();
 
@@ -63,44 +68,74 @@ const AccountTab = (): JSX.Element => (
 );
 
 const HomeStack = createStackNavigator();
-const HomeTab = (): JSX.Element => (
-  <HomeStack.Navigator>
-    <HomeStack.Screen
-      name={RouteNames.Tab.HomeTab.Main}
-      component={HomeTabMain}
-      options={{
-        ...themes.headerStyle,
-        title: strings.HomeTabTitle,
-        headerLeft: () => (
-          <Image
-            source={images.Logo}
-            style={{
-              width: themes.IconSize * 1.5,
-              height: themes.IconSize * 1.5,
-              marginLeft: 3,
-            }}
-          />
-        ),
-        headerRight: () => (
-          <Icon
-            name={'bell-outline'}
-            type={'material-community'}
-            size={themes.IconSize}
-            containerStyle={{marginRight: 12}}
-          />
-        ),
-      }}
-    />
-    <HomeStack.Screen
-      name={RouteNames.Tab.HomeTab.SeeMore}
-      component={CatalogSeeMore}
-      options={{
-        title: strings.SeeMore,
-        ...themes.headerStyle,
-      }}
-    />
-  </HomeStack.Navigator>
-);
+type HomeTabProps = {
+  navigation: StackNavigationProp<RootStackParams, 'HomeTab'>;
+  notificationCount: number;
+};
+
+@connect((state: IAppState) => ({
+  notificationCount:
+    state.UserState.profileState.profile?.notifications?.filter(
+      (t) => !t.isRead,
+    ).length || 0,
+}))
+class HomeTab extends React.Component<HomeTabProps> {
+  public render(): JSX.Element {
+    return (
+      <HomeStack.Navigator>
+        <HomeStack.Screen
+          name={RouteNames.Tab.HomeTab.Main}
+          component={HomeTabMain}
+          options={{
+            ...themes.headerStyle,
+            title: strings.HomeTabTitle,
+            headerLeft: () => (
+              <Image
+                source={images.Logo}
+                style={{
+                  width: themes.IconSize * 1.5,
+                  height: themes.IconSize * 1.5,
+                  marginLeft: 3,
+                }}
+              />
+            ),
+            headerRight: () => (
+              <BadgedIcon
+                count={this.props.notificationCount}
+                onPress={() =>
+                  this.props.navigation.push(
+                    RouteNames.Tab.HomeTab.Notification,
+                  )
+                }
+                hitSlop={themes.IconHitSlop}
+                name={'bell-outline'}
+                type={'material-community'}
+                size={themes.IconSize}
+                containerStyle={{marginRight: 12}}
+              />
+            ),
+          }}
+        />
+        <HomeStack.Screen
+          name={RouteNames.Tab.HomeTab.SeeMore}
+          component={CatalogSeeMore}
+          options={{
+            title: strings.SeeMore,
+            ...themes.headerStyle,
+          }}
+        />
+        <HomeStack.Screen
+          name={RouteNames.Tab.HomeTab.Notification}
+          component={NotificationsScreen}
+          options={{
+            title: strings.Notification,
+            ...themes.headerStyle,
+          }}
+        />
+      </HomeStack.Navigator>
+    );
+  }
+}
 
 const SearchStack = createStackNavigator();
 const SearchTab = (): JSX.Element => (

@@ -12,6 +12,7 @@ export const strings = {
   TermsOfServiceAgreement:
     'Khi đăng nhập, bạn đã đồng ý với điều khoản sử dụng của chúng tôi',
   SeeMore: 'Xem thêm',
+  Notification: 'Thông báo',
   HomeTab: 'Trang chủ',
   SearchTab: 'Tìm kiếm',
   TransactionTab: 'Giao dịch',
