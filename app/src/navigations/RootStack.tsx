@@ -22,8 +22,8 @@ export type RootStackParams = {
   ProductDetail: {shoe: Shoe};
   ProductNewReview: {shoe: Shoe};
   ProductAllReviews: {shoe: Shoe; reviews: Review[]};
-  SizeSelection: {shoe: Shoe};
-  NewSellOrder: {shoe: Shoe};
+  SizeSelection: {orderType: OrderType; shoe: Shoe};
+  NewSellOrder: {shoe: Shoe; size?: string; price?: number};
   OrderSizeSelection: {shoe: Shoe};
   OrderBuyConfirmation: {shoe: Shoe; size: string; minPrice: number};
   OrderPayment: {
