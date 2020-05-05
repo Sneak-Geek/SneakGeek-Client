@@ -15,9 +15,7 @@ export interface IAccountService {
     password: string,
     isSignUp: boolean
   ) => Promise<{ account: Account; token: string } | undefined>;
-  getCurrentUser(
-    accessToken: string
-  ): Promise<{ account: Account; token: string } | undefined>;
+  getCurrentUser(accessToken: string): Promise<{ account: Account } | undefined>;
   getUserProfile(accessToken: string): Promise<Profile | undefined>;
   updateProfile(token: string, userProfile: Partial<Profile>): Promise<Profile>;
 }

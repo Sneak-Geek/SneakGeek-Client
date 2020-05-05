@@ -7,19 +7,20 @@ import {
   ImageBackground,
   StatusBar,
 } from 'react-native';
-import {Button} from 'react-native-elements';
-import {strings, themes, images} from 'resources';
-import {StackNavigationProp} from '@react-navigation/stack';
+import { Button } from 'react-native-elements';
+import { strings, themes, images } from 'resources';
+import { StackNavigationProp } from '@react-navigation/stack';
 import RouteNames from 'navigations/RouteNames';
-import {connect} from 'utilities/ReduxUtilities';
-import {authenticateWithFb, Account} from 'business';
-import {IAppState} from 'store/AppStore';
-import {AppText} from 'screens/Shared';
+import { connect } from 'utilities/ReduxUtilities';
+import { authenticateWithFb, Account, authenticateWithGoogle, NetworkRequestState } from 'business';
+import { IAppState } from 'store/AppStore';
+import { AppText } from 'screens/Shared';
 
 type Props = {
-  account: Account;
+  accountState: { account: Account, state: NetworkRequestState, error?: any };
   navigation: StackNavigationProp<any>;
   facebookLogin: () => void;
+  googleLogin: () => void;
 };
 
 const styles = StyleSheet.create({
@@ -75,22 +76,25 @@ const styles = StyleSheet.create({
 
 @connect(
   (state: IAppState) => ({
-    account: state.UserState.accountState.account,
+    accountState: state.UserState.accountState,
   }),
   (dispatch: Function) => ({
     facebookLogin: (): void => {
       dispatch(authenticateWithFb());
     },
+    googleLogin: (): void => {
+      dispatch(authenticateWithGoogle());
+    }
   }),
 )
 export class LoginScreen extends React.Component<Props> {
   public render(): JSX.Element {
     return (
-      <ImageBackground source={images.Home} style={{flex: 1}}>
-        <SafeAreaView style={{flex: 1}}>
+      <ImageBackground source={images.Home} style={{ flex: 1 }}>
+        <SafeAreaView style={{ flex: 1 }}>
           <StatusBar barStyle={'light-content'} />
-          {!this.props.account && (
-            <View style={{flex: 1, alignItems: 'center'}}>
+          {!this.props.accountState.account && (
+            <View style={{ flex: 1, alignItems: 'center' }}>
               <View style={styles.buttonContainer}>
                 <Button
                   type={'solid'}
@@ -103,16 +107,21 @@ export class LoginScreen extends React.Component<Props> {
                     backgroundColor: themes.FacebookThemeColor,
                     ...styles.button,
                   }}
-                  onPress={(): void => this.props.facebookLogin()}
+                  onPress={(): void => {
+                    this.props.facebookLogin()
+                  }}
                 />
                 <Button
                   type={'outline'}
-                  buttonStyle={{backgroundColor: 'white', ...styles.button}}
+                  buttonStyle={{ backgroundColor: 'white', ...styles.button }}
                   title={strings.ContinueGoogle}
                   icon={
                     <Image source={images.Google} style={styles.iconStyle} />
                   }
-                  titleStyle={{...styles.titleStyle, color: 'black'}}
+                  titleStyle={{ ...styles.titleStyle, color: 'black' }}
+                  onPress={(): void => {
+                    this.props.googleLogin()
+                  }}
                 />
                 <Button
                   type={'outline'}

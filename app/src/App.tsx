@@ -4,6 +4,7 @@ import {
   ObjectFactory as Factory,
   FactoryKeys as Keys,
   IFacebookSDK,
+  IGoogleSDK,
   IEnvVar,
   ISettingsProvider,
   IAccountService,
@@ -20,7 +21,9 @@ import {
   CdnService,
 } from 'business';
 import { Provider } from 'react-redux';
-import { SettingsProvider, FacebookSdk, KeyExtensions } from 'common';
+
+import { SettingsProvider, FacebookSdk, KeyExtensions, GoogleSdk } from 'common';
+
 import { AppStore } from 'store/AppStore';
 import { InAppNotification } from 'screens/InAppNotification';
 import { AppLoadingIndicator } from 'screens/AppLoadingIndicator';
@@ -44,6 +47,7 @@ export default function App(): JSX.Element {
       prodUrl: 'https://sneakgeek-test.azurewebsites.net/api/v1',
     });
     Factory.register<IFacebookSDK>(Keys.IFacebookSDK, new FacebookSdk());
+    Factory.register<IGoogleSDK>(Keys.IGoogleSDK, new GoogleSdk());
     Factory.register<IAccountService>(
       Keys.IAccountService,
       new AccountService(),

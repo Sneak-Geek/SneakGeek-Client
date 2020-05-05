@@ -28,9 +28,17 @@
 				<string>fb1521812747994918</string>
 			</array>
 		</dict>
+		<dict>
+			<key>CFBundleTypeRole</key>
+			<string>Editor</string>
+			<key>CFBundleURLSchemes</key>
+			<array>
+				<string>com.googleusercontent.apps.660034538610-pv8d3rq25j7jm6ga6cmg0p7v8g57mv2g</string>
+			</array>
+		</dict>
 	</array>
 	<key>CFBundleVersion</key>
-	<string>1</string>
+	<string>$(CURRENT_PROJECT_VERSION)</string>
 	<key>FacebookAppID</key>
 	<string>1521812747994918</string>
 	<key>FacebookDisplayName</key>
@@ -68,8 +76,12 @@
 			</dict>
 		</dict>
 	</dict>
+	<key>NSCameraUsageDescription</key>
+	<string>SneakGeek wants to take a photo</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
 	<string></string>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>SneakGeek wants to access your photo</string>
 	<key>UIAppFonts</key>
 	<array>
 		<string>Roboto-Bold-Italic.ttf</string>
