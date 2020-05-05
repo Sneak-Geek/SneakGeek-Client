@@ -54,9 +54,10 @@ export class AccountService extends BaseService implements IAccountService {
 
     return undefined;
   }
+
   public async getCurrentUser(
     accessToken: string
-  ): Promise<{ account: Account; token: string } | undefined> {
+  ): Promise<{ account: Account } | undefined> {
     const headers = { authorization: accessToken };
     const response = await this.apiClient.getInstance().get(`/account`, { headers });
 

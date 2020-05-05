@@ -2,7 +2,7 @@ import { createAction } from "redux-actions";
 import { AuthenticationPayload, NetworkRequestState } from "../payload";
 import { ObjectFactory, FactoryKeys } from "../loader/kernel";
 import { IAccountService, ISettingsProvider, IFacebookSDK } from "../loader";
-import { SettingsKey } from "../loader/interfaces";
+import { SettingsKey, IGoogleSDK } from "../loader/interfaces";
 import { getUserProfile } from "./ProfileActions";
 import { Dispatch } from "redux";
 
@@ -109,7 +109,36 @@ export const authenticateWithFb = () => {
         const accessToken = await fbSdk.getCurrentAccessToken();
         const accountPayload = await accountService.login(accessToken, "facebook");
         await settings.setValue(SettingsKey.CurrentAccessToken, accountPayload!.token);
+        dispatch(getUserProfile());
+        dispatch(
+          updateAuthenticationState({
+            state: NetworkRequestState.SUCCESS,
+            data: accountPayload,
+          })
+        );
+      }
+    } catch (error) {
+      dispatch(updateAuthenticationState({ state: NetworkRequestState.FAILED, error }));
+    }
+  };
+};
 
+export const authenticateWithGoogle = () => {
+  return async (dispatch: Function) => {
+    const ggSdk = ObjectFactory.getObjectInstance<IGoogleSDK>(FactoryKeys.IGoogleSDK);
+    const accountService = ObjectFactory.getObjectInstance<IAccountService>(
+      FactoryKeys.IAccountService
+    );
+    const settings = ObjectFactory.getObjectInstance<ISettingsProvider>(
+      FactoryKeys.ISettingsProvider
+    );
+    try {
+      const signInResult = await ggSdk.signIn();
+      if (signInResult && signInResult.idToken) {
+        const accessToken = signInResult.idToken;
+        const accountPayload = await accountService.login(accessToken as string, "google");
+        await settings.setValue(SettingsKey.CurrentAccessToken, accountPayload?.token);
+        dispatch(getUserProfile());
         dispatch(
           updateAuthenticationState({
             state: NetworkRequestState.SUCCESS,

@@ -1,9 +1,10 @@
-import React, {useState, useEffect} from 'react';
+import React, { useState, useEffect } from 'react';
 import RootStack from 'navigations/RootStack';
 import {
   ObjectFactory as Factory,
   FactoryKeys as Keys,
   IFacebookSDK,
+  IGoogleSDK,
   IEnvVar,
   ISettingsProvider,
   IAccountService,
@@ -19,13 +20,13 @@ import {
   ICdnService,
   CdnService,
 } from 'business';
-import {Provider} from 'react-redux';
-import {SettingsProvider, FacebookSdk, KeyExtensions} from 'common';
-import {AppStore} from 'store/AppStore';
-import {InAppNotification} from 'screens/InAppNotification';
-import {AppLoadingIndicator} from 'screens/AppLoadingIndicator';
-import {IDeviceInfoProvider, DeviceInfoProvider} from 'providers';
-import {IPushNotificationService, PushNotificationService} from 'services';
+import { Provider } from 'react-redux';
+import { SettingsProvider, FacebookSdk, KeyExtensions, GoogleSdk } from 'common';
+import { AppStore } from 'store/AppStore';
+import { InAppNotification } from 'screens/InAppNotification';
+import { AppLoadingIndicator } from 'screens/AppLoadingIndicator';
+import { IDeviceInfoProvider, DeviceInfoProvider } from 'providers';
+import { IPushNotificationService, PushNotificationService } from 'services';
 
 export default function App(): JSX.Element {
   const [depLoaded, setDepLoaded] = useState(false);
@@ -40,10 +41,11 @@ export default function App(): JSX.Element {
     );
     Factory.register<IEnvVar>(Keys.IEnvVar, {
       dev: __DEV__,
-      devUrl: 'http://10.0.0.159:8080/api/v1',
-      prodUrl: 'https://sneakgeek-dev.azurewebsites.net/api/v1',
+      devUrl: 'http://10.0.0.52:8080/api/v1',
+      prodUrl: 'https://sneakgeek-test.azurewebsites.net/api/v1',
     });
     Factory.register<IFacebookSDK>(Keys.IFacebookSDK, new FacebookSdk());
+    Factory.register<IGoogleSDK>(Keys.IGoogleSDK, new GoogleSdk());
     Factory.register<IAccountService>(
       Keys.IAccountService,
       new AccountService(),
@@ -84,8 +86,8 @@ export default function App(): JSX.Element {
           <RootStack />
         </>
       ) : (
-        <></>
-      )}
+          <></>
+        )}
     </Provider>
   );
 }
