@@ -198,7 +198,6 @@ export class AccountTabMain extends React.Component<Props> {
       <BottomButton
         title={strings.LogOut}
         onPress={(): void => {
-          console.log("Pressed!")
           this._logoutHandler()
         }}
         style={{ backgroundColor: themes.AppErrorColor }}
@@ -215,7 +214,6 @@ export class AccountTabMain extends React.Component<Props> {
     this.props.navigation.navigate(RouteNames.Auth.Name, {
       screen: RouteNames.Auth.Login,
     });
-
   }
 
   private _takePicture(): void {
