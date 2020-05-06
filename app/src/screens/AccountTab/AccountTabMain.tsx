@@ -9,6 +9,8 @@ import {
   FactoryKeys,
   updateProfile,
   IAccountService,
+  ObjectFactory,
+  ISettingsProvider,
 } from 'business';
 import { themes, strings } from 'resources';
 import { AppText, BottomButton } from 'screens/Shared';
@@ -21,6 +23,7 @@ import {
   toggleIndicator,
   showSuccessNotification,
   showErrorNotification,
+  reset
 } from 'actions';
 import ActionSheet from 'react-native-action-sheet';
 
@@ -31,6 +34,7 @@ type Props = {
   toggleLoading: (isLoading: boolean) => void;
   showNotification: (message: string, isError?: boolean) => void;
   updateProfile: (profile: Partial<Profile>) => void;
+  logout: () => void;
 };
 
 type Setting = {
@@ -78,6 +82,9 @@ const styles = StyleSheet.create({
     updateProfile: (profile: Profile): void => {
       dispatch(updateProfile(profile));
     },
+    logout: (): void => {
+      dispatch(reset());
+    }
   }),
 )
 export class AccountTabMain extends React.Component<Props> {
@@ -116,6 +123,14 @@ export class AccountTabMain extends React.Component<Props> {
     mediaType: 'photo',
     quality: 0.5,
   };
+
+  shouldComponentUpdate(nextProps, nextState) {
+    //Do not update after all data is cleared. Handling log out functionality.
+    if (this.props.account && !nextProps.account)
+      return false;
+    else
+      return true;
+  }
 
   public render(): JSX.Element {
     return (
@@ -182,10 +197,25 @@ export class AccountTabMain extends React.Component<Props> {
     return (
       <BottomButton
         title={strings.LogOut}
-        onPress={(): void => null}
+        onPress={(): void => {
+          console.log("Pressed!")
+          this._logoutHandler()
+        }}
         style={{ backgroundColor: themes.AppErrorColor }}
       />
     );
+  }
+
+  private _logoutHandler(): void {
+    const settings = ObjectFactory.getObjectInstance<ISettingsProvider>(
+      FactoryKeys.ISettingsProvider
+    );
+    settings.clear();
+    this.props.logout();
+    this.props.navigation.navigate(RouteNames.Auth.Name, {
+      screen: RouteNames.Auth.Login,
+    });
+
   }
 
   private _takePicture(): void {

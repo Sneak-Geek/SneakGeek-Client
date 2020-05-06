@@ -22,6 +22,8 @@ export function handleActionsWithReset<State, Payload>(
 
   return (state: State | undefined, action: Action<Payload>): State => {
     if (action.type === BaseActions.RESET) {
+      console.log('HIT!');
+      console.log(initialState);
       return initialState;
     }
 
