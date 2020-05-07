@@ -21,14 +21,14 @@ export class OrderService extends BaseService implements IOrderService {
   }
 
 
-  public async getLowestSellPrices(token: string, shoeId: string): Promise<{ minPrice: number; size: string; }[]> {
-    const response = await this.apiClient.getInstance().get(`/shoe/sell-order/lowest-by-size?shoeId=${shoeId}`, {
+  public async getSizePricesMatching(token: string, orderType: OrderType, shoeId: string): Promise<{ price: number; size: string; }[]> {
+    const response = await this.apiClient.getInstance().get(`/order/size-price-matching?orderType=${orderType}&shoeId=${shoeId}`, {
       headers: {
         authorization: token
       }
     });
 
-    return response.data as { minPrice: number, size: string }[];
+    return response.data as { price: number, size: string }[];
   }
 
   public async getMatchingSellOrder(token: string, shoeId: string, size: string): Promise<SellOrder> {
