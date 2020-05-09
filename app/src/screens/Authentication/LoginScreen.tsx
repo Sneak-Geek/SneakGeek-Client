@@ -6,18 +6,29 @@ import {
   Image,
   ImageBackground,
   StatusBar,
+  Alert,
 } from 'react-native';
-import { Button } from 'react-native-elements';
-import { strings, themes, images } from 'resources';
-import { StackNavigationProp } from '@react-navigation/stack';
+import {Button} from 'react-native-elements';
+import {strings, themes, images} from 'resources';
+import {StackNavigationProp} from '@react-navigation/stack';
 import RouteNames from 'navigations/RouteNames';
-import { connect } from 'utilities/ReduxUtilities';
-import { authenticateWithFb, Account, authenticateWithGoogle, NetworkRequestState } from 'business';
-import { IAppState } from 'store/AppStore';
-import { AppText } from 'screens/Shared';
+import {connect} from 'utilities/ReduxUtilities';
+import {
+  authenticateWithFb,
+  Account,
+  authenticateWithGoogle,
+  NetworkRequestState,
+} from 'business';
+import {IAppState} from 'store/AppStore';
+import {AppText} from 'screens/Shared';
+import AppleAuth, {
+  AppleAuthRequestOperation,
+  AppleAuthCredentialState,
+  AppleAuthRequestScope,
+} from '@invertase/react-native-apple-authentication';
 
 type Props = {
-  accountState: { account: Account, state: NetworkRequestState, error?: any };
+  accountState: {account: Account; state: NetworkRequestState; error?: any};
   navigation: StackNavigationProp<any>;
   facebookLogin: () => void;
   googleLogin: () => void;
@@ -84,17 +95,17 @@ const styles = StyleSheet.create({
     },
     googleLogin: (): void => {
       dispatch(authenticateWithGoogle());
-    }
+    },
   }),
 )
 export class LoginScreen extends React.Component<Props> {
   public render(): JSX.Element {
     return (
-      <ImageBackground source={images.Home} style={{ flex: 1 }}>
-        <SafeAreaView style={{ flex: 1 }}>
+      <ImageBackground source={images.Home} style={{flex: 1}}>
+        <SafeAreaView style={{flex: 1}}>
           <StatusBar barStyle={'light-content'} />
           {!this.props.accountState.account && (
-            <View style={{ flex: 1, alignItems: 'center' }}>
+            <View style={{flex: 1, alignItems: 'center'}}>
               <View style={styles.buttonContainer}>
                 <Button
                   type={'solid'}
@@ -108,20 +119,30 @@ export class LoginScreen extends React.Component<Props> {
                     ...styles.button,
                   }}
                   onPress={(): void => {
-                    this.props.facebookLogin()
+                    this.props.facebookLogin();
                   }}
                 />
                 <Button
                   type={'outline'}
-                  buttonStyle={{ backgroundColor: 'white', ...styles.button }}
+                  buttonStyle={{backgroundColor: 'white', ...styles.button}}
                   title={strings.ContinueGoogle}
                   icon={
                     <Image source={images.Google} style={styles.iconStyle} />
                   }
-                  titleStyle={{ ...styles.titleStyle, color: 'black' }}
+                  titleStyle={{...styles.titleStyle, color: 'black'}}
                   onPress={(): void => {
-                    this.props.googleLogin()
+                    this.props.googleLogin();
                   }}
+                />
+                <Button
+                  type={'outline'}
+                  buttonStyle={{backgroundColor: 'white', ...styles.button}}
+                  title={strings.ContinueApple}
+                  icon={
+                    <Image source={images.Apple} style={styles.iconStyle} />
+                  }
+                  titleStyle={{...styles.titleStyle, color: 'black'}}
+                  onPress={this._onAppleLogin.bind(this)}
                 />
                 <Button
                   type={'outline'}
@@ -155,5 +176,32 @@ export class LoginScreen extends React.Component<Props> {
         </SafeAreaView>
       </ImageBackground>
     );
+  }
+
+  private async _onAppleLogin(): Promise<void> {
+    const appleAuthRequestResponse = await AppleAuth.performRequest({
+      requestedOperation: AppleAuthRequestOperation.LOGIN,
+      requestedScopes: [
+        AppleAuthRequestScope.EMAIL,
+        AppleAuthRequestScope.FULL_NAME,
+      ],
+    });
+
+    try {
+      // get current authentication state for user
+      const credentialState = await AppleAuth.getCredentialStateForUser(
+        appleAuthRequestResponse.user,
+      );
+
+      // use credentialState response to ensure the user is authenticated
+      if (credentialState === AppleAuthCredentialState.AUTHORIZED) {
+        // user is authenticated
+        console.log('Auth Apple success', credentialState);
+        Alert.alert(JSON.stringify(appleAuthRequestResponse, null, 2));
+        // Alert.alert(JSON.stringify(credentialState, null, 2));
+      }
+    } catch (error) {
+      console.log(error);
+    }
   }
 }
