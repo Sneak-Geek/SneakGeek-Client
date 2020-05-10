@@ -16,7 +16,7 @@ export type SellOrderEditInput = {
 export interface IOrderService {
   createSellOrder(token: string, sellOrder: SellOrder): Promise<void>;
   createBuyOrder(token: string, buyOrder: Partial<BuyOrder>): Promise<void>;
-  getLowestSellPrices: (token: string, shoeId: string) => Promise<{ minPrice: number, size: string }[]>;
+  getSizePricesMatching: (token: string, orderType: OrderType, shoeId: string) => Promise<{ price: number, size: string }[]>;
   getMatchingSellOrder: (token: string, shoeId: string, size: string) => Promise<SellOrder>;
   getTotalFee: (token: string, sellOrderId: string) => Promise<{ shippingFee: number, shoePrice: number }>;
   getCheckoutUrlForPurchase: (token: string, paymentType: PaymentType, sellOrderId: string, buyOrderId?: string) => Promise<string>;

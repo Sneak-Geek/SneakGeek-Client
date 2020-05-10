@@ -1,8 +1,8 @@
 import React from 'react';
-import { StackNavigationProp } from '@react-navigation/stack';
-import { connect } from 'utilities';
-import { IAppState } from 'store/AppStore';
-import { Account, getCurrentUser, NetworkRequestState } from 'business';
+import {StackNavigationProp} from '@react-navigation/stack';
+import {connect} from 'utilities';
+import {IAppState} from 'store/AppStore';
+import {Account, getCurrentUser, NetworkRequestState} from 'business';
 import RouteNames from 'navigations/RouteNames';
 import RNSplashScreen from 'react-native-splash-screen';
 
@@ -32,7 +32,7 @@ export class SplashScreen extends React.Component<Props> {
   }
 
   public componentDidUpdate(prev: Props): void {
-    const { accountState, navigation } = this.props;
+    const {accountState, navigation} = this.props;
     if (accountState.state === prev.accountState.state) {
       return;
     }
@@ -47,8 +47,6 @@ export class SplashScreen extends React.Component<Props> {
       accountState.account
     ) {
       navigation.navigate(RouteNames.Tab.Name);
-      RNSplashScreen.hide();
-    } else {
       RNSplashScreen.hide();
     }
   }
