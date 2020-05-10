@@ -2,7 +2,7 @@ import { Shoe, BuyOrder, SellOrder } from "../model";
 import { Action } from "redux-actions";
 import { buyShoe, updateGetSellOrdersState, updateGetBuyOrdersState } from "../actions";
 import { NetworkRequestState, GetSellOrdersPayload, GetBuyOrdersPayload } from "../payload";
-import { handleActionsWithReset } from "./HanldeActionWithReset";
+import { handleActionsWithReset } from "../utilities/ReduxUtilities";
 
 export type IOrderState = {
   sellState: {

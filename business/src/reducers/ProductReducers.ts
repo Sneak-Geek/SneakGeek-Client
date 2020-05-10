@@ -2,7 +2,7 @@ import { NetworkRequestState, GetReviewsPayload, GetShoeInfoPayload } from "../p
 import { Review, SellOrder, BuyOrder, Shoe } from "../model";
 import { Action } from "redux-actions";
 import { updateStateGetReviews, updateStateGetInfo } from "../actions/ShoeActions";
-import { handleActionsWithReset } from "./HanldeActionWithReset";
+import { handleActionsWithReset } from "../utilities/ReduxUtilities";
 
 export type IProductState = {
   reviewState: {

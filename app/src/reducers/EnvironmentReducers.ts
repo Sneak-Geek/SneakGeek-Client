@@ -1,5 +1,5 @@
 import {DeviceInfo} from 'providers';
-import {handleActionsWithReset} from 'utilities';
+import {handleActionsWithReset} from 'business';
 import {
   updateDeviceInfo,
   updateNotificationRegistered,

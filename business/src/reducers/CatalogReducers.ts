@@ -2,7 +2,7 @@ import { NetworkRequestState, CatalogPayload, HomePageCatalogsPayload } from "..
 import { Catalog } from "../model";
 import { updateCatalogState, updateGetHomeCatalogsState } from "../actions/CatalogActions";
 import { Action } from "redux-actions";
-import { handleActionsWithReset } from "./HanldeActionWithReset";
+import { handleActionsWithReset } from "../utilities/ReduxUtilities";
 
 export type ICatalogState = {
   catalogState: {

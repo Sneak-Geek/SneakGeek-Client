@@ -4,7 +4,7 @@ import {
   showErrorNotification,
   showSuccessNotification,
 } from 'actions';
-import {handleActionsWithReset} from 'utilities/ReduxUtilities';
+import {handleActionsWithReset} from 'business';
 
 export type Notifcation = {
   id: string;

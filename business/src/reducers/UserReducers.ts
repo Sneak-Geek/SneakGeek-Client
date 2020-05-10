@@ -5,7 +5,7 @@ import {
 } from "../payload";
 import { Account, Profile } from "../model";
 import { Action } from "redux-actions";
-import { handleActionsWithReset } from "./HanldeActionWithReset";
+import { handleActionsWithReset } from "../utilities/ReduxUtilities";
 import { updateAuthenticationState } from "../actions/AuthenticationActions";
 import { updateStateGetUserProfile, updateProfile } from "../actions";
 
