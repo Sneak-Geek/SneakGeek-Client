@@ -1,4 +1,4 @@
-import {handleActionsWithReset} from 'utilities/ReduxUtilities';
+import {handleActionsWithReset} from 'business';
 import {toggleIndicator, IndicatorPayload} from 'actions';
 import {Action} from 'redux-actions';
 

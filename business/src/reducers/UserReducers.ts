@@ -4,7 +4,8 @@ import {
   GetUserProfilePayload,
 } from "../payload";
 import { Account, Profile } from "../model";
-import { handleActions, Action } from "redux-actions";
+import { Action } from "redux-actions";
+import { handleActionsWithReset } from "../utilities/ReduxUtilities";
 import { updateAuthenticationState } from "../actions/AuthenticationActions";
 import { updateStateGetUserProfile, updateProfile } from "../actions";
 
@@ -30,7 +31,7 @@ export const initialUserState: IUserState = {
   },
 };
 
-export const UserReducers = handleActions<IUserState, any>(
+export const UserReducers = handleActionsWithReset<IUserState, any>(
   {
     [`${updateAuthenticationState}`]: (
       state: IUserState,

@@ -21,7 +21,9 @@ import {
   CdnService,
 } from 'business';
 import {Provider} from 'react-redux';
+
 import {SettingsProvider, FacebookSdk, KeyExtensions, GoogleSdk} from 'common';
+
 import {AppStore} from 'store/AppStore';
 import {InAppNotification} from 'screens/InAppNotification';
 import {AppLoadingIndicator} from 'screens/AppLoadingIndicator';
@@ -41,7 +43,7 @@ export default function App(): JSX.Element {
     );
     Factory.register<IEnvVar>(Keys.IEnvVar, {
       dev: __DEV__,
-      devUrl: 'http://192.168.0.12:8080/api/v1',
+      devUrl: 'http://10.0.0.159:8080/api/v1',
       prodUrl: 'https://sneakgeek-test.azurewebsites.net/api/v1',
     });
     Factory.register<IFacebookSDK>(Keys.IFacebookSDK, new FacebookSdk());
