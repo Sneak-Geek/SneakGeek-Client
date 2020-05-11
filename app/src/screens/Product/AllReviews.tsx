@@ -258,6 +258,7 @@ export class AllReviews extends React.Component<Props> {
     return <AppText.Title1 />;
   }
   private _renderReviews(reviews: Review[]): JSX.Element {
+    console.log(this.state.reviewStatistics)
     if (this.state.reviewStatistics.avg === 0) {
       return (
         <AppText.Body style={{textAlign: 'center', paddingVertical: 150}}>
