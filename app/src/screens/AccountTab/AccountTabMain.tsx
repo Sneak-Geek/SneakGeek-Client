@@ -124,11 +124,6 @@ export class AccountTabMain extends React.Component<Props> {
     quality: 0.5,
   };
 
-  shouldComponentUpdate(nextProps) {
-    //Do not update after all data is cleared. Handling log out functionality.
-    return !(this.props.account && !nextProps.account);
-  }
-
   public render(): JSX.Element {
     return (
       <SafeAreaView style={{backgroundColor: themes.AppAccentColor, flex: 1}}>
@@ -144,16 +139,15 @@ export class AccountTabMain extends React.Component<Props> {
 
   private _renderBasicUserData(): JSX.Element {
     const {account, profile} = this.props;
-    const {firstName, lastName} = profile?.userProvidedName;
+    const firstName = profile?.userProvidedName?.firstName;
+    const lastName = profile?.userProvidedName?.lastName;
 
     // check name
-    const name = profile?.userProvidedName
-      ? `${firstName} ${lastName}`
-      : undefined;
+    const name = `${firstName} ${lastName}` || undefined;
 
     // check avatar
     const avatarUri =
-      profile.userProvidedProfilePic || account.accountProfilePicByProvider;
+      profile?.userProvidedProfilePic || account?.accountProfilePicByProvider;
     const avatar = avatarUri
       ? {source: {uri: avatarUri}}
       : {icon: {name: 'person'}};
@@ -201,14 +195,14 @@ export class AccountTabMain extends React.Component<Props> {
   }
 
   private _logoutHandler(): void {
+    this.props.navigation.navigate(RouteNames.Auth.Name, {
+      screen: RouteNames.Auth.Login,
+    });
     const settings = ObjectFactory.getObjectInstance<ISettingsProvider>(
       FactoryKeys.ISettingsProvider,
     );
     settings.clear();
     this.props.logout();
-    this.props.navigation.navigate(RouteNames.Auth.Name, {
-      screen: RouteNames.Auth.Login,
-    });
   }
 
   private _takePicture(): void {
