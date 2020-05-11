@@ -15,23 +15,20 @@ import RouteNames from 'navigations/RouteNames';
 import {connect} from 'utilities/ReduxUtilities';
 import {
   authenticateWithFb,
-  Account,
   authenticateWithGoogle,
   NetworkRequestState,
+  authenticateWithApple,
+  Account,
 } from 'business';
 import {IAppState} from 'store/AppStore';
 import {AppText} from 'screens/Shared';
-import AppleAuth, {
-  AppleAuthRequestOperation,
-  AppleAuthCredentialState,
-  AppleAuthRequestScope,
-} from '@invertase/react-native-apple-authentication';
 
 type Props = {
   accountState: {account: Account; state: NetworkRequestState; error?: any};
   navigation: StackNavigationProp<any>;
   facebookLogin: () => void;
   googleLogin: () => void;
+  appleLogin: () => void;
 };
 
 const styles = StyleSheet.create({
@@ -96,6 +93,9 @@ const styles = StyleSheet.create({
     googleLogin: (): void => {
       dispatch(authenticateWithGoogle());
     },
+    appleLogin: (): void => {
+      dispatch(authenticateWithApple());
+    },
   }),
 )
 export class LoginScreen extends React.Component<Props> {
@@ -107,69 +107,11 @@ export class LoginScreen extends React.Component<Props> {
           {!this.props.accountState.account && (
             <View style={{flex: 1, alignItems: 'center'}}>
               <View style={styles.buttonContainer}>
-                <Button
-                  type={'solid'}
-                  title={strings.ContinueFacebook}
-                  icon={
-                    <Image source={images.Facebook} style={styles.iconStyle} />
-                  }
-                  titleStyle={styles.titleStyle}
-                  buttonStyle={{
-                    backgroundColor: themes.FacebookThemeColor,
-                    ...styles.button,
-                  }}
-                  onPress={(): void => {
-                    this.props.facebookLogin();
-                  }}
-                />
-                <Button
-                  type={'outline'}
-                  buttonStyle={{backgroundColor: 'white', ...styles.button}}
-                  title={strings.ContinueGoogle}
-                  icon={
-                    <Image source={images.Google} style={styles.iconStyle} />
-                  }
-                  titleStyle={{...styles.titleStyle, color: 'black'}}
-                  onPress={(): void => {
-                    this.props.googleLogin();
-                  }}
-                />
-                <Button
-                  type={'outline'}
-                  buttonStyle={{backgroundColor: 'white', ...styles.button}}
-                  title={strings.ContinueApple}
-                  icon={
-                    <Image source={images.Apple} style={styles.iconStyle} />
-                  }
-                  titleStyle={{...styles.titleStyle, color: 'black'}}
-                  onPress={this._onAppleLogin.bind(this)}
-                />
-                <Button
-                  type={'outline'}
-                  buttonStyle={{
-                    backgroundColor: themes.AppPrimaryColor,
-                    ...styles.button,
-                  }}
-                  title={strings.SignUpEmail}
-                  icon={
-                    <Image
-                      source={images.Email}
-                      style={styles.emailIconStyle}
-                    />
-                  }
-                  titleStyle={styles.titleStyle}
-                  onPress={() =>
-                    this.props.navigation.push(RouteNames.Auth.EmailSignUp)
-                  }
-                />
-                <AppText.Subhead
-                  style={styles.emailLoginStyle}
-                  onPress={(): void => {
-                    this.props.navigation.push(RouteNames.Auth.EmailLogin);
-                  }}>
-                  {strings.MemberAlready}{' '}
-                  <AppText.Callout>{strings.SignIn}</AppText.Callout>
-                </AppText.Subhead>
+                {this._renderFacebookLogin()}
+                {this._renderGoogleLogin()}
+                {this._renderAppleLogin()}
+                {this._renderEmailSignUp()}
+                {this._renderEmailLogin()}
               </View>
             </View>
           )}
@@ -178,30 +120,78 @@ export class LoginScreen extends React.Component<Props> {
     );
   }
 
-  private async _onAppleLogin(): Promise<void> {
-    const appleAuthRequestResponse = await AppleAuth.performRequest({
-      requestedOperation: AppleAuthRequestOperation.LOGIN,
-      requestedScopes: [
-        AppleAuthRequestScope.EMAIL,
-        AppleAuthRequestScope.FULL_NAME,
-      ],
-    });
+  private _renderFacebookLogin(): JSX.Element {
+    return (
+      <Button
+        type={'solid'}
+        title={strings.ContinueFacebook}
+        icon={<Image source={images.Facebook} style={styles.iconStyle} />}
+        titleStyle={styles.titleStyle}
+        buttonStyle={{
+          backgroundColor: themes.FacebookThemeColor,
+          ...styles.button,
+        }}
+        onPress={(): void => {
+          this.props.facebookLogin();
+        }}
+      />
+    );
+  }
 
-    try {
-      // get current authentication state for user
-      const credentialState = await AppleAuth.getCredentialStateForUser(
-        appleAuthRequestResponse.user,
-      );
+  private _renderGoogleLogin() {
+    return (
+      <Button
+        type={'outline'}
+        buttonStyle={{backgroundColor: 'white', ...styles.button}}
+        title={strings.ContinueGoogle}
+        icon={<Image source={images.Google} style={styles.iconStyle} />}
+        titleStyle={{...styles.titleStyle, color: 'black'}}
+        onPress={(): void => {
+          this.props.googleLogin();
+        }}
+      />
+    );
+  }
 
-      // use credentialState response to ensure the user is authenticated
-      if (credentialState === AppleAuthCredentialState.AUTHORIZED) {
-        // user is authenticated
-        console.log('Auth Apple success', credentialState);
-        Alert.alert(JSON.stringify(appleAuthRequestResponse, null, 2));
-        // Alert.alert(JSON.stringify(credentialState, null, 2));
-      }
-    } catch (error) {
-      console.log(error);
-    }
+  private _renderAppleLogin() {
+    return (
+      <Button
+        type={'outline'}
+        buttonStyle={{backgroundColor: 'white', ...styles.button}}
+        title={strings.ContinueApple}
+        icon={<Image source={images.Apple} style={styles.iconStyle} />}
+        titleStyle={{...styles.titleStyle, color: 'black'}}
+        onPress={this.props.appleLogin.bind(this)}
+      />
+    );
+  }
+
+  private _renderEmailSignUp() {
+    return (
+      <Button
+        type={'outline'}
+        buttonStyle={{
+          backgroundColor: themes.AppPrimaryColor,
+          ...styles.button,
+        }}
+        title={strings.SignUpEmail}
+        icon={<Image source={images.Email} style={styles.emailIconStyle} />}
+        titleStyle={styles.titleStyle}
+        onPress={() => this.props.navigation.push(RouteNames.Auth.EmailSignUp)}
+      />
+    );
+  }
+
+  private _renderEmailLogin() {
+    return (
+      <AppText.Subhead
+        style={styles.emailLoginStyle}
+        onPress={(): void => {
+          this.props.navigation.push(RouteNames.Auth.EmailLogin);
+        }}>
+        {strings.MemberAlready}{' '}
+        <AppText.Callout>{strings.SignIn}</AppText.Callout>
+      </AppText.Subhead>
+    );
   }
 }

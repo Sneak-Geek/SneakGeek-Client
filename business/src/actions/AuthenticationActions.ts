@@ -2,7 +2,7 @@ import { createAction } from "redux-actions";
 import { AuthenticationPayload, NetworkRequestState } from "../payload";
 import { ObjectFactory, FactoryKeys } from "../loader/kernel";
 import { IAccountService, ISettingsProvider, IFacebookSDK } from "../loader";
-import { SettingsKey, IGoogleSDK } from "../loader/interfaces";
+import { SettingsKey, IGoogleSDK, IAppleAuthSdk } from "../loader/interfaces";
 import { getUserProfile } from "./ProfileActions";
 import { Dispatch } from "redux";
 
@@ -23,7 +23,9 @@ export const getCurrentUser = () => {
   );
 
   return async (dispatch: Dispatch<any>) => {
-    dispatch(updateAuthenticationState({ state: NetworkRequestState.REQUESTING }));
+    dispatch(
+      updateAuthenticationState({ state: NetworkRequestState.REQUESTING })
+    );
     const token = settings.getValue(SettingsKey.CurrentAccessToken);
 
     try {
@@ -46,7 +48,9 @@ export const getCurrentUser = () => {
         );
       }
     } catch (error) {
-      dispatch(updateAuthenticationState({ state: NetworkRequestState.FAILED, error }));
+      dispatch(
+        updateAuthenticationState({ state: NetworkRequestState.FAILED, error })
+      );
     }
   };
 };
@@ -64,11 +68,20 @@ export const authenticateWithEmail = (
   );
 
   return async (dispatch: Function) => {
-    dispatch(updateAuthenticationState({ state: NetworkRequestState.REQUESTING }));
+    dispatch(
+      updateAuthenticationState({ state: NetworkRequestState.REQUESTING })
+    );
     try {
-      const accountPayload = await accountService.emailAuth(email, password, isSignUp);
+      const accountPayload = await accountService.emailAuth(
+        email,
+        password,
+        isSignUp
+      );
       if (accountPayload) {
-        await settings.setValue(SettingsKey.CurrentAccessToken, accountPayload.token);
+        await settings.setValue(
+          SettingsKey.CurrentAccessToken,
+          accountPayload.token
+        );
         await settings.loadServerSettings();
 
         await dispatch(getUserProfile());
@@ -80,7 +93,9 @@ export const authenticateWithEmail = (
         );
       }
     } catch (error) {
-      dispatch(updateAuthenticationState({ state: NetworkRequestState.FAILED, error }));
+      dispatch(
+        updateAuthenticationState({ state: NetworkRequestState.FAILED, error })
+      );
     }
   };
 };
@@ -88,7 +103,9 @@ export const authenticateWithEmail = (
 export const authenticateWithFb = () => {
   return async (dispatch: Function) => {
     const permissions = ["public_profile", "email"];
-    const fbSdk = ObjectFactory.getObjectInstance<IFacebookSDK>(FactoryKeys.IFacebookSDK);
+    const fbSdk = ObjectFactory.getObjectInstance<IFacebookSDK>(
+      FactoryKeys.IFacebookSDK
+    );
     const accountService = ObjectFactory.getObjectInstance<IAccountService>(
       FactoryKeys.IAccountService
     );
@@ -107,8 +124,14 @@ export const authenticateWithFb = () => {
         );
       } else {
         const accessToken = await fbSdk.getCurrentAccessToken();
-        const accountPayload = await accountService.login(accessToken, "facebook");
-        await settings.setValue(SettingsKey.CurrentAccessToken, accountPayload!.token);
+        const accountPayload = await accountService.login(
+          accessToken,
+          "facebook"
+        );
+        await settings.setValue(
+          SettingsKey.CurrentAccessToken,
+          accountPayload!.token
+        );
         dispatch(getUserProfile());
         dispatch(
           updateAuthenticationState({
@@ -118,14 +141,18 @@ export const authenticateWithFb = () => {
         );
       }
     } catch (error) {
-      dispatch(updateAuthenticationState({ state: NetworkRequestState.FAILED, error }));
+      dispatch(
+        updateAuthenticationState({ state: NetworkRequestState.FAILED, error })
+      );
     }
   };
 };
 
 export const authenticateWithGoogle = () => {
   return async (dispatch: Function) => {
-    const ggSdk = ObjectFactory.getObjectInstance<IGoogleSDK>(FactoryKeys.IGoogleSDK);
+    const ggSdk = ObjectFactory.getObjectInstance<IGoogleSDK>(
+      FactoryKeys.IGoogleSDK
+    );
     const accountService = ObjectFactory.getObjectInstance<IAccountService>(
       FactoryKeys.IAccountService
     );
@@ -136,8 +163,14 @@ export const authenticateWithGoogle = () => {
       const signInResult = await ggSdk.signIn();
       if (signInResult && signInResult.idToken) {
         const accessToken = signInResult.idToken;
-        const accountPayload = await accountService.login(accessToken as string, "google");
-        await settings.setValue(SettingsKey.CurrentAccessToken, accountPayload?.token);
+        const accountPayload = await accountService.login(
+          accessToken as string,
+          "google"
+        );
+        await settings.setValue(
+          SettingsKey.CurrentAccessToken,
+          accountPayload?.token
+        );
         dispatch(getUserProfile());
         dispatch(
           updateAuthenticationState({
@@ -147,7 +180,44 @@ export const authenticateWithGoogle = () => {
         );
       }
     } catch (error) {
-      dispatch(updateAuthenticationState({ state: NetworkRequestState.FAILED, error }));
+      dispatch(
+        updateAuthenticationState({ state: NetworkRequestState.FAILED, error })
+      );
+    }
+  };
+};
+
+export const authenticateWithApple = () => {
+  return async (dispatch: Dispatch<any>) => {
+    const appleSdk = ObjectFactory.getObjectInstance<IAppleAuthSdk>(
+      FactoryKeys.IAppleAuthSdk
+    );
+
+    const accountService = ObjectFactory.getObjectInstance<IAccountService>(
+      FactoryKeys.IAccountService
+    );
+    const settings = ObjectFactory.getObjectInstance<ISettingsProvider>(
+      FactoryKeys.ISettingsProvider
+    );
+
+    try {
+      const userToken = await appleSdk.signIn();
+      const accountPayload = await accountService.login(userToken, "apple");
+      await settings.setValue(
+        SettingsKey.CurrentAccessToken,
+        accountPayload?.token
+      );
+      dispatch(getUserProfile());
+      dispatch(
+        updateAuthenticationState({
+          state: NetworkRequestState.SUCCESS,
+          data: accountPayload,
+        })
+      );
+    } catch (error) {
+      dispatch(
+        updateAuthenticationState({ state: NetworkRequestState.FAILED, error })
+      );
     }
   };
 };
