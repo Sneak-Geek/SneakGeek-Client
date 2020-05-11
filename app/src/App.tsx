@@ -21,7 +21,9 @@ import {
   CdnService,
 } from 'business';
 import {Provider} from 'react-redux';
+
 import {SettingsProvider, FacebookSdk, KeyExtensions, GoogleSdk} from 'common';
+
 import {AppStore} from 'store/AppStore';
 import {InAppNotification} from 'screens/InAppNotification';
 import {AppLoadingIndicator} from 'screens/AppLoadingIndicator';

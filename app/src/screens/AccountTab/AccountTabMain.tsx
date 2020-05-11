@@ -1,7 +1,7 @@
 import React from 'react';
-import { SafeAreaView, StatusBar, View, StyleSheet } from 'react-native';
-import { connect } from 'utilities/ReduxUtilities';
-import { IAppState } from 'store/AppStore';
+import {SafeAreaView, StatusBar, View, StyleSheet} from 'react-native';
+import {connect} from 'utilities/ReduxUtilities';
+import {IAppState} from 'store/AppStore';
 import {
   Profile,
   Account,
@@ -9,18 +9,21 @@ import {
   FactoryKeys,
   updateProfile,
   IAccountService,
+  ObjectFactory,
+  ISettingsProvider,
 } from 'business';
-import { themes, strings } from 'resources';
-import { AppText, BottomButton } from 'screens/Shared';
-import { ListItem, Avatar } from 'react-native-elements';
-import ImagePicker, { ImagePickerOptions } from 'react-native-image-picker';
-import { StackNavigationProp } from '@react-navigation/stack';
+import {themes, strings} from 'resources';
+import {AppText, BottomButton} from 'screens/Shared';
+import {ListItem, Avatar} from 'react-native-elements';
+import ImagePicker, {ImagePickerOptions} from 'react-native-image-picker';
+import {StackNavigationProp} from '@react-navigation/stack';
 import RouteNames from 'navigations/RouteNames';
-import { getDependency, getToken } from 'utilities';
+import {getDependency, getToken} from 'utilities';
 import {
   toggleIndicator,
   showSuccessNotification,
   showErrorNotification,
+  reset,
 } from 'actions';
 import ActionSheet from 'react-native-action-sheet';
 
@@ -31,6 +34,7 @@ type Props = {
   toggleLoading: (isLoading: boolean) => void;
   showNotification: (message: string, isError?: boolean) => void;
   updateProfile: (profile: Partial<Profile>) => void;
+  logout: () => void;
 };
 
 type Setting = {
@@ -66,7 +70,7 @@ const styles = StyleSheet.create({
   }),
   (dispatch: Function) => ({
     toggleLoading: (isLoading: boolean): void => {
-      dispatch(toggleIndicator({ isLoading, message: strings.PleaseWait }));
+      dispatch(toggleIndicator({isLoading, message: strings.PleaseWait}));
     },
     showNotification: (message: string, isError = false): void => {
       if (!isError) {
@@ -77,6 +81,9 @@ const styles = StyleSheet.create({
     },
     updateProfile: (profile: Profile): void => {
       dispatch(updateProfile(profile));
+    },
+    logout: (): void => {
+      dispatch(reset());
     },
   }),
 )
@@ -117,11 +124,16 @@ export class AccountTabMain extends React.Component<Props> {
     quality: 0.5,
   };
 
+  shouldComponentUpdate(nextProps) {
+    //Do not update after all data is cleared. Handling log out functionality.
+    return !(this.props.account && !nextProps.account);
+  }
+
   public render(): JSX.Element {
     return (
-      <SafeAreaView style={{ backgroundColor: themes.AppAccentColor, flex: 1 }}>
+      <SafeAreaView style={{backgroundColor: themes.AppAccentColor, flex: 1}}>
         <StatusBar barStyle={'dark-content'} />
-        <View style={{ flex: 1, position: 'relative' }}>
+        <View style={{flex: 1, position: 'relative'}}>
           {this._renderBasicUserData()}
           {this._renderSettingsList()}
           {this._renderLogoutButton()}
@@ -131,8 +143,8 @@ export class AccountTabMain extends React.Component<Props> {
   }
 
   private _renderBasicUserData(): JSX.Element {
-    const { account, profile } = this.props;
-    const { firstName, lastName } = profile?.userProvidedName;
+    const {account, profile} = this.props;
+    const {firstName, lastName} = profile?.userProvidedName;
 
     // check name
     const name = profile?.userProvidedName
@@ -143,8 +155,8 @@ export class AccountTabMain extends React.Component<Props> {
     const avatarUri =
       profile.userProvidedProfilePic || account.accountProfilePicByProvider;
     const avatar = avatarUri
-      ? { source: { uri: avatarUri } }
-      : { icon: { name: 'person' } };
+      ? {source: {uri: avatarUri}}
+      : {icon: {name: 'person'}};
 
     return (
       <View style={styles.headerContainer}>
@@ -172,7 +184,7 @@ export class AccountTabMain extends React.Component<Props> {
         title={setting.title}
         bottomDivider={true}
         titleStyle={themes.TextStyle.body}
-        leftIcon={{ name: setting.leftIcon, color: themes.AppPrimaryColor }}
+        leftIcon={{name: setting.leftIcon, color: themes.AppPrimaryColor}}
         onPress={setting.onClick}
       />
     ));
@@ -182,10 +194,21 @@ export class AccountTabMain extends React.Component<Props> {
     return (
       <BottomButton
         title={strings.LogOut}
-        onPress={(): void => null}
-        style={{ backgroundColor: themes.AppErrorColor }}
+        onPress={this._logoutHandler.bind(this)}
+        style={{backgroundColor: themes.AppErrorColor}}
       />
     );
+  }
+
+  private _logoutHandler(): void {
+    const settings = ObjectFactory.getObjectInstance<ISettingsProvider>(
+      FactoryKeys.ISettingsProvider,
+    );
+    settings.clear();
+    this.props.logout();
+    this.props.navigation.navigate(RouteNames.Auth.Name, {
+      screen: RouteNames.Auth.Login,
+    });
   }
 
   private _takePicture(): void {
@@ -198,7 +221,7 @@ export class AccountTabMain extends React.Component<Props> {
         name: strings.TakePicture,
         action: (): Promise<void> => this._takeCameraPhoto(),
       },
-      { name: strings.Cancel, action: (): void => null },
+      {name: strings.Cancel, action: (): void => null},
     ];
 
     ActionSheet.showActionSheetWithOptions(

@@ -12,3 +12,4 @@ export * from "./model";
 export * from "./payload";
 export * from "./reducers";
 export * from "./assets";
+export * from "./utilities";

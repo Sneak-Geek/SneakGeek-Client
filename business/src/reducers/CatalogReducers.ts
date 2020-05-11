@@ -1,7 +1,8 @@
 import { NetworkRequestState, CatalogPayload, HomePageCatalogsPayload } from "../payload";
 import { Catalog } from "../model";
 import { updateCatalogState, updateGetHomeCatalogsState } from "../actions/CatalogActions";
-import { handleActions, Action } from "redux-actions";
+import { Action } from "redux-actions";
+import { handleActionsWithReset } from "../utilities/ReduxUtilities";
 
 export type ICatalogState = {
   catalogState: {
@@ -10,43 +11,46 @@ export type ICatalogState = {
     catalogs?: Catalog[];
   };
   homepageCatalogState: {
-    state: NetworkRequestState,
+    state: NetworkRequestState;
     error?: any;
     catalogs?: {
-      Nike: Catalog,
-      Jordan: Catalog,
-      adidas: Catalog,
-      hot: Catalog
-    }
-  }
+      Nike: Catalog;
+      Jordan: Catalog;
+      adidas: Catalog;
+      hot: Catalog;
+    };
+  };
 };
 
 export const initialCatalogState: ICatalogState = {
   catalogState: {
-    state: NetworkRequestState.NOT_STARTED
+    state: NetworkRequestState.NOT_STARTED,
   },
   homepageCatalogState: {
-    state: NetworkRequestState.NOT_STARTED
-  }
+    state: NetworkRequestState.NOT_STARTED,
+  },
 };
 
-export const CatalogReducers = handleActions<ICatalogState, any>(
+export const CatalogReducers = handleActionsWithReset<ICatalogState, any>(
   {
     [`${updateCatalogState}`]: (state: ICatalogState, action: Action<CatalogPayload>) => ({
       ...state,
       catalogState: {
         state: action.payload.state,
         error: action.payload.error,
-        catalogs: action.payload.data
-      }
+        catalogs: action.payload.data,
+      },
     }),
-    [`${updateGetHomeCatalogsState}`]: (state: ICatalogState, action: Action<HomePageCatalogsPayload>) => ({
+    [`${updateGetHomeCatalogsState}`]: (
+      state: ICatalogState,
+      action: Action<HomePageCatalogsPayload>
+    ) => ({
       ...state,
       homepageCatalogState: {
         error: action.payload.error,
         state: action.payload.state,
-        catalogs: action.payload.data
-      }
+        catalogs: action.payload.data,
+      },
     }),
   },
   initialCatalogState
