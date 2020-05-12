@@ -131,9 +131,7 @@ export class LoginScreen extends React.Component<Props> {
           backgroundColor: themes.FacebookThemeColor,
           ...styles.button,
         }}
-        onPress={(): void => {
-          this.props.facebookLogin();
-        }}
+        onPress={this.props.facebookLogin.bind(this)}
       />
     );
   }
@@ -146,9 +144,7 @@ export class LoginScreen extends React.Component<Props> {
         title={strings.ContinueGoogle}
         icon={<Image source={images.Google} style={styles.iconStyle} />}
         titleStyle={{...styles.titleStyle, color: 'black'}}
-        onPress={(): void => {
-          this.props.googleLogin();
-        }}
+        onPress={this.props.googleLogin.bind(this)}
       />
     );
   }
