@@ -6,6 +6,7 @@ import {
   Image,
   ImageBackground,
   StatusBar,
+  Alert,
 } from 'react-native';
 import {Button} from 'react-native-elements';
 import {strings, themes, images} from 'resources';
@@ -14,9 +15,10 @@ import RouteNames from 'navigations/RouteNames';
 import {connect} from 'utilities/ReduxUtilities';
 import {
   authenticateWithFb,
-  Account,
   authenticateWithGoogle,
   NetworkRequestState,
+  authenticateWithApple,
+  Account,
 } from 'business';
 import {IAppState} from 'store/AppStore';
 import {AppText} from 'screens/Shared';
@@ -26,6 +28,7 @@ type Props = {
   navigation: StackNavigationProp<any>;
   facebookLogin: () => void;
   googleLogin: () => void;
+  appleLogin: () => void;
 };
 
 const styles = StyleSheet.create({
@@ -90,6 +93,9 @@ const styles = StyleSheet.create({
     googleLogin: (): void => {
       dispatch(authenticateWithGoogle());
     },
+    appleLogin: (): void => {
+      dispatch(authenticateWithApple());
+    },
   }),
 )
 export class LoginScreen extends React.Component<Props> {
@@ -101,64 +107,87 @@ export class LoginScreen extends React.Component<Props> {
           {!this.props.accountState.account && (
             <View style={{flex: 1, alignItems: 'center'}}>
               <View style={styles.buttonContainer}>
-                <Button
-                  type={'solid'}
-                  title={strings.ContinueFacebook}
-                  icon={
-                    <Image source={images.Facebook} style={styles.iconStyle} />
-                  }
-                  titleStyle={styles.titleStyle}
-                  buttonStyle={{
-                    backgroundColor: themes.FacebookThemeColor,
-                    ...styles.button,
-                  }}
-                  onPress={(): void => {
-                    this.props.facebookLogin();
-                  }}
-                />
-                <Button
-                  type={'outline'}
-                  buttonStyle={{backgroundColor: 'white', ...styles.button}}
-                  title={strings.ContinueGoogle}
-                  icon={
-                    <Image source={images.Google} style={styles.iconStyle} />
-                  }
-                  titleStyle={{...styles.titleStyle, color: 'black'}}
-                  onPress={(): void => {
-                    this.props.googleLogin();
-                  }}
-                />
-                <Button
-                  type={'outline'}
-                  buttonStyle={{
-                    backgroundColor: themes.AppPrimaryColor,
-                    ...styles.button,
-                  }}
-                  title={strings.SignUpEmail}
-                  icon={
-                    <Image
-                      source={images.Email}
-                      style={styles.emailIconStyle}
-                    />
-                  }
-                  titleStyle={styles.titleStyle}
-                  onPress={() =>
-                    this.props.navigation.push(RouteNames.Auth.EmailSignUp)
-                  }
-                />
-                <AppText.Subhead
-                  style={styles.emailLoginStyle}
-                  onPress={(): void => {
-                    this.props.navigation.push(RouteNames.Auth.EmailLogin);
-                  }}>
-                  {strings.MemberAlready}{' '}
-                  <AppText.Callout>{strings.SignIn}</AppText.Callout>
-                </AppText.Subhead>
+                {this._renderFacebookLogin()}
+                {this._renderGoogleLogin()}
+                {this._renderAppleLogin()}
+                {this._renderEmailSignUp()}
+                {this._renderEmailLogin()}
               </View>
             </View>
           )}
         </SafeAreaView>
       </ImageBackground>
+    );
+  }
+
+  private _renderFacebookLogin(): JSX.Element {
+    return (
+      <Button
+        type={'solid'}
+        title={strings.ContinueFacebook}
+        icon={<Image source={images.Facebook} style={styles.iconStyle} />}
+        titleStyle={styles.titleStyle}
+        buttonStyle={{
+          backgroundColor: themes.FacebookThemeColor,
+          ...styles.button,
+        }}
+        onPress={this.props.facebookLogin.bind(this)}
+      />
+    );
+  }
+
+  private _renderGoogleLogin() {
+    return (
+      <Button
+        type={'outline'}
+        buttonStyle={{backgroundColor: 'white', ...styles.button}}
+        title={strings.ContinueGoogle}
+        icon={<Image source={images.Google} style={styles.iconStyle} />}
+        titleStyle={{...styles.titleStyle, color: 'black'}}
+        onPress={this.props.googleLogin.bind(this)}
+      />
+    );
+  }
+
+  private _renderAppleLogin() {
+    return (
+      <Button
+        type={'outline'}
+        buttonStyle={{backgroundColor: 'white', ...styles.button}}
+        title={strings.ContinueApple}
+        icon={<Image source={images.Apple} style={styles.iconStyle} />}
+        titleStyle={{...styles.titleStyle, color: 'black'}}
+        onPress={this.props.appleLogin.bind(this)}
+      />
+    );
+  }
+
+  private _renderEmailSignUp() {
+    return (
+      <Button
+        type={'outline'}
+        buttonStyle={{
+          backgroundColor: themes.AppPrimaryColor,
+          ...styles.button,
+        }}
+        title={strings.SignUpEmail}
+        icon={<Image source={images.Email} style={styles.emailIconStyle} />}
+        titleStyle={styles.titleStyle}
+        onPress={() => this.props.navigation.push(RouteNames.Auth.EmailSignUp)}
+      />
+    );
+  }
+
+  private _renderEmailLogin() {
+    return (
+      <AppText.Subhead
+        style={styles.emailLoginStyle}
+        onPress={(): void => {
+          this.props.navigation.push(RouteNames.Auth.EmailLogin);
+        }}>
+        {strings.MemberAlready}{' '}
+        <AppText.Callout>{strings.SignIn}</AppText.Callout>
+      </AppText.Subhead>
     );
   }
 }

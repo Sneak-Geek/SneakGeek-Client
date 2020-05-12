@@ -18,6 +18,7 @@ export const AuthenticationStack = (): JSX.Element => (
       component={LoginScreen}
       options={{
         header: () => null,
+        gestureEnabled: false,
       }}
     />
     <Stack.Screen

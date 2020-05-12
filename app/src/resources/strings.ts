@@ -1,8 +1,9 @@
 export const strings = {
   SignIn: 'Đăng nhập',
   SignUp: 'Đăng kí tài khoản',
-  ContinueFacebook: 'Tiếp tục bằng Facebook',
-  ContinueGoogle: 'Tiếp tục bằng Google',
+  ContinueFacebook: 'Tiếp tục với Facebook',
+  ContinueGoogle: 'Tiếp tục với Google',
+  ContinueApple: 'Tiếp tục với Apple',
   SignUpEmail: 'Đăng kí bằng email',
   MemberAlready: 'Đã đăng kí bằng email?',
   Email: 'Email của bạn',
