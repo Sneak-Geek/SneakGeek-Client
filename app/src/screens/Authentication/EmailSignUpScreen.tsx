@@ -58,26 +58,28 @@ export class EmailSignUpScreen extends React.Component<Props, State> {
   }
 
   public componentDidUpdate(prevProps: Props): void {
-    const {
-      accountState,
-      showErrorNotification,
-      toggleLoadingIndicator,
-    } = this.props;
-    const {state} = accountState;
-    if (state === prevProps.accountState.state) {
-      return;
-    }
-
-    toggleLoadingIndicator(state === NetworkRequestState.REQUESTING);
-
-    switch (state) {
-      case NetworkRequestState.FAILED:
-        showErrorNotification(strings.InvalidLogin);
-        break;
-      case NetworkRequestState.SUCCESS:
-        break;
-      default:
-        break;
+    if(this.props.navigation.isFocused()){
+      const {
+        accountState,
+        showErrorNotification,
+        toggleLoadingIndicator,
+      } = this.props;
+      const {state} = accountState;
+      if (state === prevProps.accountState.state) {
+        return;
+      }
+  
+      toggleLoadingIndicator(state === NetworkRequestState.REQUESTING);
+  
+      switch (state) {
+        case NetworkRequestState.FAILED:
+          showErrorNotification(strings.InvalidLogin);
+          break;
+        case NetworkRequestState.SUCCESS:
+          break;
+        default:
+          break;
+      }
     }
   }
 

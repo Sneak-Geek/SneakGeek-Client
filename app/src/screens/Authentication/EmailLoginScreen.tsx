@@ -5,6 +5,7 @@ import {
   TextInput,
   View,
   StatusBar,
+  Alert,
 } from 'react-native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { themes, strings } from 'resources';
@@ -66,6 +67,7 @@ export class EmailLoginScreen extends React.Component<Props, State> {
   };
 
   public componentDidUpdate(prevProps: Props) {
+    if (this.props.navigation.isFocused()) {
     const {
       navigation,
       accountState,
@@ -73,22 +75,35 @@ export class EmailLoginScreen extends React.Component<Props, State> {
       toggleLoadingIndicator,
     } = this.props;
     const { state } = accountState;
-    if (state === prevProps.accountState.state) {
-      return;
-    }
-
-    toggleLoadingIndicator(state === NetworkRequestState.REQUESTING);
-
-    switch (state) {
-      case NetworkRequestState.FAILED:
-        console.log(accountState.error);
-        showErrorNotification(strings.InvalidLogin);
-        break;
-      case NetworkRequestState.SUCCESS:
-        navigation.push(RouteNames.Tab.Name);
-        break;
-      default:
-        break;
+      if (state === prevProps.accountState.state) {
+        return;
+      }
+      toggleLoadingIndicator(state === NetworkRequestState.REQUESTING);
+      const currentError = this.props.accountState.error;
+      switch (state) {
+        case NetworkRequestState.FAILED:
+          const provider= currentError?.response?.data?.provider;
+          switch (provider) {
+            case strings.GoogleString:
+              Alert.alert(strings.AccountCreatedByGoogle);
+              break;
+            case strings.FacebookString:
+              Alert.alert(strings.AccountCreatedByFacebook);
+              break;
+            case strings.EmailString:
+              Alert.alert(strings.AccountCreatedByEmail);
+              break;
+            default:
+              showErrorNotification(strings.InvalidLogin);
+              break;
+          }
+          break;
+        case NetworkRequestState.SUCCESS:
+          navigation.push(RouteNames.Tab.Name);
+          break;
+        default:
+          break;
+      }
     }
   }
 

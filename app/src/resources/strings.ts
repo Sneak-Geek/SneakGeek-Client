@@ -10,6 +10,12 @@ export const strings = {
   Password: 'Mật khẩu',
   ForgotPassword: 'Quên mật khẩu?',
   InvalidLogin: 'Email hoặc mật khẩu không đúng',
+  GoogleString: 'google',
+  FacebookString: 'facebook',
+  EmailString: 'email',
+  AccountCreatedByEmail: 'Bạn đã tạo tài khoản bằng Email. Xin vui lòng ấn Đăng nhập.',
+  AccountCreatedByGoogle: 'Bạn đã tạo tài khoản bằng Google. Xin vui lòng tiếp tục với Google.',
+  AccountCreatedByFacebook: 'Bạn đã tạo tài khoản bằng Facebook. Xin vui lòng tiếp tục với Facebook.',
   TermsOfServiceAgreement:
     'Khi đăng nhập, bạn đã đồng ý với điều khoản sử dụng của chúng tôi',
   SeeMore: 'Xem thêm',

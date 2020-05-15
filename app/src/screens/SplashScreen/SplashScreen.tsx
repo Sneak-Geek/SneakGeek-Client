@@ -32,22 +32,23 @@ export class SplashScreen extends React.Component<Props> {
   }
 
   public componentDidUpdate(prev: Props): void {
-    const {accountState, navigation} = this.props;
-    if (accountState.state === prev.accountState.state) {
-      return;
-    }
-
-    if (accountState.state === NetworkRequestState.FAILED) {
-      navigation.navigate(RouteNames.Auth.Name, {
-        screen: RouteNames.Auth.Login,
-      });
-      RNSplashScreen.hide();
-    } else if (
-      accountState.state === NetworkRequestState.SUCCESS &&
-      accountState.account
-    ) {
-      navigation.navigate(RouteNames.Tab.Name);
-      RNSplashScreen.hide();
+    if(this.props.navigation.isFocused()){
+      const {accountState, navigation} = this.props;
+      if (accountState.state === prev.accountState.state) {
+        return;
+      }
+      if (accountState.state === NetworkRequestState.FAILED) {
+        navigation.navigate(RouteNames.Auth.Name, {
+          screen: RouteNames.Auth.Login,
+        });
+        RNSplashScreen.hide();
+      } else if (
+        accountState.state === NetworkRequestState.SUCCESS &&
+        accountState.account
+      ) {
+        navigation.navigate(RouteNames.Tab.Name);
+        RNSplashScreen.hide();
+      }
     }
   }
 
