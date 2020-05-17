@@ -62,7 +62,7 @@ export class SellOrderEdit extends React.Component<Props, State> {
               this.setState({
                 updatedOrder: {
                   ...this.state.updatedOrder,
-                  sellNowPrice: price,
+                  sellPrice: price,
                 },
               });
             }}

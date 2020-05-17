@@ -1,10 +1,16 @@
-import { SellOrder, BuyOrder, Transaction } from "../../../model";
+import {
+  SellOrder,
+  BuyOrder,
+  Transaction,
+  PopulatedSellOrder,
+  PopulatedBuyOrder
+} from "../../../model";
 
 export type PaymentType = "intl" | "domestic";
 export type OrderType = "BuyOrder" | "SellOrder";
 export type SellOrderEditInput = {
   orderId: string;
-  sellNowPrice?: number;
+  sellPrice?: number;
   productCondition?: {
     isTainted?: boolean;
     isOutsoleWorn?: boolean;
@@ -16,15 +22,14 @@ export type SellOrderEditInput = {
 export interface IOrderService {
   createSellOrder(token: string, sellOrder: SellOrder): Promise<void>;
   createBuyOrder(token: string, buyOrder: Partial<BuyOrder>): Promise<void>;
-  getSizePricesMatching: (token: string, orderType: OrderType, shoeId: string) => Promise<{ price: number, size: string }[]>;
-  getMatchingSellOrder: (token: string, shoeId: string, size: string) => Promise<SellOrder>;
+  getPriceSizeMap: (token: string, orderType: OrderType, shoeId: string) => Promise<{ price: number, size: string }[]>;
   getTotalFee: (token: string, sellOrderId: string) => Promise<{ shippingFee: number, shoePrice: number }>;
   getCheckoutUrlForPurchase: (token: string, paymentType: PaymentType, sellOrderId: string, buyOrderId?: string) => Promise<string>;
-  getUserOrders: (token: string, type: OrderType) => Promise<Array<BuyOrder> | Array<SellOrder>>;
+  getUserOrders: (token: string, type: OrderType) => Promise<Array<PopulatedBuyOrder> | Array<PopulatedSellOrder>>;
   getTransactionBySellOrder: (token: string, sellOrderId: string) => Promise<Transaction>;
-  getSellOrderInfoForBuy(token: string, shoeId: string, shoeSize: string): Promise<{
+  getLowestSellOrderAndHighestBuyOrder(token: string, shoeId: string, shoeSize: string): Promise<{
     lowestSellOrder?: SellOrder;
-    highestBuyOrderPrice?: number;
+    highestBuyOrder?: BuyOrder;
   }>;
   updateSellOrder: (token: string, order: SellOrderEditInput) => Promise<void>;
   cancelSellOrder: (token: string, orderId: string) => Promise<void>;

@@ -107,19 +107,19 @@ export class SizeSelection extends React.Component<Props, State> {
     this.props.toggleLoading(true);
 
     try {
-      const priceData: {
+      const priceSizeMap: {
         price: number;
         size: string;
-      }[] = await orderService.getSizePricesMatching(
+      }[] = await orderService.getPriceSizeMap(
         getToken(),
         this.orderType,
         this.shoe._id,
       );
 
-      const priceMap = new Map<string, number>();
-      priceData.forEach(({price, size}) => priceMap.set(size, price));
+      const result = new Map<string, number>();
+      priceSizeMap.forEach(({price, size}) => result.set(size, price));
 
-      this.setState({priceMap});
+      this.setState({priceMap: result});
     } catch (error) {
       console.log(error);
       const errorMessage =

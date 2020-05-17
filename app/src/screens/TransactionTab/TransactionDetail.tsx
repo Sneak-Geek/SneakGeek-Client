@@ -17,14 +17,15 @@ import {RouteProp} from '@react-navigation/native';
 import {RootStackParams} from 'navigations/RootStack';
 import {
   SellOrder,
+  PopulatedSellOrder,
   Shoe,
   Transaction,
-  PriceData,
   IOrderService,
   FactoryKeys,
   PaymentStatus,
   OrderStatus,
   BuyOrder,
+  PopulatedBuyOrder,
   OrderType,
   getOrders,
 } from 'business';
@@ -209,7 +210,7 @@ export class TransactionDetail extends React.Component<Props, State> {
           <TitleContentDescription
             emphasizeTitle={true}
             title={strings.Price}
-            content={toCurrencyString(this._getShoePrice().price)}
+            content={toCurrencyString(this._getPrice())}
           />
           <TitleContentDescription
             emphasizeTitle={true}
@@ -265,14 +266,14 @@ export class TransactionDetail extends React.Component<Props, State> {
 
   private _getShoe(): Shoe {
     return this.orderType === 'BuyOrder'
-      ? ((this.state.currentOrder as BuyOrder).shoe as Shoe)
-      : ((this.state.currentOrder as SellOrder).shoeId as Shoe);
+      ? (this.state.currentOrder as PopulatedBuyOrder).shoe
+      : (this.state.currentOrder as PopulatedSellOrder).shoe
   }
 
-  private _getShoePrice(): PriceData {
+  private _getPrice(): number {
     return this.orderType === 'BuyOrder'
-      ? ((this.state.currentOrder as BuyOrder).buyPrice as PriceData)
-      : ((this.state.currentOrder as SellOrder).sellNowPrice as PriceData);
+      ? ((this.state.currentOrder as PopulatedBuyOrder).buyPrice)
+      : ((this.state.currentOrder as PopulatedSellOrder).sellPrice);
   }
 
   private _getProductDescription(): string {
@@ -283,12 +284,13 @@ export class TransactionDetail extends React.Component<Props, State> {
     const {isNewShoe, productCondition} = this.state.currentOrder as SellOrder;
 
     const condition = isNewShoe ? strings.NewCondition : strings.OldCondition;
-    const tainted = productCondition.isTainted ? strings.Tainted : '';
-    const outsoleWorn = productCondition.isOutsoleWorn
+    const tainted = productCondition?.isTainted ? strings.Tainted : '';
+    const outsoleWorn = productCondition?.isOutsoleWorn
       ? strings.OutsoleWorn
       : '';
+    const boxCondition = productCondition?.boxCondition || ''; // TODO: figure out the right way to handle boxCondition value?
 
-    return [condition, productCondition.boxCondition, tainted, outsoleWorn]
+    return [condition, boxCondition, tainted, outsoleWorn]
       .filter((t) => t !== '')
       .join(', ');
   }

@@ -1,13 +1,19 @@
 import { IOrderService, PaymentType, OrderType, SellOrderEditInput } from "./IOrderService";
 import { BaseService } from "../BaseService";
-import { SellOrder, BuyOrder, Transaction } from "../../../model";
+import {
+  SellOrder,
+  PopulatedSellOrder,
+  BuyOrder,
+  PopulatedBuyOrder,
+  Transaction
+} from "../../../model";
 
 export class OrderService extends BaseService implements IOrderService {
   public async createSellOrder(token: string, sellOrder: SellOrder): Promise<void> {
     const response = await this.apiClient.getInstance().post(`/order/sell-order/new`, {
       shoeId: sellOrder.shoeId,
       shoeSize: sellOrder.shoeSize,
-      sellNowPrice: (sellOrder.sellNowPrice as number),
+      sellPrice: sellOrder.sellPrice,
       productCondition: sellOrder.productCondition,
       pictures: sellOrder.pictures,
       isNewShoe: sellOrder.isNewShoe
@@ -21,27 +27,14 @@ export class OrderService extends BaseService implements IOrderService {
   }
 
 
-  public async getSizePricesMatching(token: string, orderType: OrderType, shoeId: string): Promise<{ price: number; size: string; }[]> {
-    const response = await this.apiClient.getInstance().get(`/order/size-price-matching?orderType=${orderType}&shoeId=${shoeId}`, {
+  public async getPriceSizeMap(token: string, orderType: OrderType, shoeId: string): Promise<{ price: number; size: string; }[]> {
+    const response = await this.apiClient.getInstance().get(`/order/shoe-price-size-map?orderType=${orderType}&shoeId=${shoeId}`, {
       headers: {
         authorization: token
       }
     });
 
     return response.data as { price: number, size: string }[];
-  }
-
-  public async getMatchingSellOrder(token: string, shoeId: string, size: string): Promise<SellOrder> {
-    const response = await this.apiClient.getInstance().get(
-      `/order/sell-order/get-lowest-by-shoeid-and-shoesize?shoeId=${shoeId}&shoeSize=${size}`,
-      {
-        headers: {
-          authorization: token
-        }
-      }
-    );
-
-    return response.data as SellOrder;
   }
 
   public async getTotalFee(token: string, sellOrderId: string): Promise<{ shippingFee: number, shoePrice: number }> {
@@ -58,7 +51,7 @@ export class OrderService extends BaseService implements IOrderService {
   }
 
   public async getCheckoutUrlForPurchase(token: string, paymentType: PaymentType, sellOrder: string, buyOrder?: string): Promise<string> {
-    let url = `/order/buy-order/pay?paymentType=${paymentType}&sellOrderId=${sellOrder}`;
+    let url = `/order/pay?paymentType=${paymentType}&sellOrderId=${sellOrder}`;
     if (buyOrder) {
       url += `?buyOrderId=${buyOrder}`;
     }
@@ -75,7 +68,7 @@ export class OrderService extends BaseService implements IOrderService {
     return response.data;
   }
 
-  public async getUserOrders(token: string, type: OrderType): Promise<Array<BuyOrder> | Array<SellOrder>> {
+  public async getUserOrders(token: string, type: OrderType): Promise<Array<PopulatedBuyOrder> | Array<PopulatedSellOrder>> {
     const response = await this.apiClient.getInstance().get(`/order?orderType=${type}`, {
       headers: {
         authorization: token
@@ -95,8 +88,8 @@ export class OrderService extends BaseService implements IOrderService {
     return response.data.transaction;
   }
 
-  public async getSellOrderInfoForBuy(token: string, shoeId: string, shoeSize: string) {
-    const queryUrl = `/order/sell-order/get-sell-info-for-buy?shoeId=${shoeId}&shoeSize=${shoeSize}`;
+  public async getLowestSellOrderAndHighestBuyOrder(token: string, shoeId: string, shoeSize: string) {
+    const queryUrl = `/order/lowest-sell-order-and-highest-buy-order?shoeId=${shoeId}&shoeSize=${shoeSize}`;
 
     const response = await this.apiClient.getInstance().get(queryUrl, {
       headers: {

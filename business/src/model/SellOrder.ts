@@ -1,15 +1,15 @@
-import { PriceData } from "./PriceData";
-import { Shoe } from "./Shoe";
 import { OrderStatus } from "../assets";
+import { Profile } from "./Profile";
+import { Shoe } from "./Shoe";
 
 export type SellOrder = {
   _id?: string,
   id?: string,
   sellerId: string,
-  shoeId: string | Shoe,
+  shoeId: string,
   shoeSize: string,
   isNewShoe: boolean,
-  sellNowPrice: number | PriceData,
+  sellPrice: number,
   productCondition?: {
     boxCondition?: string,
     isTainted?: boolean,
@@ -21,4 +21,9 @@ export type SellOrder = {
   status: OrderStatus,
   pictures?: Array<string>,
   isDeleted?: boolean
+}
+
+export type PopulatedSellOrder = SellOrder & {
+  seller: Profile,
+  shoe: Shoe,
 }
