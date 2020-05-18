@@ -256,19 +256,21 @@ export class NewSellOrder extends React.Component<Props, State> {
     let uploadedPictures: string[] = [];
     this.props.toggleLoading(true);
 
-    try {
-      uploadedPictures = await cdnService.uploadImages(
-        token,
-        order?.pictures.map((i) => ({
-          uri: i,
-          type: 'image/png',
-        })),
-      );
-      order.pictures = uploadedPictures;
-    } catch (error) {
-      this.props.showErrorNotification(strings.ErrorPleaseTryAgain);
-      this.props.toggleLoading(false);
-      return;
+    if (order.pictures.length > 0) {
+      try {
+        uploadedPictures = await cdnService.uploadImages(
+          token,
+          order?.pictures.map((i) => ({
+            uri: i,
+            type: 'image/png',
+          })),
+        );
+        order.pictures = uploadedPictures;
+      } catch (error) {
+        this.props.showErrorNotification(strings.ErrorPleaseTryAgain);
+        this.props.toggleLoading(false);
+        return;
+      }
     }
 
     try {

@@ -5,6 +5,8 @@ export const strings = {
   ContinueGoogle: 'Tiếp tục với Google',
   ContinueApple: 'Tiếp tục với Apple',
   SignUpEmail: 'Đăng kí bằng email',
+  EmailRegisteredEng: 'This email has been registered.',
+  EmailRegisteredVN: 'Tài khoản với email này đã tồn tại. Xin vui lòng đăng nhập.',
   MemberAlready: 'Đã đăng kí bằng email?',
   Email: 'Email của bạn',
   Password: 'Mật khẩu',
@@ -13,7 +15,7 @@ export const strings = {
   GoogleString: 'google',
   FacebookString: 'facebook',
   EmailString: 'email',
-  AccountCreatedByEmail: 'Bạn đã tạo tài khoản bằng Email. Xin vui lòng ấn Đăng nhập.',
+  AccountCreatedByEmail: 'Bạn đã tạo tài khoản bằng email. Xin vui lòng ấn đăng nhập.',
   AccountCreatedByGoogle: 'Bạn đã tạo tài khoản bằng Google. Xin vui lòng tiếp tục với Google.',
   AccountCreatedByFacebook: 'Bạn đã tạo tài khoản bằng Facebook. Xin vui lòng tiếp tục với Facebook.',
   TermsOfServiceAgreement:
