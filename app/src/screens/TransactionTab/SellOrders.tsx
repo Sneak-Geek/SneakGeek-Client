@@ -5,7 +5,6 @@ import {
   PopulatedSellOrder,
   OrderStatus,
   getOrders,
-  Shoe,
 } from 'business';
 import {connect, toCurrencyString} from 'utilities';
 import {IAppState} from 'store/AppStore';
