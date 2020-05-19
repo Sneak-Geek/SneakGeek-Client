@@ -8,7 +8,7 @@ import {AppText} from 'screens/Shared';
 import {themes, strings} from 'resources';
 import {TextInput} from 'react-native-gesture-handler';
 import {toCurrencyString} from 'utilities';
-import {SellOrder, PriceData} from 'business';
+import {SellOrder} from 'business';
 
 type State = {
   isModalOpen: boolean;
@@ -69,10 +69,8 @@ export class ProductSetPrice extends React.Component<Props, State> {
 
     const isEditOrder =
       typeof props.order !== 'undefined' &&
-      typeof props.order.sellNowPrice !== 'number';
-    const price = isEditOrder
-      ? (props.order.sellNowPrice as PriceData)?.price
-      : (props.order.sellNowPrice as number);
+      typeof props.order.sellPrice !== 'number';
+    const price = props.order.sellPrice;
 
     this.state = {
       isModalOpen: false,

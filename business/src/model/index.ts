@@ -6,6 +6,5 @@ export * from "./ShoeAuthentication";
 export * from "./Review";
 export * from "./SellOrder";
 export * from "./BuyOrder";
-export * from "./PriceData";
 export * from "./Address";
 export * from "./Transaction";

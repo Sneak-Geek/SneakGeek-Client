@@ -1,21 +1,24 @@
-import { Shoe } from "./Shoe";
 import { OrderStatus } from "../assets";
-import { PriceData } from "./PriceData";
+import { Shoe } from "./Shoe";
+import { Profile } from "./Profile";
 import { SellOrder } from "./SellOrder";
+import { Transaction } from "./Transaction";
 
 export type BuyOrder = {
   _id: string,
   buyerId: string,
-  shoe: string | Shoe,
+  shoeId: string,
   shoeSize: string,
-  /**
-   * buyPrice's type:
-   * - string: ID of the PriceData
-   * - PriceData: populated object
-   * - number: for object creation purpose
-   */
-  buyPrice: string | PriceData | number,
-  sellOrder?: string | SellOrder,
-  status?: OrderStatus,
+  isNewShoe: boolean,
+  buyPrice: number, 
+  sellOrderId?: string,
+  status: OrderStatus,
   transactionId?: string
+}
+
+export type PopulatedBuyOrder = BuyOrder & {
+  buyer: Profile,
+  shoe: Shoe,
+  sellOrder?: SellOrder,
+  transaction?: Transaction,
 }
