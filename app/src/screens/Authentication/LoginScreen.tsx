@@ -122,7 +122,6 @@ export class LoginScreen extends React.Component<Props> {
   }
 
   private _renderFacebookLogin(): JSX.Element {
-    // this._logInUsingDifferentProviderAlert(strings.FacebookString);
     return (
       <Button
         type={'solid'}
@@ -139,7 +138,6 @@ export class LoginScreen extends React.Component<Props> {
   }
 
   private _renderGoogleLogin() {
-    // this._logInUsingDifferentProviderAlert(strings.GoogleString);
     return (
       <Button
         type={'outline'}

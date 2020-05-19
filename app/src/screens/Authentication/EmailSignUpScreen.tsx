@@ -70,7 +70,7 @@ export class EmailSignUpScreen extends React.Component<Props, State> {
       if (state === prevProps.accountState.state) {
         return;
       }
-      
+
       if (
         accountState.state === NetworkRequestState.SUCCESS &&
         accountState.account
@@ -79,22 +79,14 @@ export class EmailSignUpScreen extends React.Component<Props, State> {
       }
   
       toggleLoadingIndicator(state === NetworkRequestState.REQUESTING);
-  
-      switch (state) {
-        case NetworkRequestState.FAILED:
-          const errorMessage = accountState.error?.response?.data?.message;
-          switch(errorMessage){
-            case strings.EmailRegisteredEng:
-              Alert.alert(strings.EmailRegisteredVN);
-              break;
-            default:
-              showErrorNotification(strings.InvalidLogin);
-              break;
-          }
-          break;
-        case NetworkRequestState.SUCCESS:
+
+      const errorMessage = accountState.error?.response?.data?.message;
+      switch(errorMessage){
+        case strings.EmailRegisteredEng:
+          Alert.alert(strings.EmailRegisteredVN);
           break;
         default:
+          showErrorNotification(strings.InvalidLogin);
           break;
       }
     }

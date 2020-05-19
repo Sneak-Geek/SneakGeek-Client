@@ -80,30 +80,26 @@ export class EmailLoginScreen extends React.Component<Props, State> {
       }
       toggleLoadingIndicator(state === NetworkRequestState.REQUESTING);
       const currentError = this.props.accountState.error;
-      switch (state) {
-        case NetworkRequestState.FAILED:
-          const provider= currentError?.response?.data?.provider;
-          switch (provider) {
-            case strings.GoogleString:
-              Alert.alert(strings.AccountCreatedByGoogle);
-              break;
-            case strings.FacebookString:
-              Alert.alert(strings.AccountCreatedByFacebook);
-              break;
-            case strings.EmailString:
-              Alert.alert(strings.AccountCreatedByEmail);
-              break;
-            default:
-              showErrorNotification(strings.InvalidLogin);
-              break;
-          }
-          break;
-        case NetworkRequestState.SUCCESS:
-          navigation.push(RouteNames.Tab.Name);
-          break;
-        default:
-          break;
+
+      if(state === NetworkRequestState.FAILED){
+        const provider= currentError?.response?.data?.provider;
+        switch (provider) {
+          case strings.GoogleString:
+            Alert.alert(strings.AccountCreatedByGoogle);
+            break;
+          case strings.FacebookString:
+            Alert.alert(strings.AccountCreatedByFacebook);
+            break;
+          case strings.EmailString:
+            Alert.alert(strings.AccountCreatedByEmail);
+            break;
+          default:
+            showErrorNotification(strings.InvalidLogin);
+            break;
+        }
       }
+      else if( state === NetworkRequestState.SUCCESS)
+        navigation.push(RouteNames.Tab.Name);
     }
   }
 
