@@ -34,7 +34,6 @@ import {
   Shoe,
   SellOrder,
   BuyOrder,
-  PriceData,
 } from 'business';
 import RouteNames from 'navigations/RouteNames';
 
@@ -429,7 +428,7 @@ export class ProductDetail extends React.Component<Props> {
           `Cao: ${
             highestBuyOrder
               ? Humanize.compactInteger(
-                  (highestBuyOrder.buyPrice as PriceData).price,
+                  highestBuyOrder.buyPrice,
                   2,
                 )
               : '-'
@@ -461,7 +460,7 @@ export class ProductDetail extends React.Component<Props> {
           `Thấp: ${
             lowestSellOrder
               ? Humanize.compactInteger(
-                  (lowestSellOrder.sellNowPrice as PriceData).price,
+                  lowestSellOrder.sellPrice,
                   2,
                 )
               : '-'

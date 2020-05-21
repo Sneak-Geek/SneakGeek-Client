@@ -58,7 +58,7 @@ export class ProductSellSummary extends React.Component<Props> {
   }
 
   private _renderPriceSummary(): JSX.Element {
-    const price = this.props.orderSummary.sellNowPrice || '';
+    const price = this.props.orderSummary.sellPrice || '';
 
     return (
       <View style={styles.sectionContainer}>

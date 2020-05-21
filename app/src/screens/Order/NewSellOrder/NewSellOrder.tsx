@@ -74,7 +74,7 @@ export class NewSellOrder extends React.Component<Props, State> {
 
     this.state = {
       sellOrder: {
-        sellNowPrice: this._price,
+        sellPrice: this._price,
         shoeId: this._shoe._id,
         shoeSize: this._size,
         isNewShoe: undefined,
@@ -134,7 +134,7 @@ export class NewSellOrder extends React.Component<Props, State> {
         ),
         canProceed: (): boolean => {
           const {sellOrder} = this.state;
-          return sellOrder.sellNowPrice !== undefined;
+          return sellOrder.sellPrice !== undefined;
         },
       },
       {
@@ -399,10 +399,10 @@ export class NewSellOrder extends React.Component<Props, State> {
     }));
   }
 
-  private _setShoePrice(sellNowPrice: number): void {
+  private _setShoePrice(sellPrice: number): void {
     this.setState((prevState) => ({
       ...prevState,
-      sellOrder: {...prevState.sellOrder, sellNowPrice},
+      sellOrder: {...prevState.sellOrder, sellPrice},
     }));
   }
 

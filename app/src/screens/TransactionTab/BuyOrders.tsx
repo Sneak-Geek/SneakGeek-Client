@@ -1,11 +1,10 @@
 import React from 'react';
 import {
   NetworkRequestState,
-  PriceData,
   OrderStatus,
   getOrders,
-  Shoe,
   BuyOrder,
+  PopulatedBuyOrder
 } from 'business';
 import {connect, toCurrencyString} from 'utilities';
 import {IAppState} from 'store/AppStore';
@@ -39,7 +38,7 @@ const styles = StyleSheet.create({
 type Props = {
   buyOrderState: {
     state: NetworkRequestState;
-    orders: BuyOrder[];
+    orders: PopulatedBuyOrder[];
     error?: unknown;
   };
 
@@ -97,8 +96,8 @@ export class BuyOrders extends React.Component<Props> {
     );
   }
 
-  private _renderOrder(order: BuyOrder): JSX.Element {
-    const shoe = order.shoe as Shoe;
+  private _renderOrder(order: PopulatedBuyOrder): JSX.Element {
+    const shoe = order.shoe;
     let status: string;
     let color: string;
 
@@ -136,7 +135,7 @@ export class BuyOrders extends React.Component<Props> {
             <AppText.Subhead style={{marginBottom: 5}}>
               {strings.Price}:{' '}
               <AppText.Body>
-                {toCurrencyString((order.buyPrice as PriceData).price)}
+                {toCurrencyString(order.buyPrice)}
               </AppText.Body>
             </AppText.Subhead>
             <AppText.Subhead style={{marginBottom: 5}}>

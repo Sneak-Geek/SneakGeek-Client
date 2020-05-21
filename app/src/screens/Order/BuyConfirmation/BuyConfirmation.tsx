@@ -13,7 +13,7 @@ import {RootStackParams} from 'navigations/RootStack';
 import {Shoe, Profile, SellOrder, BuyOrder} from 'business';
 import {connect, getDependency, getToken, toCurrencyString} from 'utilities';
 import {IAppState} from 'store/AppStore';
-import {FactoryKeys, IOrderService, PaymentType, PriceData} from 'business/src';
+import {FactoryKeys, IOrderService, PaymentType} from 'business/src';
 import {toggleIndicator, showSuccessNotification} from 'actions';
 import {Divider, Tooltip, Icon} from 'react-native-elements';
 import {StackNavigationProp} from '@react-navigation/stack';
@@ -61,7 +61,7 @@ type Props = {
 
 type State = {
   lowestSellOrder?: SellOrder;
-  highestBuyOrderPrice?: number;
+  highestBuyOrder?: BuyOrder;
   totalFee: {
     shippingFee: number;
     shoePrice: number;
@@ -98,13 +98,13 @@ export class BuyConfirmation extends React.Component<Props, State> {
 
     this.state = {
       lowestSellOrder: null,
-      highestBuyOrderPrice: null,
+      highestBuyOrder: null,
       totalFee: {
         shippingFee: 0,
         shoePrice: 0,
       },
       newBuyOrder: {
-        shoe: this.shoe._id,
+        shoeId: this.shoe._id,
         shoeSize: this.size,
       },
       isBuyNow: this._shouldRenderBuyNow(),
@@ -115,27 +115,27 @@ export class BuyConfirmation extends React.Component<Props, State> {
   }
 
   public componentDidMount(): void {
-    this._getMatchingSellOrder();
+    this._getLowestSellOrderAndHighestBuyOrder();
   }
 
   private _shouldRenderBuyNow(): boolean {
     return typeof this.minPrice !== 'undefined' && this.minPrice > 0;
   }
 
-  private async _getMatchingSellOrder(): Promise<void> {
+  private async _getLowestSellOrderAndHighestBuyOrder(): Promise<void> {
     this.props.toggleLoading(true);
     try {
       const {
         lowestSellOrder,
-        highestBuyOrderPrice,
-      } = await this.orderService.getSellOrderInfoForBuy(
+        highestBuyOrder,
+      } = await this.orderService.getLowestSellOrderAndHighestBuyOrder(
         getToken(),
         this.shoe._id,
         this.size,
       );
 
       this.setState(
-        {lowestSellOrder, highestBuyOrderPrice},
+        {lowestSellOrder, highestBuyOrder},
         this._getTotalFee.bind(this),
       );
     } catch (error) {
@@ -208,17 +208,14 @@ export class BuyConfirmation extends React.Component<Props, State> {
           <OrderSectionWithTitle
             title={strings.HighestBuyOrderPrice}
             value={
-              toCurrencyString(this.state.highestBuyOrderPrice?.toString()) ||
+              toCurrencyString(this.state.highestBuyOrder?.buyPrice.toString()) ||
               '-'
             }
             tooltip={strings.HighestBuyOrderExplanation}
           />
           <OrderSectionWithTitle
             title={strings.BuyNowPrice}
-            value={
-              (this.state.lowestSellOrder
-                ?.sellNowPrice as PriceData)?.price?.toString() || '-'
-            }
+            value={ this.state.lowestSellOrder?.sellPrice.toString() || '-' }
           />
           {this._renderSetPriceBox()}
         </View>
