@@ -5,6 +5,7 @@ import {
   TextInput,
   View,
   StatusBar,
+  Alert,
 } from 'react-native';
 import {StackNavigationProp} from '@react-navigation/stack';
 import {themes, strings} from 'resources';
@@ -13,6 +14,7 @@ import {connect} from 'utilities/ReduxUtilities';
 import {authenticateWithEmail, NetworkRequestState, Account} from 'business';
 import {IAppState} from 'store/AppStore';
 import {showErrorNotification, toggleIndicator} from 'actions';
+import RouteNames from 'navigations/RouteNames';
 
 type State = {
   email: string;
@@ -58,26 +60,35 @@ export class EmailSignUpScreen extends React.Component<Props, State> {
   }
 
   public componentDidUpdate(prevProps: Props): void {
-    const {
-      accountState,
-      showErrorNotification,
-      toggleLoadingIndicator,
-    } = this.props;
-    const {state} = accountState;
-    if (state === prevProps.accountState.state) {
-      return;
-    }
+    if(this.props.navigation.isFocused()){
+      const {
+        accountState,
+        showErrorNotification,
+        toggleLoadingIndicator,
+      } = this.props;
+      const {state} = accountState;
+      if (state === prevProps.accountState.state) {
+        return;
+      }
 
-    toggleLoadingIndicator(state === NetworkRequestState.REQUESTING);
+      if (
+        accountState.state === NetworkRequestState.SUCCESS &&
+        accountState.account
+      ) {
+        this.props.navigation.push(RouteNames.Tab.Name);
+      }
+  
+      toggleLoadingIndicator(state === NetworkRequestState.REQUESTING);
 
-    switch (state) {
-      case NetworkRequestState.FAILED:
-        showErrorNotification(strings.InvalidLogin);
-        break;
-      case NetworkRequestState.SUCCESS:
-        break;
-      default:
-        break;
+      const errorMessage = accountState.error?.response?.data?.message;
+      switch(errorMessage){
+        case strings.EmailRegisteredEng:
+          Alert.alert(strings.EmailRegisteredVN);
+          break;
+        default:
+          showErrorNotification(strings.InvalidLogin);
+          break;
+      }
     }
   }
 
