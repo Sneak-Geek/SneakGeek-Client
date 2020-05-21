@@ -147,24 +147,26 @@ export class HomeTabMain extends React.Component<Props> {
   }
 
   public componentDidUpdate(prevProps: Props): void {
-    const prevState = prevProps.homeCatalogState.state;
-    const {homeCatalogState, toggleLoadingIndicator} = this.props;
-
-    if (prevState === homeCatalogState.state) {
-      return;
-    }
-
-    switch (homeCatalogState.state) {
-      case NetworkRequestState.NOT_STARTED:
-        break;
-      case NetworkRequestState.REQUESTING:
-        toggleLoadingIndicator(true, strings.PleaseWait);
-        break;
-      case NetworkRequestState.FAILED:
-      case NetworkRequestState.SUCCESS:
-      default:
-        toggleLoadingIndicator(false, '');
-        break;
+    if(this.props.navigation.isFocused()){
+      const prevState = prevProps.homeCatalogState.state;
+      const {homeCatalogState, toggleLoadingIndicator} = this.props;
+  
+      if (prevState === homeCatalogState.state) {
+        return;
+      }
+  
+      switch (homeCatalogState.state) {
+        case NetworkRequestState.NOT_STARTED:
+          break;
+        case NetworkRequestState.REQUESTING:
+          toggleLoadingIndicator(true, strings.PleaseWait);
+          break;
+        case NetworkRequestState.FAILED:
+        case NetworkRequestState.SUCCESS:
+        default:
+          toggleLoadingIndicator(false, '');
+          break;
+      }
     }
   }
 
