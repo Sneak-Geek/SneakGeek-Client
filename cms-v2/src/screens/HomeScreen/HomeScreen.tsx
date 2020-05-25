@@ -1,0 +1,75 @@
+import React, { useState } from 'react';
+import { Switch, Route, Redirect } from 'react-router';
+import DashboardIcon from '@material-ui/icons/Dashboard';
+import ListIcon from '@material-ui/icons/List';
+import { Sidebar, Topbar } from './Components';
+import { makeStyles, Theme, createStyles, Container } from '@material-ui/core';
+import { ProductScreen } from '../ProductScreen';
+
+const useStyles = makeStyles((theme: Theme) =>
+  createStyles({
+    root: {
+      display: 'flex',
+      paddingTop: 56,
+    },
+    appBar: {
+      zIndex: theme.zIndex.drawer + 1,
+      transition: theme.transitions.create(['width', 'margin'], {
+        easing: theme.transitions.easing.sharp,
+        duration: theme.transitions.duration.leavingScreen,
+      }),
+    },
+    menuButton: {
+      marginRight: 36,
+    },
+    hide: {
+      display: 'none',
+    },
+    content: {
+      flexGrow: 1,
+      padding: theme.spacing(3),
+    },
+  }),
+);
+
+export const HomeScreen = (): JSX.Element => {
+  const appPages = [
+    {
+      title: 'Dashboard',
+      href: '/dashboard',
+      icon: <DashboardIcon />,
+    },
+    {
+      title: 'Sản phẩm',
+      href: '/products',
+      icon: <ListIcon />,
+    },
+  ];
+  const classes = useStyles();
+  const [drawerOpen, setDrawerOpen] = useState(false);
+
+  return (
+    <div className={classes.root}>
+      <Topbar onMenuButtonClicked={() => setDrawerOpen(!drawerOpen)} />
+      <Sidebar pages={appPages} isDrawerOpen={drawerOpen} />
+
+      <Container>
+        <Switch>
+          <Route path={'/'} exact render={() => <Redirect to={'/dashboard'} />} />
+          <Route path={'/dashboard'} render={() => <h3>Tổng quan</h3>} />
+          <Route exact path={'/products'} render={() => <ProductScreen />} />
+          {/* <Route exact path={'/catalogs'} render={(props) => <CatalogScreen {...props} />} />
+        <Route
+          path={'/catalogs/:id'}
+          render={(props) => <CatalogManagementScreen {...props} />}
+        />
+        
+        <Route path={'/products/snkg'} render={() => <h3>Hi</h3>} />
+        <Route path={'/products/request'} render={() => <h3>Yêu cầu từ người dùng</h3>} />
+        <Route path={'/users'} render={() => <h3>Quản lý người dùng</h3>} />
+        <Route path={'/checking'} render={() => <SneakersCheckingScreen />} /> */}
+        </Switch>
+      </Container>
+    </div>
+  );
+};
