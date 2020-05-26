@@ -58,16 +58,6 @@ export const HomeScreen = (): JSX.Element => {
           <Route path={'/'} exact render={() => <Redirect to={'/dashboard'} />} />
           <Route path={'/dashboard'} render={() => <h3>Tổng quan</h3>} />
           <Route exact path={'/products'} render={() => <ProductScreen />} />
-          {/* <Route exact path={'/catalogs'} render={(props) => <CatalogScreen {...props} />} />
-        <Route
-          path={'/catalogs/:id'}
-          render={(props) => <CatalogManagementScreen {...props} />}
-        />
-        
-        <Route path={'/products/snkg'} render={() => <h3>Hi</h3>} />
-        <Route path={'/products/request'} render={() => <h3>Yêu cầu từ người dùng</h3>} />
-        <Route path={'/users'} render={() => <h3>Quản lý người dùng</h3>} />
-        <Route path={'/checking'} render={() => <SneakersCheckingScreen />} /> */}
         </Switch>
       </Container>
     </div>

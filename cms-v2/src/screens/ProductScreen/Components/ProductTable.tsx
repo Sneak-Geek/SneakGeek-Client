@@ -14,12 +14,15 @@ import {
   Icon,
   IconButton,
   TablePagination,
+  Fab,
 } from '@material-ui/core';
 import { Shoe, IShoeService, ObjectFactory, FactoryKeys } from 'business';
 import { SearchInput } from '../../../shared';
 import { getToken } from '../../../utilities';
+import AddIcon from '@material-ui/icons/Add';
 
 const useStyles = makeStyles((theme: Theme) => ({
+  root: {},
   content: {
     padding: 0,
   },
@@ -37,6 +40,12 @@ const useStyles = makeStyles((theme: Theme) => ({
   total: {
     marginLeft: theme.spacing(4),
     marginBottom: theme.spacing(2),
+  },
+  fab: {
+    display: 'flex',
+    position: 'fixed',
+    bottom: 50,
+    right: 50,
   },
 }));
 
@@ -106,14 +115,23 @@ export const ProductTable = (): JSX.Element => {
   });
 
   const fetchShoes = async (keyword: string = state.keyword) => {
-    const { shoes, count } = await shoeService.searchShoes(getToken(), keyword, 0);
+    const { shoes, count } = await shoeService.searchShoes(
+      getToken(),
+      keyword,
+      state.currentPage,
+    );
     setState({ ...state, shoes, total: count });
   };
 
-  const onSearch: React.ChangeEventHandler<HTMLInputElement> = (event) => {
+  const onKeywordChange: React.ChangeEventHandler<HTMLInputElement> = (event) => {
     const text = event.target.value;
-    setState({ ...state, keyword: text });
+    setState({ ...state, keyword: text, currentPage: 0 });
     fetchShoes(text);
+  };
+
+  const onChangePage = (_: any, page: number) => {
+    setState({ ...state, currentPage: page });
+    fetchShoes();
   };
 
   useEffect(() => {
@@ -123,13 +141,13 @@ export const ProductTable = (): JSX.Element => {
   });
 
   return (
-    <div>
+    <div className={classes.root}>
       <Typography variant={'h2'} className={classes.title}>
         Tất cả sản phẩm
       </Typography>
       <Card>
         <CardContent className={classes.content}>
-          <SearchInput onChange={onSearch} />
+          <SearchInput onChange={onKeywordChange} />
           <Typography variant={'body1'} className={classes.total}>
             {state.total} kết quả
           </Typography>
@@ -138,13 +156,16 @@ export const ProductTable = (): JSX.Element => {
       </Card>
       <TablePagination
         component={'div'}
-        count={Math.ceil(state.total / 10)}
+        count={state.total}
         page={state.currentPage}
-        onChangePage={() => {}}
+        onChangePage={onChangePage}
         rowsPerPageOptions={[10]}
         rowsPerPage={10}
         onChangeRowsPerPage={() => {}}
       />
+      <Fab color={'primary'} aria-label={'add'} className={classes.fab}>
+        <AddIcon />
+      </Fab>
     </div>
   );
 };
