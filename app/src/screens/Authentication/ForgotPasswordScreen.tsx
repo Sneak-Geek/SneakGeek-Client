@@ -2,7 +2,7 @@ import React from 'react';
 import { View, StyleSheet, TextInput, SafeAreaView, FlatList, Alert, ScrollView, Dimensions} from 'react-native';
 import { AppText, BottomButton } from 'screens/Shared';
 import { strings, themes } from 'resources';
-import { getDependency } from 'utilities';
+import { getDependency, isValidEmail, isValidPassword } from 'utilities';
 import { IAccountService } from 'business/src';
 import { FactoryKeys } from 'business';
 import { StackNavigationProp } from '@react-navigation/stack';
@@ -17,12 +17,18 @@ enum Status {
   SUCCESS,
 }
 
+enum ScreenType {
+  EMAIL_SCREEN,
+  PASSCODE_SCREEN,
+  PASSWORD_SCREEN,
+}
+
 type State = {
-  currentScreen: number;
+  currentScreen: ScreenType;
   currentScreenStatus: Status;
   email: string;
-  passCode: string;
-  passWord: string;
+  passcode: string;
+  password: string;
   reenteredPassWord: string;
 }
 
@@ -62,15 +68,18 @@ const styles = StyleSheet.create({
     ...themes.TextStyle.callout,
     paddingLeft: 15,
     flex: 1,
+  },
+  bottomButtonStyle: {
+    backgroundColor: themes.AppPrimaryColor, 
+    position:'absolute',
+    marginBottom: 35
   }
 });
 
 export class ForgotPasswordScreen extends React.Component<Props, State> {
-  private readonly _accountService = getDependency<IAccountService>(
-    FactoryKeys.IAccountService,
-  ); 
-  private _childFlatList: FlatList<ForgotPasswordComponents>;
 
+  private readonly _accountService = getDependency<IAccountService>(FactoryKeys.IAccountService); 
+  private _childFlatList: FlatList<ForgotPasswordComponents>;
   private childComponents: ForgotPasswordComponents[];
 
   constructor(props: Props){
@@ -79,33 +88,22 @@ export class ForgotPasswordScreen extends React.Component<Props, State> {
       currentScreenStatus: Status.ERROR,
       currentScreen: 0,
       email: '',
-      passCode: '',
-      passWord: '',
+      passcode: '',
+      password: '',
       reenteredPassWord:'',
     };
     this.childComponents = [
       {
-        render: (): JSX.Element => {return this._renderChildComponent(strings.ForgotPasswordStep1,undefined,strings.EmailStringCap)},
-        canProceed: (): boolean => {
-          const regEx = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/
-          return Boolean(this.state.email.match(regEx) || this.state.email === ''
-        )}
+        render: (): JSX.Element => { return this._renderChildComponent(strings.FillInEmail,undefined,strings.EmailStringCap) },
+        canProceed: (): boolean => { return Boolean(isValidEmail(this.state.email)); }
       },
       {
-        render: (): JSX.Element => {return this._renderChildComponent(strings.ForgotPasswordStep2a,strings.ForgotPasswordStep2b,strings.PassCode)},
-        canProceed: (): boolean => {
-          return Boolean(
-            true
-          );
-        }
+        render: (): JSX.Element => { return this._renderChildComponent(strings.ForgotPasswordTokenVerification,strings.FillInPasscode,strings.Passcode) },
+        canProceed: (): boolean => { return true; }
       },
       {
-        render: (): JSX.Element => {return this._renderChildComponent(strings.ForgotPasswordStep3,undefined,strings.Password, strings.ReenterPassword)},
-        canProceed: (): boolean => {
-          return Boolean(
-            this.state.passWord===this.state.reenteredPassWord
-          );
-        }
+        render: (): JSX.Element => { return this._renderChildComponent(strings.FillInPassword,undefined,strings.Password, strings.ReenterPassword) },
+        canProceed: (): boolean => { return Boolean(this.state.password === this.state.reenteredPassWord && isValidPassword(this.state.password,1)); }
       },
     ];
   }
@@ -138,145 +136,162 @@ export class ForgotPasswordScreen extends React.Component<Props, State> {
     );
   }
 
-  private _renderChildComponent(text1: string = " ", text2: string = undefined, inputType1:string= undefined, inputType2: string = undefined): JSX.Element {
+  private _renderChildComponent(firstComponentRenderer: string = " ", secondComponentRenderer: string = undefined, thirdComponentRenderer:string= undefined, fourthComponentRenderer: string = undefined): JSX.Element {
     return(
         <View style={styles.bodyInfoContainer}>
-          {text1 && <AppText.Body style={styles.textStyle}>{text1}</AppText.Body>}
-          {text2 && <AppText.Body style={styles.textStyle}>{text2}</AppText.Body>}
-          {inputType1 && this._renderEmailPlaceHolder(inputType1)}
-          {inputType2 && this._renderEmailPlaceHolder(inputType2)}  
+          {firstComponentRenderer && <AppText.Body style={styles.textStyle}>{firstComponentRenderer}</AppText.Body>}
+          {secondComponentRenderer && <AppText.Body style={styles.textStyle}>{secondComponentRenderer}</AppText.Body>}
+          {thirdComponentRenderer && this._renderInputPlaceHolder(thirdComponentRenderer)}
+          {fourthComponentRenderer && this._renderInputPlaceHolder(fourthComponentRenderer)}  
         </View>
     );
   }
 
-  private _renderEmailPlaceHolder(inputType: string): JSX.Element{
-    let inputPlaceHolder: JSX.Element;
-
+  private _renderInputPlaceHolder(inputType: string): JSX.Element{
     switch(inputType){
       case strings.EmailStringCap:
-        inputPlaceHolder = 
-        <View style={styles.emailContainer}>
-          <TextInput
-            autoFocus={true}
-            style={this.childComponents[this.state.currentScreen].canProceed() ? styles.input : styles.incorrectEmailStyle}
-            placeholder={strings.Email}
-            value={this.state.email}
-            onChangeText={(email) => this.setState({ email })}
-            selectionColor={themes.AppSecondaryColor}
-            autoCapitalize={'none'}
-            
-          />
-        </View>
-        break;
-      case strings.PassCode:
-        inputPlaceHolder = 
-        <View style={styles.emailContainer}>
-          <TextInput
-            autoFocus={true}
-            style={styles.input}
-            placeholder={strings.PassCode}
-            value={this.state.passCode}
-            onChangeText={(passCode) => this.setState({ passCode })}
-            selectionColor={themes.AppSecondaryColor}
-            autoCapitalize={'none'}
-          />
-        </View>
-        break;
+        return (
+          <View style={styles.emailContainer}>
+            <TextInput
+              autoFocus={true}
+              style={this.childComponents[this.state.currentScreen].canProceed() ? styles.input : styles.incorrectEmailStyle}
+              placeholder={strings.Email}
+              value={this.state.email}
+              onChangeText={(email) => this.setState({ email })}
+              selectionColor={themes.AppSecondaryColor}
+              autoCapitalize={'none'}
+            />
+          </View>
+        )
+      case strings.Passcode:
+        return (
+          <View style={styles.emailContainer}>
+            <TextInput
+              autoFocus={true}
+              style={styles.input}
+              placeholder={strings.Passcode}
+              value={this.state.passcode}
+              onChangeText={(passcode) => this.setState({ passcode })}
+              selectionColor={themes.AppSecondaryColor}
+              autoCapitalize={'none'}
+            />
+          </View>
+        )
       case strings.Password:
-        inputPlaceHolder = 
-        <View style={styles.emailContainer}>
-          <TextInput
-            autoFocus={true}
-            style={styles.input}
-            secureTextEntry={true}
-            placeholder={strings.Password}
-            value={this.state.passWord}
-            onChangeText={(passWord) => this.setState({ passWord })}
-            selectionColor={themes.AppSecondaryColor}
-            autoCapitalize={'none'}
-          />
-        </View>
-        break;
+        return(
+          <View style={styles.emailContainer}>
+            <TextInput
+              autoFocus={true}
+              style={styles.input}
+              secureTextEntry={true}
+              placeholder={strings.Password}
+              value={this.state.password}
+              onChangeText={(password) => this.setState({ password })}
+              selectionColor={themes.AppSecondaryColor}
+              autoCapitalize={'none'}
+            />
+          </View>
+        )
       case strings.ReenterPassword:
-        inputPlaceHolder = 
-        <View style={styles.emailContainer}>
-          <TextInput
-            autoFocus={true}
-            style={styles.input}
-            placeholder={strings.ReenterPassword}
-            secureTextEntry={true}
-            value={this.state.reenteredPassWord}
-            onChangeText={(reenteredPassWord) => this.setState({ reenteredPassWord })}
-            selectionColor={themes.AppSecondaryColor}
-            autoCapitalize={'none'}
-          />
-        </View>
-        break;
+        return (
+          <View style={styles.emailContainer}>
+            <TextInput
+              autoFocus={true}
+              style={styles.input}
+              placeholder={strings.ReenterPassword}
+              secureTextEntry={true}
+              value={this.state.reenteredPassWord}
+              onChangeText={(reenteredPassWord) => this.setState({ reenteredPassWord })}
+              selectionColor={themes.AppSecondaryColor}
+              autoCapitalize={'none'}
+            />
+          </View>
+        )
       default:
         break;
     }
-    return inputPlaceHolder;
   }
 
   private _renderBottomButton(title: string){
-    return(<BottomButton title={title}  style={{ backgroundColor: themes.AppPrimaryColor, position:'absolute' }} onPress={this._handleContinueButton.bind(this)}></BottomButton>);
+    return(<BottomButton title={title}  style={styles.bottomButtonStyle} onPress={this._handleContinueButton.bind(this)}></BottomButton>);
   }
 
   private async _handleContinueButton() {
     const {currentScreen} = this.state;
-    const shouldContinue = this.childComponents[
-      currentScreen
-    ].canProceed();
-    const canGoNext = shouldContinue && this.state.currentScreen < this.childComponents.length - 1;
-    const nextIndex = this.state.currentScreen + 1;
+    const shouldContinue = this.childComponents[currentScreen].canProceed();
 
     switch(currentScreen){
-      case 0:
-        if(!shouldContinue){
-          Alert.alert(strings.NotEmailType);
-          return;
-        }
-          await this._getForgotPasswordToken();
-          if(this.state.currentScreenStatus===Status.ERROR){
-            Alert.alert(strings.EmailNotFound);
-            return;
-          }
-          break;
-      case 1:
-        await this._verifyForgotPasswordToken();
-        if(this.state.currentScreenStatus===Status.ERROR){
-          Alert.alert(strings.ResetPasswordVerificationError);
-          return;
-        }
+      case ScreenType.EMAIL_SCREEN:
+        await this._handleEmailScreenAction(shouldContinue);
         break;
-      case 2:
-        if(!shouldContinue){
-          Alert.alert(strings.UnmatchedPasswords);
-          return;
-        }
-        await this._resetPassword();
-        if(this.state.currentScreenStatus===Status.ERROR){
-          Alert.alert(strings.Error);
-          return;
-        }else{
-          Alert.alert(strings.PasswordResetSuccess);
-        }
+      case ScreenType.PASSCODE_SCREEN:
+        await this._handlePasscodeScreenAction();
+        break;
+      case ScreenType.PASSWORD_SCREEN:
+        await this._handlePasswordScreenAction(shouldContinue);
         break;
       default:
         break;
     }
-    
-    if(canGoNext && this.state.currentScreenStatus === Status.SUCCESS)
+
+    const canGoNext = shouldContinue && this.state.currentScreen < this.childComponents.length - 1;
+    if(canGoNext && this.state.currentScreenStatus === Status.SUCCESS){
+      const nextIndex = this.state.currentScreen + 1;
       this.setState({currentScreen: nextIndex, currentScreenStatus: Status.ERROR}, () => { 
         this._childFlatList.scrollToIndex({
         index: nextIndex,
         animated: true,
-      });});
-
-      if(this.state.currentScreenStatus === Status.SUCCESS && this.state.currentScreen === 2){
-        this.props.navigation.navigate(RouteNames.Auth.EmailLogin);
-      }
+        });
+      });
     }
+
+    if(this.state.currentScreenStatus === Status.SUCCESS && this.state.currentScreen === ScreenType.PASSWORD_SCREEN){
+      this.props.navigation.navigate(RouteNames.Auth.EmailLogin);
+    }
+  }
+
+  private async _handleEmailScreenAction(shouldContinue: boolean){
+    if(!shouldContinue){
+      Alert.alert(strings.NotEmailType);
+      this.setState({currentScreenStatus: Status.ERROR});
+      return;
+    }
+    await this._getForgotPasswordToken();
+    if(this.state.currentScreenStatus===Status.ERROR){
+      Alert.alert(strings.EmailNotFound);
+      return;
+    }
+  }
+
+  private async _handlePasscodeScreenAction(){
+    await this._verifyForgotPasswordToken();
+    if(this.state.currentScreenStatus === Status.ERROR){
+      Alert.alert(strings.ResetPasswordVerificationError);
+    }
+  }
+
+  private async _handlePasswordScreenAction(shouldContinue: boolean){
+    if(!shouldContinue){
+      this.setState({currentScreenStatus: Status.ERROR});
+      this._notifyPasswordError();
+      return;
+    }
+    await this._resetPassword();
+    if(this.state.currentScreenStatus === Status.ERROR){
+      this._notifyPasswordError();
+    }else{
+      Alert.alert(strings.PasswordResetSuccess);
+    }
+  }
+
+  private _notifyPasswordError(){
+    if (!isValidPassword(this.state.password,1))
+      Alert.alert(strings.InvalidPasswordErrorType1)
+    else if(this.state.password !== this.state.reenteredPassWord) 
+      Alert.alert(strings.UnmatchedPasswords);
+    else
+      Alert.alert(strings.Error);
+  }
 
   private async _getForgotPasswordToken(){
     try{
@@ -289,7 +304,7 @@ export class ForgotPasswordScreen extends React.Component<Props, State> {
 
   private async _verifyForgotPasswordToken(){
     try{
-      await this._accountService.verifyForgotPasswordToken(this.state.passCode);
+      await this._accountService.verifyForgotPasswordToken(this.state.passcode);
       this.setState({currentScreenStatus: Status.SUCCESS});
     }catch (error){
       this.setState({currentScreenStatus: Status.ERROR});
@@ -298,7 +313,7 @@ export class ForgotPasswordScreen extends React.Component<Props, State> {
 
   private async _resetPassword(){
     try{
-      await this._accountService.resetPassword(this.state.passWord, this.state.passCode);
+      await this._accountService.resetPassword(this.state.password, this.state.passcode);
       this.setState({currentScreenStatus: Status.SUCCESS});
     }catch(error){
       this.setState({currentScreenStatus: Status.ERROR});
