@@ -88,4 +88,16 @@ export class AccountService extends BaseService implements IAccountService {
 
     return response.data.profile as Profile;
   }
+
+  public getForgotPasswordToken(email: string): Promise<string> {
+    return this.apiClient.getInstance().post("/account/send-confirmation-token", {email});
+  }
+
+  public verifyForgotPasswordToken(token: string): Promise<string> {
+    return this.apiClient.getInstance().post("/account/verify-token", {token});
+  }
+
+  public resetPassword(newPassword: string, token: string): Promise<string>{
+    return this.apiClient.getInstance().patch("/account/set-password", {newPassword,token});
+  }
 }
