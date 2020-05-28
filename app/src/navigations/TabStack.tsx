@@ -22,7 +22,7 @@ import {
 } from 'business';
 import {CatalogSeeMore, NotificationsScreen} from 'screens/HomeTab';
 import {createMaterialTopTabNavigator} from '@react-navigation/material-top-tabs';
-import {SellOrders, TransactionDetail, BuyOrders} from 'screens/TransactionTab';
+import {SellOrderHistory, OrderDetail, BuyOrders} from 'screens/TransactionTab';
 import {ProductRequest} from 'screens/SearchTab';
 import {getDependency, getToken, connect} from 'utilities';
 import {KeyExtensions} from 'common';
@@ -171,8 +171,8 @@ const TransactionTopTabs = (): JSX.Element => (
       }}
     />
     <TopTab.Screen
-      component={SellOrders}
-      name={RouteNames.Tab.TransactionTab.Sell}
+      component={SellOrderHistory}
+      name={RouteNames.Tab.TransactionTab.SellOrderHistory}
       options={{
         title: strings.SellHistory,
       }}
@@ -193,7 +193,7 @@ const TransactionTab = (): JSX.Element => (
     />
     <TransactionStack.Screen
       name={RouteNames.Tab.TransactionTab.Detail}
-      component={TransactionDetail}
+      component={OrderDetail}
       options={{
         headerShown: false,
         headerTransparent: true,

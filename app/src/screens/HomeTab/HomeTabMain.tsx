@@ -147,14 +147,14 @@ export class HomeTabMain extends React.Component<Props> {
   }
 
   public componentDidUpdate(prevProps: Props): void {
-    if(this.props.navigation.isFocused()){
+    if (this.props.navigation.isFocused()) {
       const prevState = prevProps.homeCatalogState.state;
       const {homeCatalogState, toggleLoadingIndicator} = this.props;
-  
+
       if (prevState === homeCatalogState.state) {
         return;
       }
-  
+
       switch (homeCatalogState.state) {
         case NetworkRequestState.NOT_STARTED:
           break;

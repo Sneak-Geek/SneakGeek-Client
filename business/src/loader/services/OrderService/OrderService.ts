@@ -68,7 +68,7 @@ export class OrderService extends BaseService implements IOrderService {
     return response.data;
   }
 
-  public async getUserOrders(token: string, type: OrderType): Promise<Array<PopulatedBuyOrder> | Array<PopulatedSellOrder>> {
+  public async getUserPopulatedOrders(token: string, type: OrderType): Promise<Array<PopulatedBuyOrder> | Array<PopulatedSellOrder>> {
     const response = await this.apiClient.getInstance().get(`/order?orderType=${type}`, {
       headers: {
         authorization: token
@@ -133,7 +133,7 @@ export class OrderService extends BaseService implements IOrderService {
     return response.data;
   }
 
-  public async getSellOrderById(token: string, orderId: string): Promise<SellOrder> {
+  public async getPopulatedSellOrderById(token: string, orderId: string): Promise<PopulatedSellOrder> {
     const response = await this.apiClient.getInstance().get(`/order/sell-order/${orderId}`, {
       headers: {
         authorization: token

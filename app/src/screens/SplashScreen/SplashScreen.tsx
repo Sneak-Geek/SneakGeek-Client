@@ -32,7 +32,7 @@ export class SplashScreen extends React.Component<Props> {
   }
 
   public componentDidUpdate(prev: Props): void {
-    if(this.props.navigation.isFocused()){
+    if (this.props.navigation.isFocused()) {
       const {accountState, navigation} = this.props;
       if (accountState.state === prev.accountState.state) {
         return;

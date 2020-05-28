@@ -13,6 +13,8 @@ import {
   BuyOrder,
   OrderType,
   Review,
+  PopulatedSellOrder,
+  PopulatedBuyOrder,
 } from 'business';
 import {OrderStack} from './OrderStack';
 import {SplashScreen} from 'screens/SplashScreen';
@@ -30,10 +32,10 @@ export type RootStackParams = {
     sellOrder: SellOrder;
     paymentType: PaymentType;
   };
-  TransactionSellOrder: undefined;
+  SellOrderHistory: undefined;
   TransactionBuyOrder: undefined;
-  TransactionDetail: {
-    order?: SellOrder | BuyOrder;
+  OrderDetail: {
+    order?: PopulatedSellOrder | PopulatedBuyOrder;
     orderId?: string;
     orderType: OrderType;
   };

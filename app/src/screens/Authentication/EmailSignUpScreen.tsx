@@ -60,7 +60,7 @@ export class EmailSignUpScreen extends React.Component<Props, State> {
   }
 
   public componentDidUpdate(prevProps: Props): void {
-    if(this.props.navigation.isFocused()){
+    if (this.props.navigation.isFocused()) {
       const {
         accountState,
         showErrorNotification,
@@ -77,11 +77,11 @@ export class EmailSignUpScreen extends React.Component<Props, State> {
       ) {
         this.props.navigation.push(RouteNames.Tab.Name);
       }
-  
+
       toggleLoadingIndicator(state === NetworkRequestState.REQUESTING);
 
       const errorMessage = accountState.error?.response?.data?.message;
-      switch(errorMessage){
+      switch (errorMessage) {
         case strings.EmailRegisteredEng:
           Alert.alert(strings.EmailRegisteredVN);
           break;
