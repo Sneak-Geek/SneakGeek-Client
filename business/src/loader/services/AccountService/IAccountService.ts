@@ -19,4 +19,7 @@ export interface IAccountService {
   ): Promise<{ account: Account } | undefined>;
   getUserProfile(accessToken: string): Promise<Profile | undefined>;
   updateProfile(token: string, userProfile: Partial<Profile>): Promise<Profile>;
+  getForgotPasswordToken(email: string): Promise<string>;
+  verifyForgotPasswordToken(token: string): Promise<string>;
+  resetPassword(newPassword: string, token: string): Promise<string>;
 }
