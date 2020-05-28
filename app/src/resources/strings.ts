@@ -26,6 +26,21 @@ export const strings = {
     'Bạn đã tạo tài khoản bằng Google. Xin vui lòng tiếp tục với Google.',
   AccountCreatedByFacebook:
     'Bạn đã tạo tài khoản bằng Facebook. Xin vui lòng tiếp tục với Facebook.',
+  FillInEmail:
+    'Để khôi phục lại mật khẩu, bạn cần điền địa chỉ email của tài khoản đăng nhập:',
+  ForgotPasswordTokenVerification:
+    'Email chứa mã code để đặt lại mật khẩu đã được gửi đến hòm thư của bạn.',
+  FillInPasscode: 'Nhập mã code trong email của bạn vào đây:',
+  FillInPassword: 'Điền mật khẩu mới cho tài khoản của bạn:',
+  ResetPasswordVerificationError: 'Mã xác thực không chính xác.',
+  UnmatchedPasswords: 'Mật khẩu không trùng khớp.',
+  PasswordResetSuccess: 'Thay đổi mật khẩu thành công.',
+  NotEmailType: 'Hãy điền lại email.',
+  InvalidPasswordErrorType1: 'Mật khẩu cần ít nhất 8 ký tự, trong đó có ít nhất 1 chữ và 1 chữ số.',
+  InvalidPasswordErrorType2: 'Mật khẩu cần ít nhất 8 ký tự, trong đó có ít nhất 1 chữ, 1 số và 1 ký tự đặc biệt.',
+  InvalidPasswordErrorType3: 'Mật khẩu cần ít nhất 8 ký tự, trong đó có ít nhất 1 chữ in hoa, 1 chữ in thường, và 1 chữ số.',
+  InvalidPasswordErrorType4: 'Mật khẩu cần ít nhất 8 ký tự, trong đó có ít nhất 1 chữ in hoa, 1 chữ in thường, 1 chữ số, và 1 ký tự đặc biệt.',
+  InvalidPasswordErrorType5: 'Mật khẩu cần ít nhất 10 ký tự, trong đó có ít nhất 1 chữ in hoa, 1 chữ in thường, 1 chữ số, và 1 ký tự đặc biệt.',
   TermsOfServiceAgreement:
     'Khi đăng nhập, bạn đã đồng ý với điều khoản sử dụng của chúng tôi',
   SeeMore: 'Xem thêm',
