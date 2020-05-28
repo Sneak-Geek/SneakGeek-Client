@@ -22,7 +22,7 @@ import {
 } from 'business';
 import {IAppState} from 'store/AppStore';
 import {AppText} from 'screens/Shared';
-import { AccountService } from 'business/src';
+import {AccountService} from 'business/src';
 
 type Props = {
   accountState: {account: Account; state: NetworkRequestState; error?: any};
@@ -155,16 +155,16 @@ export class LoginScreen extends React.Component<Props> {
       const {accountState, navigation} = this.props;
       const currentError = accountState.error;
       const prevError = prevProps.accountState.error;
-      
+
       if (
         accountState.state === NetworkRequestState.SUCCESS &&
         accountState.account
       ) {
         navigation.push(RouteNames.Tab.Name);
       }
-      
+
       if (currentError && currentError !== prevError) {
-        const provider= currentError?.response?.data?.provider;
+        const provider = currentError?.response?.data?.provider;
         switch (provider) {
           case strings.GoogleString:
             Alert.alert(strings.AccountCreatedByGoogle);

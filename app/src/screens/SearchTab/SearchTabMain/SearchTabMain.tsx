@@ -283,7 +283,9 @@ export class SearchTabMain extends React.Component<Props, State> {
       <View onTouchStart={(): void => Keyboard.dismiss()}>
         <FlatList
           data={this.state.shoes}
-          keyExtractor={(item: Shoe, index: number): string => `${index}${item._id}`}
+          keyExtractor={(item: Shoe, index: number): string =>
+            `${index}${item._id}`
+          }
           renderItem={({item}): JSX.Element => (
             <ColumnShoeCard
               shoe={item}

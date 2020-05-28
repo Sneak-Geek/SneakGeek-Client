@@ -427,10 +427,7 @@ export class ProductDetail extends React.Component<Props> {
           'Bán',
           `Cao: ${
             highestBuyOrder
-              ? Humanize.compactInteger(
-                  highestBuyOrder.buyPrice,
-                  2,
-                )
+              ? Humanize.compactInteger(highestBuyOrder.buyPrice, 2)
               : '-'
           }`,
           'cart-arrow-up',
@@ -459,10 +456,7 @@ export class ProductDetail extends React.Component<Props> {
           'Mua',
           `Thấp: ${
             lowestSellOrder
-              ? Humanize.compactInteger(
-                  lowestSellOrder.sellPrice,
-                  2,
-                )
+              ? Humanize.compactInteger(lowestSellOrder.sellPrice, 2)
               : '-'
           }`,
           'cart-arrow-down',

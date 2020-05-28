@@ -1,3 +1,3 @@
-export * from './SellOrders';
-export * from './TransactionDetail';
+export * from './SellOrderHistory';
+export * from './OrderDetail';
 export * from './BuyOrders';

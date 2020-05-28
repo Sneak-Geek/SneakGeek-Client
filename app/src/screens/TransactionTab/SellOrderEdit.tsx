@@ -1,7 +1,7 @@
 import React from 'react';
 import {View, ScrollView, StyleSheet} from 'react-native';
 import {ProductConditionExtra} from 'screens/Product/ProductConditionExtra';
-import {SellOrder, SellOrderEditInput} from 'business';
+import {PopulatedSellOrder, SellOrderEditInput} from 'business';
 import {ProductSetPrice} from 'screens/Product/ProductSetPrice';
 import {BottomButton} from 'screens/Shared';
 import {themes, strings} from 'resources';
@@ -16,7 +16,7 @@ const styles = StyleSheet.create({
 });
 
 type Props = {
-  order: SellOrder;
+  order: PopulatedSellOrder;
   onUpdateOrder: (updatedOrder: SellOrderEditInput) => any;
 };
 

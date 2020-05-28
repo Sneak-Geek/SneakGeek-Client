@@ -7,14 +7,14 @@ import {
   StatusBar,
   Alert,
 } from 'react-native';
-import { StackNavigationProp } from '@react-navigation/stack';
-import { themes, strings } from 'resources';
-import { BottomButton, AppText, DismissKeyboardView } from 'screens/Shared';
+import {StackNavigationProp} from '@react-navigation/stack';
+import {themes, strings} from 'resources';
+import {BottomButton, AppText, DismissKeyboardView} from 'screens/Shared';
 import RouteNames from 'navigations/RouteNames';
-import { connect } from 'utilities/ReduxUtilities';
-import { authenticateWithEmail, NetworkRequestState, Account } from 'business';
-import { IAppState } from 'store/AppStore';
-import { showErrorNotification, toggleIndicator } from 'actions';
+import {connect} from 'utilities/ReduxUtilities';
+import {authenticateWithEmail, NetworkRequestState, Account} from 'business';
+import {IAppState} from 'store/AppStore';
+import {showErrorNotification, toggleIndicator} from 'actions';
 
 type State = {
   email: string;
@@ -49,7 +49,7 @@ type Props = StateProps &
   (dispatch: Function) => {
     return {
       toggleLoadingIndicator: (isLoading: boolean, message?: string) => {
-        dispatch(toggleIndicator({ isLoading, message }));
+        dispatch(toggleIndicator({isLoading, message}));
       },
       showErrorNotification: (message: string) => {
         dispatch(showErrorNotification(message));
@@ -68,21 +68,21 @@ export class EmailLoginScreen extends React.Component<Props, State> {
 
   public componentDidUpdate(prevProps: Props) {
     if (this.props.navigation.isFocused()) {
-    const {
-      navigation,
-      accountState,
-      showErrorNotification,
-      toggleLoadingIndicator,
-    } = this.props;
-    const { state } = accountState;
+      const {
+        navigation,
+        accountState,
+        showErrorNotification,
+        toggleLoadingIndicator,
+      } = this.props;
+      const {state} = accountState;
       if (state === prevProps.accountState.state) {
         return;
       }
       toggleLoadingIndicator(state === NetworkRequestState.REQUESTING);
       const currentError = this.props.accountState.error;
 
-      if(state === NetworkRequestState.FAILED){
-        const provider= currentError?.response?.data?.provider;
+      if (state === NetworkRequestState.FAILED) {
+        const provider = currentError?.response?.data?.provider;
         switch (provider) {
           case strings.GoogleString:
             Alert.alert(strings.AccountCreatedByGoogle);
@@ -97,19 +97,19 @@ export class EmailLoginScreen extends React.Component<Props, State> {
             showErrorNotification(strings.InvalidLogin);
             break;
         }
-      }
-      else if( state === NetworkRequestState.SUCCESS)
+      } else if (state === NetworkRequestState.SUCCESS) {
         navigation.push(RouteNames.Tab.Name);
+      }
     }
   }
 
   public render(): JSX.Element {
     return (
-      <SafeAreaView style={{ flex: 1, backgroundColor: 'white' }}>
+      <SafeAreaView style={{flex: 1, backgroundColor: 'white'}}>
         <StatusBar barStyle={'dark-content'} />
         <DismissKeyboardView style={styles.container}>
-          <View style={{ flex: 1 }}>
-            <View style={{ paddingHorizontal: 40 }}>
+          <View style={{flex: 1}}>
+            <View style={{paddingHorizontal: 40}}>
               {this._renderEmail()}
               {this._renderPassword()}
               {this._renderForgot()}
@@ -122,7 +122,7 @@ export class EmailLoginScreen extends React.Component<Props, State> {
   }
 
   private _renderEmail(): JSX.Element {
-    const { email } = this.state;
+    const {email} = this.state;
     return (
       <View style={styles.inputContainer}>
         <TextInput
@@ -130,7 +130,7 @@ export class EmailLoginScreen extends React.Component<Props, State> {
           style={styles.input}
           placeholder={strings.Email}
           value={email}
-          onChangeText={(email) => this.setState({ email })}
+          onChangeText={(email) => this.setState({email})}
           selectionColor={themes.AppPrimaryColor}
           autoCapitalize={'none'}
         />
@@ -139,14 +139,14 @@ export class EmailLoginScreen extends React.Component<Props, State> {
   }
 
   private _renderPassword() {
-    const { password } = this.state;
+    const {password} = this.state;
     return (
       <View style={styles.inputContainer}>
         <TextInput
           style={styles.input}
           placeholder={strings.Password}
           value={password}
-          onChangeText={(password) => this.setState({ password })}
+          onChangeText={(password) => this.setState({password})}
           selectionColor={themes.AppPrimaryColor}
           secureTextEntry={true}
           autoCapitalize={'none'}
@@ -156,7 +156,7 @@ export class EmailLoginScreen extends React.Component<Props, State> {
   }
 
   private _renderForgot(): JSX.Element {
-    const { navigation } = this.props;
+    const {navigation} = this.props;
     return (
       <AppText.Body
         style={styles.forgotContainer}
@@ -167,13 +167,13 @@ export class EmailLoginScreen extends React.Component<Props, State> {
   }
 
   private _renderButton(): JSX.Element {
-    const { email, password } = this.state;
+    const {email, password} = this.state;
 
     return (
       <BottomButton
         title={strings.SignIn}
         onPress={() => this.props.emailLogin(email, password)}
-        style={{ backgroundColor: themes.AppPrimaryColor }}
+        style={{backgroundColor: themes.AppPrimaryColor}}
       />
     );
   }

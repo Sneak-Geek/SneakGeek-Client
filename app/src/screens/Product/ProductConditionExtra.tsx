@@ -79,11 +79,11 @@ export class ProductConditionExtra extends React.PureComponent<Props, State> {
     super(props);
 
     this.state = {
-      tainted: props.order?.productCondition.isTainted || false,
-      outsoleWorn: props.order?.productCondition.isOutsoleWorn || false,
-      heavilyTorn: props.order?.productCondition.isTorn || false,
-      other: props.order?.productCondition.otherDetail !== '' || false,
-      otherDetails: props.order?.productCondition.otherDetail || '',
+      tainted: props.order?.productCondition?.isTainted || false,
+      outsoleWorn: props.order?.productCondition?.isOutsoleWorn || false,
+      heavilyTorn: props.order?.productCondition?.isTorn || false,
+      other: props.order?.productCondition?.otherDetail !== '' || false,
+      otherDetails: props.order?.productCondition?.otherDetail || '',
     };
   }
 

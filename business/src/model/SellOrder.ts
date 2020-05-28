@@ -1,6 +1,7 @@
 import { OrderStatus } from "../assets";
 import { Profile } from "./Profile";
 import { Shoe } from "./Shoe";
+import { Transaction } from "./Transaction";
 
 export type SellOrder = {
   _id?: string,
@@ -26,4 +27,5 @@ export type SellOrder = {
 export type PopulatedSellOrder = SellOrder & {
   seller: Profile,
   shoe: Shoe,
+  transaction: Transaction
 }

@@ -18,16 +18,13 @@ import {RootStackParams} from 'navigations/RootStack';
 import {
   SellOrder,
   PopulatedSellOrder,
-  Shoe,
-  Transaction,
   IOrderService,
   FactoryKeys,
   PaymentStatus,
   OrderStatus,
-  BuyOrder,
   PopulatedBuyOrder,
   OrderType,
-  getOrders,
+  getUserPopulatedOrders,
 } from 'business';
 import {strings, themes} from 'resources';
 import {
@@ -50,15 +47,14 @@ import {SellOrderEdit} from './SellOrderEdit';
 import {SellOrderEditInput} from 'business/src';
 
 type Props = {
-  route: RouteProp<RootStackParams, 'TransactionDetail'>;
-  navigation: StackNavigationProp<RootStackParams, 'TransactionDetail'>;
+  route: RouteProp<RootStackParams, 'OrderDetail'>;
+  navigation: StackNavigationProp<RootStackParams, 'OrderDetail'>;
   toggleLoading: (isLoading: boolean) => void;
-  getSellOrders: () => void;
+  getUserPopulatedOrders: (orderType: OrderType) => void;
 };
 
 type State = {
-  transaction?: Transaction;
-  currentOrder: SellOrder | BuyOrder;
+  currentOrder: PopulatedSellOrder | PopulatedBuyOrder;
   isEditMode?: boolean;
 };
 
@@ -67,35 +63,30 @@ type State = {
   (dispatch: Function) => ({
     toggleLoading: (isLoading: boolean): void =>
       dispatch(toggleIndicator({isLoading, message: strings.PleaseWait})),
-    getSellOrders: (): void => dispatch(getOrders('SellOrder')),
+    getUserPopulatedOrders: (orderType: OrderType): void =>
+      dispatch(getUserPopulatedOrders(orderType)),
   }),
 )
-export class TransactionDetail extends React.Component<Props, State> {
-  private order?: SellOrder | BuyOrder;
-  private orderId?: string;
+export class OrderDetail extends React.Component<Props, State> {
+  private orderId: string;
   private orderType: OrderType;
 
   public constructor(props: Props) {
     super(props);
-    this.order = this.props.route.params.order;
     this.orderType = this.props.route.params.orderType;
-    this.orderId = this.props.route.params.orderId;
+    this.orderId =
+      this.props.route.params.orderId || this.props.route.params.order._id;
     this.state = {
-      currentOrder: this.order || undefined,
-      transaction: null,
+      currentOrder: this.props.route.params.order || undefined,
       isEditMode: false,
     };
   }
 
   public componentDidMount(): void {
-    if (this.order) {
-      this._getTransaction();
-    } else if (this.orderId) {
-      this._getCurrentOrder(this.orderId)
-        .then((newOrder) => this.setState({currentOrder: newOrder}))
-        .then(() => {
-          this._getTransaction();
-        });
+    if (!this.state.currentOrder) {
+      this._getPopulatedOrder().then((order) =>
+        this.setState({currentOrder: order}),
+      );
     }
   }
 
@@ -110,11 +101,12 @@ export class TransactionDetail extends React.Component<Props, State> {
               <>
                 {this._renderHeader(insets.top)}
 
-                <ShoeHeaderSummary shoe={this._getShoe()} />
+                <ShoeHeaderSummary shoe={this.state.currentOrder.shoe} />
                 <View style={styles.contentContainer}>
-                  {!this.state.isEditMode && this._renderOrderDetail()}
-                  {this.state.isEditMode && this._renderOrderEdit()}
-                  {this._renderCancelOrder()}
+                  {!this.state.isEditMode
+                    ? this._renderOrderDetail()
+                    : this._renderOrderEdit()}
+                  {this._shouldRenderCancelOrder() && this._renderCancelOrder()}
                 </View>
               </>
             ) : (
@@ -126,14 +118,14 @@ export class TransactionDetail extends React.Component<Props, State> {
     );
   }
 
-  private _renderCancelOrder(): JSX.Element {
-    if (
-      this.state.currentOrder.status !== OrderStatus.PENDING ||
-      this.state.isEditMode
-    ) {
-      return null;
-    }
+  private _shouldRenderCancelOrder(): boolean {
+    return (
+      this.state.currentOrder.status === OrderStatus.PENDING &&
+      !this.state.isEditMode
+    );
+  }
 
+  private _renderCancelOrder(): JSX.Element {
     return (
       <BottomButton
         onPress={this._onOrderCanceled.bind(this)}
@@ -156,11 +148,10 @@ export class TransactionDetail extends React.Component<Props, State> {
             />
             <AppText.Title3>
               {this.orderType === 'SellOrder'
-                ? strings.TransactionSellDetail
-                : strings.TransactionBuyDetail}
+                ? strings.SellOrderDetail
+                : strings.BuyOrderDetail}
             </AppText.Title3>
-            {this.state.currentOrder.status !== OrderStatus.COMPLETED &&
-            this.state.currentOrder.status !== OrderStatus.DENIED ? (
+            {this._shouldEditOrder() ? (
               <Icon
                 name={this.state.isEditMode ? 'x' : 'edit'}
                 type={'feather'}
@@ -176,6 +167,13 @@ export class TransactionDetail extends React.Component<Props, State> {
     );
   }
 
+  private _shouldEditOrder(): boolean {
+    return (
+      this.state.currentOrder.status !== OrderStatus.COMPLETED &&
+      this.state.currentOrder.status !== OrderStatus.DENIED
+    );
+  }
+
   private _onEditOrder(): void {
     this.setState({isEditMode: !this.state.isEditMode});
   }
@@ -184,9 +182,9 @@ export class TransactionDetail extends React.Component<Props, State> {
     if (this.orderType === 'SellOrder') {
       return (
         <SellOrderEdit
-          order={this.order as SellOrder}
-          onUpdateOrder={(sellOrder: SellOrderEditInput) => {
-            this._onUpdateOrder(sellOrder);
+          order={this.state.currentOrder as PopulatedSellOrder}
+          onUpdateOrder={(updatedSellOrder: SellOrderEditInput) => {
+            this._onUpdateOrder(updatedSellOrder);
           }}
         />
       );
@@ -250,7 +248,7 @@ export class TransactionDetail extends React.Component<Props, State> {
               }
             />
           )}
-          {this._shouldGetTransaction() && (
+          {this._shouldRenderTransaction() && (
             <TitleContentDescription
               emphasizeTitle={true}
               title={strings.CheckingStatus}
@@ -264,16 +262,10 @@ export class TransactionDetail extends React.Component<Props, State> {
     );
   }
 
-  private _getShoe(): Shoe {
-    return this.orderType === 'BuyOrder'
-      ? (this.state.currentOrder as PopulatedBuyOrder).shoe
-      : (this.state.currentOrder as PopulatedSellOrder).shoe
-  }
-
   private _getPrice(): number {
     return this.orderType === 'BuyOrder'
-      ? ((this.state.currentOrder as PopulatedBuyOrder).buyPrice)
-      : ((this.state.currentOrder as PopulatedSellOrder).sellPrice);
+      ? (this.state.currentOrder as PopulatedBuyOrder).buyPrice
+      : (this.state.currentOrder as PopulatedSellOrder).sellPrice;
   }
 
   private _getProductDescription(): string {
@@ -296,11 +288,7 @@ export class TransactionDetail extends React.Component<Props, State> {
   }
 
   private _getTransactionStatus(): string {
-    if (!this.state.transaction || !this.state.transaction?.paymentStatus) {
-      return null;
-    }
-
-    const {paymentStatus} = this.state.transaction;
+    const {paymentStatus} = this.state.currentOrder.transaction;
     switch (paymentStatus.status) {
       case PaymentStatus.CANCELED:
         return strings.Cancel;
@@ -313,26 +301,7 @@ export class TransactionDetail extends React.Component<Props, State> {
     }
   }
 
-  private async _getTransaction(): Promise<void> {
-    this.props.toggleLoading(true);
-    try {
-      const orderService = getDependency<IOrderService>(
-        FactoryKeys.IOrderService,
-      );
-      const transaction = await orderService.getTransactionBySellOrder(
-        getToken(),
-        this.state.currentOrder._id,
-      );
-
-      this.setState({transaction});
-    } catch (error) {
-      console.log(error);
-    } finally {
-      this.props.toggleLoading(false);
-    }
-  }
-
-  private _shouldGetTransaction(): boolean {
+  private _shouldRenderTransaction(): boolean {
     return this.state.currentOrder.status === OrderStatus.COMPLETED;
   }
 
@@ -347,7 +316,7 @@ export class TransactionDetail extends React.Component<Props, State> {
         this.state.currentOrder._id,
       );
       this.props.navigation.goBack();
-      this.props.getSellOrders();
+      this.props.getUserPopulatedOrders(this.orderType);
     } catch (error) {
       console.log('Error cancel sell order');
     } finally {
@@ -364,12 +333,12 @@ export class TransactionDetail extends React.Component<Props, State> {
     this.props.toggleLoading(true);
     try {
       await orderService.updateSellOrder(getToken(), updatedOrder);
-      const newOrder = await this._getCurrentOrder();
+      const newOrder = await this._getPopulatedOrder();
       this.setState({
         currentOrder: newOrder,
         isEditMode: false,
       });
-      this.props.getSellOrders();
+      this.props.getUserPopulatedOrders(this.orderType);
     } catch (error) {
       console.log('Error updating sell order');
     } finally {
@@ -377,13 +346,17 @@ export class TransactionDetail extends React.Component<Props, State> {
     }
   }
 
-  private async _getCurrentOrder(
-    id: string = this.order?._id,
-  ): Promise<SellOrder> {
+  private async _getPopulatedOrder(): Promise<PopulatedSellOrder> {
     const orderService = getDependency<IOrderService>(
       FactoryKeys.IOrderService,
     );
-    return await orderService.getSellOrderById(getToken(), id);
+    if (this.orderType === 'BuyOrder') {
+    } else {
+      return await orderService.getPopulatedSellOrderById(
+        getToken(),
+        this.orderId,
+      );
+    }
   }
 
   /**

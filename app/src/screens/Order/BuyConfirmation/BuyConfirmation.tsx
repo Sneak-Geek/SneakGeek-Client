@@ -208,14 +208,15 @@ export class BuyConfirmation extends React.Component<Props, State> {
           <OrderSectionWithTitle
             title={strings.HighestBuyOrderPrice}
             value={
-              toCurrencyString(this.state.highestBuyOrder?.buyPrice.toString()) ||
-              '-'
+              toCurrencyString(
+                this.state.highestBuyOrder?.buyPrice.toString(),
+              ) || '-'
             }
             tooltip={strings.HighestBuyOrderExplanation}
           />
           <OrderSectionWithTitle
             title={strings.BuyNowPrice}
-            value={ this.state.lowestSellOrder?.sellPrice.toString() || '-' }
+            value={this.state.lowestSellOrder?.sellPrice.toString() || '-'}
           />
           {this._renderSetPriceBox()}
         </View>
