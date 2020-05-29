@@ -16,33 +16,31 @@ export function isValidEmail(email: string) {
   return regex.test(email.toLowerCase());
 }
 
-export function isValidPassword(password: string, type: number){
+export function isValidPassword(password: string, type: number) {
   let regex: RegExp;
-  switch(type){
+  switch (type) {
     //Minimum eight characters, at least one letter and one number
     case 1:
-      regex = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/
+      regex = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/;
       break;
-      //Minimum eight characters, at least one letter, one number and one special character
+    //Minimum eight characters, at least one letter, one number and one special character
     case 2:
-      regex = /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,}$/
+      regex = /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,}$/;
       break;
-      //Minimum eight characters, at least one uppercase letter, one lowercase letter and one number
-    case 3: 
-      regex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{8,}$/
+    //Minimum eight characters, at least one uppercase letter, one lowercase letter and one number
+    case 3:
+      regex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{8,}$/;
       break;
-      //Minimum eight characters, at least one uppercase letter, one lowercase letter, one number and one special character
+    //Minimum eight characters, at least one uppercase letter, one lowercase letter, one number and one special character
     case 4:
-      regex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/
+      regex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
       break;
-      //Minimum eight and maximum 10 characters, at least one uppercase letter, one lowercase letter, one number and one special character
+    //Minimum eight and maximum 10 characters, at least one uppercase letter, one lowercase letter, one number and one special character
     case 5:
-      regex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,10}$/
+      regex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,10}$/;
       break;
     default:
       break;
-    }
-    return regex.test(password);
-    
+  }
+  return regex.test(password);
 }
-

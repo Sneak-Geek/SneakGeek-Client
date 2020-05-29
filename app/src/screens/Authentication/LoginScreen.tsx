@@ -22,7 +22,6 @@ import {
 } from 'business';
 import {IAppState} from 'store/AppStore';
 import {AppText} from 'screens/Shared';
-import {AccountService} from 'business/src';
 
 type Props = {
   accountState: {account: Account; state: NetworkRequestState; error?: any};

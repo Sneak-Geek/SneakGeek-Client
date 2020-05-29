@@ -2,7 +2,7 @@ import React from 'react';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import RouteNames from './RouteNames';
 import {themes, strings, images} from 'resources';
-import {Icon, Badge} from 'react-native-elements';
+import {Icon} from 'react-native-elements';
 import {
   AccountTabMain,
   AccountTabEditProfile,
@@ -14,7 +14,7 @@ import {
 } from '@react-navigation/stack';
 import {HomeTabMain} from 'screens/HomeTab/HomeTabMain';
 import {SearchTabMain} from 'screens/SearchTab/SearchTabMain';
-import {Image, View} from 'react-native';
+import {Image} from 'react-native';
 import {
   ObjectFactory as Factory,
   ISettingsProvider,
