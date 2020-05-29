@@ -10,7 +10,6 @@ import {
   Catalog,
   SellOrder,
   PaymentType,
-  BuyOrder,
   OrderType,
   Review,
   PopulatedSellOrder,
