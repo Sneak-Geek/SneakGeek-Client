@@ -42,6 +42,7 @@ type SellDetailChild = {
 type State = {
   sellOrder: Partial<SellOrder>;
   currentIndex: number;
+  childComponents: SellDetailChild[];
 };
 
 @connect(
@@ -62,8 +63,23 @@ export class NewSellOrder extends React.Component<Props, State> {
   private _shoe: Shoe;
   private _size: string;
   private _price: number;
-  private childComponents: SellDetailChild[];
   private _childFlatList: FlatList<SellDetailChild>;
+  private _usedShoeCondition: SellDetailChild = {
+    render: (): JSX.Element => (
+      <ProductConditionExtra
+        key={1}
+        onSetShoeHeavilyTorn={this._setShoeHeavilyTorn.bind(this)}
+        onSetShoeOutsoleWorn={this._setShoeOutsoleWorn.bind(this)}
+        onSetShoeTainted={this._setShoeTainted.bind(this)}
+        onSetShoeInsoleWorn={this._setShoeInsoleWorn.bind(this)}
+        onSetShoeOtherDetail={this._setShoeOtherDetail.bind(this)}
+      />
+    ),
+    canProceed: (): boolean => {
+      return true;
+    },
+  };
+  private _maxChildComponentsSize = 4;
 
   public constructor(props: Props) {
     super(props);
@@ -88,70 +104,55 @@ export class NewSellOrder extends React.Component<Props, State> {
         pictures: [],
       },
       currentIndex: 0,
+      childComponents: [
+        {
+          render: (): JSX.Element => (
+            <ProductRequiredInfo
+              key={0}
+              order={this.state.sellOrder}
+              onSetShoeSize={this._setShoeSize.bind(this)}
+              onSetShoeCondition={this._setShoeCondition.bind(this)}
+              onSetBoxCondition={this._setBoxCondition.bind(this)}
+            />
+          ),
+          canProceed: (): boolean => {
+            const {sellOrder} = this.state;
+            return Boolean(
+              sellOrder.shoeSize &&
+                sellOrder.isNewShoe !== undefined &&
+                sellOrder.productCondition.boxCondition,
+            );
+          },
+        },
+        {
+          render: (): JSX.Element => (
+            <ProductSetPrice
+              key={2}
+              order={this.state.sellOrder}
+              onSetShoePrice={this._setShoePrice.bind(this)}
+            />
+          ),
+          canProceed: (): boolean => {
+            const {sellOrder} = this.state;
+            return sellOrder.sellPrice !== undefined;
+          },
+        },
+        {
+          render: (): JSX.Element => (
+            <ProductSellSummary
+              key={3}
+              orderSummary={this.state.sellOrder}
+              onShoePictureAdded={(picUri: string): void =>
+                this._onPictureAdded(picUri)
+              }
+            />
+          ),
+          canProceed: (): boolean => {
+            return true;
+          },
+        },
+      ],
     };
-    this.childComponents = [
-      {
-        render: (): JSX.Element => (
-          <ProductRequiredInfo
-            key={0}
-            order={this.state.sellOrder}
-            onSetShoeSize={this._setShoeSize.bind(this)}
-            onSetShoeCondition={this._setShoeCondition.bind(this)}
-            onSetBoxCondition={this._setBoxCondition.bind(this)}
-          />
-        ),
-        canProceed: (): boolean => {
-          const {sellOrder} = this.state;
-          return Boolean(
-            sellOrder.shoeSize &&
-              sellOrder.isNewShoe !== undefined &&
-              sellOrder.productCondition.boxCondition,
-          );
-        },
-      },
-      {
-        render: (): JSX.Element => (
-          <ProductConditionExtra
-            key={1}
-            onSetShoeHeavilyTorn={this._setShoeHeavilyTorn.bind(this)}
-            onSetShoeOutsoleWorn={this._setShoeOutsoleWorn.bind(this)}
-            onSetShoeTainted={this._setShoeTainted.bind(this)}
-            onSetShoeInsoleWorn={this._setShoeInsoleWorn.bind(this)}
-            onSetShoeOtherDetail={this._setShoeOtherDetail.bind(this)}
-          />
-        ),
-        canProceed: (): boolean => {
-          return true;
-        },
-      },
-      {
-        render: (): JSX.Element => (
-          <ProductSetPrice
-            key={2}
-            order={this.state.sellOrder}
-            onSetShoePrice={this._setShoePrice.bind(this)}
-          />
-        ),
-        canProceed: (): boolean => {
-          const {sellOrder} = this.state;
-          return sellOrder.sellPrice !== undefined;
-        },
-      },
-      {
-        render: (): JSX.Element => (
-          <ProductSellSummary
-            key={3}
-            orderSummary={this.state.sellOrder}
-            onShoePictureAdded={(picUri: string): void =>
-              this._onPictureAdded(picUri)
-            }
-          />
-        ),
-        canProceed: (): boolean => {
-          return true;
-        },
-      },
-    ];
   }
 
   public render(): JSX.Element {
@@ -213,7 +214,7 @@ export class NewSellOrder extends React.Component<Props, State> {
         style={{flex: 1, marginTop: 10, height: '100%'}}
         horizontal={true}
         pagingEnabled={true}
-        data={this.childComponents}
+        data={this.state.childComponents}
         renderItem={({item}) => item.render()}
         alwaysBounceHorizontal={false}
         scrollEnabled={false}
@@ -224,8 +225,8 @@ export class NewSellOrder extends React.Component<Props, State> {
 
   private _renderBottomButton(bottom: number) {
     const shouldSellShoe =
-      this.state.currentIndex === this.childComponents.length - 1;
-    const shouldContinue = this.childComponents[
+      this.state.currentIndex === this.state.childComponents.length - 1;
+    const shouldContinue = this.state.childComponents[
       this.state.currentIndex
     ].canProceed();
 
@@ -287,13 +288,13 @@ export class NewSellOrder extends React.Component<Props, State> {
   }
 
   private _onListScroll(forward = true): void {
-    const shouldContinue = this.childComponents[
+    const shouldContinue = this.state.childComponents[
       this.state.currentIndex
     ].canProceed();
     const canGoNext =
       shouldContinue &&
       forward &&
-      this.state.currentIndex < this.childComponents.length - 1;
+      this.state.currentIndex < this.state.childComponents.length - 1;
     const canGoBack = !forward && this.state.currentIndex >= 1;
     const nextIndex = forward
       ? this.state.currentIndex + 1
@@ -326,11 +327,26 @@ export class NewSellOrder extends React.Component<Props, State> {
   }
 
   private _setShoeCondition(shoeCondition: string): void {
+    const isNewShoe = shoeCondition === 'Mới';
+    const childComponents = [...this.state.childComponents];
+    if (
+      isNewShoe &&
+      this.state.childComponents.length === this._maxChildComponentsSize
+    ) {
+      childComponents.splice(1, 1);
+    } else if (
+      !isNewShoe &&
+      this.state.childComponents.length + 1 === this._maxChildComponentsSize
+    ) {
+      childComponents.splice(1, 0, this._usedShoeCondition);
+    }
+
     this.setState({
       sellOrder: {
         ...this.state.sellOrder,
-        isNewShoe: shoeCondition === 'Mới',
+        isNewShoe,
       },
+      childComponents,
     });
   }
 
