@@ -59,7 +59,7 @@ export const HomeScreen = (): JSX.Element => {
           <Switch>
             <Route path={'/'} exact render={() => <Redirect to={'/dashboard'} />} />
             <Route path={'/dashboard'} render={() => <h3>Tổng quan</h3>} />
-            <Route exact path={'/products'} render={() => <ProductScreen />} />
+            <Route path={'/products'} component={ProductScreen} />
           </Switch>
         </Container>
       </div>

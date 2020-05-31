@@ -1,78 +1,23 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import {
   Card,
   CardContent,
-  Table,
-  TableHead,
-  TableRow,
-  TableCell,
-  Avatar,
   Typography,
-  makeStyles,
   Theme,
-  Chip,
-  Icon,
-  IconButton,
   TablePagination,
   Fab,
   withStyles,
 } from '@material-ui/core';
 import { Shoe, IShoeService, ObjectFactory, FactoryKeys } from 'business';
-import { SearchInput } from '../../../shared';
-import { getToken } from '../../../utilities';
+import { SearchInput } from '../../../../shared';
+import { getToken } from '../../../../utilities';
 import AddIcon from '@material-ui/icons/Add';
-
-const ProductTableContent = (props: { shoes: Shoe[]; classes: any }): JSX.Element => (
-  <Table>
-    <TableHead>
-      <TableRow>
-        <TableCell />
-        <TableCell>Title</TableCell>
-        <TableCell>Brand</TableCell>
-        <TableCell>Colorway</TableCell>
-        <TableCell>Category</TableCell>
-        <TableCell>Action</TableCell>
-      </TableRow>
-    </TableHead>
-    {props.shoes.map((shoe, index) => (
-      <TableRow hover key={`${index}${shoe._id}`}>
-        <TableCell>
-          <Avatar src={shoe.imageUrl} variant={'rounded'} sizes={'large'} />
-        </TableCell>
-        <TableCell>
-          <Typography variant="body1">{shoe.title}</Typography>
-        </TableCell>
-        <TableCell>
-          <Typography variant="body1">{shoe.brand}</Typography>
-        </TableCell>
-        <TableCell>
-          {shoe.colorway.map((c) => (
-            <Chip
-              clickable
-              label={c}
-              key={c}
-              className={props.classes.chip}
-              color={'inherit'}
-            />
-          ))}
-        </TableCell>
-        <TableCell>
-          <Chip clickable label={shoe.category} />
-        </TableCell>
-        <TableCell className={props.classes.action}>
-          <IconButton>
-            <Icon>edit</Icon>
-          </IconButton>
-          <IconButton>
-            <Icon>arrow_forward</Icon>
-          </IconButton>
-        </TableCell>
-      </TableRow>
-    ))}
-  </Table>
-);
+import { History } from 'history';
+import ProductTableContent from './ProductTableContent';
+import ProductDetailDialog from './ProductDetailDialog';
 
 type Props = {
+  history: History;
   classes: any;
 };
 
@@ -81,9 +26,11 @@ type State = {
   shoes: Shoe[];
   total: number;
   keyword: string;
+  shoeViewDialogOpen: boolean;
+  selectedShoe?: Shoe;
 };
 
-class ProductTable extends React.Component<Props, State> {
+class ProductList extends React.Component<Props, State> {
   private shoeService: IShoeService = ObjectFactory.getObjectInstance(FactoryKeys.IShoeService);
 
   state = {
@@ -91,6 +38,8 @@ class ProductTable extends React.Component<Props, State> {
     currentPage: 0,
     total: 0,
     keyword: '',
+    shoeViewDialogOpen: false,
+    selectedShoe: undefined
   };
 
   public componentDidMount() {
@@ -111,7 +60,11 @@ class ProductTable extends React.Component<Props, State> {
             <Typography variant={'body1'} className={classes.total}>
               {this.state.total} kết quả
             </Typography>
-            <ProductTableContent shoes={this.state.shoes} classes={classes} />
+            <ProductTableContent
+              shoes={this.state.shoes}
+              classes={classes}
+              onShoeView={this.onShoeView.bind(this)}
+            />
           </CardContent>
         </Card>
         <TablePagination
@@ -122,6 +75,11 @@ class ProductTable extends React.Component<Props, State> {
           rowsPerPageOptions={[20]}
           rowsPerPage={20}
           onChangeRowsPerPage={() => {}}
+        />
+        <ProductDetailDialog
+          shoe={this.state.selectedShoe}
+          onCloseProductDetail={this.onDialogClose.bind(this)}
+          isDialogOpen={this.state.shoeViewDialogOpen}
         />
         <Fab color={'primary'} aria-label={'add'} className={classes.fab}>
           <AddIcon />
@@ -148,6 +106,18 @@ class ProductTable extends React.Component<Props, State> {
   private onChangePage(_: any, page: number) {
     this.setState({ shoes: [], currentPage: page });
     this.fetchShoes();
+  }
+
+  private onShoeView(shoe: Shoe, isEditMode: boolean) {
+    if (isEditMode) {
+      this.props.history.push(`/products/${shoe._id}`, shoe);
+    } else {
+      this.setState({ shoeViewDialogOpen: true, selectedShoe: shoe, });
+    }
+  }
+
+  private onDialogClose() {
+    this.setState({ shoeViewDialogOpen: false });
   }
 }
 
@@ -177,4 +147,4 @@ export default withStyles((theme: Theme) => ({
     bottom: 50,
     right: 50,
   },
-}))(ProductTable);
+}))(ProductList);
