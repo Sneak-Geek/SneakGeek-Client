@@ -7,8 +7,6 @@ import {
   TablePagination,
   Fab,
   withStyles,
-  Dialog,
-  DialogTitle,
 } from '@material-ui/core';
 import { Shoe, IShoeService, ObjectFactory, FactoryKeys } from 'business';
 import { SearchInput } from '../../../../shared';
@@ -16,6 +14,7 @@ import { getToken } from '../../../../utilities';
 import AddIcon from '@material-ui/icons/Add';
 import { History } from 'history';
 import ProductTableContent from './ProductTableContent';
+import ProductDetailDialog from './ProductDetailDialog';
 
 type Props = {
   history: History;
@@ -28,6 +27,7 @@ type State = {
   total: number;
   keyword: string;
   shoeViewDialogOpen: boolean;
+  selectedShoe?: Shoe;
 };
 
 class ProductList extends React.Component<Props, State> {
@@ -39,6 +39,7 @@ class ProductList extends React.Component<Props, State> {
     total: 0,
     keyword: '',
     shoeViewDialogOpen: false,
+    selectedShoe: undefined
   };
 
   public componentDidMount() {
@@ -75,6 +76,11 @@ class ProductList extends React.Component<Props, State> {
           rowsPerPage={20}
           onChangeRowsPerPage={() => {}}
         />
+        <ProductDetailDialog
+          shoe={this.state.selectedShoe}
+          onCloseProductDetail={this.onDialogClose.bind(this)}
+          isDialogOpen={this.state.shoeViewDialogOpen}
+        />
         <Fab color={'primary'} aria-label={'add'} className={classes.fab}>
           <AddIcon />
         </Fab>
@@ -106,7 +112,7 @@ class ProductList extends React.Component<Props, State> {
     if (isEditMode) {
       this.props.history.push(`/products/${shoe._id}`, shoe);
     } else {
-      this.setState({ shoeViewDialogOpen: true });
+      this.setState({ shoeViewDialogOpen: true, selectedShoe: shoe, });
     }
   }
 

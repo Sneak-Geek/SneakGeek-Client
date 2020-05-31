@@ -54,11 +54,11 @@ const ProductTableContent = (props: {
           <Chip clickable label={shoe.category} />
         </TableCell>
         <TableCell className={props.classes.action}>
-          <IconButton onClick={() => props.onShoeView(shoe, false)}>
+          <IconButton onClick={() => props.onShoeView(shoe, true)}>
             <Icon>edit</Icon>
           </IconButton>
-          <IconButton onClick={() => props.onShoeView(shoe, true)}>
-            <Icon>arrow_forward</Icon>
+          <IconButton onClick={() => props.onShoeView(shoe, false)}>
+            <Icon>preview</Icon>
           </IconButton>
         </TableCell>
       </TableRow>

@@ -16,13 +16,13 @@ type Props = {
 };
 
 const ProductEdit = (props: Props): JSX.Element => {
-  const shoe: Shoe = props.history.state.shoe;
+  // const shoe: Shoe = props.history.state.shoe;
 
   return (
     <div>
       <Card>
         <CardActionArea>
-          <CardMedia component={'img'} alt={'Shoe image'} height={200} image={shoe.imageUrl} />
+          {/* <CardMedia component={'img'} alt={'Shoe image'} height={200} image={shoe.imageUrl} /> */}
         </CardActionArea>
       </Card>
     </div>
