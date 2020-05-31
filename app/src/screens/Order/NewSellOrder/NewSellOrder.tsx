@@ -8,7 +8,7 @@ import {
 import {Icon} from 'react-native-elements';
 import {themes, strings} from 'resources';
 import {AppText, ShoeHeaderSummary, BottomButton} from 'screens/Shared';
-import {Shoe, SellOrder, IOrderService, FactoryKeys} from 'business';
+import {Shoe, SellOrder, IOrderService, FactoryKeys, Profile} from 'business';
 import {RouteProp} from '@react-navigation/native';
 import {RootStackParams} from 'navigations/RootStack';
 import {ProductSetPrice} from '../../Product/ProductSetPrice';
@@ -24,8 +24,10 @@ import {
 import {styles} from './styles';
 import {CdnService} from 'business/src';
 import RouteNames from 'navigations/RouteNames';
+import {IAppState} from 'store/AppStore';
 
 type Props = {
+  userProfile: Profile;
   route: RouteProp<RootStackParams, 'NewSellOrder'>;
   navigation: StackNavigationProp<RootStackParams, 'NewSellOrder'>;
 
@@ -46,7 +48,9 @@ type State = {
 };
 
 @connect(
-  () => ({}),
+  (state: IAppState) => ({
+    userProfile: state.UserState.profileState.profile,
+  }),
   (dispatch: Function) => ({
     toggleLoading: (isLoading: boolean) => {
       dispatch(toggleIndicator({isLoading, message: strings.PleaseWait}));
@@ -140,6 +144,12 @@ export class NewSellOrder extends React.Component<Props, State> {
         {
           render: (): JSX.Element => (
             <ProductSellSummary
+              onEditShippingInfo={() =>
+                this.props.navigation.navigate(RouteNames.Tab.AccountTab.Name, {
+                  screen: RouteNames.Tab.AccountTab.EditProfile,
+                })
+              }
+              userProfile={this.props.userProfile}
               key={3}
               orderSummary={this.state.sellOrder}
               onShoePictureAdded={(picUri: string): void =>
