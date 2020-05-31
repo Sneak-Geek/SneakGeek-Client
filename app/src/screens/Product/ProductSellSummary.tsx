@@ -141,7 +141,7 @@ export class ProductSellSummary extends React.Component<Props> {
     );
   }
 
-  private _shouldRenderShippingInfoDetails = () => {
+  private _shouldRenderShippingInfoDetails(): boolean {
     const profile = this.props.userProfile;
     if (
       !profile.userProvidedName?.firstName ||
@@ -163,12 +163,12 @@ export class ProductSellSummary extends React.Component<Props> {
     return true;
   };
 
-  private _renderName = () => {
+  private _renderName(): JSX.Element {
     const name = `${this.props.userProfile.userProvidedName.firstName} ${this.props.userProfile.userProvidedName.lastName}`;
     return <AppText.Body>{name}</AppText.Body>;
   };
 
-  private _renderShippingInfoDetails = () => {
+  private _renderShippingInfoDetails(): JSX.Element {
     const profile = this.props.userProfile;
     const phoneNumber = profile.userProvidedPhoneNumber;
     const {streetAddress, ward, district, city} = profile.userProvidedAddress;
