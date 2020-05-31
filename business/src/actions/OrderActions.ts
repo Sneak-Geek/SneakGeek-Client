@@ -1,13 +1,13 @@
 import { createAction } from "redux-actions"
-import { Shoe, BuyOrder, SellOrder } from "../model"
-import { GetBuyOrdersPayload, GetSellOrdersPayload, NetworkRequestState } from "../payload";
+import { Shoe, BuyOrder, PopulatedSellOrder } from "../model"
+import { GetBuyOrdersPayload, GetSellOrderHistoryPayload, NetworkRequestState } from "../payload";
 import { ObjectFactory, FactoryKeys } from "../loader/kernel";
 import { ISettingsProvider, IOrderService, SettingsKey, OrderType } from "../loader";
 
 export const OrderActions = {
   BUY_SHOE: "BUY_SHOE",
   UPDATE_GET_BUY_ORDERS_STATE: "UPDATE_GET_BUY_ORDERS_STATE",
-  UPDATE_GET_SELL_ORDERS_STATE: "UPDATE_GET_SELL_ORDERS_STATE"
+  UPDATE_GET_SELL_ORDER_HISTORY_STATE: "UPDATE_GET_SELL_ORDER_HISTORY_STATE"
 }
 
 export const buyShoe = createAction<{
@@ -15,21 +15,21 @@ export const buyShoe = createAction<{
 }>(OrderActions.BUY_SHOE);
 
 export const updateGetBuyOrdersState = createAction<GetBuyOrdersPayload>(OrderActions.UPDATE_GET_BUY_ORDERS_STATE);
-export const updateGetSellOrdersState = createAction<GetSellOrdersPayload>(OrderActions.UPDATE_GET_SELL_ORDERS_STATE);
+export const updateGetSellOrderHistoryState = createAction<GetSellOrderHistoryPayload>(OrderActions.UPDATE_GET_SELL_ORDER_HISTORY_STATE);
 
-export const getOrders = (type: OrderType) => {
+export const getUserPopulatedOrders = (type: OrderType) => {
   const settings = ObjectFactory.getObjectInstance<ISettingsProvider>(FactoryKeys.ISettingsProvider);
   const orderService = ObjectFactory.getObjectInstance<IOrderService>(FactoryKeys.IOrderService);
-  const updateAction = type === "BuyOrder" ? updateGetBuyOrdersState : updateGetSellOrdersState;
+  const updateAction = type === "BuyOrder" ? updateGetBuyOrdersState : updateGetSellOrderHistoryState;
 
   return async (dispatch: Function) => {
     dispatch(updateAction({ state: NetworkRequestState.REQUESTING }));
     try {
-      const orders = await orderService.getUserOrders(settings.getValue(SettingsKey.CurrentAccessToken), type);
+      const orders = await orderService.getUserPopulatedOrders(settings.getValue(SettingsKey.CurrentAccessToken), type);
       dispatch(updateAction({
         state: NetworkRequestState.SUCCESS,
         // @ts-ignore
-        data: orders as BuyOrder[] | SellOrder[]
+        data: orders as BuyOrder[] | PopulatedSellOrder[]
       }));
     } catch (error) {
       dispatch(updateAction({

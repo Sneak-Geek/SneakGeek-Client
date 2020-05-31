@@ -1,7 +1,7 @@
-import { Shoe, BuyOrder, SellOrder } from "../model";
+import { Shoe, BuyOrder, PopulatedSellOrder } from "../model";
 import { Action } from "redux-actions";
-import { buyShoe, updateGetSellOrdersState, updateGetBuyOrdersState } from "../actions";
-import { NetworkRequestState, GetSellOrdersPayload, GetBuyOrdersPayload } from "../payload";
+import { buyShoe, updateGetSellOrderHistoryState, updateGetBuyOrdersState } from "../actions";
+import { NetworkRequestState, GetSellOrderHistoryPayload, GetBuyOrdersPayload } from "../payload";
 import { handleActionsWithReset } from "../utilities/ReduxUtilities";
 
 export type IOrderState = {
@@ -17,9 +17,9 @@ export type IOrderState = {
     orders: BuyOrder[];
     error?: any;
   };
-  sellOrdersState: {
+  sellOrderHistoryState: {
     state: NetworkRequestState;
-    orders: SellOrder[];
+    orders: PopulatedSellOrder[];
     error?: any;
   };
 };
@@ -31,7 +31,7 @@ export const initialState: IOrderState = {
     state: NetworkRequestState.NOT_STARTED,
     orders: [],
   },
-  sellOrdersState: {
+  sellOrderHistoryState: {
     state: NetworkRequestState.NOT_STARTED,
     orders: [],
   },
@@ -50,16 +50,16 @@ export const OrderReducers = handleActionsWithReset<IOrderState, any>(
         size: action.payload.size || state.buyState.size,
       },
     }),
-    [`${updateGetSellOrdersState}`]: (
+    [`${updateGetSellOrderHistoryState}`]: (
       state: IOrderState,
-      action: Action<GetSellOrdersPayload>
+      action: Action<GetSellOrderHistoryPayload>
     ) => ({
       ...state,
-      sellOrdersState: {
-        ...state.sellOrdersState,
+      sellOrderHistoryState: {
+        ...state.sellOrderHistoryState,
         state: action.payload.state,
         error: action.payload.error,
-        orders: action.payload.data ?? state.sellOrdersState.orders,
+        orders: action.payload.data ?? state.sellOrderHistoryState.orders,
       },
     }),
     [`${updateGetBuyOrdersState}`]: (

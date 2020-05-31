@@ -4,7 +4,7 @@ import {Avatar, Rating} from 'react-native-elements';
 import {Review, Profile} from 'business';
 import {StyleSheet, View} from 'react-native';
 import {AppText} from './Text';
-import {connect, toVnDateFormat} from 'utilities';
+import {toVnDateFormat} from 'utilities';
 
 const styles = StyleSheet.create({
   reviewContent: {flexDirection: 'row', marginBottom: 8},

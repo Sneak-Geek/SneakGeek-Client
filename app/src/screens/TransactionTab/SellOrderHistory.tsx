@@ -4,7 +4,7 @@ import {
   SellOrder,
   PopulatedSellOrder,
   OrderStatus,
-  getOrders,
+  getUserPopulatedOrders,
 } from 'business';
 import {connect, toCurrencyString} from 'utilities';
 import {IAppState} from 'store/AppStore';
@@ -43,39 +43,42 @@ const styles = StyleSheet.create({
 });
 
 type Props = {
-  sellOrdersState: {
+  sellOrderHistoryState: {
     state: NetworkRequestState;
     orders: PopulatedSellOrder[];
     error?: unknown;
   };
 
   // dispatch props
-  getOrders: () => void;
+  getUserPopulatedOrders: () => void;
 
   // navigation
-  navigation: StackNavigationProp<RootStackParams, 'TransactionSellOrder'>;
+  navigation: StackNavigationProp<RootStackParams, 'SellOrderHistory'>;
 };
 
 @connect(
   (state: IAppState) => ({
-    sellOrdersState: state.OrderState.sellOrdersState,
+    sellOrderHistoryState: state.OrderState.sellOrderHistoryState,
   }),
   (dispatch: Function) => ({
-    getOrders: (): void => dispatch(getOrders('SellOrder')),
+    getUserPopulatedOrders: (): void =>
+      dispatch(getUserPopulatedOrders('SellOrder')),
   }),
 )
-export class SellOrders extends React.Component<Props> {
+export class SellOrderHistory extends React.Component<Props> {
   public componentDidMount(): void {
-    const {state, orders} = this.props.sellOrdersState;
+    const {state, orders} = this.props.sellOrderHistoryState;
     if (state === NetworkRequestState.NOT_STARTED && orders.length === 0) {
-      this.props.getOrders();
+      this.props.getUserPopulatedOrders();
     }
   }
 
   public render(): JSX.Element {
-    const {orders, state} = this.props.sellOrdersState;
+    const {orders, state} = this.props.sellOrderHistoryState;
 
-    if (this.props.sellOrdersState.state === NetworkRequestState.REQUESTING) {
+    if (
+      this.props.sellOrderHistoryState.state === NetworkRequestState.REQUESTING
+    ) {
       return <ShimmerLoadList />;
     }
 
@@ -86,7 +89,7 @@ export class SellOrders extends React.Component<Props> {
             refreshControl={
               <RefreshControl
                 refreshing={state === NetworkRequestState.REQUESTING}
-                onRefresh={(): void => this.props.getOrders()}
+                onRefresh={(): void => this.props.getUserPopulatedOrders()}
               />
             }
             data={orders}
@@ -141,9 +144,7 @@ export class SellOrders extends React.Component<Props> {
             </AppText.Subhead>
             <AppText.Subhead style={{marginBottom: 5}}>
               {strings.Price}:{' '}
-              <AppText.Body>
-                {toCurrencyString(order.sellPrice)}
-              </AppText.Body>
+              <AppText.Body>{toCurrencyString(order.sellPrice)}</AppText.Body>
             </AppText.Subhead>
             <AppText.Subhead style={{marginBottom: 5}}>
               {strings.ShoeSize}: <AppText.Body>{order.shoeSize}</AppText.Body>

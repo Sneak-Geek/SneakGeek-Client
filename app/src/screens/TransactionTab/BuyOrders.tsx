@@ -2,9 +2,9 @@ import React from 'react';
 import {
   NetworkRequestState,
   OrderStatus,
-  getOrders,
+  getUserPopulatedOrders,
   BuyOrder,
-  PopulatedBuyOrder
+  PopulatedBuyOrder,
 } from 'business';
 import {connect, toCurrencyString} from 'utilities';
 import {IAppState} from 'store/AppStore';
@@ -36,14 +36,14 @@ const styles = StyleSheet.create({
 });
 
 type Props = {
-  buyOrderState: {
+  buyOrderHistoryState: {
     state: NetworkRequestState;
     orders: PopulatedBuyOrder[];
     error?: unknown;
   };
 
   // dispatch props
-  getOrders: () => void;
+  getUserPopulatedOrders: () => void;
 
   // navigation
   navigation: StackNavigationProp<RootStackParams, 'TransactionBuyOrder'>;
@@ -51,22 +51,23 @@ type Props = {
 
 @connect(
   (state: IAppState) => ({
-    buyOrderState: state.OrderState.buyOrdersState,
+    buyOrderHistoryState: state.OrderState.buyOrdersState,
   }),
   (dispatch: Function) => ({
-    getOrders: (): void => dispatch(getOrders('BuyOrder')),
+    getUserPopulatedOrders: (): void =>
+      dispatch(getUserPopulatedOrders('BuyOrder')),
   }),
 )
 export class BuyOrders extends React.Component<Props> {
   public componentDidMount(): void {
-    const {state, orders} = this.props.buyOrderState;
+    const {state, orders} = this.props.buyOrderHistoryState;
     if (state === NetworkRequestState.NOT_STARTED && orders.length === 0) {
-      this.props.getOrders();
+      this.props.getUserPopulatedOrders();
     }
   }
 
   public render(): JSX.Element {
-    const {orders, state} = this.props.buyOrderState;
+    const {orders, state} = this.props.buyOrderHistoryState;
 
     if (state === NetworkRequestState.REQUESTING) {
       return <ShimmerLoadList />;
@@ -89,7 +90,7 @@ export class BuyOrders extends React.Component<Props> {
               flex: 1,
               backgroundColor: themes.AppBackgroundColor,
             }}>
-            <AppText.Body>Hiện chưa có đơn bán nào</AppText.Body>
+            <AppText.Body>Hiện chưa có đơn mua nào</AppText.Body>
           </View>
         )}
       </SafeAreaView>
@@ -107,7 +108,7 @@ export class BuyOrders extends React.Component<Props> {
         color = themes.AppPendingColor;
         break;
       case OrderStatus.APPROVED:
-        status = strings.Selling;
+        status = strings.Buying;
         color = themes.AppDisabledColor;
         break;
       case OrderStatus.DENIED:
@@ -115,7 +116,7 @@ export class BuyOrders extends React.Component<Props> {
         color = themes.AppErrorColor;
         break;
       default:
-        status = strings.Sold;
+        status = strings.Bought;
         color = themes.AppPrimaryColor;
         break;
     }
@@ -134,9 +135,7 @@ export class BuyOrders extends React.Component<Props> {
             </AppText.Subhead>
             <AppText.Subhead style={{marginBottom: 5}}>
               {strings.Price}:{' '}
-              <AppText.Body>
-                {toCurrencyString(order.buyPrice)}
-              </AppText.Body>
+              <AppText.Body>{toCurrencyString(order.buyPrice)}</AppText.Body>
             </AppText.Subhead>
             <AppText.Subhead style={{marginBottom: 5}}>
               {strings.ShoeSize}: <AppText.Body>{order.shoeSize}</AppText.Body>

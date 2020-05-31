@@ -1,5 +1,5 @@
 import {SignInResult, IGoogleSDK} from 'business';
-import {GoogleSignin, statusCodes} from '@react-native-community/google-signin';
+import {GoogleSignin} from '@react-native-community/google-signin';
 
 export class GoogleSdk implements IGoogleSDK {
   constructor() {

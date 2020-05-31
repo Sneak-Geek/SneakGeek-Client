@@ -37,8 +37,8 @@ const RouteNames = {
       Name: 'TransactionTab',
       Main: 'TransactionTabMain',
       Buy: 'TransactionBuyOrder',
-      Sell: 'TransactionSellOrder',
-      Detail: 'TransactionDetail',
+      SellOrderHistory: 'SellOrderHistory',
+      Detail: 'OrderDetail',
     },
     AccountTab: {
       Name: 'AccountTab',
