@@ -7,23 +7,50 @@ import {
   View,
   TouchableOpacity,
 } from 'react-native';
+import {Divider} from 'react-native-elements';
 import {} from 'react-native-gesture-handler';
 import ImagePicker, {ImagePickerOptions} from 'react-native-image-picker';
 import {AppText} from 'screens/Shared';
 import {SellOrder} from 'business';
 import {toCurrencyString} from 'utilities';
 import {images, strings} from 'resources';
+import {Profile} from 'business';
 
 const styles = StyleSheet.create({
   sectionContainer: {
-    flexDirection: 'column',
-    alignItems: 'flex-start',
-    marginBottom: 30,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    marginTop: 30,
   },
 
-  detail: {
-    color: '#1ABC9C',
+  shippingInfoSectionContainer: {
+    marginTop: 0,
+  },
+
+  shippingInfoDescriptionContainer: {
+    marginTop: 20,
+  },
+
+  shippingInfoTopDivider: {
+    marginTop: 30,
+    marginBottom: 25,
+  },
+
+  shippingInfoBottomDivider: {
+    marginTop: 25,
+  },
+
+  shippingInfoDetails: {
     marginTop: 10,
+  },
+
+  summaryField: {
+    opacity: 0.6,
+    textTransform: 'uppercase',
+  },
+
+  editShippingInfo: {
+    color: '#E2603F',
   },
 
   imageContainer: {
@@ -35,7 +62,9 @@ const styles = StyleSheet.create({
 
 type Props = {
   orderSummary: Partial<SellOrder>;
+  userProfile: Profile;
   onShoePictureAdded: (picUri: string) => void;
+  onEditShippingInfo: () => void;
 };
 
 export class ProductSellSummary extends React.Component<Props> {
@@ -47,41 +76,117 @@ export class ProductSellSummary extends React.Component<Props> {
 
   public /** override */ render(): JSX.Element {
     return (
-      <ScrollView style={{flex: 1, width: Dimensions.get('screen').width}}>
+      <View style={{flex: 1, width: Dimensions.get('screen').width}}>
         <View style={{flex: 1, paddingHorizontal: 20}}>
-          {this._renderPriceSummary()}
-          {this._renderDescription()}
-          {this._renderPictures()}
+          {this._renderSummaryDetail(
+            'Cỡ giày',
+            this.props.orderSummary.shoeSize,
+          )}
+          {this._renderSummaryDetail(
+            'Tình trạng',
+            this.props.orderSummary.isNewShoe ? 'Mới' : 'Cũ',
+          )}
+          {this._renderSummaryDetail(
+            'Hộp',
+            this.props.orderSummary.productCondition.boxCondition,
+          )}
+          {this._renderShippingInfo()}
+          {this._renderSummaryDetail(
+            'Giá bán',
+            toCurrencyString(this.props.orderSummary.sellPrice),
+          )}
+          {!this.props.orderSummary.isNewShoe && this._renderPictures()}
         </View>
-      </ScrollView>
-    );
-  }
-
-  private _renderPriceSummary(): JSX.Element {
-    const price = this.props.orderSummary.sellPrice || '';
-
-    return (
-      <View style={styles.sectionContainer}>
-        <AppText.Callout>{strings.SellPrice}</AppText.Callout>
-        <AppText.Body style={styles.detail}>
-          {toCurrencyString(price as string)}
-        </AppText.Body>
       </View>
     );
   }
 
-  private _renderDescription(): JSX.Element {
-    const {orderSummary} = this.props;
+  private _renderSummaryDetail(field: string, value: string): JSX.Element {
     return (
       <View style={styles.sectionContainer}>
-        <AppText.Callout>{strings.OrderDescription}</AppText.Callout>
-        <AppText.Body style={styles.detail}>
-          Cỡ {orderSummary.shoeSize}, {orderSummary.isNewShoe ? 'Mới' : 'Cũ'},{' '}
-          {orderSummary.productCondition.boxCondition}
-        </AppText.Body>
+        <AppText.SubHeadline style={styles.summaryField}>
+          {field}
+        </AppText.SubHeadline>
+        <AppText.Body>{value}</AppText.Body>
       </View>
     );
   }
+
+  private _renderShippingInfo(): JSX.Element {
+    return (
+      <View>
+        <Divider style={styles.shippingInfoTopDivider} />
+        <View
+          style={[
+            styles.sectionContainer,
+            styles.shippingInfoSectionContainer,
+          ]}>
+          <AppText.SubHeadline style={styles.summaryField}>
+            {'Thông tin giao hàng'}
+          </AppText.SubHeadline>
+          <AppText.Body
+            style={styles.editShippingInfo}
+            onPress={() => this.props.onEditShippingInfo()}>
+            {'Thay đổi'}
+          </AppText.Body>
+        </View>
+        {this._shouldRenderShippingInfoDetails() && (
+          <View style={styles.shippingInfoDescriptionContainer}>
+            {this._renderName()}
+            {this._renderShippingInfoDetails()}
+          </View>
+        )}
+        <Divider style={styles.shippingInfoBottomDivider} />
+      </View>
+    );
+  }
+
+  private _shouldRenderShippingInfoDetails = () => {
+    const profile = this.props.userProfile;
+    if (
+      !profile.userProvidedName?.firstName ||
+      !profile.userProvidedName?.lastName
+    ) {
+      return false;
+    } else if (!profile.userProvidedEmail) {
+      return false;
+    } else if (!profile.userProvidedPhoneNumber) {
+      return false;
+    } else if (
+      !profile.userProvidedAddress?.streetAddress ||
+      !profile.userProvidedAddress?.ward ||
+      !profile.userProvidedAddress?.district ||
+      !profile.userProvidedAddress?.city
+    ) {
+      return false;
+    }
+    return true;
+  };
+
+  private _renderName = () => {
+    const name = `${this.props.userProfile.userProvidedName.firstName} ${this.props.userProfile.userProvidedName.lastName}`;
+    return <AppText.Body>{name}</AppText.Body>;
+  };
+
+  private _renderShippingInfoDetails = () => {
+    const profile = this.props.userProfile;
+    const phoneNumber = profile.userProvidedPhoneNumber;
+    const {streetAddress, ward, district, city} = profile.userProvidedAddress;
+    return (
+      <>
+        <AppText.Footnote style={styles.shippingInfoDetails}>
+          {phoneNumber}
+        </AppText.Footnote>
+        <AppText.Footnote style={styles.shippingInfoDetails}>
+          {streetAddress}
+        </AppText.Footnote>
+        <AppText.Footnote
+          style={
+            styles.shippingInfoDetails
+          }>{`${ward} - ${district} - ${city}`}</AppText.Footnote>
+      </>
+    );
+  };
 
   private _renderPictures(): JSX.Element {
     return (

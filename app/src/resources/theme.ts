@@ -55,6 +55,11 @@ export const themes = {
       fontFamily: 'RobotoCondensed-Bold',
     },
 
+    subheadline: {
+      fontSize: 14,
+      fontFamily: 'RobotoCondensed-Bold',
+    },
+
     body: {
       fontSize: 17,
       fontFamily: 'RobotoCondensed-Regular',

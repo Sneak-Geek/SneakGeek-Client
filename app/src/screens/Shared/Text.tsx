@@ -61,6 +61,17 @@ class Headline extends React.PureComponent<TextProps> {
   }
 }
 
+class SubHeadline extends React.PureComponent<TextProps> {
+  public render(): JSX.Element {
+    return (
+      <Text
+        {...this.props}
+        style={[themes.TextStyle.subheadline, this.props.style]}
+      />
+    );
+  }
+}
+
 class Callout extends React.PureComponent<TextProps> {
   public render(): JSX.Element {
     return (
@@ -130,6 +141,7 @@ export const AppText = {
   Title2,
   Title3,
   Headline,
+  SubHeadline,
   Body,
   Footnote,
   Caption1,
