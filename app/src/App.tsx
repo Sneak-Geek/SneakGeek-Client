@@ -19,6 +19,7 @@ import {
   OrderService,
   ICdnService,
   CdnService,
+  IAppleAuthSdk,
 } from 'business';
 import {Provider} from 'react-redux';
 
@@ -29,6 +30,7 @@ import {InAppNotification} from 'screens/InAppNotification';
 import {AppLoadingIndicator} from 'screens/AppLoadingIndicator';
 import {IDeviceInfoProvider, DeviceInfoProvider} from 'providers';
 import {IPushNotificationService, PushNotificationService} from 'services';
+import {AppleAuthSdk} from 'common/AppleAuthSdk';
 
 export default function App(): JSX.Element {
   const [depLoaded, setDepLoaded] = useState(false);
@@ -43,11 +45,12 @@ export default function App(): JSX.Element {
     );
     Factory.register<IEnvVar>(Keys.IEnvVar, {
       dev: __DEV__,
-      devUrl: 'https://192.168.0.11:8080/api/v1',
+      devUrl: 'https://10.0.0.159:8080/api/v1',
       prodUrl: 'https://sneakgeek-dev.azurewebsites.net/api/v1',
     });
     Factory.register<IFacebookSDK>(Keys.IFacebookSDK, new FacebookSdk());
     Factory.register<IGoogleSDK>(Keys.IGoogleSDK, new GoogleSdk());
+    Factory.register<IAppleAuthSdk>(Keys.IAppleAuthSdk, new AppleAuthSdk());
     Factory.register<IAccountService>(
       Keys.IAccountService,
       new AccountService(),
