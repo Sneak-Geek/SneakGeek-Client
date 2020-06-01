@@ -105,7 +105,7 @@ export class LoginScreen extends React.Component<Props> {
         <SafeAreaView style={{flex: 1}}>
           <StatusBar barStyle={'light-content'} />
           {!this.props.accountState.account && (
-            <View style={{flex: 1, alignItems: 'center'}}>
+            <View style={{flex: 1, alignItems: 'center', marginBottom: 10}}>
               <View style={styles.buttonContainer}>
                 {this._renderFacebookLogin()}
                 {this._renderGoogleLogin()}

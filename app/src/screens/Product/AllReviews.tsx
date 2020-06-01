@@ -155,7 +155,10 @@ export class AllReviews extends React.Component<Props> {
           <View
             style={{
               ...styles.headerContainer,
-              height: headerHeight + topInsets,
+              height:
+                headerHeight > 0
+                  ? headerHeight + topInsets
+                  : themes.IosHeaderHeight,
             }}>
             <Icon
               name={'ios-arrow-back'}

@@ -118,7 +118,16 @@ export class Payment extends React.Component<Props, State> {
     return (
       <HeaderHeightContext.Consumer>
         {(headerHeight): JSX.Element => (
-          <View style={[styles.header, {height: headerHeight + top}]}>
+          <View
+            style={[
+              styles.header,
+              {
+                height:
+                  headerHeight > 0
+                    ? headerHeight + top
+                    : themes.IosHeaderHeight,
+              },
+            ]}>
             <View style={{width: themes.IconSize, aspectRatio: 1}} />
             <AppText.Title3>{title}</AppText.Title3>
             <Icon
