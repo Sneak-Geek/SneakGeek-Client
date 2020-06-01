@@ -8,3 +8,4 @@ export * from "./SellOrder";
 export * from "./BuyOrder";
 export * from "./Address";
 export * from "./Transaction";
+export * from "./Notification";

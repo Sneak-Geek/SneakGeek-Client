@@ -32,7 +32,6 @@ export const getAllCatalogs = () => {
     try {
       const catalogPayload = await catalogService.getAllCatalogs(token);
       if (catalogPayload) {
-        await settings.loadServerSettings();
         dispatch(
           updateCatalogState({
             state: NetworkRequestState.SUCCESS,
