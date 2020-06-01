@@ -190,7 +190,10 @@ export class NewSellOrder extends React.Component<Props, State> {
           <View
             style={{
               ...styles.headerContainer,
-              height: headerHeight + topInset,
+              height:
+                headerHeight > 0
+                  ? headerHeight + topInset
+                  : themes.IosHeaderHeight,
             }}>
             {this.state.currentIndex > 0 ? (
               <Icon
