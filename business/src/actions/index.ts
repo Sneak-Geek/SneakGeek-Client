@@ -7,3 +7,4 @@ export * from "./ProfileActions";
 export * from "./CatalogActions";
 export * from "./ShoeActions";
 export * from "./OrderActions";
+export * from "./NotificationActions";

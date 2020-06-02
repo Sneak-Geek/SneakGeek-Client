@@ -1,7 +1,7 @@
 import React from 'react';
 import { Route, Switch } from 'react-router-dom';
 import { Provider } from 'react-redux';
-import { AppStore, history } from '../../store';
+import { AppStore, history } from 'store';
 import { ConnectedRouter } from 'connected-react-router';
 import { LoginScreen } from '../LoginScreen';
 import { ThemeProvider } from '@material-ui/core';

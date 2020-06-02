@@ -14,6 +14,10 @@ import {
   ProductReducers,
   CatalogReducers,
   UserReducers,
+  IAppNotificationState,
+  IOrderState,
+  OrderReducers,
+  AppNotificationReducers,
 } from 'business';
 import {
   NotificationReducers,
@@ -23,11 +27,11 @@ import {
   IEnvironmentState,
   EnvironmentReducers,
 } from 'reducers';
-import {IOrderState, OrderReducers} from 'business/src';
 
 export type IAppState = {
   UserState: IUserState;
   ProductState: IProductState;
+  AppNotificationState: IAppNotificationState;
   NotificationState: INotificationState;
   LoadingIndicatorState: ILoadingIndicatorState;
   CatalogState: ICatalogState;
@@ -38,6 +42,7 @@ export type IAppState = {
 const rootReducers = combineReducers({
   UserState: UserReducers,
   ProductState: ProductReducers,
+  AppNotificationState: AppNotificationReducers,
   NotificationState: NotificationReducers,
   LoadingIndicatorState: LoadingIndicatorReducers,
   CatalogState: CatalogReducers,

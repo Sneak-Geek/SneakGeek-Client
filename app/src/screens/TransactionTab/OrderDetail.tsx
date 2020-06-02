@@ -139,7 +139,12 @@ export class OrderDetail extends React.Component<Props, State> {
     return (
       <HeaderHeightContext.Consumer>
         {(headerHeight): JSX.Element => (
-          <View style={{...styles.headerContainer, height: headerHeight + top}}>
+          <View
+            style={{
+              ...styles.headerContainer,
+              height:
+                headerHeight > 0 ? headerHeight + top : themes.IosHeaderHeight,
+            }}>
             <Icon
               name={'ios-arrow-back'}
               type={'ionicon'}

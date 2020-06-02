@@ -19,6 +19,7 @@ import {
   ObjectFactory as Factory,
   ISettingsProvider,
   FactoryKeys as Keys,
+  getNotification,
 } from 'business';
 import {CatalogSeeMore, NotificationsScreen} from 'screens/HomeTab';
 import {createMaterialTopTabNavigator} from '@react-navigation/material-top-tabs';
@@ -74,10 +75,7 @@ type HomeTabProps = {
 };
 
 @connect((state: IAppState) => ({
-  notificationCount:
-    state.UserState.profileState.profile?.notifications?.filter(
-      (t) => !t.isRead,
-    ).length || 0,
+  notificationCount: state.AppNotificationState.notifications.length,
 }))
 class HomeTab extends React.Component<HomeTabProps> {
   public render(): JSX.Element {
@@ -204,11 +202,19 @@ const TransactionTab = (): JSX.Element => (
 
 type RootTabProps = {
   pushDeviceToken: string;
+  getNotifications: () => void;
 };
 
-@connect((state: IAppState) => ({
-  pushDeviceToken: state.EnvironmentState.pushDeviceToken,
-}))
+@connect(
+  (state: IAppState) => ({
+    pushDeviceToken: state.EnvironmentState.pushDeviceToken,
+  }),
+  (dispatch: Function) => ({
+    getNotifications: () => {
+      dispatch(getNotification());
+    },
+  }),
+)
 export class TabStack extends React.Component<RootTabProps> {
   private notificationProvider = getDependency<IPushNotificationService>(
     KeyExtensions.IPushNotificationService,
@@ -220,6 +226,9 @@ export class TabStack extends React.Component<RootTabProps> {
     );
     this.notificationProvider.initializeListeners();
     settingsProvider.loadServerSettings();
+
+    // Get notifications
+    this.props.getNotifications();
   }
 
   public componentDidUpdate(prevProps: RootTabProps) {

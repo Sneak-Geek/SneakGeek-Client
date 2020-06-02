@@ -42,7 +42,7 @@ const styles = StyleSheet.create({
     height: themes.RegularButtonHeight,
     marginVertical: 5,
     alignItems: 'center',
-    justifyContent: 'flex-start',
+    justifyContent: 'center',
     borderColor: themes.AppSecondaryColor,
     borderWidth: 0,
   },
@@ -62,7 +62,7 @@ const styles = StyleSheet.create({
     width: themes.IconSize,
     aspectRatio: 1,
     marginLeft: 10,
-    marginRight: 20,
+    marginRight: 10,
   },
   logo: {
     width: 350,
@@ -105,7 +105,7 @@ export class LoginScreen extends React.Component<Props> {
         <SafeAreaView style={{flex: 1}}>
           <StatusBar barStyle={'light-content'} />
           {!this.props.accountState.account && (
-            <View style={{flex: 1, alignItems: 'center'}}>
+            <View style={{flex: 1, alignItems: 'center', marginBottom: 10}}>
               <View style={styles.buttonContainer}>
                 {this._renderFacebookLogin()}
                 {this._renderGoogleLogin()}
@@ -185,7 +185,7 @@ export class LoginScreen extends React.Component<Props> {
     return (
       <Button
         type={'outline'}
-        buttonStyle={{backgroundColor: 'white', ...styles.button}}
+        buttonStyle={[{backgroundColor: 'white'}, styles.button]}
         title={strings.ContinueApple}
         icon={<Image source={images.Apple} style={styles.iconStyle} />}
         titleStyle={{...styles.titleStyle, color: 'black'}}

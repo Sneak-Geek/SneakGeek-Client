@@ -1,6 +1,6 @@
 import React from 'react';
 import { makeStyles, Theme } from '@material-ui/core';
-import { ProductTable } from './Components';
+import { ProductTable, ProductEdit } from './Components';
 import { Switch, Route } from 'react-router';
 
 const useStyles = makeStyles((theme: Theme) => ({
@@ -16,9 +16,8 @@ export const ProductScreen = (): JSX.Element => {
   return (
     <div className={classes.root}>
       <Switch>
-        <Route path={'/products'} component={ProductTable} />
-        <Route path={'/products/:shoeId'} component={ProductTable} />
-        <Route path={'/products/:shoeId/edit'} component={ProductTable} />
+        <Route exact path={'/products'} component={ProductTable} />
+        <Route path={'/products/:shoeId/edit'} component={ProductEdit} />
       </Switch>
     </div>
   );

@@ -1,19 +1,18 @@
 import React from 'react';
 import {connect} from 'utilities';
 import {IAppState} from 'store/AppStore';
-import {Notification, getUserProfile, NetworkRequestState} from 'business';
+import {Notification, NetworkRequestState, getNotification} from 'business';
 import {FlatList, RefreshControl, StyleSheet} from 'react-native';
 import {ListItem} from 'react-native-elements';
 import {themes} from 'resources';
-import {StackNavigationProp} from '@react-navigation/stack';
-import {RootStackParams} from 'navigations/RootStack';
 import RouteNames from 'navigations/RouteNames';
+import {StackNavigationProp} from '@react-navigation/stack';
 
 type Props = {
+  navigation: StackNavigationProp<any>;
+  getNotificationState: NetworkRequestState;
   notifications: Notification[];
-  navigation: StackNavigationProp<RootStackParams, 'HomeTabNotification'>;
-  getProfileState: NetworkRequestState;
-  getProfile: () => void;
+  getNotifications: () => void;
 };
 
 const styles = StyleSheet.create({
@@ -41,12 +40,12 @@ const NotificationItem = (props: {item: Notification; onPress: () => void}) => (
 
 @connect(
   (state: IAppState) => ({
-    notifications: state.UserState.profileState.profile?.notifications || [],
-    getProfileState: state.UserState.profileState.state,
+    getNotificationState: state.AppNotificationState.state,
+    notifications: state.AppNotificationState.notifications,
   }),
   (dispatch: Function) => ({
-    getProfile: () => {
-      dispatch(getUserProfile());
+    getNotifications: () => {
+      dispatch(getNotification());
     },
   }),
 )
@@ -65,7 +64,7 @@ export class NotificationsScreen extends React.Component<Props> {
                 {
                   screen: RouteNames.Tab.TransactionTab.Detail,
                   params: {
-                    orderId: item.order,
+                    orderId: item.orderId,
                     orderType: item.orderType,
                   },
                 },
@@ -76,9 +75,9 @@ export class NotificationsScreen extends React.Component<Props> {
         refreshControl={
           <RefreshControl
             refreshing={
-              this.props.getProfileState === NetworkRequestState.REQUESTING
+              this.props.getNotificationState === NetworkRequestState.REQUESTING
             }
-            onRefresh={() => this.props.getProfile()}
+            onRefresh={() => this.props.getNotifications()}
           />
         }
       />

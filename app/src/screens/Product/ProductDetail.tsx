@@ -128,6 +128,7 @@ const styles = StyleSheet.create({
     alignItems: 'stretch',
     justifyContent: 'space-between',
     paddingHorizontal: '3%',
+    bottom: 10,
   },
   bottomButtonStyle: {
     height: themes.RegularButtonHeight,
@@ -209,23 +210,28 @@ export class ProductDetail extends React.Component<Props> {
   private _renderHeader(topInsets: number): JSX.Element {
     return (
       <HeaderHeightContext.Consumer>
-        {(headerHeight): JSX.Element => (
-          <View
-            style={{
-              ...styles.headerContainer,
-              height: headerHeight + topInsets,
-            }}>
-            <Icon
-              name={'ios-arrow-back'}
-              type={'ionicon'}
-              size={themes.IconSize}
-              onPress={(): void => this.props.navigation.goBack()}
-              hitSlop={styles.backHitSlop}
-            />
-            <AppText.Title3>{strings.ProductDetail}</AppText.Title3>
-            <Icon name={'share'} type={'feather'} size={themes.IconSize} />
-          </View>
-        )}
+        {(headerHeight): JSX.Element => {
+          return (
+            <View
+              style={{
+                ...styles.headerContainer,
+                height:
+                  headerHeight > 0
+                    ? headerHeight + topInsets
+                    : themes.IosHeaderHeight,
+              }}>
+              <Icon
+                name={'ios-arrow-back'}
+                type={'ionicon'}
+                size={themes.IconSize}
+                onPress={(): void => this.props.navigation.goBack()}
+                hitSlop={styles.backHitSlop}
+              />
+              <AppText.Title3>{strings.ProductDetail}</AppText.Title3>
+              <Icon name={'share'} type={'feather'} size={themes.IconSize} />
+            </View>
+          );
+        }}
       </HeaderHeightContext.Consumer>
     );
   }
