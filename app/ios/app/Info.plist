@@ -77,11 +77,11 @@
 		</dict>
 	</dict>
 	<key>NSCameraUsageDescription</key>
-	<string>SneakGeek wants to take a photo</string>
+	<string>SneakGeek wants to take a photo. You can take your profile picture or sneakers images, and share it with us</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
 	<string></string>
 	<key>NSPhotoLibraryUsageDescription</key>
-	<string>SneakGeek wants to access your photo</string>
+	<string>SneakGeek wants to access your photo. You can choose your profile picture or sneakers, and share it with us</string>
 	<key>UIAppFonts</key>
 	<array>
 		<string>Roboto-Bold-Italic.ttf</string>
@@ -129,7 +129,7 @@
 	</array>
 	<key>UIViewControllerBasedStatusBarAppearance</key>
 	<false/>
-  <key>ITSAppUsesNonExemptEncryption</key>
-  <false/>
+	<key>ITSAppUsesNonExemptEncryption</key>
+	<false/>
 </dict>
 </plist>
