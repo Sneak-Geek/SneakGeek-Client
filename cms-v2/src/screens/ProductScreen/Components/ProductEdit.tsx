@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, { useState } from 'react';
 import {
   Card,
   CardContent,
@@ -11,16 +11,11 @@ import {
   Button,
 } from '@material-ui/core';
 import { History } from 'history';
-import {
-  Shoe,
-  ObjectFactory,
-  IShoeService,
-  FactoryKeys,
-} from 'business';
-import { getToken } from "../../../utilities";
+import { Shoe, ObjectFactory, IShoeService, FactoryKeys } from 'business';
+import { getToken } from '../../../utilities';
 
 type Props = {
-  history: History<{shoe:Shoe}>;
+  history: History<{ shoe: Shoe }>;
   isEditMode: boolean;
 };
 
@@ -51,19 +46,19 @@ const useStyles = makeStyles((theme: Theme) => ({
       backgroundColor: '#1976d2', // material-ui original color for primary button
       color: 'white',
     },
-  }
+  },
 }));
 
 const ProductEdit = (props: Props): JSX.Element => {
   const classes = useStyles();
   const shoe: Shoe = props.history.location.state.shoe;
 
-  const [title, setTitle] = useState(shoe?.title?? '');
-  const [brand, setBrand] = useState(shoe?.brand?? '');
-  const [category, setCategory] = useState(shoe?.category?? '');
-  const [retailPrice, setRetailPrice] = useState(shoe?.retailPrice?? '');
-  const [releaseDate, setReleaseDate] = useState(shoe?.releaseDate?? '');
-  const [description, setDescription] = useState(shoe?.description?? '');
+  const [title, setTitle] = useState(shoe?.title ?? '');
+  const [brand, setBrand] = useState(shoe?.brand ?? '');
+  const [category, setCategory] = useState(shoe?.category ?? '');
+  const [retailPrice, setRetailPrice] = useState(shoe?.retailPrice ?? '');
+  const [releaseDate, setReleaseDate] = useState(shoe?.releaseDate ?? '');
+  const [description, setDescription] = useState(shoe?.description ?? '');
 
   return (
     <div className={classes.root}>
@@ -72,14 +67,19 @@ const ProductEdit = (props: Props): JSX.Element => {
       </Typography>
       <Card>
         <CardContent>
-          <CardMedia component={'img'} alt={'Shoe image'} image={shoe.imageUrl} className={classes.shoeImg}/>
+          <CardMedia
+            component={'img'}
+            alt={'Shoe image'}
+            image={shoe.imageUrl}
+            className={classes.shoeImg}
+          />
           <Grid container spacing={3}>
             <Grid item xs={4}></Grid>
             <Grid item xs={4}>
               <TextField
-                variant='outlined'
+                variant="outlined"
                 required
-                label='Title'
+                label="Title"
                 defaultValue={title}
                 fullWidth
                 InputLabelProps={{
@@ -95,9 +95,9 @@ const ProductEdit = (props: Props): JSX.Element => {
           <Grid container spacing={3}>
             <Grid item xs>
               <TextField
-                variant='outlined'
+                variant="outlined"
                 required
-                label='Brand'
+                label="Brand"
                 defaultValue={brand}
                 fullWidth
                 onChange={(event) => setBrand(event.target.value)}
@@ -105,9 +105,9 @@ const ProductEdit = (props: Props): JSX.Element => {
             </Grid>
             <Grid item xs>
               <TextField
-                variant='outlined'
+                variant="outlined"
                 required
-                label='Category'
+                label="Category"
                 defaultValue={category}
                 fullWidth
                 onChange={(event) => setCategory(event.target.value)}
@@ -117,8 +117,8 @@ const ProductEdit = (props: Props): JSX.Element => {
           <Grid container spacing={3}>
             <Grid item xs>
               <TextField
-                variant='outlined'
-                label='Retail price'
+                variant="outlined"
+                label="Retail price"
                 fullWidth
                 InputLabelProps={{
                   shrink: true,
@@ -129,8 +129,8 @@ const ProductEdit = (props: Props): JSX.Element => {
             </Grid>
             <Grid item xs>
               <TextField
-                variant='outlined'
-                label='Release date'
+                variant="outlined"
+                label="Release date"
                 defaultValue={releaseDate}
                 fullWidth
                 onChange={(event) => setReleaseDate(event.target.value)}
@@ -140,8 +140,8 @@ const ProductEdit = (props: Props): JSX.Element => {
           <Grid container spacing={3}>
             <Grid item xs={12}>
               <TextField
-                variant='outlined'
-                label='Description'
+                variant="outlined"
+                label="Description"
                 fullWidth
                 multiline
                 rows={6}
@@ -157,23 +157,25 @@ const ProductEdit = (props: Props): JSX.Element => {
       </Card>
       <Grid
         container
-        direction='row'
-        justify='flex-end'
-        alignItems='center' 
+        direction="row"
+        justify="flex-end"
+        alignItems="center"
         className={classes.buttonContainer}
       >
         <Button
-          variant='contained'
-          className='cancelButton'
+          variant="contained"
+          className="cancelButton"
           onClick={() => props.history.goBack()}
         >
           Huỷ
         </Button>
         <Button
-          variant='contained'
-          className='confirmButton'
+          variant="contained"
+          className="confirmButton"
           onClick={async () => {
-            const shoeService = ObjectFactory.getObjectInstance<IShoeService>(FactoryKeys.IShoeService);
+            const shoeService = ObjectFactory.getObjectInstance<IShoeService>(
+              FactoryKeys.IShoeService,
+            );
             try {
               const updateParam = {
                 shoeId: shoe._id,
@@ -185,11 +187,10 @@ const ProductEdit = (props: Props): JSX.Element => {
                 releaseDate,
                 description,
               };
-              if (!retailPrice) { delete updateParam.retailPrice; }
-              await shoeService.updateShoe(
-                getToken(),
-                updateParam,
-              );
+              if (!retailPrice) {
+                delete updateParam.retailPrice;
+              }
+              await shoeService.updateShoe(getToken(), updateParam);
               props.history.goBack();
             } catch (error) {
               alert(error);

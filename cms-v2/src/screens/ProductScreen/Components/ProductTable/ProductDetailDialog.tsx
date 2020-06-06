@@ -36,11 +36,11 @@ const ProductDetailDialog = (props: Props): JSX.Element => {
   const [scroll, setScroll] = React.useState<DialogProps['scroll']>('paper');
 
   const fieldMappings: { [key: string]: string | undefined } = {
-    'Tên': props.shoe?.title,
+    Tên: props.shoe?.title,
     'Mã sản phẩm': props.shoe?._id,
-    'Hãng': props.shoe?.brand,
+    Hãng: props.shoe?.brand,
     'Miêu tả': props.shoe?.description,
-    'Màu': props.shoe?.colorway?.join(' '),
+    Màu: props.shoe?.colorway?.join(' '),
     'Phân loại': props.shoe?.category,
     'Giá gốc': props.shoe?.retailPrice?.toString(),
   };

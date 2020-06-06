@@ -39,7 +39,7 @@ class ProductList extends React.Component<Props, State> {
     total: 0,
     keyword: '',
     shoeViewDialogOpen: false,
-    selectedShoe: undefined
+    selectedShoe: undefined,
   };
 
   public componentDidMount() {
@@ -110,9 +110,9 @@ class ProductList extends React.Component<Props, State> {
 
   private onShoeView(shoe: Shoe, isEditMode: boolean) {
     if (isEditMode) {
-      this.props.history.push(`/products/${shoe._id}/edit`, {shoe});
+      this.props.history.push(`/products/${shoe._id}/edit`, { shoe });
     } else {
-      this.setState({ shoeViewDialogOpen: true, selectedShoe: shoe, });
+      this.setState({ shoeViewDialogOpen: true, selectedShoe: shoe });
     }
   }
 
