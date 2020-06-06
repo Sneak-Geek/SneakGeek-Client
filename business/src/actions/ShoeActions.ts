@@ -1,6 +1,11 @@
 import { Dispatch, AnyAction } from "redux"
 import { createAction } from "redux-actions"
-import { SearchShoesPayload, NetworkRequestState, GetReviewsPayload, GetShoeInfoPayload } from "../payload"
+import {
+  SearchShoesPayload,
+  NetworkRequestState,
+  GetReviewsPayload,
+  GetShoeInfoPayload,
+} from "../payload"
 import { ObjectFactory, FactoryKeys } from "../loader/kernel";
 import { IShoeService, ISettingsProvider, SettingsKey } from "../loader/interfaces";
 import { Review } from "../model";

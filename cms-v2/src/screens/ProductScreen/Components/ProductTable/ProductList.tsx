@@ -110,7 +110,7 @@ class ProductList extends React.Component<Props, State> {
 
   private onShoeView(shoe: Shoe, isEditMode: boolean) {
     if (isEditMode) {
-      this.props.history.push(`/products/${shoe._id}`, shoe);
+      this.props.history.push(`/products/${shoe._id}/edit`, {shoe});
     } else {
       this.setState({ shoeViewDialogOpen: true, selectedShoe: shoe, });
     }
