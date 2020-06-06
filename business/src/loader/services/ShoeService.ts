@@ -95,4 +95,15 @@ export class ShoeService extends BaseService implements IShoeService {
       });
     return response.data;
   }
+
+  public async updateShoe(token: string, updateParam: any) {
+    const response = await this.apiClient
+      .getInstance()
+      .put(
+        '/shoe/update',
+        { ...updateParam },
+        { headers: { authorization: token } }
+      );
+    return response.data;
+  }
 }
