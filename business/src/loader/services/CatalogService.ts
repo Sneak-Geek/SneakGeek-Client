@@ -5,7 +5,7 @@ import { ICatalogService } from "../interfaces";
 
 export class CatalogService extends BaseService implements ICatalogService {
   public async getAllCatalogs(token: string): Promise<Catalog[] | undefined> {
-    const response = await this.apiClient.getInstance().get(`/catalogue/`, {
+    const response = await this.apiClient.getInstance().get(`/catalogue/all`, {
       headers: {
         authorization_token: token,
       },
