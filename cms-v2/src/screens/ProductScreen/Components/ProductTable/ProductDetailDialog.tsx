@@ -19,7 +19,7 @@ type Props = {
   isDialogOpen: boolean;
 };
 
-const useStyles = makeStyles((theme: Theme) => ({
+const useStyles = makeStyles(() => ({
   container: {
     display: 'flex',
     flexDirection: 'column',
