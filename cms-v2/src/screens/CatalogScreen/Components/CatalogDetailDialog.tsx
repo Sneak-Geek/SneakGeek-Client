@@ -45,7 +45,7 @@ const CatalogDetailDialog = (props: {
 
   return (
     <Dialog scroll={scroll} onClose={props.onClose} open={props.isVisible}>
-      <DialogTitle>Thông tin giày</DialogTitle>
+      <DialogTitle>Thông tin catalog</DialogTitle>
       <DialogContent dividers={scroll === 'paper'}>
         {props.catalog?.coverImage && (
           <img src={props.catalog?.coverImage} className={classes.image} />
