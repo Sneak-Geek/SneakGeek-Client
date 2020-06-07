@@ -11,7 +11,10 @@ import {
   Card,
   CardContent,
   makeStyles,
+  IconButton,
+  Icon,
 } from '@material-ui/core';
+import CatalogDetailDialog from './CatalogDetailDialog';
 
 const useStyles = makeStyles(() => ({
   content: {
@@ -22,8 +25,51 @@ const useStyles = makeStyles(() => ({
   },
 }));
 
+const CatalogTableContent = (props: {
+  catalogs: Catalog[];
+  onCatalogSelected: (c: Catalog) => void;
+}): JSX.Element => (
+  <Table>
+    <TableHead>
+      <TableRow>
+        <TableCell>Ảnh cover</TableCell>
+        <TableCell>Title</TableCell>
+        <TableCell>Miêu tả</TableCell>
+        <TableCell>Số sản phẩm</TableCell>
+        <TableCell>Action</TableCell>
+      </TableRow>
+    </TableHead>
+    {props.catalogs.map((c) => (
+      <TableRow hover key={c._id}>
+        <TableCell>
+          <Avatar src={c.coverImage} variant={'square'} sizes={'large'} />
+        </TableCell>
+        <TableCell>
+          <Typography variant={'body1'}>{c.title}</Typography>
+        </TableCell>
+        <TableCell>
+          <Typography variant={'body1'}>{c.description}</Typography>
+        </TableCell>
+        <TableCell>
+          <Typography variant={'body1'}>{c.products.length}</Typography>
+        </TableCell>
+        <TableCell>
+          <IconButton>
+            <Icon>edit</Icon>
+          </IconButton>
+          <IconButton onClick={() => props.onCatalogSelected(c)}>
+            <Icon>preview</Icon>
+          </IconButton>
+        </TableCell>
+      </TableRow>
+    ))}
+  </Table>
+);
+
 const CatalogTable = (): JSX.Element => {
   const [catalogs, setCatalogs] = useState(new Array<Catalog>());
+  const [selectedCatalog, setSelectedCatalog] = useState<Catalog>();
+  const [dialogVisible, setDialogVisible] = useState(false);
 
   const fetchCatalogs = async () => {
     const catalogService = ObjectFactory.getObjectInstance<ICatalogService>(
@@ -49,34 +95,20 @@ const CatalogTable = (): JSX.Element => {
       </Typography>
       <Card>
         <CardContent className={classes.content}>
-          <Table>
-            <TableHead>
-              <TableRow>
-                <TableCell>Ảnh đại diện</TableCell>
-                <TableCell>Title</TableCell>
-                <TableCell>Miêu tả</TableCell>
-                <TableCell>Tổng sản phẩm</TableCell>
-              </TableRow>
-            </TableHead>
-            {catalogs.map((c) => (
-              <TableRow key={c._id}>
-                <TableCell>
-                  <Avatar src={c.coverImage} variant={'square'} sizes={'large'} />
-                </TableCell>
-                <TableCell>
-                  <Typography variant={'body1'}>{c.title}</Typography>
-                </TableCell>
-                <TableCell>
-                  <Typography variant={'body1'}>{c.description}</Typography>
-                </TableCell>
-                <TableCell>
-                  <Typography variant={'body1'}>{c.products.length}</Typography>
-                </TableCell>
-              </TableRow>
-            ))}
-          </Table>
+          <CatalogTableContent
+            catalogs={catalogs}
+            onCatalogSelected={(c: Catalog) => {
+              setSelectedCatalog(c);
+              setDialogVisible(true);
+            }}
+          />
         </CardContent>
       </Card>
+      <CatalogDetailDialog
+        catalog={selectedCatalog}
+        isVisible={dialogVisible}
+        onClose={() => setDialogVisible(false)}
+      />
     </div>
   );
 };
