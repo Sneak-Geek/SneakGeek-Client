@@ -28,4 +28,5 @@ export interface IShoeService {
       }>
     | undefined
   >;
+  updateShoe: (token: string, updateParam: any) => Promise<Shoe>;
 }

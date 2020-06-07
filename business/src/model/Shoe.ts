@@ -1,5 +1,6 @@
 export interface Shoe {
   _id: string;
+  esId?: string;
   brand: string;
   category: string;
   colorway: string[];
