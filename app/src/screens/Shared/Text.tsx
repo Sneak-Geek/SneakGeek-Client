@@ -108,7 +108,7 @@ class Subhead extends React.PureComponent<TextProps> {
 class Body extends React.PureComponent<TextProps> {
   public render(): JSX.Element {
     return (
-      <Text {...this.props} style={[themes.TextStyle.body, this.props.style]}/>
+      <Text {...this.props} style={[themes.TextStyle.body, this.props.style]} />
     );
   }
 }

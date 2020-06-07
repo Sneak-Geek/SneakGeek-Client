@@ -148,7 +148,7 @@ const styles = StyleSheet.create({
     marginTop: 15,
     flexDirection: 'row',
     alignItems: 'center',
-  }
+  },
 });
 
 @connect(
@@ -283,7 +283,10 @@ export class ProductDetail extends React.Component<Props> {
   private _renderProductDetail(): JSX.Element {
     const fieldMapping = new Map<string, string>([
       [this._shoe.brand, strings.Brand],
-      [this._shoe.retailPrice? toCurrencyString(this._shoe.retailPrice) : '-', strings.RetailPrice],
+      [
+        this._shoe.retailPrice ? toCurrencyString(this._shoe.retailPrice) : '-',
+        strings.RetailPrice,
+      ],
       [toVnDateFormat(this._shoe.releaseDate), strings.ReleaseDate],
     ]);
     const views: JSX.Element[] = [];
@@ -308,19 +311,19 @@ export class ProductDetail extends React.Component<Props> {
 
     let content: JSX.Element;
     if (state === NetworkRequestState.REQUESTING) {
-      content = <ActivityIndicator/>;
+      content = <ActivityIndicator />;
     } else if (state === NetworkRequestState.SUCCESS && reviews.length > 0) {
       <View>
         {reviews.slice(0, 2).map((review) => (
           <ReviewItem key={review._id} review={review} />
         ))}
-      </View>
+      </View>;
     } else {
       content = null;
     }
 
     return (
-      <View style={{paddingHorizontal: 20, alignItems: 'flex-start' }}>
+      <View style={{paddingHorizontal: 20, alignItems: 'flex-start'}}>
         <View style={styles.ratingHeaderContainer}>
           <AppText.Headline>{strings.Rating.toUpperCase()}</AppText.Headline>
         </View>
@@ -356,12 +359,13 @@ export class ProductDetail extends React.Component<Props> {
             size={themes.IconSize}
             color={themes.AppPrimaryColor}
           />
-          <AppText.Body style={{color:themes.AppPrimaryColor,marginHorizontal:6}}>
+          <AppText.Body
+            style={{color: themes.AppPrimaryColor, marginHorizontal: 6}}>
             {strings.AddReview}
           </AppText.Body>
         </View>
       </TouchableOpacity>
-    )
+    );
   }
 
   private _onAddReview(): void {
@@ -430,7 +434,9 @@ export class ProductDetail extends React.Component<Props> {
     return (
       <View style={{flex: 1, paddingHorizontal: 20}}>
         <View style={styles.ratingHeaderContainer}>
-          <AppText.Headline>{strings.RelatedProducts.toUpperCase()}</AppText.Headline>
+          <AppText.Headline>
+            {strings.RelatedProducts.toUpperCase()}
+          </AppText.Headline>
         </View>
         {content}
       </View>
@@ -441,43 +447,35 @@ export class ProductDetail extends React.Component<Props> {
     const {highestBuyOrder, lowestSellOrder} = this.props.shoeInfoState;
     return (
       <View style={{bottom, ...styles.bottomContainer}}>
-        {this._renderSingleActionButton(
-          'Mua',
-          lowestSellOrder,
-          () => {
-            // @ts-ignore
+        {this._renderSingleActionButton('Mua', lowestSellOrder, () => {
+          // @ts-ignore
+          this.props.navigation.push(RouteNames.Order.Name, {
+            screen: RouteNames.Order.SizeSelection,
+            params: {
+              orderType: 'SellOrder',
+              shoe: this._shoe,
+            },
+          });
+        })}
+        {this._renderSingleActionButton('Bán', highestBuyOrder, () => {
+          // @ts-ignore
+          if (highestBuyOrder) {
             this.props.navigation.push(RouteNames.Order.Name, {
               screen: RouteNames.Order.SizeSelection,
               params: {
-                orderType: 'SellOrder',
+                orderType: 'BuyOrder',
                 shoe: this._shoe,
               },
             });
-          },
-        )}
-        {this._renderSingleActionButton(
-          'Bán',
-          highestBuyOrder,
-          () => {
-            // @ts-ignore
-            if (highestBuyOrder) {
-              this.props.navigation.push(RouteNames.Order.Name, {
-                screen: RouteNames.Order.SizeSelection,
-                params: {
-                  orderType: 'BuyOrder',
-                  shoe: this._shoe,
-                },
-              });
-            } else {
-              this.props.navigation.push(RouteNames.Order.Name, {
-                screen: RouteNames.Order.NewSellOrder,
-                params: {
-                  shoe: this._shoe,
-                },
-              });
-            }
-          },
-        )}
+          } else {
+            this.props.navigation.push(RouteNames.Order.Name, {
+              screen: RouteNames.Order.NewSellOrder,
+              params: {
+                shoe: this._shoe,
+              },
+            });
+          }
+        })}
       </View>
     );
   }
@@ -501,15 +499,15 @@ export class ProductDetail extends React.Component<Props> {
     let subtitle: string;
     let price: string;
     switch (actionType) {
-      case "Mua":
-        backgroundColor = "#1E2330";
-        subtitle = "thấp nhất";
+      case 'Mua':
+        backgroundColor = '#1E2330';
+        subtitle = 'thấp nhất';
         price = order ? toCurrencyString((order as SellOrder).sellPrice) : '-';
         break;
       default:
         backgroundColor = themes.AppSellColor;
-        subtitle = "cao nhất";
-        toCurrencyString
+        subtitle = 'cao nhất';
+        toCurrencyString;
         price = order ? toCurrencyString((order as BuyOrder).buyPrice) : '-';
     }
 
@@ -543,7 +541,8 @@ export class ProductDetail extends React.Component<Props> {
               <AppText.Body style={{color: themes.AppAccentColor}}>
                 {subtitle}
               </AppText.Body>
-              <AppText.SubCallout style={{color: themes.AppAccentColor, alignSelf: 'center'}}>
+              <AppText.SubCallout
+                style={{color: themes.AppAccentColor, alignSelf: 'center'}}>
                 {price}
               </AppText.SubCallout>
             </View>
