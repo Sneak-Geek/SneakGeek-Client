@@ -44,11 +44,6 @@ const styles = StyleSheet.create({
     marginTop: 10,
   },
 
-  summaryField: {
-    opacity: 0.6,
-    textTransform: 'uppercase',
-  },
-
   editShippingInfo: {
     color: '#E2603F',
   },
@@ -104,7 +99,7 @@ export class ProductSellSummary extends React.Component<Props> {
   private _renderSummaryDetail(field: string, value: string): JSX.Element {
     return (
       <View style={styles.sectionContainer}>
-        <AppText.SubHeadline style={styles.summaryField}>
+        <AppText.SubHeadline>
           {field}
         </AppText.SubHeadline>
         <AppText.Body>{value}</AppText.Body>
@@ -121,7 +116,7 @@ export class ProductSellSummary extends React.Component<Props> {
             styles.sectionContainer,
             styles.shippingInfoSectionContainer,
           ]}>
-          <AppText.SubHeadline style={styles.summaryField}>
+          <AppText.SubHeadline>
             {'Thông tin giao hàng'}
           </AppText.SubHeadline>
           <AppText.Body
