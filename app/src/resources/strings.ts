@@ -73,6 +73,7 @@ export const strings = {
   NoReview: 'Hiện tại chưa có đánh giá nào.',
   Rating: 'Đánh giá sản phẩm',
   ReleaseDate: 'Ngày ra mắt',
+  RetailPrice: 'Giá bán lẻ',
   NewReview: 'Đánh giá mới',
   RatingTitle: 'Đánh giá:',
   RatingPlaceHolder: 'Giày đi êm chân, dáng đẹp,...',

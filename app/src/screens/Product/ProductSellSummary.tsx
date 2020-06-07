@@ -44,11 +44,6 @@ const styles = StyleSheet.create({
     marginTop: 10,
   },
 
-  summaryField: {
-    opacity: 0.6,
-    textTransform: 'uppercase',
-  },
-
   editShippingInfo: {
     color: '#E2603F',
   },
@@ -104,9 +99,7 @@ export class ProductSellSummary extends React.Component<Props> {
   private _renderSummaryDetail(field: string, value: string): JSX.Element {
     return (
       <View style={styles.sectionContainer}>
-        <AppText.SubHeadline style={styles.summaryField}>
-          {field}
-        </AppText.SubHeadline>
+        <AppText.SubHeadline>{field}</AppText.SubHeadline>
         <AppText.Body>{value}</AppText.Body>
       </View>
     );
@@ -121,9 +114,7 @@ export class ProductSellSummary extends React.Component<Props> {
             styles.sectionContainer,
             styles.shippingInfoSectionContainer,
           ]}>
-          <AppText.SubHeadline style={styles.summaryField}>
-            {'Thông tin giao hàng'}
-          </AppText.SubHeadline>
+          <AppText.SubHeadline>{'Thông tin giao hàng'}</AppText.SubHeadline>
           <AppText.Body
             style={styles.editShippingInfo}
             onPress={() => this.props.onEditShippingInfo()}>
@@ -161,12 +152,12 @@ export class ProductSellSummary extends React.Component<Props> {
       return false;
     }
     return true;
-  };
+  }
 
   private _renderName(): JSX.Element {
     const name = `${this.props.userProfile.userProvidedName.firstName} ${this.props.userProfile.userProvidedName.lastName}`;
     return <AppText.Body>{name}</AppText.Body>;
-  };
+  }
 
   private _renderShippingInfoDetails(): JSX.Element {
     const profile = this.props.userProfile;
@@ -186,7 +177,7 @@ export class ProductSellSummary extends React.Component<Props> {
           }>{`${ward} - ${district} - ${city}`}</AppText.Footnote>
       </>
     );
-  };
+  }
 
   private _renderPictures(): JSX.Element {
     return (
