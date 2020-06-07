@@ -141,7 +141,7 @@ const styles = StyleSheet.create({
     height: themes.RegularButtonHeight,
     width: Dimensions.get('window').width * 0.45,
     alignItems: 'center',
-    borderRadius: themes.ButtonBorderRadius,
+    borderRadius: themes.LargeBorderRadius,
     flexDirection: 'row',
   },
   addReview: {
