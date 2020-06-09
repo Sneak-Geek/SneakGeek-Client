@@ -83,6 +83,17 @@ class Callout extends React.PureComponent<TextProps> {
   }
 }
 
+class SubCallout extends React.PureComponent<TextProps> {
+  public render(): JSX.Element {
+    return (
+      <Text
+        {...this.props}
+        style={[themes.TextStyle.subcallout, this.props.style]}
+      />
+    );
+  }
+}
+
 class Subhead extends React.PureComponent<TextProps> {
   public render(): JSX.Element {
     return (
@@ -147,5 +158,6 @@ export const AppText = {
   Caption1,
   Caption2,
   Callout,
+  SubCallout,
   Subhead,
 };

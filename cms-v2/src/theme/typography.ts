@@ -1,7 +1,7 @@
 import palette from './pallete';
 
 // BUG IN TYPESCRIPT DON'T OVERRIDE
-const override: "uppercase" = "uppercase";
+const override: 'uppercase' = 'uppercase';
 
 export default {
   h1: {

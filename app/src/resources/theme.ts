@@ -3,13 +3,13 @@ import {StyleSheet, Platform} from 'react-native';
 export const themes = {
   IosHeaderHeight: 44,
   FacebookThemeColor: '#3B5998',
-  IconSize: 24,
+  IconSize: 18,
   RegularButtonHeight: 54,
   MediumButtonHeigt: 40,
   ButtonBorderRadius: 4,
-  LargeBorderRadius: 40,
+  LargeBorderRadius: 64,
   DisabledColor: '#DADADA',
-  AppPrimaryColor: '#1ABC9C',
+  AppPrimaryColor: '#E2603F',
   AppSecondaryColor: '#000',
   AppAccentColor: '#FFF',
   AppErrorColor: '#FF2D55',
@@ -59,6 +59,8 @@ export const themes = {
     subheadline: {
       fontSize: 14,
       fontFamily: 'RobotoCondensed-Bold',
+      opacity: 0.6,
+      textTransform: 'uppercase',
     },
 
     body: {
@@ -68,6 +70,11 @@ export const themes = {
 
     callout: {
       fontSize: 16,
+      fontFamily: 'RobotoCondensed-Regular',
+    },
+
+    subcallout: {
+      fontSize: 14,
       fontFamily: 'RobotoCondensed-Regular',
     },
 

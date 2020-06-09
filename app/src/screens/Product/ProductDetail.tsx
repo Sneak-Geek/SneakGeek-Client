@@ -21,7 +21,7 @@ import {SafeAreaConsumer} from 'react-native-safe-area-context';
 import {AppText, LiteShoeCard, ReviewItem} from 'screens/Shared';
 import {strings, themes} from 'resources';
 import {Icon} from 'react-native-elements';
-import {connect, toVnDateFormat} from 'utilities';
+import {connect, toVnDateFormat, toCurrencyString} from 'utilities';
 import Humanize from 'humanize-plus';
 import {IAppState} from 'store/AppStore';
 import {
@@ -93,13 +93,20 @@ const styles = StyleSheet.create({
     right: 10,
   },
   shoeTitle: {
-    marginVertical: 20,
+    marginTop: 24,
     marginHorizontal: '15%',
     textAlign: 'center',
   },
+  shoeDescription: {
+    textAlign: 'center',
+    textAlignVertical: 'center',
+    marginTop: 30,
+    marginHorizontal: 40,
+    lineHeight: themes.TextStyle.body.fontSize * 1.4,
+  },
   detailRow: {
     flexDirection: 'row',
-    marginVertical: 10,
+    marginTop: 30,
     alignItems: 'flex-start',
     justifyContent: 'center',
   },
@@ -116,6 +123,7 @@ const styles = StyleSheet.create({
     marginVertical: 10,
   },
   ratingHeaderContainer: {
+    marginTop: 40,
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
@@ -128,14 +136,18 @@ const styles = StyleSheet.create({
     alignItems: 'stretch',
     justifyContent: 'space-between',
     paddingHorizontal: '3%',
-    bottom: 10,
   },
   bottomButtonStyle: {
     height: themes.RegularButtonHeight,
     width: Dimensions.get('window').width * 0.45,
     alignItems: 'center',
-    borderRadius: themes.ButtonBorderRadius,
+    borderRadius: themes.LargeBorderRadius,
     flexDirection: 'row',
+  },
+  addReview: {
+    marginTop: 15,
+    flexDirection: 'row',
+    alignItems: 'center',
   },
 });
 
@@ -262,7 +274,7 @@ export class ProductDetail extends React.Component<Props> {
     }
 
     return (
-      <AppText.Body style={{marginHorizontal: 30}}>
+      <AppText.Body style={styles.shoeDescription}>
         {this._shoe.description}
       </AppText.Body>
     );
@@ -270,19 +282,20 @@ export class ProductDetail extends React.Component<Props> {
 
   private _renderProductDetail(): JSX.Element {
     const fieldMapping = new Map<string, string>([
-      [this._shoe.title, strings.ProductName],
-      [this._shoe.colorway.join(', '), strings.Colorway],
       [this._shoe.brand, strings.Brand],
-      [this._shoe.category, strings.Category],
+      [
+        this._shoe.retailPrice ? toCurrencyString(this._shoe.retailPrice) : '-',
+        strings.RetailPrice,
+      ],
       [toVnDateFormat(this._shoe.releaseDate), strings.ReleaseDate],
     ]);
     const views: JSX.Element[] = [];
     fieldMapping.forEach((value: string, key: string) =>
       views.push(
         <View key={key} style={styles.detailRow}>
-          <AppText.Subhead style={styles.detailKey}>
+          <AppText.SubHeadline style={styles.detailKey}>
             {value.toUpperCase()}
-          </AppText.Subhead>
+          </AppText.SubHeadline>
           <AppText.Body style={styles.detailValue} numberOfLines={2}>
             {key}
           </AppText.Body>
@@ -299,37 +312,22 @@ export class ProductDetail extends React.Component<Props> {
     let content: JSX.Element;
     if (state === NetworkRequestState.REQUESTING) {
       content = <ActivityIndicator />;
-    } else if (state === NetworkRequestState.FAILED) {
+    } else if (state === NetworkRequestState.SUCCESS && reviews.length > 0) {
+      <View>
+        {reviews.slice(0, 2).map((review) => (
+          <ReviewItem key={review._id} review={review} />
+        ))}
+      </View>;
+    } else {
       content = null;
     }
 
-    if (state === NetworkRequestState.SUCCESS && reviews.length === 0) {
-      content = (
-        <AppText.Subhead style={styles.noReview}>
-          {strings.NoReview}
-        </AppText.Subhead>
-      );
-    } else {
-      content = (
-        <View style={{marginTop: 10}}>
-          {reviews.slice(0, 2).map((review) => (
-            <ReviewItem key={review._id} review={review} />
-          ))}
-        </View>
-      );
-    }
-
     return (
-      <View style={{flex: 1, padding: 20}}>
+      <View style={{paddingHorizontal: 20, alignItems: 'flex-start'}}>
         <View style={styles.ratingHeaderContainer}>
-          <AppText.Title2>{strings.Rating}</AppText.Title2>
-          <Icon
-            name={'edit'}
-            size={themes.IconSize}
-            color={themes.AppPrimaryColor}
-            onPress={this._onEditReview.bind(this)}
-          />
+          <AppText.Headline>{strings.Rating.toUpperCase()}</AppText.Headline>
         </View>
+        {this._renderAddReview()}
         {content}
         {reviews.length >= 3 ? (
           <View style={{flex: 1, flexDirection: 'row-reverse'}}>
@@ -352,7 +350,25 @@ export class ProductDetail extends React.Component<Props> {
     );
   }
 
-  private _onEditReview(): void {
+  private _renderAddReview(): JSX.Element {
+    return (
+      <TouchableOpacity onPress={this._onAddReview.bind(this)}>
+        <View style={styles.addReview}>
+          <Icon
+            name={'edit'}
+            size={themes.IconSize}
+            color={themes.AppPrimaryColor}
+          />
+          <AppText.Body
+            style={{color: themes.AppPrimaryColor, marginHorizontal: 6}}>
+            {strings.AddReview}
+          </AppText.Body>
+        </View>
+      </TouchableOpacity>
+    );
+  }
+
+  private _onAddReview(): void {
     const {profile, navigation} = this.props;
     if (
       profile.userProvidedName &&
@@ -416,9 +432,11 @@ export class ProductDetail extends React.Component<Props> {
     }
 
     return (
-      <View style={{flex: 1, padding: 20}}>
+      <View style={{flex: 1, paddingHorizontal: 20}}>
         <View style={styles.ratingHeaderContainer}>
-          <AppText.Title2>{strings.RelatedProducts}</AppText.Title2>
+          <AppText.Headline>
+            {strings.RelatedProducts.toUpperCase()}
+          </AppText.Headline>
         </View>
         {content}
       </View>
@@ -429,64 +447,42 @@ export class ProductDetail extends React.Component<Props> {
     const {highestBuyOrder, lowestSellOrder} = this.props.shoeInfoState;
     return (
       <View style={{bottom, ...styles.bottomContainer}}>
-        {this._renderSingleActionButton(
-          'Bán',
-          `Cao: ${
-            highestBuyOrder
-              ? Humanize.compactInteger(highestBuyOrder.buyPrice, 2)
-              : '-'
-          }`,
-          'cart-arrow-up',
-          themes.AppSellColor,
-          () => {
-            // @ts-ignore
-            if (highestBuyOrder) {
-              this.props.navigation.push(RouteNames.Order.Name, {
-                screen: RouteNames.Order.SizeSelection,
-                params: {
-                  orderType: 'BuyOrder',
-                  shoe: this._shoe,
-                },
-              });
-            } else {
-              this.props.navigation.push(RouteNames.Order.Name, {
-                screen: RouteNames.Order.NewSellOrder,
-                params: {
-                  shoe: this._shoe,
-                },
-              });
-            }
-          },
-        )}
-        {this._renderSingleActionButton(
-          'Mua',
-          `Thấp: ${
-            lowestSellOrder
-              ? Humanize.compactInteger(lowestSellOrder.sellPrice, 2)
-              : '-'
-          }`,
-          'cart-arrow-down',
-          themes.AppPrimaryColor,
-          () => {
-            // @ts-ignore
+        {this._renderSingleActionButton('Mua', lowestSellOrder, () => {
+          // @ts-ignore
+          this.props.navigation.push(RouteNames.Order.Name, {
+            screen: RouteNames.Order.SizeSelection,
+            params: {
+              orderType: 'SellOrder',
+              shoe: this._shoe,
+            },
+          });
+        })}
+        {this._renderSingleActionButton('Bán', highestBuyOrder, () => {
+          // @ts-ignore
+          if (highestBuyOrder) {
             this.props.navigation.push(RouteNames.Order.Name, {
               screen: RouteNames.Order.SizeSelection,
               params: {
-                orderType: 'SellOrder',
+                orderType: 'BuyOrder',
                 shoe: this._shoe,
               },
             });
-          },
-        )}
+          } else {
+            this.props.navigation.push(RouteNames.Order.Name, {
+              screen: RouteNames.Order.NewSellOrder,
+              params: {
+                shoe: this._shoe,
+              },
+            });
+          }
+        })}
       </View>
     );
   }
 
   private _renderSingleActionButton(
-    title: string,
-    subtitle: string,
-    iconName: string,
-    backgroundColor: string,
+    actionType: string,
+    order: SellOrder | BuyOrder,
     onPress: () => void,
   ): JSX.Element {
     const {account, profile} = this.props;
@@ -498,6 +494,22 @@ export class ProductDetail extends React.Component<Props> {
       !profile.userProvidedAddress.districtId ||
       !profile.userProvidedAddress.wardCode ||
       !profile.userProvidedAddress.streetAddress;
+
+    let backgroundColor: string;
+    let subtitle: string;
+    let price: string;
+    switch (actionType) {
+      case 'Mua':
+        backgroundColor = '#1E2330';
+        subtitle = 'thấp nhất';
+        price = order ? toCurrencyString((order as SellOrder).sellPrice) : '-';
+        break;
+      default:
+        backgroundColor = themes.AppSellColor;
+        subtitle = 'cao nhất';
+        toCurrencyString;
+        price = order ? toCurrencyString((order as BuyOrder).buyPrice) : '-';
+    }
 
     const newOnPress = (): void => {
       if (isVerified && !missingAddress) {
@@ -519,20 +531,21 @@ export class ProductDetail extends React.Component<Props> {
             ...styles.bottomButtonStyle,
             ...themes.ButtonShadow,
           }}>
-          <Icon
-            name={iconName}
-            size={themes.IconSize}
-            color={themes.AppAccentColor}
-            type={'material-community'}
-            containerStyle={{marginHorizontal: 10}}
-          />
-          <View style={{flex: 1, marginLeft: 10}}>
+          <View style={{flex: 1, alignItems: 'center'}}>
             <AppText.Title3 style={{color: themes.AppAccentColor}}>
-              {title}
+              {actionType.toUpperCase()}
             </AppText.Title3>
-            <AppText.Callout style={{color: themes.AppAccentColor}}>
-              {subtitle}
-            </AppText.Callout>
+          </View>
+          <View style={{flex: 1, alignItems: 'flex-start'}}>
+            <View>
+              <AppText.Body style={{color: themes.AppAccentColor}}>
+                {subtitle}
+              </AppText.Body>
+              <AppText.SubCallout
+                style={{color: themes.AppAccentColor, alignSelf: 'center'}}>
+                {price}
+              </AppText.SubCallout>
+            </View>
           </View>
         </View>
       </TouchableOpacity>
