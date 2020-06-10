@@ -16,7 +16,7 @@ const UnconnectedSecuredScreen = (props: React.PropsWithChildren<Props>) => {
     if (!account || state === NetworkRequestState.FAILED) {
       history.replace('/login');
     }
-  });
+  }, []);
 
   return (<>{props.children}</>) as React.ReactElement;
 };

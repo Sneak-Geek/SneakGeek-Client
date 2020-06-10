@@ -4,7 +4,6 @@ import {
   CardContent,
   CardMedia,
   makeStyles,
-  Theme,
   Typography,
   TextField,
   Grid,
@@ -19,12 +18,8 @@ type Props = {
   isEditMode: boolean;
 };
 
-const useStyles = makeStyles((theme: Theme) => ({
-  root: {
-    '& .MuiTextField-root': {
-      // marginTop: 10,
-    },
-  },
+const useStyles = makeStyles(() => ({
+  root: {},
   screenName: {
     marginBottom: 15,
   },

@@ -5,7 +5,6 @@ import {
   List,
   ListItem,
   Typography,
-  Theme,
   makeStyles,
   ListItemText,
   DialogContent,
