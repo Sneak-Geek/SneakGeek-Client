@@ -38,7 +38,7 @@ export class CatalogService extends BaseService implements ICatalogService {
 
   public async saveCatalog(
     token: string,
-    catalog: Catalog,
+    catalog: Partial<Catalog>,
     catalogID: string
   ): Promise<void> {
     await this.apiClient.getInstance().put(`/catalogue/${catalogID}`, catalog, {

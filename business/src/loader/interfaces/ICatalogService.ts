@@ -9,6 +9,6 @@ export interface ICatalogService {
     products: string[]
   ): Promise<void>;
   getShoes(token: string, value: any): Promise<Shoe[] | undefined>;
-  saveCatalog(token: string, catalog: Catalog, catalogID: string): Promise<void>;
+  saveCatalog(token: string, catalog: Partial<Catalog>, catalogID: string): Promise<void>;
   getCatalogByTag(token: string, tag: string): Promise<Catalog>;
 }
