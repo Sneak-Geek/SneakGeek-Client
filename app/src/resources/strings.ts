@@ -140,10 +140,12 @@ export const strings = {
   HighestBuyOrderExplanation:
     'Dựa trên các đơn đặt mua trên thị trường, SneakGeek đưa ra giá đặt mua cao nhất để tham khảo',
   SetPrice: 'Đặt giá',
+  SetSellPrice: 'Giá đặt bán',
   SetPriceSuccess: 'Đặt giá thành công',
   SellPrice: 'Giá bán',
   ProductPictures: 'Ảnh sản phẩm',
   ProductOtherDetail: 'Các chi tiết khác của sản phẩm',
   UpdateOrder: 'Cập nhật đơn hàng',
   CancelOrder: 'Huỷ đơn hàng',
+  LowestSellOrderPrice: 'Giá đặt bán thấp nhất',
 };

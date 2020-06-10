@@ -2,11 +2,12 @@ import React from 'react';
 import {createStackNavigator} from '@react-navigation/stack';
 import RouteNames from './RouteNames';
 import {
-  NewSellOrder,
+  // NewSellOrder,
   SizeSelection,
   BuyConfirmation,
   Payment,
 } from 'screens/Order';
+import {NewSellOrder} from 'screens/Order/NewSellOrder';
 import {strings, themes} from 'resources';
 
 const Stack = createStackNavigator();

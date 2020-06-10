@@ -3,18 +3,17 @@ import {
   FlatList,
   StyleSheet,
   View,
-  StyleProp,
-  ViewStyle,
   TouchableOpacity,
+  Dimensions,
 } from 'react-native';
 import {AppText} from './Text';
 import {themes} from 'resources';
-import Humanize from 'humanize-plus';
+import {toCurrencyString} from 'utilities';
 
 const styles = StyleSheet.create({
   row: {
     flex: 1,
-    justifyContent: 'space-around',
+    justifyContent: 'space-between',
   },
   priceBoxContainer: {
     flex: 1,
@@ -23,7 +22,7 @@ const styles = StyleSheet.create({
   },
   priceBox: {
     flex: 1,
-    aspectRatio: 1,
+    // aspectRatio: 1,
     borderWidth: 1,
     borderColor: themes.AppSecondaryColor,
     alignItems: 'center',
@@ -53,10 +52,12 @@ const PriceBox = (props: {
         ]}
         onPress={(): void => props.onSelect(props.size)}>
         <View style={[styles.priceTextContainer]}>
-          <AppText.Callout style={{marginBottom: 5, color}}>
-            {props.price ? Humanize.compactInteger(props.price, 2) : '-'}
-          </AppText.Callout>
-          <AppText.Subhead style={{color}}>Cỡ: {props.size}</AppText.Subhead>
+          <AppText.SubCallout style={{marginBottom: 5, color}}>
+            {props.price ? toCurrencyString(props.price, 2) : '-'}
+          </AppText.SubCallout>
+          <AppText.SubCallout style={{color, opacity: selected ? 0.8 : 0.5}}>
+            Cỡ: {props.size}
+          </AppText.SubCallout>
         </View>
       </TouchableOpacity>
     </View>
@@ -66,14 +67,17 @@ const PriceBox = (props: {
 export const SizePricePicker = (props: {
   sizes: string[];
   priceMap: Map<string, number>;
-  style: StyleProp<ViewStyle>;
   onSizeSelected: (size: string) => void;
 }): JSX.Element => {
   const [selectedSize, setSelectedSize] = useState('');
 
   return (
     <FlatList
-      style={[{marginHorizontal: 5}, props.style]}
+      style={{
+        marginTop: 24,
+        width: Dimensions.get('window').width,
+        height: Dimensions.get('window').height,
+      }}
       data={props.sizes}
       keyExtractor={(itm): string => itm}
       renderItem={({item}): JSX.Element => (
