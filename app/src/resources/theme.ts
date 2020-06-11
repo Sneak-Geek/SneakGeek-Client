@@ -17,6 +17,7 @@ export const themes = {
   DisabledTheme: 'rgba(0, 0, 0, 0.05)',
   AppDisabledColor: '#DADADA',
   AppSellColor: '#E2603F',
+  AppBuyColor: '#1ABC9C',
   AppPendingColor: '#E2C115',
   AppBackgroundColor: '#f5f5f7',
   NotificationBackground: '#D8F2ED',

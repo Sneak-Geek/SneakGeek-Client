@@ -1,11 +1,15 @@
 const minVndThreshold = 50000;
-const vndToUsdConversionRate = 25;
+const usdToVndConversionRate = 25000;
+
+export function convertUsdToVnd(amount: string | number) {
+  let parsedAmount = typeof amount === 'string' ? parseInt(amount, 10) : amount;
+  return parsedAmount < minVndThreshold
+    ? parsedAmount * usdToVndConversionRate
+    : parsedAmount;
+}
 
 export function toCurrencyString(amount: string | number, maxDigit?: number) {
   let converted = typeof amount === 'string' ? parseInt(amount, 10) : amount;
-  if (converted < minVndThreshold) {
-    converted = converted * vndToUsdConversionRate;
-  }
   if (converted) {
     return converted.toLocaleString('vi', {
       style: 'currency',

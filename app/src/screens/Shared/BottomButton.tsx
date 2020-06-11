@@ -35,9 +35,9 @@ type Props = {
 export const BottomButton = (props: Props) => (
   <View style={[styles.containerStyle, props.style]}>
     <TouchableOpacity style={styles.buttonStyle} onPress={props.onPress}>
-      <AppText.Title3 style={[props.titleStyle, styles.titleStyle]}>
+      <AppText.Headline style={[props.titleStyle, styles.titleStyle]}>
         {props.title}
-      </AppText.Title3>
+      </AppText.Headline>
     </TouchableOpacity>
   </View>
 );

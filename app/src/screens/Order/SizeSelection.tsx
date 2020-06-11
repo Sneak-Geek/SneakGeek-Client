@@ -26,8 +26,11 @@ const styles = StyleSheet.create({
 });
 
 type Props = {
-  navigation: StackNavigationProp<RootStackParams>;
-  route: RouteProp<RootStackParams, 'SizeSelection'>;
+  // navigation: StackNavigationProp<RootStackParams>;
+  // route: RouteProp<RootStackParams, 'SizeSelection'>;
+  shoe: Shoe;
+  orderType: OrderType;
+  onSelectSize: (size: string) => void;
 
   toggleLoading: (isLoading: boolean) => void;
   showErrorMessage: (msg: string) => void;
@@ -63,8 +66,8 @@ export class SizeSelection extends React.Component<Props, State> {
     this.shoeSizes = settings.getValue(
       SettingsKey.RemoteSettings,
     ).shoeSizes.Adult;
-    this.shoe = this.props.route.params.shoe;
-    this.orderType = this.props.route.params.orderType;
+    this.shoe = this.props.shoe;
+    this.orderType = this.props.orderType;
 
     this.state = {
       priceMap: new Map(),
@@ -78,24 +81,13 @@ export class SizeSelection extends React.Component<Props, State> {
 
   public render(): JSX.Element {
     return (
-      <SafeAreaView style={styles.rootContainer}>
-        <View style={{flex: 1}}>
-          <ShoeHeaderSummary shoe={this.shoe} />
-          <SizePricePicker
-            sizes={this.shoeSizes}
-            style={{marginTop: 15}}
-            priceMap={this.state.priceMap}
-            onSizeSelected={this._onSizeSelected.bind(this)}
-          />
-          <BottomButton
-            onPress={(): void => this.props.navigation.goBack()}
-            title={strings.Cancel}
-            style={{
-              backgroundColor: themes.AppErrorColor,
-            }}
-          />
-        </View>
-      </SafeAreaView>
+      <View style={{flex: 1}}>
+        <SizePricePicker
+          sizes={this.shoeSizes}
+          priceMap={this.state.priceMap}
+          onSizeSelected={this.props.onSelectSize}
+        />
+      </View>
     );
   }
 
@@ -130,23 +122,5 @@ export class SizeSelection extends React.Component<Props, State> {
     } finally {
       this.props.toggleLoading(false);
     }
-  }
-
-  private _onSizeSelected(size: string): void {
-    this.setState({selectedSize: size}, () => {
-      if (this.orderType === 'SellOrder') {
-        return this.props.navigation.push(RouteNames.Order.BuyConfirmation, {
-          size,
-          minPrice: this.state.priceMap.get(size),
-          shoe: this.shoe,
-        });
-      }
-
-      return this.props.navigation.push(RouteNames.Order.NewSellOrder, {
-        shoe: this.shoe,
-        size: this.state.selectedSize,
-        price: this.state.priceMap.get(this.state.selectedSize),
-      });
-    });
   }
 }
