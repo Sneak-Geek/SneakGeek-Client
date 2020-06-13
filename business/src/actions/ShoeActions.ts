@@ -33,10 +33,9 @@ export const searchShoes = (key: string,
     dispatch(updateStateSearchShoes({
       state: NetworkRequestState.REQUESTING,
     }));
-    const settings = ObjectFactory.getObjectInstance<ISettingsProvider>(FactoryKeys.ISettingsProvider);
     const shoeService = ObjectFactory.getObjectInstance<IShoeService>(FactoryKeys.IShoeService);
     try {
-      const { shoes } = await shoeService.searchShoes(settings.getValue(SettingsKey.CurrentAccessToken), key, page);
+      const { shoes } = await shoeService.searchShoes(key, page);
 
       dispatch(updateStateSearchShoes({
         state: NetworkRequestState.SUCCESS,
@@ -56,11 +55,9 @@ export const getReviews = (shoeId: string) => {
     dispatch(updateStateGetReviews({ state: NetworkRequestState.REQUESTING }));
 
     const shoeService = ObjectFactory.getObjectInstance<IShoeService>(FactoryKeys.IShoeService);
-    const settings = ObjectFactory.getObjectInstance<ISettingsProvider>(FactoryKeys.ISettingsProvider);
-    const token = settings.getValue(SettingsKey.CurrentAccessToken);
 
     try {
-      const reviews: Review[] = await shoeService.getShoeReviews(token, shoeId);
+      const reviews: Review[] = await shoeService.getShoeReviews(shoeId);
 
       dispatch(updateStateGetReviews({
         state: NetworkRequestState.SUCCESS,
@@ -77,10 +74,10 @@ export const getReviews = (shoeId: string) => {
 
 export const getShoeInfo = (shoeId: string) => {
   return async (dispatch: Dispatch<AnyAction>) => {
-    const { shoeService, token } = getShoeServiceAndToken();
+    const { shoeService } = getShoeServiceAndToken();
     dispatch(updateStateGetInfo({ state: NetworkRequestState.NOT_STARTED }));
     try {
-      const data = await shoeService.getShoeInfo(token, shoeId);
+      const data = await shoeService.getShoeInfo(shoeId);
       dispatch(updateStateGetInfo({
         state: NetworkRequestState.SUCCESS,
         data
