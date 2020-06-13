@@ -1,4 +1,4 @@
-import { Catalog, Shoe } from "../../model";
+import { Catalog } from "../../model";
 
 export interface ICatalogService {
   getAllCatalogs(token: string): Promise<Catalog[] | undefined>;
@@ -8,7 +8,6 @@ export interface ICatalogService {
     catalogDescription: string,
     products: string[]
   ): Promise<void>;
-  getShoes(token: string, value: any): Promise<Shoe[] | undefined>;
   saveCatalog(token: string, catalog: Partial<Catalog>, catalogID: string): Promise<void>;
-  getCatalogByTag(token: string, tag: string): Promise<Catalog>;
+  getCatalogByTag(tag: string): Promise<Catalog>;
 }

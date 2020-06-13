@@ -4,7 +4,6 @@ import { IShoeService } from "../interfaces/IShoeService";
 
 export class ShoeService extends BaseService implements IShoeService {
   public async searchShoes(
-    token: string,
     key: string,
     page: number = 0,
     gender?: string,
@@ -23,20 +22,12 @@ export class ShoeService extends BaseService implements IShoeService {
       queryUrl += `&brand=${brand.join(",")}`;
     }
 
-    const response = await this.apiClient.getInstance().get(queryUrl, {
-      headers: {
-        authorization: token,
-      },
-    });
+    const response = await this.apiClient.getInstance().get(queryUrl);
     return response.data;
   }
 
-  public async getShoeReviews(token: string, shoeId: string): Promise<Review[]> {
-    const response = await this.apiClient.getInstance().get(`/review?shoeId=${shoeId}`, {
-      headers: {
-        authorization: token,
-      },
-    });
+  public async getShoeReviews(shoeId: string): Promise<Review[]> {
+    const response = await this.apiClient.getInstance().get(`/review?shoeId=${shoeId}`);
 
     return response.data.reviews as Review[];
   }
@@ -59,7 +50,6 @@ export class ShoeService extends BaseService implements IShoeService {
   }
 
   public async getShoeInfo(
-    token: string,
     shoeId: string
   ): Promise<{
     relatedShoes: Shoe[];
@@ -68,32 +58,18 @@ export class ShoeService extends BaseService implements IShoeService {
   }> {
     const response = await this.apiClient
       .getInstance()
-      .get(`/shoe/detail?shoeId=${shoeId}`, {
-        headers: {
-          authorization: token,
-        },
-      });
+      .get(`/shoe/detail?shoeId=${shoeId}`);
     return response.data;
   }
 
   public async getReviewStats(
-    token: string,
     shoeId: string
-  ): Promise<
-    | Array<{
-        count: number;
-        rating: number;
-      }>
-    | undefined
-  > {
+  ): Promise<Array<{ count: number; rating: number }>> {
     const response = await this.apiClient
       .getInstance()
-      .get(`/review/stats?shoeId=${shoeId}`, {
-        headers: {
-          authorization: token,
-        },
-      });
-    return response.data;
+      .get(`/review/stats?shoeId=${shoeId}`);
+
+    return response.data || [];
   }
 
   public async updateShoe(token: string, updateParam: any) {

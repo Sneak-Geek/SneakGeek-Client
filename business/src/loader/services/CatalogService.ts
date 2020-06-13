@@ -1,27 +1,11 @@
 import { BaseService } from "./BaseService";
 import HttpStatus from "http-status";
-import { Catalog, Shoe } from "../../model";
+import { Catalog } from "../../model";
 import { ICatalogService } from "../interfaces";
 
 export class CatalogService extends BaseService implements ICatalogService {
   public async getAllCatalogs(token: string): Promise<Catalog[] | undefined> {
     const response = await this.apiClient.getInstance().get(`/catalogue/all`, {
-      headers: {
-        authorization_token: token,
-      },
-    });
-
-    if (
-      response &&
-      (response.status === HttpStatus.CREATED || response.status === HttpStatus.OK)
-    ) {
-      return response.data;
-    }
-    return undefined;
-  }
-
-  public async getShoes(token: string, value: any): Promise<Shoe[] | undefined> {
-    const response = await this.apiClient.getInstance().get(`shoe/find?title=${value}`, {
       headers: {
         authorization_token: token,
       },
@@ -69,12 +53,8 @@ export class CatalogService extends BaseService implements ICatalogService {
     );
   }
 
-  public async getCatalogByTag(token: string, tag: string): Promise<Catalog> {
-    const response = await this.apiClient.getInstance().get(`/catalogue?tag=${tag}`, {
-      headers: {
-        authorization: token,
-      },
-    });
+  public async getCatalogByTag(tag: string): Promise<Catalog> {
+    const response = await this.apiClient.getInstance().get(`/catalogue?tag=${tag}`);
 
     return response.data.catalog;
   }
