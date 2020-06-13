@@ -492,15 +492,16 @@ export class ProductDetail extends React.Component<Props> {
     onPress: () => void,
     order?: SellOrder | BuyOrder,
   ): JSX.Element {
-    const {account, profile} = this.props;
+    const {account, profile, navigation} = this.props;
+    const isAccountAvailable = Boolean(account && profile);
 
-    const isVerified = account.isVerified;
+    const isVerified = account?.isVerified;
     const missingAddress =
-      !profile.userProvidedAddress ||
-      !profile.userProvidedAddress.city ||
-      !profile.userProvidedAddress.districtId ||
-      !profile.userProvidedAddress.wardCode ||
-      !profile.userProvidedAddress.streetAddress;
+      !profile?.userProvidedAddress ||
+      !profile?.userProvidedAddress.city ||
+      !profile?.userProvidedAddress.districtId ||
+      !profile?.userProvidedAddress.wardCode ||
+      !profile?.userProvidedAddress.streetAddress;
 
     let backgroundColor: string;
     let subtitle: string;
@@ -519,7 +520,12 @@ export class ProductDetail extends React.Component<Props> {
     }
 
     const newOnPress = (): void => {
-      if (isVerified && !missingAddress) {
+      if (!isAccountAvailable) {
+        // @ts-ignore
+        navigation.navigate(RouteNames.Auth.Name, {
+          screen: RouteNames.Auth.Login,
+        });
+      } else if (isVerified && !missingAddress) {
         return onPress();
       } else if (!isVerified) {
         Alert.alert(strings.AccountNotVerifieid);

@@ -25,13 +25,12 @@ export class SettingsProvider implements ISettingsProvider {
   }
 
   public async loadServerSettings(): Promise<boolean> {
-    const token = this.getValue(SettingsKey.CurrentAccessToken);
     const settingsService = ObjectFactory.getObjectInstance<ISettingService>(
       FactoryKeys.ISettingService,
     );
 
     try {
-      const remoteSettings = await settingsService.getServerSettings(token);
+      const remoteSettings = await settingsService.getServerSettings();
       await this.setValue(SettingsKey.RemoteSettings, remoteSettings);
       return true;
     } catch (error) {

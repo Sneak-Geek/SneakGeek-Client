@@ -148,4 +148,7 @@ export const strings = {
   UpdateOrder: 'Cập nhật đơn hàng',
   CancelOrder: 'Huỷ đơn hàng',
   LowestSellOrderPrice: 'Giá đặt bán thấp nhất',
+  PleaseLogin: 'Xin vui lòng đăng nhập',
+  NoAccountPleastLogin:
+    'Hiện nay bạn chưa đăng nhập. Xin vui lòng đăng nhập để sử dụng tính năng này',
 };

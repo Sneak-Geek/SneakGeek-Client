@@ -328,8 +328,7 @@ export class AllReviews extends React.Component<Props> {
     const {toggleLoadingIndicator, showErrorNotification} = this.props;
     toggleLoadingIndicator(true);
     try {
-      const token = getToken();
-      const response = await this._shoeService.getReviewStats(token, shoeId);
+      const response = await this._shoeService.getReviewStats(shoeId);
       this.setState({reviewStatistics: response});
       return response;
     } catch (error) {
