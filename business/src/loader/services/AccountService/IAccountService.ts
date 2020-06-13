@@ -2,7 +2,7 @@
 //! Copyright (c) 2019 - SneakGeek. All rights reserved
 //!
 
-import { AuthProvider, Profile, Account } from "../../../model";
+import { AuthProvider, Profile, Account, BalanceHistory } from "../../../model";
 
 export interface IAccountService {
   login(
@@ -22,4 +22,6 @@ export interface IAccountService {
   getForgotPasswordToken(email: string): Promise<string>;
   verifyForgotPasswordToken(token: string): Promise<string>;
   resetPassword(newPassword: string, token: string): Promise<string>;
+  getBalanceHistories(asscessToken: string, action?: string, status?: string): Promise< Array<BalanceHistory>>;
+  createProcessingWithdrawal(token: string,amount: number, bankName: string, accountNumber: string, accountHolderName: string):Promise<void>;
 }

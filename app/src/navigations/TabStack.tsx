@@ -7,6 +7,7 @@ import {
   AccountTabMain,
   AccountTabEditProfile,
   AccountTabFaq,
+  AccountTabPaymentInfo,
 } from 'screens/AccountTab';
 import {
   createStackNavigator,
@@ -63,6 +64,14 @@ const AccountTab = (): JSX.Element => (
       options={{
         ...themes.headerStyle,
         title: strings.InfoAppSetting,
+      }}
+    />
+    <AccountStack.Screen
+      name={RouteNames.Tab.AccountTab.PaymentInfo}
+      component={AccountTabPaymentInfo}
+      options={{
+        title: strings.PaymentInfo,
+        ...themes.headerStyle,
       }}
     />
   </AccountStack.Navigator>

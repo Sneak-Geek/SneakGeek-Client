@@ -8,9 +8,12 @@ export const themes = {
   MediumButtonHeigt: 40,
   ButtonBorderRadius: 4,
   LargeBorderRadius: 64,
+  backGroundGray: 'rgba(196,196,196,0.1)',
   DisabledColor: '#DADADA',
   AppPrimaryColor: '#E2603F',
   AppSecondaryColor: '#000',
+  HotOrange: '#FF9500',
+  LightGreenBlue: '#1ABC9C',
   AppAccentColor: '#FFF',
   AppErrorColor: '#FF2D55',
   AppModalBackground: 'rgba(0.0, 0.0, 0.0, 0.65)',
@@ -66,6 +69,11 @@ export const themes = {
 
     body: {
       fontSize: 17,
+      fontFamily: 'RobotoCondensed-Regular',
+    },
+
+    largecallout: {
+      fontSize: 28,
       fontFamily: 'RobotoCondensed-Regular',
     },
 
