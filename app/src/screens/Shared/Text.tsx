@@ -94,6 +94,17 @@ class SubCallout extends React.PureComponent<TextProps> {
   }
 }
 
+class LargeCallout extends React.PureComponent<TextProps> {
+  public render(): JSX.Element {
+    return (
+      <Text
+        {...this.props}
+        style={[themes.TextStyle.largecallout, this.props.style]}
+      />
+    );
+  }
+}
+
 class Subhead extends React.PureComponent<TextProps> {
   public render(): JSX.Element {
     return (
@@ -119,6 +130,17 @@ class Footnote extends React.PureComponent<TextProps> {
       <Text
         {...this.props}
         style={[themes.TextStyle.footnote, this.props.style]}
+      />
+    );
+  }
+}
+
+class FootnoteRegular extends React.PureComponent<TextProps> {
+  public render(): JSX.Element {
+    return (
+      <Text
+        {...this.props}
+        style={[themes.TextStyle.footnoteRegular, this.props.style]}
       />
     );
   }
@@ -155,9 +177,11 @@ export const AppText = {
   SubHeadline,
   Body,
   Footnote,
+  FootnoteRegular,
   Caption1,
   Caption2,
   Callout,
   SubCallout,
+  LargeCallout,
   Subhead,
 };

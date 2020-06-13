@@ -96,6 +96,12 @@ export class AccountTabMain extends React.Component<Props> {
       leftIcon: 'person',
     },
     {
+      title: strings.PaymentInfo,
+      onClick: (): void =>
+        this.props.navigation.push(RouteNames.Tab.AccountTab.PaymentInfo),
+      leftIcon: 'account-balance'
+    },
+    {
       title: strings.NotificationSettings,
       onClick: (): void => null,
       leftIcon: 'notifications-active',
