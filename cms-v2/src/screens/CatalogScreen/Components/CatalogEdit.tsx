@@ -30,8 +30,11 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
 }));
 
-const CatalogEdit = (props: { history: History<{ catalog: Catalog }> }): JSX.Element => {
-  const catalog = props.history.location.state.catalog;
+const CatalogEdit = (props: {
+  history: History<{ catalog?: Partial<Catalog> }>;
+  isEditMode: boolean;
+}): JSX.Element => {
+  const catalog = props.history.location.state?.catalog || {};
 
   // Styles
   const classes = useStyles();
@@ -43,7 +46,7 @@ const CatalogEdit = (props: { history: History<{ catalog: Catalog }> }): JSX.Ele
   );
 
   // State declaration
-  const [editedCatalog, setEditedCatalog] = useState<Catalog>(catalog);
+  const [editedCatalog, setEditedCatalog] = useState<Partial<Catalog>>(catalog);
   const [searchProductResults, setSearchProductResults] = useState<Shoe[]>([]);
 
   type SnackbarType = '' | 'success' | 'error';
@@ -52,17 +55,17 @@ const CatalogEdit = (props: { history: History<{ catalog: Catalog }> }): JSX.Ele
   const onRemoveProduct = (s: Shoe) => {
     setEditedCatalog({
       ...editedCatalog,
-      productIds: editedCatalog.productIds.filter((id) => id !== s._id),
-      products: editedCatalog.products.filter((shoe) => shoe._id !== s._id),
+      productIds: editedCatalog.productIds?.filter((id) => id !== s._id),
+      products: editedCatalog.products?.filter((shoe) => shoe._id !== s._id),
     });
   };
 
   const onAddProduct = (s: Shoe) => {
-    if (!editedCatalog.productIds.some((id) => id === s._id)) {
+    if (!editedCatalog.productIds?.some((id) => id === s._id)) {
       setEditedCatalog({
         ...editedCatalog,
-        productIds: [...editedCatalog.productIds, s._id],
-        products: [...editedCatalog.products, s],
+        productIds: [...(editedCatalog.productIds || []), s._id],
+        products: [...(editedCatalog.products || []), s],
       });
     }
   };
@@ -80,24 +83,35 @@ const CatalogEdit = (props: { history: History<{ catalog: Catalog }> }): JSX.Ele
   };
 
   const onProductSearch = async (query: string) => {
-    const { shoes } = await shoeService.searchShoes(getToken(), query, 0);
+    const { shoes } = await shoeService.searchShoes(query, 0);
     setSearchProductResults(shoes);
   };
 
   const updateCatalog = async () => {
+    if (editedCatalog._id) {
+      try {
+        await catalogService.saveCatalog(
+          getToken(),
+          {
+            title: editedCatalog.title,
+            description: editedCatalog.description,
+            productIds: editedCatalog.productIds,
+            coverImage: editedCatalog.coverImage,
+            catalogType: editedCatalog.catalogType,
+            showOnHomepagePriority: editedCatalog.showOnHomepagePriority,
+          },
+          editedCatalog._id,
+        );
+        setSnackbarType('success');
+      } catch (error) {
+        setSnackbarType('error');
+      }
+    }
+  };
+
+  const addCatalog = async () => {
     try {
-      await catalogService.saveCatalog(
-        getToken(),
-        {
-          title: editedCatalog.title,
-          description: editedCatalog.description,
-          productIds: editedCatalog.productIds,
-          coverImage: editedCatalog.coverImage,
-          catalogType: editedCatalog.catalogType,
-          showOnHomepagePriority: editedCatalog.showOnHomepagePriority,
-        },
-        editedCatalog._id,
-      );
+      await catalogService.createNewCatalog(getToken(), editedCatalog);
       setSnackbarType('success');
     } catch (error) {
       setSnackbarType('error');
@@ -107,7 +121,7 @@ const CatalogEdit = (props: { history: History<{ catalog: Catalog }> }): JSX.Ele
   return (
     <div className={classes.root}>
       <Typography variant={'h2'} className={classes.cardTitle}>
-        Thay đổi thông tin catalog
+        {props.isEditMode ? 'Thay đổi thông tin catalog' : 'Thêm catalog'}
       </Typography>
       <Grid container spacing={3}>
         <Grid item xs={6}>
@@ -120,7 +134,7 @@ const CatalogEdit = (props: { history: History<{ catalog: Catalog }> }): JSX.Ele
         </Grid>
         <Grid item xs={6}>
           <CatalogEditProductList
-            products={editedCatalog.products}
+            products={editedCatalog.products || []}
             productSearchList={searchProductResults}
             onAddProduct={onAddProduct}
             onRemoveProduct={onRemoveProduct}
@@ -128,12 +142,17 @@ const CatalogEdit = (props: { history: History<{ catalog: Catalog }> }): JSX.Ele
           />
         </Grid>
       </Grid>
-      <Fab color={'primary'} aria-label={'add'} className={classes.fab} onClick={updateCatalog}>
+      <Fab
+        color={'primary'}
+        aria-label={'add'}
+        className={classes.fab}
+        onClick={props.isEditMode ? updateCatalog : addCatalog}
+      >
         <Icon>backup</Icon>
       </Fab>
       <Snackbar
         open={snackbarType !== ''}
-        autoHideDuration={6000}
+        autoHideDuration={5000}
         onClose={() => setSnackbarType('')}
       >
         <Alert onClose={() => setSnackbarType('')} severity={snackbarType as Color}>

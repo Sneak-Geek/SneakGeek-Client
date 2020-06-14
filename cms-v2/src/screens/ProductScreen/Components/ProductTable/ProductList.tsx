@@ -10,7 +10,6 @@ import {
 } from '@material-ui/core';
 import { Shoe, IShoeService, ObjectFactory, FactoryKeys } from 'business';
 import { SearchInput } from '../../../../shared';
-import { getToken } from '../../../../utilities';
 import AddIcon from '@material-ui/icons/Add';
 import { History } from 'history';
 import ProductTableContent from './ProductTableContent';
@@ -90,7 +89,6 @@ class ProductList extends React.Component<Props, State> {
 
   private async fetchShoes(keyword: string = this.state.keyword) {
     const { shoes, count } = await this.shoeService.searchShoes(
-      getToken(),
       keyword,
       this.state.currentPage,
     );

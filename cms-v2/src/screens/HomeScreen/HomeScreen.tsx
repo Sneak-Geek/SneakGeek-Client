@@ -6,7 +6,7 @@ import CatalogIcon from '@material-ui/icons/ReceiptOutlined';
 import { Sidebar, Topbar } from './Components';
 import { makeStyles, Theme, createStyles, Container } from '@material-ui/core';
 import { ProductScreen } from '../ProductScreen';
-import { SecuredScreen } from '../SecuredScreen';
+// import { SecuredScreen } from '../SecuredScreen';
 import { CatalogScreen } from '../CatalogScreen';
 
 const useStyles = makeStyles((theme: Theme) =>

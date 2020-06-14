@@ -30,7 +30,7 @@ const useStyles = makeStyles((theme: Theme) => ({
 }));
 
 const CatalogEditContent = (props: {
-  catalog: Catalog;
+  catalog: Partial<Catalog>;
   onTitleChange: (title: string) => void;
   onDescriptionChange: (desc: string) => void;
   onCatalogTypeChange: (catalogType: CatalogType) => void;

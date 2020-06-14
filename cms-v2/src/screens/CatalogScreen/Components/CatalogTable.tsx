@@ -13,6 +13,7 @@ import {
   makeStyles,
   IconButton,
   Icon,
+  Fab,
 } from '@material-ui/core';
 import CatalogDetailDialog from './CatalogDetailDialog';
 import { History } from 'history';
@@ -23,6 +24,11 @@ const useStyles = makeStyles(() => ({
   },
   title: {
     marginBottom: 15,
+  },
+  fab: {
+    position: 'fixed',
+    bottom: 50,
+    right: 50,
   },
 }));
 
@@ -118,6 +124,14 @@ const CatalogTable = (props: { history: History }): JSX.Element => {
         isVisible={dialogVisible}
         onClose={() => setDialogVisible(false)}
       />
+      <Fab
+        color={'primary'}
+        aria-label={'add'}
+        className={classes.fab}
+        onClick={() => props.history.push(`/catalogs/new`)}
+      >
+        <Icon>add</Icon>
+      </Fab>
     </div>
   );
 };
