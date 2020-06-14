@@ -8,6 +8,7 @@ import {
   Payment,
 } from 'screens/Order';
 import {NewSellOrder} from 'screens/Order/NewSellOrder';
+import {NewBuyOrder} from 'screens/Order/NewBuyOrder';
 import {strings, themes} from 'resources';
 
 const Stack = createStackNavigator();
@@ -23,21 +24,29 @@ export const OrderStack = (): JSX.Element => (
       }}
     />
     <Stack.Screen
+      name={RouteNames.Order.NewBuyOrder}
+      component={NewBuyOrder}
+      options={{
+        headerTransparent: true,
+        headerShown: false,
+      }}
+    />
+    {/* <Stack.Screen
       name={RouteNames.Order.SizeSelection}
       component={SizeSelection}
       options={{
         title: strings.ChooseSize,
         ...themes.headerStyle,
       }}
-    />
-    <Stack.Screen
+    /> */}
+    {/* <Stack.Screen
       name={RouteNames.Order.BuyConfirmation}
       component={BuyConfirmation}
       options={{
         title: strings.Checkout,
         ...themes.headerStyle,
       }}
-    />
+    /> */}
     <Stack.Screen
       name={RouteNames.Order.Payment}
       component={Payment}

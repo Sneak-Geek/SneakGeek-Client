@@ -15,6 +15,7 @@ import {SellOrder} from 'business';
 import {toCurrencyString} from 'utilities';
 import {images, strings} from 'resources';
 import {Profile} from 'business';
+import { OrderType } from 'business/src';
 
 const styles = StyleSheet.create({
   sectionContainer: {
@@ -56,13 +57,18 @@ const styles = StyleSheet.create({
 });
 
 type Props = {
-  orderSummary: Partial<SellOrder>;
+  orderType: OrderType;
+  shoeSize: string;
+  isNewShoe: boolean;
+  price: number;
+  shippingFee?: number;
+  // orderSummary: Partial<SellOrder>;
   userProfile: Profile;
   onShoePictureAdded: (picUri: string) => void;
   onEditShippingInfo: () => void;
 };
 
-export class ProductSellSummary extends React.Component<Props> {
+export class OrderSummary extends React.Component<Props> {
   private readonly imagePickerOptions: ImagePickerOptions = {
     allowsEditing: true,
     mediaType: 'photo',
@@ -75,18 +81,20 @@ export class ProductSellSummary extends React.Component<Props> {
         <View style={{flex: 1, paddingHorizontal: 20}}>
           {this._renderSummaryDetail(
             'Cỡ giày',
-            this.props.orderSummary.shoeSize,
+            this.props.shoeSize,
           )}
           {this._renderSummaryDetail(
             'Tình trạng',
-            this.props.orderSummary.isNewShoe ? 'Mới' : 'Cũ',
+            this.props.isNewShoe ? 'Mới' : 'Cũ',
           )}
           {this._renderShippingInfo()}
           {this._renderSummaryDetail(
-            'Giá bán',
-            toCurrencyString(this.props.orderSummary.sellPrice),
+            this.props.orderType === 'SellOrder' ? 'Giá bán' : 'Giá mua',
+            toCurrencyString(this.props.price),
           )}
-          {!this.props.orderSummary.isNewShoe && this._renderPictures()}
+          {this.props.shippingFee >= 0 && this._renderSummaryDetail('Phí vận chuyển', toCurrencyString(this.props.shippingFee))}
+          {this.props.shippingFee >= 0 && this._renderSummaryDetail('Tổng cộng', toCurrencyString(this.props.price + this.props.shippingFee))}
+          {/* {!this.props.isNewShoe && this._renderPictures()} */}
         </View>
       </View>
     );
@@ -175,31 +183,31 @@ export class ProductSellSummary extends React.Component<Props> {
     );
   }
 
-  private _renderPictures(): JSX.Element {
-    return (
-      <View style={{flex: 1, flexDirection: 'column'}}>
-        <AppText.Body>{strings.ProductPictures}</AppText.Body>
-        <ScrollView horizontal={true} showsHorizontalScrollIndicator={false}>
-          <View style={{flex: 1, flexDirection: 'row', marginTop: 10}}>
-            <TouchableOpacity onPress={this._launchImagePicker.bind(this)}>
-              <Image
-                source={images.CameraPlaceholder}
-                style={styles.imageContainer}
-              />
-            </TouchableOpacity>
-            {this.props.orderSummary?.pictures?.map((item, index) => (
-              <Image
-                key={index}
-                source={{uri: item}}
-                style={styles.imageContainer}
-                resizeMode={'cover'}
-              />
-            ))}
-          </View>
-        </ScrollView>
-      </View>
-    );
-  }
+  // private _renderPictures(): JSX.Element {
+  //   return (
+  //     <View style={{flex: 1, flexDirection: 'column'}}>
+  //       <AppText.Body>{strings.ProductPictures}</AppText.Body>
+  //       <ScrollView horizontal={true} showsHorizontalScrollIndicator={false}>
+  //         <View style={{flex: 1, flexDirection: 'row', marginTop: 10}}>
+  //           <TouchableOpacity onPress={this._launchImagePicker.bind(this)}>
+  //             <Image
+  //               source={images.CameraPlaceholder}
+  //               style={styles.imageContainer}
+  //             />
+  //           </TouchableOpacity>
+  //           {this.props.orderSummary?.pictures?.map((item, index) => (
+  //             <Image
+  //               key={index}
+  //               source={{uri: item}}
+  //               style={styles.imageContainer}
+  //               resizeMode={'cover'}
+  //             />
+  //           ))}
+  //         </View>
+  //       </ScrollView>
+  //     </View>
+  //   );
+  // }
 
   private _launchImagePicker(): void {
     ImagePicker.launchImageLibrary(this.imagePickerOptions, (result) => {

@@ -8,12 +8,13 @@ import {ProductStack} from './ProductStack';
 import {
   Shoe,
   Catalog,
-  SellOrder,
   PaymentType,
   OrderType,
   Review,
   PopulatedSellOrder,
   PopulatedBuyOrder,
+  BuyOrder,
+  SellOrder,
 } from 'business';
 import {OrderStack} from './OrderStack';
 import {SplashScreen} from 'screens/SplashScreen';
@@ -26,8 +27,11 @@ export type RootStackParams = {
   SizeSelection: {orderType: OrderType; shoe: Shoe};
   NewSellOrder: {
     shoe: Shoe;
-    highestBuyPrice?: number;
-    lowestSellPrice?: number;
+    highestBuyOrder?: BuyOrder;
+    lowestSellOrder?: SellOrder;
+  };
+  NewBuyOrder: {
+    shoe: Shoe;
   };
   OrderSizeSelection: {shoe: Shoe};
   OrderBuyConfirmation: {shoe: Shoe; size: string; minPrice: number};

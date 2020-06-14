@@ -8,12 +8,12 @@ import {
 import {Icon} from 'react-native-elements';
 import {themes, strings} from 'resources';
 import {AppText, ShoeHeaderSummary, BottomButton} from 'screens/Shared';
-import {Shoe, SellOrder, IOrderService, FactoryKeys, Profile} from 'business';
+import {Shoe, BuyOrder, SellOrder, IOrderService, FactoryKeys, Profile} from 'business';
 import {RouteProp} from '@react-navigation/native';
 import {RootStackParams} from 'navigations/RootStack';
 import {ProductSetPrice} from '../../Product/ProductSetPrice';
 import {ProductConditionExtra} from '../../Product/ProductConditionExtra';
-import {ProductSellSummary} from '../../Product/ProductSellSummary';
+import {OrderSummary} from '../../Product/OrderSummary';
 import {ProductRequiredInfo} from '../../Product/ProductRequiredInfo';
 import {connect, getToken, getDependency} from 'utilities';
 import {
@@ -44,6 +44,8 @@ type SellDetailChild = {
 
 type State = {
   sellOrder: Partial<SellOrder>;
+  highestBuyOrder?: BuyOrder;
+  lowestSellOrder?: SellOrder;
   currentIndex: number;
   childComponents: SellDetailChild[];
 };
@@ -66,8 +68,6 @@ type State = {
 )
 export class NewSellOrder extends React.Component<Props, State> {
   private _shoe: Shoe;
-  private _highestBuyPrice: number;
-  private _lowestSellPrice: number;
   private _childFlatList: FlatList<SellDetailChild>;
   // private _usedShoeCondition: SellDetailChild = {
   //   render: (): JSX.Element => (
@@ -90,8 +90,6 @@ export class NewSellOrder extends React.Component<Props, State> {
     super(props);
 
     this._shoe = this.props.route.params.shoe;
-    this._highestBuyPrice = this.props.route.params.highestBuyPrice;
-    this._lowestSellPrice = this.props.route.params.lowestSellPrice;
 
     this.state = {
       sellOrder: {
@@ -108,6 +106,8 @@ export class NewSellOrder extends React.Component<Props, State> {
         },
         pictures: [],
       },
+      highestBuyOrder: this.props.route.params.highestBuyOrder,
+      lowestSellOrder: this.props.route.params.lowestSellOrder,
       currentIndex: 0,
       childComponents: [
         // {
@@ -134,7 +134,7 @@ export class NewSellOrder extends React.Component<Props, State> {
             <SizeSelection
               key={0}
               shoe={this._shoe}
-              orderType="SellOrder"
+              orderType="BuyOrder"
               onSelectSize={this._setShoeSize.bind(this)}
             />
           ),
@@ -147,8 +147,8 @@ export class NewSellOrder extends React.Component<Props, State> {
             <ProductSetPrice
               key={2}
               order={this.state.sellOrder}
-              highestBuyPrice={this._highestBuyPrice}
-              lowestSellPrice={this._lowestSellPrice}
+              highestBuyPrice={this.state.highestBuyOrder?.buyPrice}
+              lowestSellPrice={this.state.lowestSellOrder?.sellPrice}
               onSetShoePrice={this._setShoePrice.bind(this)}
             />
           ),
@@ -159,15 +159,18 @@ export class NewSellOrder extends React.Component<Props, State> {
         },
         {
           render: (): JSX.Element => (
-            <ProductSellSummary
+            <OrderSummary
               onEditShippingInfo={() =>
                 this.props.navigation.navigate(RouteNames.Tab.AccountTab.Name, {
                   screen: RouteNames.Tab.AccountTab.EditProfile,
                 })
               }
               userProfile={this.props.userProfile}
+              orderType='SellOrder'
+              shoeSize={this.state.sellOrder.shoeSize}
+              isNewShoe={this.state.sellOrder.isNewShoe}
+              price={this.state.sellOrder.sellPrice}
               key={3}
-              orderSummary={this.state.sellOrder}
               onShoePictureAdded={(picUri: string): void =>
                 this._onPictureAdded(picUri)
               }

@@ -16,6 +16,7 @@ const RouteNames = {
   Order: {
     Name: 'Order',
     NewSellOrder: 'NewSellOrder',
+    NewBuyOrder: 'NewBuyOrder',
     SizeSelection: 'OrderSizeSelection',
     BuyConfirmation: 'OrderBuyConfirmation',
     Payment: 'OrderPayment',
