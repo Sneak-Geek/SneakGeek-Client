@@ -11,3 +11,4 @@ export * from './ShimmerLoadList';
 export * from './ReviewItem';
 export * from './SizePricePicker';
 export * from './BadgedIcon';
+export * from './WrongInputError'
