@@ -4,7 +4,7 @@
 
 import { IAccountService } from "./IAccountService";
 import { AuthProvider } from "../../../types";
-import { Account, Profile } from "../../../model";
+import { Account, Profile, BalanceHistory } from "../../../model";
 import { BaseService } from "../BaseService";
 import HttpStatus from "http-status";
 
@@ -110,4 +110,32 @@ export class AccountService extends BaseService implements IAccountService {
 
     return response.data.notifications;
   }
+
+  public async getBalanceHistories(token: string, action?: string, status?: string): Promise< Array<BalanceHistory>> {
+    let url = `/balance-history/`;
+    if(action && status){
+      url += `?action=${action}&status=${status}`
+    }else if(action){
+      url += `?action=${action}`
+    }else if(status){
+      url += `?status=${status}`
+    }
+
+    const response = await this.apiClient.getInstance().get(url, {
+      headers: {
+        authorization: token
+      }
+    });
+    
+    return response.data;
+  }
+
+  public async createProcessingWithdrawal(token: string,amount: number, bankName: string, accountNumber: string, accountHolderName: string): Promise<void>{
+     return this.apiClient.getInstance().post(`/balance-history/withdraw/`,{amount, bankName, accountNumber, accountHolderName} ,{
+      headers: {
+        authorization: token
+      }
+    });
+  }
+
 }

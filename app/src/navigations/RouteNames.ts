@@ -45,6 +45,7 @@ const RouteNames = {
       Main: 'AccountTabMain',
       EditProfile: 'AccountTabEditProfile',
       Faq: 'AccountTabFaq',
+      PaymentInfo: 'AccountTabPaymentInfo'
     },
   },
 };
