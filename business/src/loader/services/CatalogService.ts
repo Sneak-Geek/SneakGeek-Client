@@ -1,6 +1,6 @@
 import { BaseService } from "./BaseService";
 import HttpStatus from "http-status";
-import { Catalog, Shoe } from "../../model";
+import { Catalog } from "../../model";
 import { ICatalogService } from "../interfaces";
 
 export class CatalogService extends BaseService implements ICatalogService {
@@ -20,25 +20,9 @@ export class CatalogService extends BaseService implements ICatalogService {
     return undefined;
   }
 
-  public async getShoes(token: string, value: any): Promise<Shoe[] | undefined> {
-    const response = await this.apiClient.getInstance().get(`shoe/find?title=${value}`, {
-      headers: {
-        authorization_token: token,
-      },
-    });
-
-    if (
-      response &&
-      (response.status === HttpStatus.CREATED || response.status === HttpStatus.OK)
-    ) {
-      return response.data;
-    }
-    return undefined;
-  }
-
   public async saveCatalog(
     token: string,
-    catalog: Catalog,
+    catalog: Partial<Catalog>,
     catalogID: string
   ): Promise<void> {
     await this.apiClient.getInstance().put(`/catalogue/${catalogID}`, catalog, {
@@ -50,16 +34,16 @@ export class CatalogService extends BaseService implements ICatalogService {
 
   public async createNewCatalog(
     token: string,
-    catalogTitle: string,
-    catalogDescription: string,
-    products: string[]
+    catalog: Partial<Catalog>
   ): Promise<void> {
     await this.apiClient.getInstance().post(
       `/catalogue/`,
       {
-        title: catalogTitle,
-        products: products,
-        description: catalogDescription,
+        title: catalog.title,
+        productIds: catalog.productIds,
+        description: catalog.description,
+        catalogType: catalog.catalogType,
+        coverImage: catalog.coverImage || '',
       },
       {
         headers: {
@@ -69,12 +53,8 @@ export class CatalogService extends BaseService implements ICatalogService {
     );
   }
 
-  public async getCatalogByTag(token: string, tag: string): Promise<Catalog> {
-    const response = await this.apiClient.getInstance().get(`/catalogue?tag=${tag}`, {
-      headers: {
-        authorization: token,
-      },
-    });
+  public async getCatalogByTag(tag: string): Promise<Catalog> {
+    const response = await this.apiClient.getInstance().get(`/catalogue?tag=${tag}`);
 
     return response.data.catalog;
   }

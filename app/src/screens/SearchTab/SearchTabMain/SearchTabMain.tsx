@@ -18,7 +18,7 @@ import {ScrollView, FlatList} from 'react-native-gesture-handler';
 import {StackNavigationProp} from '@react-navigation/stack';
 import RouteNames from 'navigations/RouteNames';
 import {RootStackParams} from 'navigations/RootStack';
-import {getDependency, getToken} from 'utilities';
+import {getDependency} from 'utilities';
 import {ISettingsProvider, SettingsKey} from 'business/src';
 import {styles} from './styles';
 
@@ -319,7 +319,6 @@ export class SearchTabMain extends React.Component<Props, State> {
 
     if (shouldSearch || (scrollEnd && shouldSearchScrollEnd)) {
       const result = await this._shoeService.searchShoes(
-        getToken(),
         searchText,
         currentSearchPage,
         this._getStandardizedGender(),

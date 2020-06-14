@@ -21,7 +21,12 @@ import {SafeAreaConsumer} from 'react-native-safe-area-context';
 import {AppText, LiteShoeCard, ReviewItem} from 'screens/Shared';
 import {strings, themes} from 'resources';
 import {Icon} from 'react-native-elements';
-import {connect, toVnDateFormat, toCurrencyString} from 'utilities';
+import {
+  connect,
+  toVnDateFormat,
+  toCurrencyString,
+  convertUsdToVnd,
+} from 'utilities';
 import Humanize from 'humanize-plus';
 import {IAppState} from 'store/AppStore';
 import {
@@ -284,7 +289,9 @@ export class ProductDetail extends React.Component<Props> {
     const fieldMapping = new Map<string, string>([
       [this._shoe.brand, strings.Brand],
       [
-        this._shoe.retailPrice ? toCurrencyString(this._shoe.retailPrice) : '-',
+        this._shoe.retailPrice
+          ? toCurrencyString(convertUsdToVnd(this._shoe.retailPrice))
+          : '-',
         strings.RetailPrice,
       ],
       [toVnDateFormat(this._shoe.releaseDate), strings.ReleaseDate],
@@ -447,53 +454,54 @@ export class ProductDetail extends React.Component<Props> {
     const {highestBuyOrder, lowestSellOrder} = this.props.shoeInfoState;
     return (
       <View style={{bottom, ...styles.bottomContainer}}>
-        {this._renderSingleActionButton('Mua', lowestSellOrder, () => {
-          // @ts-ignore
-          this.props.navigation.push(RouteNames.Order.Name, {
-            screen: RouteNames.Order.SizeSelection,
-            params: {
-              orderType: 'SellOrder',
-              shoe: this._shoe,
-            },
-          });
-        })}
-        {this._renderSingleActionButton('Bán', highestBuyOrder, () => {
-          // @ts-ignore
-          if (highestBuyOrder) {
+        {this._renderSingleActionButton(
+          'Mua',
+          () => {
+            // @ts-ignore
             this.props.navigation.push(RouteNames.Order.Name, {
               screen: RouteNames.Order.SizeSelection,
               params: {
-                orderType: 'BuyOrder',
+                orderType: 'SellOrder',
                 shoe: this._shoe,
               },
             });
-          } else {
+          },
+          lowestSellOrder,
+        )}
+        {this._renderSingleActionButton(
+          'Bán',
+          () => {
+            // @ts-ignore
             this.props.navigation.push(RouteNames.Order.Name, {
               screen: RouteNames.Order.NewSellOrder,
               params: {
                 shoe: this._shoe,
+                highestBuyPrice: highestBuyOrder?.buyPrice,
+                lowestSellPrice: lowestSellOrder?.sellPrice,
               },
             });
-          }
-        })}
+          },
+          highestBuyOrder,
+        )}
       </View>
     );
   }
 
   private _renderSingleActionButton(
     actionType: string,
-    order: SellOrder | BuyOrder,
     onPress: () => void,
+    order?: SellOrder | BuyOrder,
   ): JSX.Element {
-    const {account, profile} = this.props;
+    const {account, profile, navigation} = this.props;
+    const isAccountAvailable = Boolean(account && profile);
 
-    const isVerified = account.isVerified;
+    const isVerified = account?.isVerified;
     const missingAddress =
-      !profile.userProvidedAddress ||
-      !profile.userProvidedAddress.city ||
-      !profile.userProvidedAddress.districtId ||
-      !profile.userProvidedAddress.wardCode ||
-      !profile.userProvidedAddress.streetAddress;
+      !profile?.userProvidedAddress ||
+      !profile?.userProvidedAddress.city ||
+      !profile?.userProvidedAddress.districtId ||
+      !profile?.userProvidedAddress.wardCode ||
+      !profile?.userProvidedAddress.streetAddress;
 
     let backgroundColor: string;
     let subtitle: string;
@@ -512,7 +520,12 @@ export class ProductDetail extends React.Component<Props> {
     }
 
     const newOnPress = (): void => {
-      if (isVerified && !missingAddress) {
+      if (!isAccountAvailable) {
+        // @ts-ignore
+        navigation.navigate(RouteNames.Auth.Name, {
+          screen: RouteNames.Auth.Login,
+        });
+      } else if (isVerified && !missingAddress) {
         return onPress();
       } else if (!isVerified) {
         Alert.alert(strings.AccountNotVerifieid);

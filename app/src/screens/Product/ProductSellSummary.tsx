@@ -81,10 +81,6 @@ export class ProductSellSummary extends React.Component<Props> {
             'Tình trạng',
             this.props.orderSummary.isNewShoe ? 'Mới' : 'Cũ',
           )}
-          {this._renderSummaryDetail(
-            'Hộp',
-            this.props.orderSummary.productCondition.boxCondition,
-          )}
           {this._renderShippingInfo()}
           {this._renderSummaryDetail(
             'Giá bán',

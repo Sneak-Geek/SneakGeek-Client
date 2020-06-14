@@ -13,8 +13,10 @@ import {
   makeStyles,
   IconButton,
   Icon,
+  Fab,
 } from '@material-ui/core';
 import CatalogDetailDialog from './CatalogDetailDialog';
+import { History } from 'history';
 
 const useStyles = makeStyles(() => ({
   content: {
@@ -23,10 +25,16 @@ const useStyles = makeStyles(() => ({
   title: {
     marginBottom: 15,
   },
+  fab: {
+    position: 'fixed',
+    bottom: 50,
+    right: 50,
+  },
 }));
 
 const CatalogTableContent = (props: {
   catalogs: Catalog[];
+  onCatalogEdit: (c: Catalog) => void;
   onCatalogSelected: (c: Catalog) => void;
 }): JSX.Element => (
   <Table>
@@ -36,6 +44,7 @@ const CatalogTableContent = (props: {
         <TableCell>Title</TableCell>
         <TableCell>Miêu tả</TableCell>
         <TableCell>Số sản phẩm</TableCell>
+        <TableCell>Phân loại</TableCell>
         <TableCell>Action</TableCell>
       </TableRow>
     </TableHead>
@@ -54,7 +63,10 @@ const CatalogTableContent = (props: {
           <Typography variant={'body1'}>{c.products.length}</Typography>
         </TableCell>
         <TableCell>
-          <IconButton>
+          <Typography variant={'body1'}>{c.catalogType}</Typography>
+        </TableCell>
+        <TableCell>
+          <IconButton onClick={() => props.onCatalogEdit(c)}>
             <Icon>edit</Icon>
           </IconButton>
           <IconButton onClick={() => props.onCatalogSelected(c)}>
@@ -66,7 +78,7 @@ const CatalogTableContent = (props: {
   </Table>
 );
 
-const CatalogTable = (): JSX.Element => {
+const CatalogTable = (props: { history: History }): JSX.Element => {
   const [catalogs, setCatalogs] = useState(new Array<Catalog>());
   const [selectedCatalog, setSelectedCatalog] = useState<Catalog>();
   const [dialogVisible, setDialogVisible] = useState(false);
@@ -97,6 +109,9 @@ const CatalogTable = (): JSX.Element => {
         <CardContent className={classes.content}>
           <CatalogTableContent
             catalogs={catalogs}
+            onCatalogEdit={(c: Catalog) => {
+              props.history.push(`/catalogs/${c._id}/edit`, { catalog: c });
+            }}
             onCatalogSelected={(c: Catalog) => {
               setSelectedCatalog(c);
               setDialogVisible(true);
@@ -109,6 +124,14 @@ const CatalogTable = (): JSX.Element => {
         isVisible={dialogVisible}
         onClose={() => setDialogVisible(false)}
       />
+      <Fab
+        color={'primary'}
+        aria-label={'add'}
+        className={classes.fab}
+        onClick={() => props.history.push(`/catalogs/new`)}
+      >
+        <Icon>add</Icon>
+      </Fab>
     </div>
   );
 };

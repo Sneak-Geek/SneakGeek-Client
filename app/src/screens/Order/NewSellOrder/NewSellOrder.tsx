@@ -1,6 +1,6 @@
 import React from 'react';
 import {SafeAreaConsumer} from 'react-native-safe-area-context';
-import {View, ScrollView, FlatList} from 'react-native';
+import {View, ScrollView, FlatList, Dimensions} from 'react-native';
 import {
   HeaderHeightContext,
   StackNavigationProp,
@@ -25,6 +25,7 @@ import {styles} from './styles';
 import {CdnService} from 'business/src';
 import RouteNames from 'navigations/RouteNames';
 import {IAppState} from 'store/AppStore';
+import {SizeSelection} from '../';
 
 type Props = {
   userProfile: Profile;
@@ -65,39 +66,39 @@ type State = {
 )
 export class NewSellOrder extends React.Component<Props, State> {
   private _shoe: Shoe;
-  private _size: string;
-  private _price: number;
+  private _highestBuyPrice: number;
+  private _lowestSellPrice: number;
   private _childFlatList: FlatList<SellDetailChild>;
-  private _usedShoeCondition: SellDetailChild = {
-    render: (): JSX.Element => (
-      <ProductConditionExtra
-        key={1}
-        onSetShoeHeavilyTorn={this._setShoeHeavilyTorn.bind(this)}
-        onSetShoeOutsoleWorn={this._setShoeOutsoleWorn.bind(this)}
-        onSetShoeTainted={this._setShoeTainted.bind(this)}
-        onSetShoeInsoleWorn={this._setShoeInsoleWorn.bind(this)}
-        onSetShoeOtherDetail={this._setShoeOtherDetail.bind(this)}
-      />
-    ),
-    canProceed: (): boolean => {
-      return true;
-    },
-  };
-  private _maxChildComponentsSize = 4;
+  // private _usedShoeCondition: SellDetailChild = {
+  //   render: (): JSX.Element => (
+  //     <ProductConditionExtra
+  //       key={1}
+  //       onSetShoeHeavilyTorn={this._setShoeHeavilyTorn.bind(this)}
+  //       onSetShoeOutsoleWorn={this._setShoeOutsoleWorn.bind(this)}
+  //       onSetShoeTainted={this._setShoeTainted.bind(this)}
+  //       onSetShoeInsoleWorn={this._setShoeInsoleWorn.bind(this)}
+  //       onSetShoeOtherDetail={this._setShoeOtherDetail.bind(this)}
+  //     />
+  //   ),
+  //   canProceed: (): boolean => {
+  //     return true;
+  //   },
+  // };
+  // private _maxChildComponentsSize = 4;
 
   public constructor(props: Props) {
     super(props);
 
     this._shoe = this.props.route.params.shoe;
-    this._size = this.props.route.params.size;
-    this._price = this.props.route.params.price;
+    this._highestBuyPrice = this.props.route.params.highestBuyPrice;
+    this._lowestSellPrice = this.props.route.params.lowestSellPrice;
 
     this.state = {
       sellOrder: {
-        sellPrice: this._price,
+        sellPrice: undefined,
         shoeId: this._shoe._id,
-        shoeSize: this._size,
-        isNewShoe: undefined,
+        shoeSize: undefined,
+        isNewShoe: true,
         productCondition: {
           boxCondition: undefined,
           isTainted: false,
@@ -109,23 +110,36 @@ export class NewSellOrder extends React.Component<Props, State> {
       },
       currentIndex: 0,
       childComponents: [
+        // {
+        //   render: (): JSX.Element => (
+        //     <ProductRequiredInfo
+        //       key={0}
+        //       order={this.state.sellOrder}
+        //       onSetShoeSize={this._setShoeSize.bind(this)}
+        //       onSetShoeCondition={this._setShoeCondition.bind(this)}
+        //       onSetBoxCondition={this._setBoxCondition.bind(this)}
+        //     />
+        //   ),
+        //   canProceed: (): boolean => {
+        //     const {sellOrder} = this.state;
+        //     return Boolean(
+        //       sellOrder.shoeSize &&
+        //         sellOrder.isNewShoe !== undefined &&
+        //         sellOrder.productCondition.boxCondition,
+        //     );
+        //   },
+        // },
         {
           render: (): JSX.Element => (
-            <ProductRequiredInfo
+            <SizeSelection
               key={0}
-              order={this.state.sellOrder}
-              onSetShoeSize={this._setShoeSize.bind(this)}
-              onSetShoeCondition={this._setShoeCondition.bind(this)}
-              onSetBoxCondition={this._setBoxCondition.bind(this)}
+              shoe={this._shoe}
+              orderType="SellOrder"
+              onSelectSize={this._setShoeSize.bind(this)}
             />
           ),
           canProceed: (): boolean => {
-            const {sellOrder} = this.state;
-            return Boolean(
-              sellOrder.shoeSize &&
-                sellOrder.isNewShoe !== undefined &&
-                sellOrder.productCondition.boxCondition,
-            );
+            return this.state.sellOrder.shoeSize !== undefined;
           },
         },
         {
@@ -133,6 +147,8 @@ export class NewSellOrder extends React.Component<Props, State> {
             <ProductSetPrice
               key={2}
               order={this.state.sellOrder}
+              highestBuyPrice={this._highestBuyPrice}
+              lowestSellPrice={this._lowestSellPrice}
               onSetShoePrice={this._setShoePrice.bind(this)}
             />
           ),
@@ -244,18 +260,26 @@ export class NewSellOrder extends React.Component<Props, State> {
     ].canProceed();
 
     return (
-      <BottomButton
-        title={shouldSellShoe ? strings.SellShoe : strings.Continue}
-        onPress={() =>
-          shouldSellShoe ? this._sellShoe() : this._onListScroll()
-        }
-        style={{
-          bottom,
-          backgroundColor: shouldContinue
-            ? themes.AppSecondaryColor
-            : themes.AppDisabledColor,
-        }}
-      />
+      <View>
+        <BottomButton
+          title={(shouldSellShoe
+            ? strings.SellShoe
+            : strings.Continue
+          ).toUpperCase()}
+          onPress={() =>
+            shouldSellShoe ? this._sellShoe() : this._onListScroll()
+          }
+          style={{
+            bottom,
+            backgroundColor: shouldContinue
+              ? themes.AppSecondaryColor
+              : themes.AppDisabledColor,
+            borderRadius: themes.LargeBorderRadius,
+            marginLeft: 20,
+            width: Dimensions.get('window').width - 40,
+          }}
+        />
+      </View>
     );
   }
 
@@ -327,106 +351,106 @@ export class NewSellOrder extends React.Component<Props, State> {
     this.setState({sellOrder: {...this.state.sellOrder, shoeSize}});
   }
 
-  private _setBoxCondition(boxCondition: string): void {
-    this.setState({
-      sellOrder: {
-        ...this.state.sellOrder,
-        productCondition: {
-          ...this.state.sellOrder.productCondition,
-          boxCondition,
-        },
-      },
-    });
-  }
+  // private _setBoxCondition(boxCondition: string): void {
+  //   this.setState({
+  //     sellOrder: {
+  //       ...this.state.sellOrder,
+  //       productCondition: {
+  //         ...this.state.sellOrder.productCondition,
+  //         boxCondition,
+  //       },
+  //     },
+  //   });
+  // }
 
-  private _setShoeCondition(shoeCondition: string): void {
-    const isNewShoe = shoeCondition === 'Mới';
-    const childComponents = [...this.state.childComponents];
-    if (
-      isNewShoe &&
-      this.state.childComponents.length === this._maxChildComponentsSize
-    ) {
-      childComponents.splice(1, 1);
-    } else if (
-      !isNewShoe &&
-      this.state.childComponents.length + 1 === this._maxChildComponentsSize
-    ) {
-      childComponents.splice(1, 0, this._usedShoeCondition);
-    }
+  // private _setShoeCondition(shoeCondition: string): void {
+  //   const isNewShoe = shoeCondition === 'Mới';
+  //   const childComponents = [...this.state.childComponents];
+  //   if (
+  //     isNewShoe &&
+  //     this.state.childComponents.length === this._maxChildComponentsSize
+  //   ) {
+  //     childComponents.splice(1, 1);
+  //   } else if (
+  //     !isNewShoe &&
+  //     this.state.childComponents.length + 1 === this._maxChildComponentsSize
+  //   ) {
+  //     childComponents.splice(1, 0, this._usedShoeCondition);
+  //   }
 
-    this.setState({
-      sellOrder: {
-        ...this.state.sellOrder,
-        isNewShoe,
-      },
-      childComponents,
-    });
-  }
+  //   this.setState({
+  //     sellOrder: {
+  //       ...this.state.sellOrder,
+  //       isNewShoe,
+  //     },
+  //     childComponents,
+  //   });
+  // }
 
-  private _setShoeHeavilyTorn(isTorn: boolean): void {
-    this.setState((prevState) => ({
-      ...prevState,
-      sellOrder: {
-        ...prevState.sellOrder,
-        productCondition: {
-          ...prevState.sellOrder.productCondition,
-          isTorn,
-        },
-      },
-    }));
-  }
+  // private _setShoeHeavilyTorn(isTorn: boolean): void {
+  //   this.setState((prevState) => ({
+  //     ...prevState,
+  //     sellOrder: {
+  //       ...prevState.sellOrder,
+  //       productCondition: {
+  //         ...prevState.sellOrder.productCondition,
+  //         isTorn,
+  //       },
+  //     },
+  //   }));
+  // }
 
-  private _setShoeOutsoleWorn(isOutsoleWorn: boolean): void {
-    this.setState((prevState) => ({
-      ...prevState,
-      sellOrder: {
-        ...prevState.sellOrder,
-        productCondition: {
-          ...prevState.sellOrder.productCondition,
-          isOutsoleWorn,
-        },
-      },
-    }));
-  }
+  // private _setShoeOutsoleWorn(isOutsoleWorn: boolean): void {
+  //   this.setState((prevState) => ({
+  //     ...prevState,
+  //     sellOrder: {
+  //       ...prevState.sellOrder,
+  //       productCondition: {
+  //         ...prevState.sellOrder.productCondition,
+  //         isOutsoleWorn,
+  //       },
+  //     },
+  //   }));
+  // }
 
-  private _setShoeInsoleWorn(isInsoleWorn: boolean): void {
-    this.setState((prevState) => ({
-      ...prevState,
-      sellOrder: {
-        ...prevState.sellOrder,
-        productCondition: {
-          ...prevState.sellOrder.productCondition,
-          isInsoleWorn,
-        },
-      },
-    }));
-  }
+  // private _setShoeInsoleWorn(isInsoleWorn: boolean): void {
+  //   this.setState((prevState) => ({
+  //     ...prevState,
+  //     sellOrder: {
+  //       ...prevState.sellOrder,
+  //       productCondition: {
+  //         ...prevState.sellOrder.productCondition,
+  //         isInsoleWorn,
+  //       },
+  //     },
+  //   }));
+  // }
 
-  private _setShoeTainted(isTainted: boolean): void {
-    this.setState((prevState) => ({
-      ...prevState,
-      sellOrder: {
-        ...prevState.sellOrder,
-        productCondition: {
-          ...prevState.sellOrder.productCondition,
-          isTainted,
-        },
-      },
-    }));
-  }
+  // private _setShoeTainted(isTainted: boolean): void {
+  //   this.setState((prevState) => ({
+  //     ...prevState,
+  //     sellOrder: {
+  //       ...prevState.sellOrder,
+  //       productCondition: {
+  //         ...prevState.sellOrder.productCondition,
+  //         isTainted,
+  //       },
+  //     },
+  //   }));
+  // }
 
-  private _setShoeOtherDetail(otherDetail: string): void {
-    this.setState((prevState) => ({
-      ...prevState,
-      sellOrder: {
-        ...prevState.sellOrder,
-        productCondition: {
-          ...prevState.sellOrder.productCondition,
-          otherDetail,
-        },
-      },
-    }));
-  }
+  // private _setShoeOtherDetail(otherDetail: string): void {
+  //   this.setState((prevState) => ({
+  //     ...prevState,
+  //     sellOrder: {
+  //       ...prevState.sellOrder,
+  //       productCondition: {
+  //         ...prevState.sellOrder.productCondition,
+  //         otherDetail,
+  //       },
+  //     },
+  //   }));
+  // }
 
   private _setShoePrice(sellPrice: number): void {
     this.setState((prevState) => ({

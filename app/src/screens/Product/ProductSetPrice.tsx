@@ -18,6 +18,8 @@ type State = {
 
 type Props = {
   order?: Partial<SellOrder>;
+  highestBuyPrice?: number;
+  lowestSellPrice?: number;
   onSetShoePrice: (price: number) => void;
 };
 
@@ -71,14 +73,26 @@ export class ProductSetPrice extends React.Component<Props, State> {
 
     this.state = {
       isModalOpen: false,
-      shoePrice: props.order ? toCurrencyString(price) : '',
+      shoePrice: props.order?.sellPrice ? toCurrencyString(price) : '',
     };
   }
 
   public render(): JSX.Element {
     return (
       <ScrollView style={{flex: 1, width: Dimensions.get('screen').width}}>
-        <View style={{flex: 1, paddingHorizontal: 20}}>
+        <View style={{flex: 1, paddingHorizontal: 20, marginTop: 40}}>
+          <View style={{flex: 1, flexDirection: 'row'}}>
+            {this._renderReferencePrice(
+              themes.AppSellColor,
+              strings.LowestSellOrderPrice,
+              this.props.lowestSellPrice,
+            )}
+            {this._renderReferencePrice(
+              themes.AppBuyColor,
+              strings.HighestBuyOrderPrice,
+              this.props.highestBuyPrice,
+            )}
+          </View>
           {this._renderSetPrice()}
         </View>
       </ScrollView>
@@ -87,11 +101,10 @@ export class ProductSetPrice extends React.Component<Props, State> {
 
   private _renderSetPrice(): JSX.Element {
     return (
-      <View style={[styles.rowSeparatedContainer, {marginVertical: 15}]}>
-        <AppText.Headline>{strings.SetPrice}</AppText.Headline>
+      <View style={[styles.rowSeparatedContainer, {marginTop: 40}]}>
         <View style={styles.inputContainer}>
           <TextInput
-            keyboardType={'numeric'}
+            keyboardType={'number-pad'}
             onChangeText={(shoePrice): void => this.setState({shoePrice})}
             value={this.state.shoePrice}
             onEndEditing={(): void => {
@@ -102,10 +115,30 @@ export class ProductSetPrice extends React.Component<Props, State> {
             onFocus={(): void => {
               this.setState({shoePrice: ''});
             }}
-            placeholder={'1000000'}
+            placeholder={toCurrencyString('1000000')}
             style={themes.TextStyle.body}
           />
         </View>
+        <AppText.SubHeadline style={{alignSelf: 'center', marginTop: 8}}>
+          {strings.SetSellPrice}
+        </AppText.SubHeadline>
+      </View>
+    );
+  }
+
+  private _renderReferencePrice(
+    textColor: string,
+    subtitle: string,
+    price?: number,
+  ): JSX.Element {
+    return (
+      <View style={{flex: 1, alignItems: 'center'}}>
+        <AppText.Title2 style={{color: textColor}}>
+          {price ? toCurrencyString(price) : '-'}
+        </AppText.Title2>
+        <AppText.SubHeadline style={{marginTop: 8}}>
+          {subtitle}
+        </AppText.SubHeadline>
       </View>
     );
   }

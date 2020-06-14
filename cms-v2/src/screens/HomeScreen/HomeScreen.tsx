@@ -6,7 +6,7 @@ import CatalogIcon from '@material-ui/icons/ReceiptOutlined';
 import { Sidebar, Topbar } from './Components';
 import { makeStyles, Theme, createStyles, Container } from '@material-ui/core';
 import { ProductScreen } from '../ProductScreen';
-import { SecuredScreen } from '../SecuredScreen';
+// import { SecuredScreen } from '../SecuredScreen';
 import { CatalogScreen } from '../CatalogScreen';
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -57,19 +57,17 @@ export const HomeScreen = (): JSX.Element => {
   const [drawerOpen, setDrawerOpen] = useState(false);
 
   return (
-    <SecuredScreen>
-      <div className={classes.root}>
-        <Topbar onMenuButtonClicked={() => setDrawerOpen(!drawerOpen)} />
-        <Sidebar pages={appPages} isDrawerOpen={drawerOpen} />
-        <Container>
-          <Switch>
-            <Route path={'/'} exact render={() => <Redirect to={'/dashboard'} />} />
-            <Route path={'/dashboard'} render={() => <h3>Tổng quan</h3>} />
-            <Route path={'/products'} component={ProductScreen} />
-            <Route path={'/catalogs'} component={CatalogScreen} />
-          </Switch>
-        </Container>
-      </div>
-    </SecuredScreen>
+    <div className={classes.root}>
+      <Topbar onMenuButtonClicked={() => setDrawerOpen(!drawerOpen)} />
+      <Sidebar pages={appPages} isDrawerOpen={drawerOpen} />
+      <Container>
+        <Switch>
+          <Route path={'/'} exact render={() => <Redirect to={'/dashboard'} />} />
+          <Route path={'/dashboard'} render={() => <h3>Tổng quan</h3>} />
+          <Route path={'/products'} component={ProductScreen} />
+          <Route path={'/catalogs'} component={CatalogScreen} />
+        </Switch>
+      </Container>
+    </div>
   );
 };

@@ -3,12 +3,8 @@ import { BaseService } from "./BaseService";
 import { District, Ward } from "../../model";
 
 export class SettingService extends BaseService implements ISettingService {
-  public async getServerSettings(token: string): Promise<Object> {
-    const response = await this.apiClient.getInstance().get('/settings', {
-      headers: {
-        authorization: token
-      }
-    });
+  public async getServerSettings(): Promise<Object> {
+    const response = await this.apiClient.getInstance().get('/settings');
 
     return response.data;
   }

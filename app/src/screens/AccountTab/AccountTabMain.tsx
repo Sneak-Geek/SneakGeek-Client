@@ -1,5 +1,5 @@
 import React from 'react';
-import {SafeAreaView, StatusBar, View, StyleSheet} from 'react-native';
+import {SafeAreaView, StatusBar, View, StyleSheet, Alert} from 'react-native';
 import {connect} from 'utilities/ReduxUtilities';
 import {IAppState} from 'store/AppStore';
 import {
@@ -92,7 +92,9 @@ export class AccountTabMain extends React.Component<Props> {
     {
       title: strings.AccountInfo,
       onClick: (): void =>
-        this.props.navigation.push(RouteNames.Tab.AccountTab.EditProfile),
+        this._onClickWithAccountGuarded(() =>
+          this.props.navigation.push(RouteNames.Tab.AccountTab.EditProfile),
+        ),
       leftIcon: 'person',
     },
     {
@@ -108,7 +110,9 @@ export class AccountTabMain extends React.Component<Props> {
     {
       title: strings.InfoAppSetting,
       onClick: (): void => {
-        this.props.navigation.push(RouteNames.Tab.AccountTab.Faq);
+        this._onClickWithAccountGuarded(() =>
+          this.props.navigation.push(RouteNames.Tab.AccountTab.Faq),
+        );
       },
       leftIcon: 'info',
     },
@@ -131,10 +135,34 @@ export class AccountTabMain extends React.Component<Props> {
         <View style={{flex: 1, position: 'relative'}}>
           {this._renderBasicUserData()}
           {this._renderSettingsList()}
-          {this._renderLogoutButton()}
+          {this._renderBottomActionButton()}
         </View>
       </SafeAreaView>
     );
+  }
+
+  private _onClickWithAccountGuarded(action: () => void) {
+    const {account, profile, navigation} = this.props;
+    const isAccountExist = Boolean(account && profile);
+    if (isAccountExist) {
+      return action();
+    }
+
+    Alert.alert(strings.PleaseLogin, strings.NoAccountPleastLogin, [
+      {
+        text: strings.SignIn,
+        onPress: () => {
+          navigation.navigate(RouteNames.Auth.Name, {
+            screen: RouteNames.Auth.Login,
+          });
+        },
+      },
+      {
+        text: strings.Cancel,
+        onPress: null,
+        style: 'cancel',
+      },
+    ]);
   }
 
   private _renderBasicUserData(): JSX.Element {
@@ -184,25 +212,34 @@ export class AccountTabMain extends React.Component<Props> {
     ));
   }
 
-  private _renderLogoutButton(): JSX.Element {
+  private _renderBottomActionButton(): JSX.Element {
+    const isAccountAvailable = Boolean(
+      this.props.account && this.props.profile,
+    );
+    const title = isAccountAvailable ? strings.LogOut : strings.SignIn;
+    const backgroundColor = isAccountAvailable
+      ? themes.AppBackgroundColor
+      : themes.AppErrorColor;
     return (
       <BottomButton
-        title={strings.LogOut}
-        onPress={this._logoutHandler.bind(this)}
-        style={{backgroundColor: themes.AppErrorColor}}
+        title={title}
+        onPress={this._bottomButtonHandler.bind(this, isAccountAvailable)}
+        style={{backgroundColor}}
       />
     );
   }
 
-  private _logoutHandler(): void {
+  private _bottomButtonHandler(isAccountAvailable: boolean = true): void {
     this.props.navigation.navigate(RouteNames.Auth.Name, {
       screen: RouteNames.Auth.Login,
     });
-    const settings = ObjectFactory.getObjectInstance<ISettingsProvider>(
-      FactoryKeys.ISettingsProvider,
-    );
-    settings.clear();
-    this.props.logout();
+    if (isAccountAvailable) {
+      const settings = ObjectFactory.getObjectInstance<ISettingsProvider>(
+        FactoryKeys.ISettingsProvider,
+      );
+      settings.clear();
+      this.props.logout();
+    }
   }
 
   private _takePicture(): void {

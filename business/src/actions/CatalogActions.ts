@@ -54,21 +54,19 @@ export const getAllCatalogs = () => {
 
 export const getHomeCatalogs = () => {
   const catalogService = ObjectFactory.getObjectInstance<ICatalogService>(FactoryKeys.ICatalogService);
-  const settings = ObjectFactory.getObjectInstance<ISettingsProvider>(FactoryKeys.ISettingsProvider);
 
   return async (dispatch: Dispatch<AnyAction>) => {
     dispatch(updateGetHomeCatalogsState({ state: NetworkRequestState.REQUESTING }));
-    const token = settings.getValue(SettingsKey.CurrentAccessToken);
 
     try {
       const [Nike, Jordan, adidas, hot, ranking, toppick, buynow] = await Promise.all([
-        catalogService.getCatalogByTag(token, "nike"),
-        catalogService.getCatalogByTag(token, "jordan"),
-        catalogService.getCatalogByTag(token, "adidas"),
-        catalogService.getCatalogByTag(token, "hot"),
-        catalogService.getCatalogByTag(token, "ranking"),
-        catalogService.getCatalogByTag(token, "toppick"),
-        catalogService.getCatalogByTag(token, "buynow")
+        catalogService.getCatalogByTag("nike"),
+        catalogService.getCatalogByTag("jordan"),
+        catalogService.getCatalogByTag("adidas"),
+        catalogService.getCatalogByTag("hot"),
+        catalogService.getCatalogByTag("ranking"),
+        catalogService.getCatalogByTag("toppick"),
+        catalogService.getCatalogByTag("buynow")
       ]);
 
       dispatch(updateGetHomeCatalogsState({

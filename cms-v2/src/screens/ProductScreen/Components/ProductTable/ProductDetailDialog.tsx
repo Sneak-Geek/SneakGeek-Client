@@ -5,7 +5,6 @@ import {
   List,
   ListItem,
   Typography,
-  Theme,
   makeStyles,
   ListItemText,
   DialogContent,
@@ -33,7 +32,7 @@ const useStyles = makeStyles(() => ({
 
 const ProductDetailDialog = (props: Props): JSX.Element => {
   const classes = useStyles();
-  const [scroll, setScroll] = React.useState<DialogProps['scroll']>('paper');
+  const [scroll] = React.useState<DialogProps['scroll']>('paper');
 
   const fieldMappings: { [key: string]: string | undefined } = {
     Tên: props.shoe?.title,
