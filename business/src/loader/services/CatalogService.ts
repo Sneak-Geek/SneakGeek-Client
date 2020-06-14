@@ -34,16 +34,16 @@ export class CatalogService extends BaseService implements ICatalogService {
 
   public async createNewCatalog(
     token: string,
-    catalogTitle: string,
-    catalogDescription: string,
-    products: string[]
+    catalog: Partial<Catalog>
   ): Promise<void> {
     await this.apiClient.getInstance().post(
       `/catalogue/`,
       {
-        title: catalogTitle,
-        products: products,
-        description: catalogDescription,
+        title: catalog.title,
+        productIds: catalog.productIds,
+        description: catalog.description,
+        catalogType: catalog.catalogType,
+        coverImage: catalog.coverImage || '',
       },
       {
         headers: {
