@@ -98,6 +98,14 @@ export class AccountTabMain extends React.Component<Props> {
       leftIcon: 'person',
     },
     {
+      title: strings.PaymentInfo,
+      onClick: (): void =>
+      this._onClickWithAccountGuarded(() => 
+        this.props.navigation.push(RouteNames.Tab.AccountTab.PaymentInfo)
+      ),
+      leftIcon: 'account-balance'
+    },
+    {
       title: strings.NotificationSettings,
       onClick: (): void => null,
       leftIcon: 'notifications-active',
@@ -218,7 +226,7 @@ export class AccountTabMain extends React.Component<Props> {
     );
     const title = isAccountAvailable ? strings.LogOut : strings.SignIn;
     const backgroundColor = isAccountAvailable
-      ? themes.AppBackgroundColor
+      ? themes.AppPrimaryColor
       : themes.AppErrorColor;
     return (
       <BottomButton

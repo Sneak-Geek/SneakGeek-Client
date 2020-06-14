@@ -8,16 +8,18 @@ export const themes = {
   MediumButtonHeigt: 40,
   ButtonBorderRadius: 4,
   LargeBorderRadius: 64,
+  ListItemBackGroundColor: 'rgba(196,196,196,0.1)',
   DisabledColor: '#DADADA',
   AppPrimaryColor: '#E2603F',
   AppSecondaryColor: '#000',
+  HotOrange: '#FF9500',
+  LightGreenBlue: '#1ABC9C',
   AppAccentColor: '#FFF',
   AppErrorColor: '#FF2D55',
   AppModalBackground: 'rgba(0.0, 0.0, 0.0, 0.65)',
   DisabledTheme: 'rgba(0, 0, 0, 0.05)',
   AppDisabledColor: '#DADADA',
   AppSellColor: '#E2603F',
-  AppBuyColor: '#1ABC9C',
   AppPendingColor: '#E2C115',
   AppBackgroundColor: '#f5f5f7',
   NotificationBackground: '#D8F2ED',
@@ -66,6 +68,11 @@ export const themes = {
 
     body: {
       fontSize: 17,
+      fontFamily: 'RobotoCondensed-Regular',
+    },
+
+    largecallout: {
+      fontSize: 28,
       fontFamily: 'RobotoCondensed-Regular',
     },
 
