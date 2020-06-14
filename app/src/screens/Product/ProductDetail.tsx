@@ -459,9 +459,8 @@ export class ProductDetail extends React.Component<Props> {
           () => {
             // @ts-ignore
             this.props.navigation.push(RouteNames.Order.Name, {
-              screen: RouteNames.Order.SizeSelection,
+              screen: RouteNames.Order.NewBuyOrder,
               params: {
-                orderType: 'SellOrder',
                 shoe: this._shoe,
               },
             });
@@ -476,8 +475,8 @@ export class ProductDetail extends React.Component<Props> {
               screen: RouteNames.Order.NewSellOrder,
               params: {
                 shoe: this._shoe,
-                highestBuyPrice: highestBuyOrder?.buyPrice,
-                lowestSellPrice: lowestSellOrder?.sellPrice,
+                highestBuyOrder: highestBuyOrder,
+                lowestSellOrder: lowestSellOrder,
               },
             });
           },
