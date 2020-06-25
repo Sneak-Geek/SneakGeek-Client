@@ -4,7 +4,7 @@
 
 import { IAccountService } from "./IAccountService";
 import { AuthProvider } from "../../../types";
-import { Account, Profile, BalanceHistory } from "../../../model";
+import { Account, Profile, BalanceHistory, BalanceHistoryStatus } from "../../../model";
 import { BaseService } from "../BaseService";
 import HttpStatus from "http-status";
 
@@ -126,7 +126,15 @@ export class AccountService extends BaseService implements IAccountService {
         authorization: token
       }
     });
-    
+    return response.data;
+  }
+
+  public async getBalanceHisotiresForAdmin(token: string): Promise<Array<BalanceHistory>>{
+    const response = await this.apiClient.getInstance().get(`/balance-history/admin`, {
+      headers: {
+        authorization: token
+      }
+    });
     return response.data;
   }
 
@@ -138,4 +146,11 @@ export class AccountService extends BaseService implements IAccountService {
     });
   }
 
+  public async updateWithdrawalStatusForAdmin(token: string, status: BalanceHistoryStatus, balanceHistoryId: string): Promise<void>{
+    return await this.apiClient.getInstance().post(`/balance-history/update-balance-history`, {status, balanceHistoryId} ,{
+      headers: {
+        authorization: token
+      }
+    });
+  }
 }
