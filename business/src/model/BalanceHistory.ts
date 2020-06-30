@@ -19,6 +19,7 @@ export type BankingInfo = {
 }
 
 export type BalanceHistory = {
+    _id: string;
     profileId: string;
     transactionId: string;
     prevBalance: number;

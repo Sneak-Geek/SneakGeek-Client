@@ -8,6 +8,8 @@ import { makeStyles, Theme, createStyles, Container } from '@material-ui/core';
 import { ProductScreen } from '../ProductScreen';
 // import { SecuredScreen } from '../SecuredScreen';
 import { CatalogScreen } from '../CatalogScreen';
+import { WithdrawalScreen } from 'screens/WithdrawalScreen';
+import MonetizationOnIcon from '@material-ui/icons/MonetizationOn';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -52,6 +54,11 @@ export const HomeScreen = (): JSX.Element => {
       href: '/catalogs',
       icon: <CatalogIcon />,
     },
+    {
+      title: 'Withdrawals',
+      href: '/withdrawals',
+      icon: <MonetizationOnIcon />,
+    },
   ];
   const classes = useStyles();
   const [drawerOpen, setDrawerOpen] = useState(false);
@@ -66,6 +73,7 @@ export const HomeScreen = (): JSX.Element => {
           <Route path={'/dashboard'} render={() => <h3>Tổng quan</h3>} />
           <Route path={'/products'} component={ProductScreen} />
           <Route path={'/catalogs'} component={CatalogScreen} />
+          <Route path="/withdrawals" component={WithdrawalScreen} />
         </Switch>
       </Container>
     </div>
